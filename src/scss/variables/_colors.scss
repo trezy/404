@@ -1,0 +1,23 @@
+:root {
+	/* Palette */
+	--palette-black: #140c1c;
+	--palette-indigo: #442434;
+	--palette-purple: #30346d;
+	--palette-dark-grey: #4e4a4e;
+	--palette-brown: #854c30;
+	--palette-green: #346524;
+	--palette-red: #d04648;
+	--palette-grey: #757161;
+	--palette-blue: #597dce;
+	--palette-orange: #d27d2c;
+	--palette-light-grey: #8595a1;
+	--palette-light-green: #6daa2c;
+	--palette-beige: #d2aa99;
+	--palette-light-blue: #6dc2ca;
+	--palette-yellow: #dad45e;
+	--palette-white: #deeed6;
+
+	/* Normalised */
+	--background-color: var(--palette-black);
+	--text-color: var(--palette-white);
+}

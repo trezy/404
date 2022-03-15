@@ -1,0 +1,7 @@
+#loading-game {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: calc(5px * var(--ui-scale));
+	justify-content: center;
+}

@@ -1,0 +1,132 @@
+@use 'sass:list';
+@use 'sass:map';
+
+$optionsDefaults: (
+	'borderSize': 0,
+	'clipSize': 0,
+	'isBorder': false,
+	'uiScale': 1,
+);
+
+@function generateCornerCutPath($options) {
+	$options: map.merge(
+		$optionsDefaults,
+		$options,
+	);
+	$borderSize: map.get($options, 'borderSize');
+	$clipSize: map.get($options, 'clipSize');
+	$isBorder: map.get($options, 'isBorder');
+	$uiScale: map.get($options, 'uiScale');
+
+  $points: ();
+
+	// Top left outer corner
+	@for $index from 0 through $clipSize {
+		$points: list.append(
+			$points,
+			calc(#{$index} * #{$uiScale} * 1px) calc((#{$clipSize} - #{$index}) * #{$uiScale} * 1px),
+			$separator: comma,
+		);
+		$points: list.append(
+			$points,
+			calc(#{$index + 1} * #{$uiScale} * 1px) calc((#{$clipSize} - #{$index}) * #{$uiScale} * 1px),
+			$separator: comma,
+		);
+	}
+
+	$points: list.append(
+		$points,
+		calc(#{$clipSize} * #{$uiScale} * 1px) 0,
+		$separator: comma,
+	);
+
+	// Top right outer corner
+	$points: list.append(
+		$points,
+		100% 0,
+		$separator: comma,
+	);
+
+	// Bottom right outer corner
+	@for $index from 0 through $clipSize {
+		$points: list.append(
+			$points,
+			calc(100% - (#{$index} * #{$uiScale} * 1px)) calc(100% - ((#{$clipSize} - #{$index}) * #{$uiScale} * 1px)),
+			$separator: comma,
+		);
+		$points: list.append(
+			$points,
+			calc(100% - (#{$index + 1} * #{$uiScale} * 1px)) calc(100% - ((#{$clipSize} - #{$index}) * #{$uiScale} * 1px)),
+			$separator: comma,
+		);
+	}
+
+	$points: list.append(
+		$points,
+		calc(100% - (#{$clipSize} * #{$uiScale} * 1px)) 100%,
+		$separator: comma,
+	);
+
+	// Bottom left outer corner
+	$points: list.append(
+		$points,
+		0 100%,
+		$separator: comma,
+	);
+
+	// U-turn
+	@if $isBorder {
+		$points: list.append(
+			$points,
+			0 calc(#{$clipSize} * #{$uiScale} * 1px),
+			$separator: comma,
+		);
+		$points: list.append(
+			$points,
+			calc(#{$borderSize}px * #{$uiScale}) calc(#{$clipSize} * #{$uiScale} * 1px),
+			$separator: comma,
+		);
+		$points: list.append(
+			$points,
+			calc(#{$borderSize}px * #{$uiScale}) calc(100% - #{$borderSize}px * #{$uiScale}),
+			$separator: comma,
+		);
+
+		// Bottom right inner corner
+		@for $index from 0 through ($clipSize - $borderSize + 1) {
+			$points: list.append(
+				$points,
+				calc(100% - ((#{$borderSize}px + #{$clipSize - $index}px) * #{$uiScale})) calc(100% - (#{$borderSize}px + #{$index}px) * #{$uiScale}),
+				$separator: comma,
+			);
+			$points: list.append(
+				$points,
+				calc(100% - ((#{$borderSize}px + #{$clipSize - $index - 1}px) * #{$uiScale})) calc(100% - (#{$borderSize}px + #{$index}px) * #{$uiScale}),
+				$separator: comma,
+			);
+		}
+
+		// Top right inner corner
+		$points: list.append(
+			$points,
+			calc(100% - (#{$borderSize}px * #{$uiScale})) calc(#{$borderSize}px * #{$uiScale}),
+			$separator: comma,
+		);
+
+		// Top left inner corner
+		@for $index from 0 through ($clipSize - $borderSize + 1) {
+			$points: list.append(
+				$points,
+				calc((#{$borderSize}px + #{$clipSize - $index}px) * #{$uiScale}) calc((#{$borderSize}px + #{$index}px) * #{$uiScale}),
+				$separator: comma,
+			);
+			$points: list.append(
+				$points,
+				calc((#{$borderSize}px + #{$clipSize - $index - 1}px) * #{$uiScale}) calc((#{$borderSize}px + #{$index}px) * #{$uiScale}),
+				$separator: comma,
+			);
+		}
+	}
+
+  @return polygon($points);
+}

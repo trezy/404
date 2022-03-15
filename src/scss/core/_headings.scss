@@ -1,0 +1,53 @@
+h1 {
+	@extend %thaleah-3x;
+}
+
+h2 {
+	@extend %thaleah-2x;
+
+	align-content: stretch;
+	display: flex;
+	flex-direction: column;
+
+	&:after,
+	&:before {
+		background-color: var(--palette-white);
+		content: '';
+		flex-grow: 1;
+		height: calc(2px * var(--ui-scale));
+		opacity: 0.5;
+		width: 100%;
+	}
+
+	&:after {
+		clip-path: polygon(
+			0 50%,
+			calc(100% - (9px * var(--ui-scale))) 50%,
+			calc(100% - (9px * var(--ui-scale))) 0,
+			calc(100% - (2px * var(--ui-scale))) 0,
+			calc(100% - (2px * var(--ui-scale))) 50%,
+			100% 50%,
+			100% 100%,
+			0 100%,
+		);
+		margin-top: calc(2px * var(--ui-scale));
+	}
+
+	&:before {
+		clip-path: polygon(
+			0 0,
+			100% 0,
+			100% 50%,
+			calc(9px * var(--ui-scale)) 50%,
+			calc(9px * var(--ui-scale)) 100%,
+			calc(2px * var(--ui-scale)) 100%,
+			calc(2px * var(--ui-scale)) 50%,
+			0 50%,
+		);
+		margin-bottom: calc(2px * var(--ui-scale));
+	}
+}
+
+h3 {
+	@extend %thaleah-1x;
+}

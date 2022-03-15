@@ -1,0 +1,32 @@
+.panel {
+	--panel-border-width: 2px;
+
+	display: flex;
+	flex-direction: column;
+	padding: calc(((var(--panel-border-width) * 2) + (var(--panel-padding) * 2)) * var(--ui-scale));
+	position: relative;
+
+	&:after {
+		background-color: var(--palette-dark-grey);
+		clip-path: generateCornerCutPath((
+			'borderSize': 2,
+			'clipSize': 6,
+			'isBorder': true,
+			'uiScale': var(--ui-scale),
+		));
+		content: '';
+		display: flex;
+		inset: 0;
+		// opacity: 0.5;
+		position: absolute;
+	}
+
+	&.is-centered {
+		align-items: center;
+		justify-content: center;
+	}
+
+	> .panel-bottom {
+		margin-top: auto;
+	}
+}

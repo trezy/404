@@ -1,0 +1,23 @@
+@font-face {
+	font-family: 'awkward';
+	src: url('/fonts/awkward.woff2') format('woff2'),
+			 url('/fonts/awkward.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+:root {
+	@for $index from 1 to 5 {
+		--fonts-awkward-line-height-#{$index}x: calc((5px * #{$index}) * (var(--ui-scale) - 1));
+		--fonts-awkward-size-#{$index}x: calc((7px * #{$index}) * (var(--ui-scale) - 1));
+	}
+}
+
+@for $index from 1 through 5 {
+	%awkward-#{$index}x {
+		font-family: awkward, monospace;
+		font-size: var(--fonts-awkward-size-#{$index}x);
+		letter-spacing: calc(1px * #{$index} * var(--ui-scale));
+		line-height: var(--fonts-awkward-line-height-#{$index}x);
+	}
+}
