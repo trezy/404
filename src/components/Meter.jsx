@@ -38,22 +38,30 @@ export function Meter(props) {
 			index += 1
 		}
 
-		return (
-			<div className="meter-segments">
-				{segments}
-			</div>
-		)
+		return segments
 	}, [range])
 
 	return (
-		<div className="meter">
+		<div
+			aria-valuemax={maximum}
+			aria-valuemin={minimum}
+			aria-valuenow={value}
+			className="meter"
+			role="meter">
 			<div
+				aria-hidden
 				className="meter-fill"
 				style={{
 					width: `${fillPercentage}%`,
 				}} />
 
-			{showSegments && meterSegments}
+			{showSegments && (
+				<div
+					aria-hidden
+					className="meter-segments">
+					{meterSegments}
+				</div>
+			)}
 		</div>
 	)
 }

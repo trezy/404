@@ -13,6 +13,7 @@
 	.meter-fill {
 		background-color: var(--palette-green);
 		height: var(--meter-height-calculated);
+		pointer-events: none;
 	}
 
 	.meter-segments {
@@ -20,6 +21,7 @@
 		align-items: stretch;
 		display: flex;
 		inset: 0;
+		pointer-events: none;
 		position: absolute;
 
 		.meter-segment {
