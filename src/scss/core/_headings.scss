@@ -11,11 +11,10 @@ h2 {
 
 	&:after,
 	&:before {
-		background-color: var(--palette-white);
+		background-color: var(--palette-dark-grey);
 		content: '';
 		flex-grow: 1;
 		height: calc(2px * var(--ui-scale));
-		opacity: 0.5;
 		width: 100%;
 	}
 
