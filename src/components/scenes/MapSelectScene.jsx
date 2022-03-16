@@ -1,5 +1,8 @@
 // Module imports
-import { useMemo } from 'react'
+import {
+	useCallback,
+	useMemo,
+} from 'react'
 
 
 
@@ -20,29 +23,34 @@ import { useStore } from '../../store/react.js'
 
 
 // Constants
-const LEVELS = [
+const MAPS = [
 	{
 		bestTime: 60_000, // milliseconds
+		id: 1,
 		rating: 5,
 		name: 'Level 1',
 	},
 	{
 		bestTime: 120_000,
+		id: 2,
 		rating: 2.5,
 		name: 'Level 2',
 	},
 	{
 		bestTime: 123_456,
+		id: 3,
 		rating: 0.5,
 		name: 'Level 3',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
+		id: 4,
 		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 4',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
+		id: 5,
 		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 5',
 	},
@@ -54,37 +62,43 @@ const LEVELS = [
 
 export function MapSelectScene() {
 	const [
+		goToPlay,
 		goToSettings,
 		goToTitle,
 	] = useStore(state => [
+		state.goToPlay,
 		state.goToSettings,
 		state.goToTitle,
 	])
 
-	const mappedLevels = useMemo(() => {
-		return LEVELS.map((level, index) => {
+	const loadMap = useCallback(mapID => () => goToPlay(mapID), [goToPlay])
+
+	const mappedMaps = useMemo(() => {
+		return MAPS.map((map, index) => {
 			return (
 				<tr key={index}>
-					<th>{level.name}</th>
+					<th>{map.name}</th>
 
-					<td>{convertMillisecondsToStopwatchString(level.bestTime)}</td>
+					<td>{convertMillisecondsToStopwatchString(map.bestTime)}</td>
 
 					<td>
 						<Meter
 							maximum={5}
 							minimum={0}
-							value={level.rating} />
+							value={map.rating} />
 					</td>
 
 					<td>
-						<Button isSmall>
+						<Button
+							isSmall
+							onClick={loadMap(map.id)}>
 							{'Play'}
 						</Button>
 					</td>
 				</tr>
 			)
 		})
-	}, [LEVELS])
+	}, [MAPS])
 
 	return (
 		<Scene id="map-select">
@@ -112,7 +126,7 @@ export function MapSelectScene() {
 
 					<table>
 						<tbody>
-							{mappedLevels}
+							{mappedMaps}
 						</tbody>
 					</table>
 				</Panel>

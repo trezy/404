@@ -20,13 +20,17 @@ const FRAME_BUFFER = []
 
 
 const store = create((set, get) => ({
-	currentScene: 'loadingGame',
+	currentMap: null,
 	fps: 0,
 	frame: 0,
 	isRunning: false,
 	gameManager: new GameManager,
 	timeDelta: 0,
 	time: 0,
+
+	goToPlay: mapID => {
+		console.log(`TODO: load map loading scene for map ${mapID}`)
+	},
 
 	goToTitle: () => {
 		set({ currentScene: 'title' })
