@@ -1,0 +1,35 @@
+.meter {
+	--meter-height: 5px;
+	--meter-width: 35px;
+
+	--meter-height-calculated: calc(var(--meter-height) * var(--ui-scale));
+	--meter-width-calculated: calc(var(--meter-width) * var(--ui-scale));
+
+	background-color: var(--palette-dark-grey);
+  height: var(--meter-height-calculated);
+	position: relative;
+	width: var(--meter-width-calculated);
+
+	.meter-fill {
+		background-color: var(--palette-green);
+		height: var(--meter-height-calculated);
+	}
+
+	.meter-segments {
+		align-content: stretch;
+		align-items: stretch;
+		display: flex;
+		inset: 0;
+		position: absolute;
+
+		.meter-segment {
+			flex-grow: 1;
+
+			&:not(:last-child) {
+				border-right-color: var(--palette-black);
+				border-right-style: solid;
+				border-right-width: calc(1px * var(--ui-scale));
+			}
+		}
+	}
+}
