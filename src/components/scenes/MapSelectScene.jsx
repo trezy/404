@@ -11,6 +11,7 @@ import { ButtonStack } from '../ButtonStack.jsx'
 import { convertMillisecondsToStopwatchString } from '../../helpers/convertMillisecondsToStopwatchString.js'
 import { Panel } from '../Panel.jsx'
 import { PanelsLayout } from '../layouts/PanelsLayout.jsx'
+import { Meter } from '../Meter.jsx'
 import { Scene } from '../Scene.jsx'
 import { useStore } from '../../store/react.js'
 
@@ -32,17 +33,17 @@ const LEVELS = [
 	},
 	{
 		bestTime: 123_456,
-		rating: Math.round(Math.random() * 5),
+		rating: 0.5,
 		name: 'Level 3',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
-		rating: Math.round(Math.random() * 5),
+		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 4',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
-		rating: Math.round(Math.random() * 5),
+		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 5',
 	},
 ]
@@ -61,14 +62,19 @@ export function MapSelectScene() {
 	])
 
 	const mappedLevels = useMemo(() => {
-		return LEVELS.map(level => {
+		return LEVELS.map((level, index) => {
 			return (
-				<tr>
+				<tr key={index}>
 					<th>{level.name}</th>
 
 					<td>{convertMillisecondsToStopwatchString(level.bestTime)}</td>
 
-					<td>{level.rating}</td>
+					<td>
+						<Meter
+							maximum={5}
+							minimum={0}
+							value={level.rating} />
+					</td>
 
 					<td>
 						<Button isSmall>

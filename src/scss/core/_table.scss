@@ -1,4 +1,9 @@
 table {
+	td,
+	th {
+		vertical-align: middle;
+	}
+
 	td {
 		padding-left: calc(4px * var(--ui-scale));
 		text-align: right;
