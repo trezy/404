@@ -7,9 +7,9 @@ import { WholePixelContainer } from './WholePixelContainer.jsx'
 
 
 export function App() {
-  return (
-    <WholePixelContainer>
-      <SceneManager />
-    </WholePixelContainer>
-  )
+	return (
+		<WholePixelContainer>
+			<SceneManager />
+		</WholePixelContainer>
+	)
 }
