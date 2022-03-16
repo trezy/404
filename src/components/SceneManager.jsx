@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 // Local imports
 import { LoadingGameScene } from './scenes/LoadingGameScene.jsx'
 import { MapSelectScene } from './scenes/MapSelectScene.jsx'
+import { PlayScene } from './scenes/PlayScene.jsx'
 import { SettingsScene } from './scenes/SettingsScene.jsx'
 import { TitleScene } from './scenes/TitleScene.jsx'
 import { useStore } from '../store/react.js'
@@ -24,6 +25,9 @@ const SCENES = {
 	},
 	mapSelect: {
 		component: <MapSelectScene />,
+	},
+	play: {
+		component: <PlayScene />,
 	},
 	settings: {
 		component: <SettingsScene />,

@@ -28,8 +28,15 @@ const store = create((set, get) => ({
 	timeDelta: 0,
 	time: 0,
 
+	goToMapSelect: () => {
+		set({ currentScene: 'mapSelect' })
+	},
+
 	goToPlay: mapID => {
-		console.log(`TODO: load map loading scene for map ${mapID}`)
+		set({
+			currentMap: mapID,
+			currentScene: 'play',
+		})
 	},
 
 	goToTitle: () => {
