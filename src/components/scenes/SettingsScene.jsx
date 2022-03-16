@@ -30,7 +30,7 @@ export function SettingsScene() {
 	const [goToTitle] = useStore(state => [state.goToTitle])
 
 	return (
-		<Scene id="title">
+		<Scene id="settings">
 			<PanelsLayout id="title">
 				<Panel>
 					<h2>{'Menu'}</h2>
