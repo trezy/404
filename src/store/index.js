@@ -20,13 +20,21 @@ const FRAME_BUFFER = []
 
 
 const store = create((set, get) => ({
-	currentScene: 'title',
+	currentScene: 'loadingGame',
 	fps: 0,
 	frame: 0,
 	isRunning: false,
 	gameManager: new GameManager,
 	timeDelta: 0,
 	time: 0,
+
+	goToTitle: () => {
+		set({ currentScene: 'title' })
+	},
+
+	goToSettings: () => {
+		set({ currentScene: 'settings' })
+	},
 
 	nextFrame: () => {
 		const now = performance.now()

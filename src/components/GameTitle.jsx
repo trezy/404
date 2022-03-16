@@ -1,8 +1,17 @@
+// Module imports
+import { motion } from 'framer-motion'
+
+
+
+
+
 export function GameTitle() {
 	return (
-		<h1 className="game-title">
+		<motion.h1
+			className="game-title"
+			layoutId="game-title">
 			<span>{'de'}</span>
 			<span>{'bug'}</span>
-		</h1>
+		</motion.h1>
 	)
 }

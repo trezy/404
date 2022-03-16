@@ -15,11 +15,11 @@ export function PanelsLayout(props) {
 	const className = classnames('layout', 'panels', props.className)
 
 	return (
-		<main
+		<div
 			className={className}
 			id={id}>
 			{children}
-		</main>
+		</div>
 	)
 }
 
