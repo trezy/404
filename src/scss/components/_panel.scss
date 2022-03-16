@@ -1,4 +1,5 @@
 .panel {
+	--panel-border-color: var(--palette-dark-grey);
 	--panel-border-width: 2px;
 
 	display: flex;
@@ -7,7 +8,7 @@
 	position: relative;
 
 	&:after {
-		background-color: var(--palette-dark-grey);
+		background-color: var(--panel-border-color);
 		clip-path: generateCornerCutPath((
 			'borderSize': 2,
 			'clipSize': 6,
@@ -18,11 +19,17 @@
 		display: flex;
 		inset: 0;
 		position: absolute;
+		transition-duration: 0.2s;
+		transition-property: background-color;
 	}
 
 	&.is-centered {
 		align-items: center;
 		justify-content: center;
+	}
+
+	&.is-primary {
+		--panel-border-color: var(--palette-white);
 	}
 
 	> .panel-bottom {
