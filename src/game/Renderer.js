@@ -1,11 +1,14 @@
 // Local imports
-import { TILE_RENDERERS } from './Tile.js'
+import {
+	TILE_RENDERERS,
+	TILE_SIZE,
+} from './Tile.js'
+
+
+
+
 
 // Constants
-const TILE_SIZE = {
-	height: 16,
-	width: 16,
-}
 const LAYERS = {
 	background: 0,
 	foreground: 1,
@@ -174,28 +177,13 @@ export class Renderer {
 			const tileRenderer = TILE_RENDERERS[type]
 
 			if (tileRenderer) {
-				tileRenderer(
-					this,
+				tileRenderer({
+					destinationX: x * TILE_SIZE.width,
+					destinationY: y * TILE_SIZE.height,
+					renderer: this,
 					tileset,
-					x * TILE_SIZE.width,
-					y * TILE_SIZE.height,
-				)
+				})
 			}
-			// this.drawImage({
-			// 	image: tileset,
-			// 	source: {
-			// 		height: TILE_SIZE.height,
-			// 		width: TILE_SIZE.width,
-			// 		x: 112,
-			// 		y: 176,
-			// 	},
-			// 	destination: {
-			// 		height: TILE_SIZE.height,
-			// 		width: TILE_SIZE.width,
-			// 		x: x * TILE_SIZE.width,
-			// 		y: y * TILE_SIZE.height,
-			// 	},
-			// })
 		})
 	}
 
