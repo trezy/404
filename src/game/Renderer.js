@@ -9,7 +9,7 @@ import {
 
 
 // Constants
-const LAYERS = {
+export const LAYERS = {
 	background: 0,
 	foreground: 1,
 	sprites: 2,
@@ -165,35 +165,6 @@ export class Renderer {
 		this.queue[this.layer].push(['moveTo', sourceX, sourceY])
 		this.queue[this.layer].push(['lineTo', destinationX, destinationY])
 		this.queue[this.layer].push(['stroke'])
-	}
-
-	drawMap(mapData, tileset) {
-		this.layer = LAYERS.foreground
-
-		mapData.tiles.forEach((tileData, index) => {
-			if (!Array.isArray(tileData)) {
-				tileData = [tileData]
-			}
-
-			const [
-				rendererIndex,
-				tileConfig = {},
-			] = tileData
-
-			const x = index % mapData.width
-			const y = Math.floor((index - x) / mapData.height)
-
-			const tileRenderer = TILE_RENDERERS[rendererIndex]
-
-			if (tileRenderer) {
-				tileRenderer({
-					destinationX: x * TILE_SIZE.width,
-					destinationY: y * TILE_SIZE.height,
-					renderer: this,
-					tileset,
-				}, tileConfig)
-			}
-		})
 	}
 
 	drawRectangle(config) {

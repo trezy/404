@@ -7,6 +7,7 @@ import create from 'zustand/vanilla'
 
 // Local imports
 import { GameManager } from '../game/GameManager.js'
+import { Map } from '../game/Map.js'
 
 
 
@@ -26,6 +27,7 @@ const store = create((set, get) => ({
 	isRunning: false,
 	gameManager: new GameManager,
 	mapData: null,
+	map: null,
 	tileset: null,
 	timeDelta: 0,
 	time: 0,
@@ -65,6 +67,7 @@ const store = create((set, get) => ({
 
 		set({
 			currentScene: 'play',
+			map: new Map(mapData, tileset),
 			mapData,
 			tileset,
 		})
