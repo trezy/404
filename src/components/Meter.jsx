@@ -1,5 +1,6 @@
 // Module imports
 import { useMemo } from 'react'
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 
@@ -8,11 +9,19 @@ import PropTypes from 'prop-types'
 
 export function Meter(props) {
 	const {
+		isFullWidth,
 		maximum,
 		minimum,
+		segmentSize,
 		showSegments,
 		value,
 	} = props
+
+	const className = useMemo(() => {
+		return classnames('meter', {
+			'is-full-width': isFullWidth,
+		})
+	}, [props.className])
 
 	const range = useMemo(() => maximum - minimum, [
 		maximum,
@@ -28,7 +37,7 @@ export function Meter(props) {
 		const segments = []
 
 		let index = 0
-		while (index < range) {
+		while (index < Math.ceil(range / segmentSize)) {
 			segments.push((
 				<div
 					key={index}
@@ -46,7 +55,7 @@ export function Meter(props) {
 			aria-valuemax={maximum}
 			aria-valuemin={minimum}
 			aria-valuenow={value}
-			className="meter"
+			className={className}
 			role="meter">
 			<div
 				aria-hidden
@@ -67,14 +76,20 @@ export function Meter(props) {
 }
 
 Meter.defaultProps = {
+	className: '',
+	isFullWidth: false,
 	maximum: 100,
 	minimum: 0,
+	segmentSize: 1,
 	showSegments: true,
 }
 
 Meter.propTypes = {
+	className: PropTypes.string,
+	isFullWidth: PropTypes.bool,
 	maximum: PropTypes.number,
 	minimum: PropTypes.number,
+	segmentSize: PropTypes.number,
 	showSegments: PropTypes.bool,
 	value: PropTypes.number.isRequired,
 }
