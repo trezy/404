@@ -1,0 +1,9 @@
+dl {
+	dd {
+		text-indent: calc(10px * var(--ui-scale));
+
+		+ dt {
+			margin-top: calc(2px * var(--ui-scale));
+		}
+	}
+}

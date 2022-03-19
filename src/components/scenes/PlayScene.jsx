@@ -1,6 +1,14 @@
+// Module imports
+import { useEffect } from 'react'
+
+
+
+
+
 // Local imports
 import { Button } from '../Button.jsx'
 import { ButtonStack } from '../ButtonStack.jsx'
+import { FPSMeter } from '../FPSMeter.jsx'
 import { Panel } from '../Panel.jsx'
 import { PanelsLayout } from '../layouts/PanelsLayout.jsx'
 import { Scene } from '../Scene.jsx'
@@ -12,7 +20,20 @@ import { useStore } from '../../store/react.js'
 
 
 export function PlayScene() {
-	const [goToMapSelect] = useStore(state => [state.goToMapSelect])
+	const [
+		goToMapSelect,
+		startGameLoop,
+		stopGameLoop,
+	] = useStore(state => [
+		state.goToMapSelect,
+		state.startGameLoop,
+		state.stopGameLoop,
+	])
+
+	useEffect(() => {
+		startGameLoop()
+		return stopGameLoop
+	}, [startGameLoop])
 
 	return (
 		<Scene id="play">
@@ -30,6 +51,7 @@ export function PlayScene() {
 				<Panel
 					columnSpan={2}
           isPrimary>
+					<canvas id="game-canvas" />
 				</Panel>
 
 				<Panel columnSpan={1}>
@@ -38,6 +60,10 @@ export function PlayScene() {
 						isCentered
 						isLarge
 						isMonospace />
+
+					<div className="panel-bottom">
+						<FPSMeter />
+					</div>
 				</Panel>
 			</PanelsLayout>
 		</Scene>

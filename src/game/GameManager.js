@@ -1,4 +1,5 @@
 // Local imports
+import { Renderer } from './Renderer.js'
 import { store } from '../store/index.js'
 
 
@@ -11,6 +12,7 @@ export class GameManager {
 	\****************************************************************************/
 
 	#canvas = null
+	#renderer = null
 
 
 
@@ -26,6 +28,7 @@ export class GameManager {
 		y: 0,
 	}
 	currentCell = null
+	isRunning = true
 
 
 
@@ -35,27 +38,32 @@ export class GameManager {
 	 * Public methods
 	\****************************************************************************/
 
-	constructor() {
-		// const system = new PlanetarySystem
-
-		// this.canvas = document.querySelector('canvas')
-		// this.canvas.style.display = 'none'
-		// console.log(system)
-
-		// this.currentCell = this.cluster.getRandomReachableCell()
-		// this.cluster.populateGridCell(this.currentCell.x, this.currentCell.y)
-
-		// setInterval(() => {
-		// 	console.log(store.getState())
-		// }, 1000)
-	}
+	constructor() {}
 
 	gameLoop = () => {
-		store
-			.getState()
-			.nextFrame()
+		if (this.isRunning) {
+			const {
+				mapData,
+				nextFrame,
+				tileset,
+			} = store.getState()
 
-		requestAnimationFrame(this.gameLoop)
+			nextFrame()
+
+			this.renderer.drawGrid(mapData.width, mapData.height)
+			this.renderer.drawMap(mapData, tileset)
+
+			// render.drawMap(map)
+			// render.drawEntities(entities)
+
+			// if (currentTile < map.tiles.length) {
+			// 	render.drawPlacement()
+			// }
+
+			this.renderer.update()
+
+			requestAnimationFrame(this.gameLoop)
+		}
 	}
 
 	// handleDoubleClick = () => {
@@ -66,57 +74,29 @@ export class GameManager {
 	// 	}
 	// }
 
-	resizeCanvas = () => {
-		// // Update the camera
-		// this.camera.aspect = this.aspectRatio
-		// this.camera.updateProjectionMatrix()
-
-		// // Update the renderer
-		// this.renderer.setSize(this.viewportWidth, this.viewportHeight)
-		// this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-	}
-
 	start() {
 		if (!store.getState().isRunning) {
 			store.setState({ isRunning: true })
+			this.isRunning = true
 
-			window.addEventListener('resize', this.resizeCanvas)
 			// window.addEventListener('dblclick', this.handleDoubleClick)
 
-			this.resizeCanvas()
 			this.gameLoop()
 		}
 	}
 
-
-
-
-
-	/****************************************************************************\
-	 * Public getters
-	\****************************************************************************/
-
-	get aspectRatio() {
-		return this.viewportWidth / this.viewportHeight
+	stop() {
+		if (store.getState().isRunning) {
+			store.setState({ isRunning: false })
+			this.isRunning = false
+		}
 	}
 
-	get canvas() {
-		if (!this.#canvas) {
-			this.#canvas = document.querySelector('canvas')
+	get renderer() {
+		if (!this.#renderer) {
+			this.#renderer = new Renderer()
 		}
 
-		return this.#canvas
-	}
-
-	get resolution() {
-		return window.devicePixelRatio || 1
-	}
-
-	get viewportHeight() {
-		return window.innerHeight
-	}
-
-	get viewportWidth() {
-		return window.innerWidth
+		return this.#renderer
 	}
 }
