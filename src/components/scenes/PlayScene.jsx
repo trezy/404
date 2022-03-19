@@ -22,12 +22,12 @@ import { useStore } from '../../store/react.js'
 export function PlayScene() {
 	const [
 		goToMapSelect,
-		mapData,
+		map,
 		startGameLoop,
 		stopGameLoop,
 	] = useStore(state => [
 		state.goToMapSelect,
-		state.mapData,
+		state.map,
 		state.startGameLoop,
 		state.stopGameLoop,
 	])
@@ -45,10 +45,10 @@ export function PlayScene() {
 
 					<dl>
 						<dt>{'Map:'}</dt>
-						<dd>{mapData.name}</dd>
+						<dd>{map.name}</dd>
 
 						<dt>{'Size:'}</dt>
-						<dd>{`${mapData.width} x ${mapData.height}`}</dd>
+						<dd>{`${map.width} x ${map.height}`}</dd>
 					</dl>
 
 					<ButtonStack className="panel-bottom">

@@ -20,11 +20,11 @@ export function LoadingMapScene() {
 	const [
 		currentMap,
 		loadMap,
-		mapData,
+		map,
 	] = useStore(state => [
 		state.currentMap,
 		state.loadMap,
-		state.mapData,
+		state.map,
 	])
 
 	useEffect(() => {
@@ -50,10 +50,10 @@ export function LoadingMapScene() {
 							<dt>{'Map Name:'}</dt>
 							<dd>{currentMap}</dd>
 
-							{Boolean(mapData) && (
+							{Boolean(map) && (
 								<>
 									<dt>{'Map Size:'}</dt>
-									<dd>{`${mapData.width} x ${mapData.height}`}</dd>
+									<dd>{`${map.width} x ${map.height}`}</dd>
 								</>
 							)}
 						</dl>

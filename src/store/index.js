@@ -26,7 +26,6 @@ const store = create((set, get) => ({
 	frame: 0,
 	isRunning: false,
 	gameManager: new GameManager,
-	mapData: null,
 	map: null,
 	tileset: null,
 	timeDelta: 0,
@@ -41,10 +40,6 @@ const store = create((set, get) => ({
 
 	goToMapSelect: () => {
 		set({ currentScene: 'mapSelect' })
-	},
-
-	goToPlay: () => {
-		set({ currentScene: 'play' })
 	},
 
 	goToTitle: () => {
@@ -68,7 +63,6 @@ const store = create((set, get) => ({
 		set({
 			currentScene: 'play',
 			map: new Map(mapData, tileset),
-			mapData,
 			tileset,
 		})
 	},
