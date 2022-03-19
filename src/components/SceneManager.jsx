@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 
 // Local imports
 import { LoadingGameScene } from './scenes/LoadingGameScene.jsx'
+import { MapSelectScene } from './scenes/MapSelectScene.jsx'
 import { SettingsScene } from './scenes/SettingsScene.jsx'
 import { TitleScene } from './scenes/TitleScene.jsx'
 import { useStore } from '../store/react.js'
@@ -18,16 +19,17 @@ import { useStore } from '../store/react.js'
 
 // Constants
 const SCENES = {
-	level: {},
-	levelSelect: {},
 	loadingGame: {
 		component: <LoadingGameScene />,
 	},
+	mapSelect: {
+		component: <MapSelectScene />,
+	},
 	settings: {
-		component: <SettingsScene />
+		component: <SettingsScene />,
 	},
 	title: {
-		component: <TitleScene />
+		component: <TitleScene />,
 	},
 }
 

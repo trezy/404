@@ -12,6 +12,7 @@ export function Button(props) {
 		children,
 		isDisabled,
 		isPrimary,
+		isSmall,
 		isText,
 		onClick,
 		type,
@@ -20,6 +21,7 @@ export function Button(props) {
 	const className = useMemo(() => {
 		return classnames(props.className, {
 			'is-primary': isPrimary,
+			'is-small': isSmall,
 			'is-text': isText,
 		})
 	}, [
@@ -55,6 +57,7 @@ Button.defaultProps = {
 	className: '',
 	isDisabled: false,
 	isPrimary: false,
+	isSmall: false,
 	isText: false,
 	onClick: () => {},
 	type: 'button',
@@ -65,6 +68,7 @@ Button.propTypes = {
 	className: PropTypes.string,
 	isDisabled: PropTypes.bool,
 	isPrimary: PropTypes.bool,
+	isSmall: PropTypes.bool,
 	isText: PropTypes.bool,
 	onClick: PropTypes.func,
 	type: PropTypes.oneOf([

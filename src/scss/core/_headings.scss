@@ -8,6 +8,7 @@ h2 {
 	align-content: stretch;
 	display: flex;
 	flex-direction: column;
+	margin-bottom: calc(2px * var(--ui-scale));
 
 	&:after,
 	&:before {
