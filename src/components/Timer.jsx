@@ -93,7 +93,9 @@ export function Timer(props) {
 
 	return (
 		<time className={className}>
-			{renderedTime}
+			<span className="time-wrapper">
+				{renderedTime}
+			</span>
 		</time>
 	)
 }

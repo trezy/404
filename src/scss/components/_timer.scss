@@ -67,13 +67,22 @@
 	}
 
 	&.is-monospace {
-		display: grid;
-		gap: calc(1px * var(--ui-scale));
-		grid-template-columns: 1fr 1fr auto 1fr 1fr;
+		display: flex;
 
-		> span {
-			display: inline-flex;
-			justify-content: end;
+		&.is-centered {
+			justify-content: center;
+		}
+
+		.time-wrapper {
+			align-content: center;
+			display: grid;
+			gap: calc(1px * var(--ui-scale));
+			grid-template-columns: 1fr 1fr auto 1fr 1fr;
+
+			> span {
+				display: inline-flex;
+				justify-content: end;
+			}
 		}
 	}
 }
