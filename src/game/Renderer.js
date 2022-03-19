@@ -79,7 +79,7 @@ export class Renderer {
 		let column = 0
 		let row = 0
 
-		this.setAlpha(0.25)
+		this.setAlpha(0.1)
 
 		while (row <= renderHeight) {
 			let y = (TILE_SIZE.height * row) + 0.5
@@ -170,11 +170,20 @@ export class Renderer {
 	drawMap(mapData, tileset) {
 		this.layer = LAYERS.foreground
 
-		mapData.tiles.forEach((type, index) => {
+		mapData.tiles.forEach((tileData, index) => {
+			if (!Array.isArray(tileData)) {
+				tileData = [tileData]
+			}
+
+			const [
+				rendererIndex,
+				tileConfig = {},
+			] = tileData
+
 			const x = index % mapData.width
 			const y = Math.floor((index - x) / mapData.height)
 
-			const tileRenderer = TILE_RENDERERS[type]
+			const tileRenderer = TILE_RENDERERS[rendererIndex]
 
 			if (tileRenderer) {
 				tileRenderer({
@@ -182,7 +191,7 @@ export class Renderer {
 					destinationY: y * TILE_SIZE.height,
 					renderer: this,
 					tileset,
-				})
+				}, tileConfig)
 			}
 		})
 	}

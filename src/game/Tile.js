@@ -3,7 +3,7 @@ export const TILE_SIZE = {
 	width: 16,
 }
 
-export function renderStandardSizeTile(config) {
+function renderStandardSizeTile(config) {
 	const {
 		destinationX,
 		destinationY,
@@ -31,63 +31,178 @@ export function renderStandardSizeTile(config) {
 }
 
 export const TILE_RENDERERS = [
-	// 0 = empty
+	// empty
 	() => {},
 
-	// 1 = wall w/ face
-	config => {
+	// wall
+	(rendererConfig, tileConfig) => {
+		const {
+			destinationY,
+			renderer,
+		} = rendererConfig
+
+		let sourceX = 144
+		let sourceY = 48
+
+		switch (tileConfig.grouping) {
+			case 'down':
+				sourceY = 16
+				break
+
+			case 'up':
+				sourceX = 112
+				break
+
+			case 'vertical':
+				sourceX = 112
+				sourceY = 16
+				break
+		}
+
 		renderStandardSizeTile({
-			...config,
-			sourceX: 144,
-			sourceY: 48,
+			...rendererConfig,
+			sourceX,
+			sourceY,
 		})
 
-		config.renderer.setAlpha(0.5)
+		renderer.setAlpha(0.5)
 		renderStandardSizeTile({
-			...config,
-			destinationY: config.destinationY + TILE_SIZE.height,
+			...rendererConfig,
+			destinationY: destinationY + TILE_SIZE.height,
 			sourceX: 16,
 			sourceY: 176,
 		})
-		config.renderer.setAlpha(1)
+		renderer.setAlpha(1)
 	},
 
-	// 2 = wall w/ face, adjacent top
-	config => {
-		renderStandardSizeTile({
-			...config,
-			sourceX: 112,
-			sourceY: 48,
-		})
+	// floor
+	(rendererConfig, tileConfig) => {
+		const {
+			color,
+			fade = false,
+		} = tileConfig
+		const baseX = 48
+		const baseY = 176
 
-		config.renderer.setAlpha(0.5)
+		let xMod = 0
+		let yMod = 0
+
+		switch(color) {
+			case 'dark grey':
+				xMod += 2
+				break
+
+			case 'green':
+				xMod += 3
+				break
+
+			case 'hazard':
+				xMod += 5
+				break
+
+			case 'grey':
+				xMod += 1
+				break
+
+			case 'orange':
+				xMod += 8
+				break
+
+			case 'red':
+				xMod += 6
+				break
+
+			// blue
+			default:
+				xMod = 0
+		}
+
+		switch(fade) {
+			case 'down':
+				yMod = 2
+				break
+
+			case 'left':
+				yMod = 1
+				break
+
+			case 'right':
+				yMod = 3
+				break
+
+			case 'up':
+				yMod = 4
+				break
+
+			// no fade
+			default:
+				yMod = 0
+		}
+
 		renderStandardSizeTile({
-			...config,
-			destinationY: config.destinationY + TILE_SIZE.height,
-			sourceX: 16,
-			sourceY: 176,
+			...rendererConfig,
+			sourceX: baseX + (xMod * TILE_SIZE.width * 2),
+			sourceY: baseY + (yMod * TILE_SIZE.height * 2),
 		})
-		config.renderer.setAlpha(1)
 	},
-
-	// 3 = wall top
-	config => renderStandardSizeTile({
-		...config,
-		sourceX: 144,
-		sourceY: 16,
-	}),
-
-	// 4 = wall top, adjacent top
-	config => renderStandardSizeTile({
-		...config,
-		sourceX: 112,
-		sourceY: 16,
-	}),
-
-	// 5 = floor
-	config => renderStandardSizeTile({
-		...config,
-		sourceX: 112,
-		sourceY: 176,
-	}),
 ]
+
+export class Tile {
+	hasShadow = {}
+	tileConfig = {}
+	tileType = 'empty'
+
+	color(color) {
+		this.tileConfig.color = color
+		return this
+	}
+
+	fade(fadeDirection) {
+		this.tileConfig.fade = fadeDirection
+		return this
+	}
+
+	floor() {
+		this.tileType = 'floor'
+		return this
+	}
+
+	compile() {
+		if (Object.keys(this.tileConfig).length) {
+			return [
+				this.rendererIndex,
+				this.tileConfig,
+			]
+		}
+
+		return this.rendererIndex
+	}
+
+	group(grouping) {
+		if (this.tileType !== 'wall') {
+			throw new Error('Tile.group() method is only allowed for walls')
+		}
+
+		this.tileConfig.grouping = grouping
+
+		return this
+	}
+
+	wall() {
+		this.tileType = 'wall'
+		return this
+	}
+
+	get rendererIndex() {
+		switch (this.tileType) {
+			case 'wall':
+				return 1
+
+			case 'floor':
+				return 2
+
+			default:
+				return 0
+		}
+	}
+}
