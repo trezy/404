@@ -1,5 +1,4 @@
 // Module imports
-import { AnimatePresence } from 'framer-motion'
 import { useMemo } from 'react'
 
 
@@ -8,7 +7,9 @@ import { useMemo } from 'react'
 
 // Local imports
 import { LoadingGameScene } from './scenes/LoadingGameScene.jsx'
+import { LoadingMapScene } from './scenes/LoadingMapScene.jsx'
 import { MapSelectScene } from './scenes/MapSelectScene.jsx'
+import { PlayScene } from './scenes/PlayScene.jsx'
 import { SettingsScene } from './scenes/SettingsScene.jsx'
 import { TitleScene } from './scenes/TitleScene.jsx'
 import { useStore } from '../store/react.js'
@@ -22,8 +23,14 @@ const SCENES = {
 	loadingGame: {
 		component: <LoadingGameScene />,
 	},
+	loadingMap: {
+		component: <LoadingMapScene />,
+	},
 	mapSelect: {
 		component: <MapSelectScene />,
+	},
+	play: {
+		component: <PlayScene />,
 	},
 	settings: {
 		component: <SettingsScene />,
@@ -47,9 +54,5 @@ export function SceneManager() {
 		SCENES,
 	])
 
-	return (
-		<AnimatePresence exitBeforeEnter>
-			{scene.component}
-		</AnimatePresence>
-	)
+	return scene.component
 }

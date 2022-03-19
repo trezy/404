@@ -25,11 +25,24 @@ const store = create((set, get) => ({
 	frame: 0,
 	isRunning: false,
 	gameManager: new GameManager,
+	mapData: null,
+	tileset: null,
 	timeDelta: 0,
 	time: 0,
 
-	goToPlay: mapID => {
-		console.log(`TODO: load map loading scene for map ${mapID}`)
+	goToLoadingMap: mapID => {
+		set({
+			currentMap: mapID,
+			currentScene: 'loadingMap',
+		})
+	},
+
+	goToMapSelect: () => {
+		set({ currentScene: 'mapSelect' })
+	},
+
+	goToPlay: () => {
+		set({ currentScene: 'play' })
 	},
 
 	goToTitle: () => {
@@ -38,6 +51,23 @@ const store = create((set, get) => ({
 
 	goToSettings: () => {
 		set({ currentScene: 'settings' })
+	},
+
+	loadMap: async () => {
+		const {
+			currentMap,
+			preloadTileset,
+		} = get()
+
+		const { default: mapData } = await import(`/maps/${currentMap}.js`)
+
+		const tileset = await preloadTileset()
+
+		set({
+			currentScene: 'play',
+			mapData,
+			tileset,
+		})
 	},
 
 	nextFrame: () => {
@@ -56,6 +86,24 @@ const store = create((set, get) => ({
 			time: now,
 			timeDelta: now - state.time,
 		}))
+	},
+
+	preloadTileset: async () => {
+		const tileset = new Image
+
+		tileset.src = '/tileset.png'
+
+		await tileset.decode()
+
+		return tileset
+	},
+
+	startGameLoop: () => {
+		get().gameManager.start()
+	},
+
+	stopGameLoop: () => {
+		get().gameManager.stop()
 	},
 }))
 

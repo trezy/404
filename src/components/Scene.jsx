@@ -15,11 +15,8 @@ export function Scene(props) {
 	return (
 		<motion.main
 			key={id}
-			animate={{ opacity: 1 }}
 			className="scene"
-			exit={{ opacity: 0 }}
-			id={id}
-			initial={{ opacity: 0 }}>
+			id={id}>
 			{children}
 		</motion.main>
 	)

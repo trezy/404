@@ -10,6 +10,10 @@
 	position: relative;
 	width: var(--meter-width-calculated);
 
+	&.is-full-width {
+		width: 100%;
+	}
+
 	.meter-fill {
 		background-color: var(--palette-green);
 		height: var(--meter-height-calculated);

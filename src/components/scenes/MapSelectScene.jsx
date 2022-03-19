@@ -26,31 +26,31 @@ import { useStore } from '../../store/react.js'
 const MAPS = [
 	{
 		bestTime: 60_000, // milliseconds
-		id: 1,
+		id: 'test',
 		rating: 5,
 		name: 'Level 1',
 	},
 	{
 		bestTime: 120_000,
-		id: 2,
+		id: 'test',
 		rating: 2.5,
 		name: 'Level 2',
 	},
 	{
 		bestTime: 123_456,
-		id: 3,
+		id: 'test',
 		rating: 0.5,
 		name: 'Level 3',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
-		id: 4,
+		id: 'test',
 		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 4',
 	},
 	{
 		bestTime: Math.ceil(Math.random() * 300_000),
-		id: 5,
+		id: 'test',
 		rating: Number((Math.round(Math.random() * 50) * 0.1).toFixed(1)),
 		name: 'Level 5',
 	},
@@ -62,16 +62,16 @@ const MAPS = [
 
 export function MapSelectScene() {
 	const [
-		goToPlay,
+		goToLoadingMap,
 		goToSettings,
 		goToTitle,
 	] = useStore(state => [
-		state.goToPlay,
+		state.goToLoadingMap,
 		state.goToSettings,
 		state.goToTitle,
 	])
 
-	const loadMap = useCallback(mapID => () => goToPlay(mapID), [goToPlay])
+	const loadMap = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
 
 	const mappedMaps = useMemo(() => {
 		return MAPS.map((map, index) => {

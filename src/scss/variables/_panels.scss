@@ -1,0 +1,11 @@
+$panelBorderSize: 2;
+$panelCornerClipSize: 6;
+$panelPadding: 6;
+
+:root {
+	--panel-border-color: var(--palette-dark-grey);
+	--panel-border-size: #{$panelBorderSize};
+	--panel-corner-clip-size: #{$panelCornerClipSize};
+	--panel-gutter: 5px;
+	--panel-padding: #{$panelPadding};
+}
