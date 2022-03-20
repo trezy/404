@@ -82,7 +82,7 @@ export class GameManager {
 		}
 	}
 
-	stop() {
+	stop = () => {
 		if (store.getState().isRunning) {
 			store.setState({ isRunning: false })
 			this.isRunning = false
