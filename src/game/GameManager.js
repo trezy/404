@@ -22,11 +22,6 @@ export class GameManager {
 	\****************************************************************************/
 
 	controls = null
-	cursorPosition = {
-		x: 0,
-		y: 0,
-	}
-	currentCell = null
 	isRunning = true
 
 
@@ -38,11 +33,11 @@ export class GameManager {
 	\****************************************************************************/
 
 	gameLoop = () => {
-			const {
+		const {
 			isRunning,
-				map,
-				nextFrame,
-			} = store.getState()
+			map,
+			nextFrame,
+		} = store.getState()
 
 		if (isRunning) {
 			nextFrame()
