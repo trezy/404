@@ -21,21 +21,19 @@ import { useStore } from '../../store/react.js'
 
 export function PlayScene() {
 	const [
+		gameManager,
 		goToMapSelect,
 		map,
-		startGameLoop,
-		stopGameLoop,
 	] = useStore(state => [
+		state.gameManager,
 		state.goToMapSelect,
 		state.map,
-		state.startGameLoop,
-		state.stopGameLoop,
 	])
 
 	useEffect(() => {
-		startGameLoop()
-		return stopGameLoop
-	}, [startGameLoop])
+		gameManager.start()
+		return gameManager.stop
+	}, [gameManager])
 
 	return (
 		<Scene id="play">

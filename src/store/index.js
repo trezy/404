@@ -94,14 +94,6 @@ const store = create((set, get) => ({
 
 		return tileset
 	},
-
-	startGameLoop: () => {
-		get().gameManager.start()
-	},
-
-	stopGameLoop: () => {
-		get().gameManager.stop()
-	},
 }))
 
 export { store }
