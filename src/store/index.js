@@ -22,6 +22,7 @@ const FRAME_BUFFER = []
 
 const store = create((set, get) => ({
 	currentMap: null,
+	currentScene: 'loadingGame',
 	fps: 0,
 	frame: 0,
 	isRunning: false,
