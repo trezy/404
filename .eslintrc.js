@@ -29,7 +29,11 @@ module.exports = {
 		sourceType: 'module',
 	},
 	rules: {
+		// eslint
 		'no-unused-vars': 'error',
+		'semi': ['error', 'never', {
+			beforeStatementContinuationChars: 'always',
+		}],
 		'sort-class-members/sort-class-members': ['error', {
 			accessorPairPositioning: 'getThenSet',
 			order: [
@@ -42,9 +46,13 @@ module.exports = {
 				'[conventional-private-methods]',
 			],
 		}],
+
+		// editorconfig
 		'editorconfig/indent': ['error', {
 			'SwitchCase': 1,
 		}],
+
+		// security
 		'security/detect-object-injection': 'off',
 	},
 	settings: {
