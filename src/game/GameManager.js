@@ -37,15 +37,14 @@ export class GameManager {
 	 * Public methods
 	\****************************************************************************/
 
-	constructor() {}
-
 	gameLoop = () => {
-		if (this.isRunning) {
 			const {
+			isRunning,
 				map,
 				nextFrame,
 			} = store.getState()
 
+		if (isRunning) {
 			nextFrame()
 
 			this.renderer.drawGrid(map.width, map.height)
@@ -72,9 +71,10 @@ export class GameManager {
 	// }
 
 	start() {
-		if (!store.getState().isRunning) {
+		const { isRunning } = store.getState()
+
+		if (!isRunning) {
 			store.setState({ isRunning: true })
-			this.isRunning = true
 
 			// window.addEventListener('dblclick', this.handleDoubleClick)
 
@@ -83,9 +83,10 @@ export class GameManager {
 	}
 
 	stop = () => {
-		if (store.getState().isRunning) {
+		const { isRunning } = store.getState()
+
+		if (isRunning) {
 			store.setState({ isRunning: false })
-			this.isRunning = false
 		}
 	}
 
