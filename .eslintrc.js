@@ -18,6 +18,7 @@ module.exports = {
 	],
 	plugins: [
 		'editorconfig',
+		'security',
 		'sort-class-members',
 		'unused-imports',
 	],
@@ -43,7 +44,8 @@ module.exports = {
 		}],
 		'editorconfig/indent': ['error', {
 			'SwitchCase': 1,
-		}]
+		}],
+		'security/detect-object-injection': 'off',
 	},
 	settings: {
 		react: {

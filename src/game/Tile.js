@@ -1,33 +1,13 @@
+// Local imports
+import { renderStandardSizeTile } from '../helpers/renderStandardSizeTile.js'
+
+
+
+
+
 export const TILE_SIZE = {
 	height: 16,
 	width: 16,
-}
-
-function renderStandardSizeTile(config) {
-	const {
-		destinationX,
-		destinationY,
-		renderer,
-		sourceX,
-		sourceY,
-		tileset,
-	} = config
-
-	renderer.drawImage({
-		image: tileset,
-		source: {
-			height: TILE_SIZE.height,
-			width: TILE_SIZE.width,
-			x: sourceX,
-			y: sourceY,
-		},
-		destination: {
-			height: TILE_SIZE.height,
-			width: TILE_SIZE.width,
-			x: destinationX,
-			y: destinationY,
-		},
-	})
 }
 
 export const TILE_RENDERERS = [
