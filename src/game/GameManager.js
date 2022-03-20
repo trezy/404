@@ -11,7 +11,6 @@ export class GameManager {
 	 * Private properties
 	\****************************************************************************/
 
-	#canvas = null
 	#renderer = null
 
 
