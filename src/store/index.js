@@ -57,7 +57,7 @@ const store = create((set, get) => ({
 			preloadTileset,
 		} = get()
 
-		const { default: mapData } = await import(`/maps/${currentMap}.js`)
+		const { default: mapData } = await import(/* @vite-ignore */ `/maps/${currentMap}.js`)
 
 		const tileset = await preloadTileset()
 
