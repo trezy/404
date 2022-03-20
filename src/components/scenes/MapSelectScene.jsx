@@ -65,10 +65,12 @@ export function MapSelectScene() {
 		goToLoadingMap,
 		goToSettings,
 		goToTitle,
+		doStuffSave,
 	] = useStore(state => [
 		state.goToLoadingMap,
 		state.goToSettings,
 		state.goToTitle,
+		state.doStuffSave
 	])
 
 	const loadMap = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
@@ -92,7 +94,7 @@ export function MapSelectScene() {
 						<Button
 							isSmall
 							onClick={loadMap(map.id)}>
-							{'Play'}
+							{'Load'}
 						</Button>
 					</td>
 				</tr>
