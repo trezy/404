@@ -65,7 +65,7 @@ export class GameManager {
 	// 	}
 	// }
 
-	start() {
+	start = () => {
 		const { isRunning } = store.getState()
 
 		if (!isRunning) {

@@ -1,8 +1,5 @@
 // Local imports
-import {
-	TILE_RENDERERS,
-	TILE_SIZE,
-} from './Tile.js'
+import { TILE_SIZE } from './Tile.js'
 
 
 
@@ -51,6 +48,34 @@ export class Renderer {
 	/****************************************************************************\
 	 * Public instance methods
 	\****************************************************************************/
+
+	resize = config => {
+		const {
+			height,
+			width,
+		} = config
+
+		const shadowCanvas = this.shadow.canvas
+		const targetCanvas = this.target.canvas
+
+		this.height = height
+		this.width = width
+		this.pixelSize = this.uiScale * this.resolution
+
+		// Set display size
+		targetCanvas.style.height = `${height}px`
+		targetCanvas.style.width = `${width}px`
+
+		// Set actual size
+		targetCanvas.height = Math.floor(height * this.resolution)
+		targetCanvas.width = Math.floor(width * this.resolution)
+		shadowCanvas.height = Math.floor(height * this.resolution)
+		shadowCanvas.width = Math.floor(width * this.resolution)
+
+		// Normalise coordinates
+		this.target.scale(this.pixelSize, this.pixelSize)
+		this.shadow.scale(this.pixelSize, this.pixelSize)
+	}
 
 	constructor() {
 		const canvas = document.querySelector('#game-canvas')
@@ -215,34 +240,6 @@ export class Renderer {
 		this.queue[this.layer].push(['setTransform', this.pixelSize, 0, 0, this.pixelSize, 0, 0])
 	}
 
-	resize = config => {
-		const {
-			height,
-			width,
-		} = config
-
-		const shadowCanvas = this.shadow.canvas
-		const targetCanvas = this.target.canvas
-
-		this.height = height
-		this.width = width
-		this.pixelSize = this.uiScale * this.resolution
-
-		// Set display size
-		targetCanvas.style.height = `${height}px`
-		targetCanvas.style.width = `${width}px`
-
-		// Set actual size
-		targetCanvas.height = Math.floor(height * this.resolution)
-		targetCanvas.width = Math.floor(width * this.resolution)
-		shadowCanvas.height = Math.floor(height * this.resolution)
-		shadowCanvas.width = Math.floor(width * this.resolution)
-
-		// Normalise coordinates
-		this.target.scale(this.pixelSize, this.pixelSize)
-		this.shadow.scale(this.pixelSize, this.pixelSize)
-	}
-
 	setAlpha(alpha) {
 		this.queue[this.layer].push(['alpha', alpha])
 	}
@@ -270,20 +267,20 @@ export class Renderer {
 			const [call] = task
 			switch (call) {
 				case 'alpha':
-					[, context.globalAlpha] = task
+					context.globalAlpha = task[1]
 					break
 
 				case 'color':
-					[, context.strokeStyle, context.fillStyle] = task
+					context.strokeStyle = task[1]
+					context.fillStyle = task[2]
 					break
 
 				case 'lineWidth':
-					[, context.lineWidth] = task
+					context.lineWidth = task[1]
 					break
 
 				default:
-					const [, ...args] = task
-					context[call](...args)
+					context[call](task.slice(1))
 					break
 			}
 		}

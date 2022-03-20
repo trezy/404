@@ -41,6 +41,9 @@ module.exports = {
 				'[conventional-private-methods]',
 			],
 		}],
+		'editorconfig/indent': ['error', {
+			'SwitchCase': 1,
+		}]
 	},
 	settings: {
 		react: {
