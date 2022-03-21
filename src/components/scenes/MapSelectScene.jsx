@@ -12,9 +12,9 @@ import {
 import { Button } from '../Button.jsx'
 import { ButtonStack } from '../ButtonStack.jsx'
 import { convertMillisecondsToStopwatchString } from '../../helpers/convertMillisecondsToStopwatchString.js'
+import { Meter } from '../Meter.jsx'
 import { Panel } from '../Panel.jsx'
 import { PanelsLayout } from '../layouts/PanelsLayout.jsx'
-import { Meter } from '../Meter.jsx'
 import { Scene } from '../Scene.jsx'
 import { useStore } from '../../store/react.js'
 
@@ -60,17 +60,18 @@ const MAPS = [
 
 
 
+/**
+ * Scene component for selecting a map to load.
+ */
 export function MapSelectScene() {
 	const [
 		goToLoadingMap,
 		goToSettings,
 		goToTitle,
-		doStuffSave,
 	] = useStore(state => [
 		state.goToLoadingMap,
 		state.goToSettings,
 		state.goToTitle,
-		state.doStuffSave
 	])
 
 	const loadMap = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
@@ -100,15 +101,15 @@ export function MapSelectScene() {
 				</tr>
 			)
 		})
-	}, [MAPS])
+	}, [loadMap])
 
 	return (
-		<Scene id="map-select">
-			<PanelsLayout id="title">
+		<Scene id={'map-select'}>
+			<PanelsLayout id={'title'}>
 				<Panel>
 					<h2>{'Menu'}</h2>
 
-					<ButtonStack className="panel-bottom">
+					<ButtonStack className={'panel-bottom'}>
 						<Button>
 							{'Statistics'}
 						</Button>

@@ -11,8 +11,19 @@ import PropTypes from 'prop-types'
 
 
 
+/**
+ * A timer to represent the amount of time that has passed during the current map session.
+ *
+ * @param {object} props All component props.
+ * @param {string} [props.className] A string of classes to be set on the timer.
+ * @param {boolean} [props.isBordered = false] Whether or not this timer should have a border.
+ * @param {boolean} [props.isCentered = false] Whether or not this timer should be centered horizontally.
+ * @param {boolean} [props.isLarge = false] Whether or not this timer should be larger than normal.
+ * @param {boolean} [props.isMonospace = false] Whether or not the numbers of this timer should be monospaced.
+ */
 export function Timer(props) {
 	const {
+		className,
 		isBordered,
 		isCentered,
 		isLarge,
@@ -21,8 +32,8 @@ export function Timer(props) {
 	const [currentTime, setCurrentTime] = useState([0, 0])
 	const [startTimestamp] = useState(performance.now())
 
-	const className = useMemo(() => {
-		return classnames('timer', props.className, {
+	const compiledClassName = useMemo(() => {
+		return classnames('timer', className, {
 			'is-bordered': isBordered,
 			'is-centered': isCentered,
 			'is-large': isLarge,
@@ -33,11 +44,11 @@ export function Timer(props) {
 		isCentered,
 		isLarge,
 		isMonospace,
-		props.className,
+		className,
 	])
 
 	const renderedTime = useMemo(() => {
-		let result = currentTime
+		const result = currentTime
 			.map(value => String(value).padStart(2, '0'))
 			.join(':')
 
@@ -64,6 +75,9 @@ export function Timer(props) {
 	useEffect(() => {
 		let shouldContinue = true
 
+		/**
+		 * Function to be run on every frame.
+		 */
 		const loop = () => {
 			if (!shouldContinue) {
 				return
@@ -89,11 +103,12 @@ export function Timer(props) {
 	}, [
 		currentTime,
 		setCurrentTime,
+		startTimestamp,
 	])
 
 	return (
-		<time className={className}>
-			<span className="time-wrapper">
+		<time className={compiledClassName}>
+			<span className={'time-wrapper'}>
 				{renderedTime}
 			</span>
 		</time>

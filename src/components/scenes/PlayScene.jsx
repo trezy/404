@@ -19,6 +19,9 @@ import { useStore } from '../../store/react.js'
 
 
 
+/**
+ * Scene component for running an active map.
+ */
 export function PlayScene() {
 	const [
 		gameManager,
@@ -36,8 +39,8 @@ export function PlayScene() {
 	}, [gameManager])
 
 	return (
-		<Scene id="play">
-			<PanelsLayout id="title">
+		<Scene id={'play'}>
+			<PanelsLayout id={'title'}>
 				<Panel>
 					<h2>{'Menu'}</h2>
 
@@ -49,7 +52,7 @@ export function PlayScene() {
 						<dd>{`${map.width} x ${map.height}`}</dd>
 					</dl>
 
-					<ButtonStack className="panel-bottom">
+					<ButtonStack className={'panel-bottom'}>
 						<Button onClick={goToMapSelect}>
 							{'Quit'}
 						</Button>
@@ -58,8 +61,8 @@ export function PlayScene() {
 
 				<Panel
 					columnSpan={2}
-          isPrimary>
-					<canvas id="game-canvas" />
+					isPrimary>
+					<canvas id={'game-canvas'} />
 				</Panel>
 
 				<Panel columnSpan={1}>
@@ -69,7 +72,7 @@ export function PlayScene() {
 						isLarge
 						isMonospace />
 
-					<div className="panel-bottom">
+					<div className={'panel-bottom'}>
 						<FPSMeter />
 					</div>
 				</Panel>

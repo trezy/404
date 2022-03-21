@@ -10,6 +10,12 @@ import PropTypes from 'prop-types'
 
 
 
+/**
+ * A wrapper for ensuring its contents will always be divisible by the current UI scale.
+ *
+ * @param {object} props All component props.
+ * @param {*} [props.children] Node to be rendered inside of the container.
+ */
 export function WholePixelContainer(props) {
 	const { children } = props
 	const [state, setState] = useState({
@@ -46,7 +52,7 @@ export function WholePixelContainer(props) {
 
 	return (
 		<div
-			id="whole-pixel-container"
+			id={'whole-pixel-container'}
 			style={state}>
 			{children}
 		</div>

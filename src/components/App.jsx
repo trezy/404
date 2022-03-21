@@ -6,6 +6,9 @@ import { WholePixelContainer } from './WholePixelContainer.jsx'
 
 
 
+/**
+ * The main application wrapper.
+ */
 export function App() {
 	return (
 		<WholePixelContainer>
