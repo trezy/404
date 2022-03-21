@@ -6,9 +6,9 @@ import { useEffect } from 'react'
 
 
 // Local imports
+import { Meter } from '../Meter.jsx'
 import { Panel } from '../Panel.jsx'
 import { PanelsLayout } from '../layouts/PanelsLayout.jsx'
-import { Meter } from '../Meter.jsx'
 import { Scene } from '../Scene.jsx'
 import { useStore } from '../../store/react.js'
 
@@ -16,6 +16,9 @@ import { useStore } from '../../store/react.js'
 
 
 
+/**
+ * Scene component to display while a map is being loaded.
+ */
 export function LoadingMapScene() {
 	const [
 		currentMap,
@@ -34,8 +37,8 @@ export function LoadingMapScene() {
 	])
 
 	return (
-		<Scene id="map-select">
-			<PanelsLayout id="title">
+		<Scene id={'map-select'}>
+			<PanelsLayout id={'title'}>
 				<Panel>
 					<h2>{'Menu'}</h2>
 				</Panel>

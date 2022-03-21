@@ -20,6 +20,9 @@ import { useStore } from '../../store/react.js'
 
 
 
+/**
+ * Scene component for the settings menu.
+ */
 export function SettingsScene() {
 	const [currentPanel, setCurrentPanel] = useState('graphics')
 
@@ -30,27 +33,27 @@ export function SettingsScene() {
 	const [goToTitle] = useStore(state => [state.goToTitle])
 
 	return (
-		<Scene id="settings">
-			<PanelsLayout id="title">
+		<Scene id={'settings'}>
+			<PanelsLayout id={'title'}>
 				<Panel>
 					<h2>{'Menu'}</h2>
 
-					<ButtonStack className="panel-bottom">
+					<ButtonStack className={'panel-bottom'}>
 						<Button
-							onClick={showGraphicsPanel}
-							isPrimary={currentPanel === 'graphics'}>
+							isPrimary={currentPanel === 'graphics'}
+							onClick={showGraphicsPanel}>
 							{'Graphics'}
 						</Button>
 
 						<Button
-							onClick={showSoundPanel}
-							isPrimary={currentPanel === 'sound'}>
+							isPrimary={currentPanel === 'sound'}
+							onClick={showSoundPanel}>
 							{'Sound'}
 						</Button>
 
 						<Button
-							onClick={showAccessibilityPanel}
-							isPrimary={currentPanel === 'accessibility'}>
+							isPrimary={currentPanel === 'accessibility'}
+							onClick={showAccessibilityPanel}>
 							{'Accessibility'}
 						</Button>
 

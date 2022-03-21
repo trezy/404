@@ -1082,6 +1082,7 @@ __metadata:
     eslint-plugin-react: ^7.29.4
     eslint-plugin-react-hooks: ^4.3.0
     eslint-plugin-react-perf: ^3.3.1
+    eslint-plugin-react-prefer-function-component: ^1.0.0
     eslint-plugin-security: ^1.4.0
     eslint-plugin-sort-class-members: ^1.14.1
     eslint-plugin-unused-imports: ^2.0.0
@@ -1590,6 +1591,13 @@ __metadata:
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
   checksum: 2609624b84312fda7adcdce0a93be02815bbcbb0c591f21914e081da7118654d735bd6b8d88f33b9fd3dab97e141e947860e441a95746bb267cb32417a5907f8
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-prefer-function-component@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "eslint-plugin-react-prefer-function-component@npm:1.0.0"
+  checksum: cf8ef7bd2c5704fbe73795045bd96a0680491e83cf5e2f8baf19a96f6c60991f353da6118781d3f549266079322a750930470ede459bb41378e1c709ea344591
   languageName: node
   linkType: hard
 

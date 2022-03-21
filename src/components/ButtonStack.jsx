@@ -1,21 +1,29 @@
 // Module imports
-import { useMemo } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
+import { useMemo } from 'react'
 
 
 
 
 
+/**
+ * A wrapper for groups of buttons.
+ *
+ * @param {object} props All component props.
+ * @param {*} [props.children] Node to be rendered inside of the button.
+ * @param {string} [props.className] A string of classes to be set on the button.
+ */
 export function ButtonStack(props) {
-	const { children } = props
+	const {
+		children,
+		className,
+	} = props
 
-	const className = useMemo(() => {
-		return classNames('button-stack', props.className)
-	}, [props.className])
+	const compiledClassName = useMemo(() => classNames('button-stack', className), [className])
 
 	return (
-		<menu className={className}>
+		<menu className={compiledClassName}>
 			{children}
 		</menu>
 	)

@@ -20,7 +20,7 @@ const FRAME_BUFFER = []
 
 
 
-const store = create((set, get) => ({
+export const store = create((set, get) => ({
 	currentMap: null,
 	currentScene: 'loadingGame',
 	fps: 0,
@@ -32,6 +32,11 @@ const store = create((set, get) => ({
 	timeDelta: 0,
 	time: 0,
 
+	/**
+	 * Switch to the map loading scene.
+	 *
+	 * @param {string} mapID The ID of the map to be loaded.
+	 */
 	goToLoadingMap: mapID => {
 		set({
 			currentMap: mapID,
@@ -39,18 +44,31 @@ const store = create((set, get) => ({
 		})
 	},
 
+	/**
+	 * Switch to the map select scene.
+	 */
 	goToMapSelect: () => {
 		set({ currentScene: 'mapSelect' })
 	},
 
+	/**
+	 * Switch to the main title scene.
+	 */
 	goToTitle: () => {
 		set({ currentScene: 'title' })
 	},
 
+
+	/**
+	 * Switch to the game settings scene.
+	 */
 	goToSettings: () => {
 		set({ currentScene: 'settings' })
 	},
 
+	/**
+	 * Load the currently selected map. Also initiates preloading of the tileset.
+	 */
 	loadMap: async () => {
 		const {
 			currentMap,
@@ -68,6 +86,9 @@ const store = create((set, get) => ({
 		})
 	},
 
+	/**
+	 * Updates the frame buffer and current FPS.
+	 */
 	nextFrame: () => {
 		const now = performance.now()
 
@@ -86,6 +107,9 @@ const store = create((set, get) => ({
 		}))
 	},
 
+	/**
+	 * Preload the game's tileset.
+	 */
 	preloadTileset: async () => {
 		const tileset = new Image
 
@@ -96,5 +120,3 @@ const store = create((set, get) => ({
 		return tileset
 	},
 }))
-
-export { store }

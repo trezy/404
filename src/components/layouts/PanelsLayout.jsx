@@ -6,17 +6,26 @@ import PropTypes from 'prop-types'
 
 
 
+/**
+ * A wrapper for panel layouts.
+ *
+ * @param {object} props All component props.
+ * @param {*} [props.children] Node to be rendered inside of the layout.
+ * @param {string} [props.className] A string of classes to be set on the layout wrapper.
+ * @param {string} [props.id] A unique identifier for the layout wrapper.
+ */
 export function PanelsLayout(props) {
 	const {
 		children,
+		className,
 		id,
 	} = props
 
-	const className = classnames('layout', 'panels', props.className)
+	const compiledClassName = classnames('layout', 'panels', className)
 
 	return (
 		<div
-			className={className}
+			className={compiledClassName}
 			id={id}>
 			{children}
 		</div>

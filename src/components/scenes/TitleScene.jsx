@@ -11,18 +11,21 @@ import { useStore } from '../../store/react.js'
 
 
 
+/**
+ * Scene component for the main title menu.
+ */
 export function TitleScene() {
 	const [goToSettings] = useStore(state => [
 		state.goToSettings,
 	])
 
 	return (
-		<Scene id="title">
-			<PanelsLayout id="title">
+		<Scene id={'title'}>
+			<PanelsLayout id={'title'}>
 				<Panel>
 					<h2>{'Menu'}</h2>
 
-					<ButtonStack className="panel-bottom">
+					<ButtonStack className={'panel-bottom'}>
 						<Button isPrimary>
 							{'Continue'}
 						</Button>

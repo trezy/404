@@ -14,6 +14,9 @@ import { useStore } from '../../store/react.js'
 
 
 
+/**
+ * Scene component to display while the game is being loaded.
+ */
 export function LoadingGameScene() {
 	const [goToTitle] = useStore(state => [state.goToTitle])
 
@@ -24,7 +27,7 @@ export function LoadingGameScene() {
 	}, [goToTitle])
 
 	return (
-		<Scene id="loading-game">
+		<Scene id={'loading-game'}>
 			<GameTitle />
 			<p>{'loading...'}</p>
 		</Scene>

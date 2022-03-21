@@ -44,15 +44,15 @@ const SCENES = {
 
 
 
+/**
+ * Manages which scene should currently be rendered.
+ */
 export function SceneManager() {
 	const [currentScene] = useStore(state => [
 		state.currentScene,
 	])
 
-	const scene = useMemo(() => SCENES[currentScene], [
-		currentScene,
-		SCENES,
-	])
+	const scene = useMemo(() => SCENES[currentScene], [currentScene])
 
 	return scene.component
 }

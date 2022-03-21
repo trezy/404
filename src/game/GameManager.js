@@ -6,6 +6,9 @@ import { store } from '../store/index.js'
 
 
 
+/**
+ * The core controller for the game.
+ */
 export class GameManager {
 	/****************************************************************************\
 	 * Private properties
@@ -32,6 +35,9 @@ export class GameManager {
 	 * Public methods
 	\****************************************************************************/
 
+	/**
+	 * The main game loop. Calls all major per-frame update functions in the correct order.
+	 */
 	gameLoop = () => {
 		const {
 			isRunning,
@@ -65,6 +71,9 @@ export class GameManager {
 	// 	}
 	// }
 
+	/**
+	 * Start the game manager.
+	 */
 	start = () => {
 		const { isRunning } = store.getState()
 
@@ -77,6 +86,9 @@ export class GameManager {
 		}
 	}
 
+	/**
+	 * Stop the game manager.
+	 */
 	stop = () => {
 		const { isRunning } = store.getState()
 
@@ -85,6 +97,19 @@ export class GameManager {
 		}
 	}
 
+
+
+
+
+	/****************************************************************************\
+	 * Public methods
+	\****************************************************************************/
+
+	/**
+	 * Retrieves the `Renderer` being used by this `GameManager`.
+	 *
+	 * @returns {Renderer} The `GameManager`'s `Renderer`.
+	 */
 	get renderer() {
 		if (!this.#renderer) {
 			this.#renderer = new Renderer()

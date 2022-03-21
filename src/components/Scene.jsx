@@ -6,6 +6,13 @@ import PropTypes from 'prop-types'
 
 
 
+/**
+ * A wrapper for individual scenes.
+ *
+ * @param {object} props All component props.
+ * @param {*} [props.children] Node to be rendered inside of the scene.
+ * @param {string} props.id An unique identifier for the scene.
+ */
 export function Scene(props) {
 	const {
 		children,
@@ -15,7 +22,7 @@ export function Scene(props) {
 	return (
 		<motion.main
 			key={id}
-			className="scene"
+			className={'scene'}
 			id={id}>
 			{children}
 		</motion.main>
