@@ -44,7 +44,7 @@ export function SaveSelectScene() {
 			const timestamp = new Date(save.updatedAt)
 			const dateTimeFormatter = new Intl.DateTimeFormat([], {
 				year: 'numeric', month: 'numeric', day: 'numeric',
-				hour: 'numeric', minute: 'numeric', second: 'numeric'
+				hour: 'numeric', minute: 'numeric', second: 'numeric',
 			})
 			const formattedDateTime = dateTimeFormatter.format(timestamp)
 

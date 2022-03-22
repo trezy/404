@@ -70,7 +70,7 @@ export const TILE_RENDERERS = [
 		let xMod = 0
 		let yMod = 0
 
-		switch(color) {
+		switch (color) {
 			case 'dark grey':
 				xMod += 2
 				break
@@ -100,7 +100,7 @@ export const TILE_RENDERERS = [
 				xMod = 0
 		}
 
-		switch(fade) {
+		switch (fade) {
 			case 'down':
 				yMod = 2
 				break

@@ -25,7 +25,7 @@ export const store = create((set, get) => ({
 	isRunning: false,
 	gameManager: new GameManager,
 	map: null,
-	mostRecentSaveID: (()=> {
+	mostRecentSaveID: (() => {
 		const mostRecentSaveID = localStorage.getItem('debug-game:most-recent-save-id')
 
 		if (mostRecentSaveID) {
@@ -112,8 +112,11 @@ export const store = create((set, get) => ({
 	/**
 	 * Load the currently selected map. Also initiates preloading of the tileset.
 	 */
-	async loadMap() {
-		const { currentMap, preloadTileset } = get()
+	async loadMap(){
+		const {
+			currentMap,
+			preloadTileset,
+		} = get()
 
 		const { default: mapData } = await import(/* @vite-ignore */ `/maps/${currentMap}.js`)
 
@@ -151,7 +154,7 @@ export const store = create((set, get) => ({
 	 * Preload the game's tileset.
 	 */
 	async preloadTileset() {
-		const tileset = new Image()
+		const tileset = new Image
 
 		tileset.src = '/tileset.png'
 

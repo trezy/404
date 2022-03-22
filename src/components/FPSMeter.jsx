@@ -38,7 +38,7 @@ export function FPSMeter() {
 				if (fpsRef.current) {
 					fpsRef.current.textContent = parseInt(String(value), 10)
 				}
-			}
+			},
 		})
 
 		return () => controls.stop()

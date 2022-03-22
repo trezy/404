@@ -112,7 +112,7 @@ export class GameManager {
 	 */
 	get renderer() {
 		if (!this.#renderer) {
-			this.#renderer = new Renderer()
+			this.#renderer = new Renderer
 		}
 
 		return this.#renderer

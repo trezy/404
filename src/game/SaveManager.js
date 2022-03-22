@@ -63,7 +63,7 @@ export class SaveManager {
 	 * @returns {GameSave} The newly created `GameSave`.
 	 */
 	createSave() {
-		const save = new GameSave()
+		const save = new GameSave
 
 		SaveManager.saves.push(save)
 

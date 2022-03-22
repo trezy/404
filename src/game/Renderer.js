@@ -136,7 +136,7 @@ export class Renderer {
 				destination: {
 					x: this.width,
 					y,
-				}
+				},
 			})
 			row += 1
 		}
@@ -152,7 +152,7 @@ export class Renderer {
 				destination: {
 					x,
 					y: this.height,
-				}
+				},
 			})
 			column += 1
 		}
@@ -230,7 +230,7 @@ export class Renderer {
 			destination: {
 				x: destinationX,
 				y: destinationY,
-			}
+			},
 		} = config
 
 		this.queue[this.layer].push(['beginPath'])
