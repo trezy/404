@@ -95,7 +95,7 @@ export function MapSelectScene() {
 						<Button
 							isSmall
 							onClick={loadMap(map.id)}>
-							{'Play'}
+							{'Load'}
 						</Button>
 					</td>
 				</tr>

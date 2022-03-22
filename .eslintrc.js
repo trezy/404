@@ -91,6 +91,7 @@ module.exports = {
 		'prefer-spread': ['error'],
 		'prefer-rest-params': ['error'],
 		'prefer-template': ['error'],
+		'quotes': ['error', 'single'],
 		'radix': ['error'],
 		'require-atomic-updates': ['error'],
 		'require-await': ['error'],
