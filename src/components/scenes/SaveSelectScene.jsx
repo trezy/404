@@ -1,11 +1,19 @@
-import { useCallback } from 'react'
+// Module imports
+import {
+	useCallback,
+	useMemo,
+} from 'react'
 
+
+
+
+
+// Local imports
 import { Button } from '../Button'
 import { ButtonStack } from '../ButtonStack'
 import { convertMillisecondsToStopwatchString } from '../../helpers/convertMillisecondsToStopwatchString'
 import { Panel } from '../Panel'
 import { PanelsLayout } from '../layouts/PanelsLayout'
-import saveManager from '../../game/SaveManager'
 import { Scene } from '../Scene'
 import { useStore } from '../../store/react'
 
@@ -14,40 +22,54 @@ import { useStore } from '../../store/react'
  */
 export function SaveSelectScene() {
 	const [
+		goToMapSelect,
 		goToSettings,
 		goToTitle,
-		loadSave,
+		saveManager,
 	] = useStore(state => [
+		state.goToMapSelect,
 		state.goToSettings,
 		state.goToTitle,
-		state.loadSave,
+		state.saveManager,
 	])
 
 	const handleLoadClick = useCallback(saveID => () => {
-		loadSave(saveID)
-	}, [loadSave])
+		goToMapSelect(saveID)
+	}, [goToMapSelect])
 
-	const mappedMaps = saveManager.getAllSaves().map((save, index) => {
-		const d = new Date(save._lastUpdateTime)
-		return (
-			<tr key={index}>
-				<th>{save.name}</th>
-				<td>{convertMillisecondsToStopwatchString(save.levelData.levels.reduce((total,level)=>total+Math.max(0,level.time),0))}</td>
-				<td>{' | '}</td>
-				<td>{new Intl.DateTimeFormat([],{
-			year: 'numeric', month: 'numeric', day: 'numeric',
-			hour: 'numeric', minute: 'numeric', second: 'numeric'
-		}).format(d)}</td>
-				<td>
-					<Button
-						isSmall
-						onClick={handleLoadClick(save.id)}>
-						{'Load'}
-					</Button>
-				</td>
-			</tr>
-		)
-	})
+	const mappedMaps = useMemo(() => {
+		const allSaves = saveManager.getAllSaves()
+
+		return allSaves.map((save, index) => {
+			const timestamp = new Date(save.updatedAt)
+			const dateTimeFormatter = new Intl.DateTimeFormat([], {
+				year: 'numeric', month: 'numeric', day: 'numeric',
+				hour: 'numeric', minute: 'numeric', second: 'numeric'
+			})
+			const formattedDateTime = dateTimeFormatter.format(timestamp)
+
+			const timePlayedString = convertMillisecondsToStopwatchString(save.getTimePlayed())
+
+			return (
+				<tr key={index}>
+					<th>{save.name}</th>
+					<td>{timePlayedString}</td>
+					<td>{' | '}</td>
+					<td>{formattedDateTime}</td>
+					<td>
+						<Button
+							isSmall
+							onClick={handleLoadClick(save.id)}>
+							{'Load'}
+						</Button>
+					</td>
+				</tr>
+			)
+		})
+	}, [
+		handleLoadClick,
+		saveManager,
+	])
 
 	return (
 		<Scene id={'map-select'}>

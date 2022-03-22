@@ -1,3 +1,13 @@
+// Module imports
+import {
+	useCallback,
+	useMemo,
+} from 'react'
+
+
+
+
+
 // Local imports
 import { Button } from '../Button.jsx'
 import { ButtonStack } from '../ButtonStack.jsx'
@@ -18,10 +28,39 @@ export function TitleScene() {
   const [
 		goToSaveSelect,
 		goToSettings,
+		goToMapSelect,
+		mostRecentSaveID,
+		saveManager,
 	] = useStore(state => [
 		state.goToSaveSelect,
     state.goToSettings,
+    state.goToMapSelect,
+    state.mostRecentSaveID,
+    state.saveManager,
   ])
+
+	const hasSaves = useMemo(() => {
+		return Boolean(saveManager.getAllSaves().length)
+	}, [saveManager])
+
+	const handleContinueClick = useCallback(() => {
+		goToMapSelect(mostRecentSaveID)
+	}, [
+		goToMapSelect,
+		mostRecentSaveID,
+	])
+
+	const handleLoadGameClick = useCallback(() => {
+		goToSaveSelect()
+	}, [goToSaveSelect])
+
+	const handleNewGameClick = useCallback(() => {
+		goToMapSelect()
+	}, [goToMapSelect])
+
+	const handleSettingsClick = useCallback(() => {
+		goToSettings()
+	}, [goToSettings])
 
 	return (
 		<Scene id={'title'}>
@@ -30,19 +69,25 @@ export function TitleScene() {
 					<h2>{'Menu'}</h2>
 
 					<ButtonStack className={'panel-bottom'}>
-						<Button isPrimary>
-							{'Continue'}
-						</Button>
+						{Boolean(mostRecentSaveID) && (
+							<Button
+								isPrimary
+								onClick={handleContinueClick}>
+								{'Continue'}
+							</Button>
+						)}
 
-						<Button>
+						<Button onClick={handleNewGameClick}>
 							{'New Game'}
 						</Button>
 
-						<Button onClick={goToSaveSelect}>
-							{'Load Game'}
-						</Button>
+						{hasSaves && (
+							<Button onClick={handleLoadGameClick}>
+								{'Load Game'}
+							</Button>
+						)}
 
-						<Button onClick={goToSettings}>
+						<Button onClick={handleSettingsClick}>
 							{'Settings'}
 						</Button>
 					</ButtonStack>
