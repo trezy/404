@@ -14,8 +14,7 @@ button {
 	line-height: inherit;
 	padding: calc(3px * var(--ui-scale)) calc(10px * var(--ui-scale));
 	transition-property: background-color;
-	transition-duration: 0.3s;
-	transition-timing-function: steps(5);
+	transition-duration: 0.1s;
 
 	&:hover {
 		background-color: var(--palette-grey);
