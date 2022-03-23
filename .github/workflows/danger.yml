@@ -3,7 +3,7 @@ on: [pull_request]
 
 jobs:
   release:
-    name: Release
+    name: Danger CI
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
