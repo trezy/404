@@ -19,6 +19,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.2.0",
+    "danger": "^11.0.2",
+    "danger-plugin-eslint": "^0.1.0",
     "eslint": "^8.11.0",
     "eslint-plugin-editorconfig": "^3.2.0",
     "eslint-plugin-jsdoc": "^38.0.6",
