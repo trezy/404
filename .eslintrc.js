@@ -127,6 +127,7 @@ module.exports = {
 		'semi': ['error', 'never', {
 			beforeStatementContinuationChars: 'always',
 		}],
+		'space-before-blocks': ['error', 'always'],
 		'space-before-function-paren': ['error', 'never'],
 		'sort-class-members/sort-class-members': ['error', {
 			accessorPairPositioning: 'getThenSet',
