@@ -1,9 +1,9 @@
 // Module imports
-import {
+const {
 	danger,
 	message,
-} from 'danger'
-import eslint from 'danger-plugin-eslint'
+} = require('danger')
+const eslint = require('danger-plugin-eslint')
 
 
 
