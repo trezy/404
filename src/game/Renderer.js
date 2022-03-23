@@ -366,7 +366,7 @@ export class Renderer {
 					break
 
 				default:
-					context[call](task.slice(1))
+					context[call](...task.slice(1))
 					break
 			}
 		}
