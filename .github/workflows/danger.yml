@@ -1,14 +1,7 @@
 name: Danger CI
 on: [pull_request]
 
-
-steps:
-
-
 jobs:
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   release:
     name: Release
     runs-on: ubuntu-20.04
@@ -26,6 +19,5 @@ jobs:
 
       - name: Danger CI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
         run: yarn danger ci
