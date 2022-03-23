@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 module.exports = {
 	root: true,
 	env: {
@@ -22,8 +24,8 @@ module.exports = {
 		{
 			files: ['*.jsx'],
 			rules: {
-				'jsdoc/require-returns': ['off']
-			}
+				'jsdoc/require-returns': ['off'],
+			},
 		},
 	],
 	parserOptions: {
@@ -179,7 +181,7 @@ module.exports = {
 				{
 					element: 'button',
 					message: 'Use <Button> component instead.',
-				}
+				},
 			],
 		}],
 		'react/jsx-boolean-value': ['error'],
@@ -206,7 +208,7 @@ module.exports = {
 			arrow: 'parens-new-line',
 			condition: 'parens-new-line',
 			logical: 'parens-new-line',
-			prop: 'parens-new-line'
+			prop: 'parens-new-line',
 		}],
 		'react/no-danger': ['error'],
 		'react/no-invalid-html-attribute': ['error'],
