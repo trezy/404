@@ -112,7 +112,7 @@ export const store = create((set, get) => ({
 	/**
 	 * Load the currently selected map. Also initiates preloading of the tileset.
 	 */
-	async loadMap(){
+	async loadMap() {
 		const {
 			currentMap,
 			preloadTileset,
