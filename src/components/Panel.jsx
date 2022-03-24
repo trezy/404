@@ -1,6 +1,5 @@
 // Module imports
 import classnames from 'classnames'
-import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 
@@ -17,12 +16,14 @@ import { useMemo } from 'react'
  * @param {1 | 2 | 3 | 4} [props.columnSpan = 1] How many columns this panel should span.
  * @param {boolean} [props.isCentered = false] Whether or not the content of this panel should be centered (both horizontally and vertically).
  * @param {boolean} [props.isPrimary = false] Whether or not this button is a primary type panel.
+ * @param {string} [props.id] A unique identifier which allows this component to transition between different layouts.
  */
 export function Panel(props) {
 	const {
 		children,
 		className,
 		columnSpan,
+		id,
 		isCentered,
 		isPrimary,
 	} = props
@@ -40,9 +41,11 @@ export function Panel(props) {
 	])
 
 	return (
-		<motion.div className={compiledClassName}>
+		<div
+			className={compiledClassName}
+			id={id}>
 			{children}
-		</motion.div>
+		</div>
 	)
 }
 
@@ -50,6 +53,7 @@ Panel.defaultProps = {
 	children: null,
 	className: '',
 	columnSpan: 1,
+	id: null,
 	isCentered: false,
 	isPrimary: false,
 }
@@ -58,6 +62,7 @@ Panel.propTypes = {
 	children: PropTypes.node,
 	className: PropTypes.string,
 	columnSpan: PropTypes.oneOf([1, 2, 3, 4]),
+	id: PropTypes.string,
 	isCentered: PropTypes.bool,
 	isPrimary: PropTypes.bool,
 }
