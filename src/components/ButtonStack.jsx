@@ -18,7 +18,9 @@ const BUTTON_VARIANTS = {
 		opacity: 1,
 		x: 0,
 		transition: {
-			duration: 0.2,
+			damping: 30,
+			type: 'spring',
+			stiffness: 500,
 		},
 	},
 	exit: {
@@ -31,9 +33,6 @@ const BUTTON_VARIANTS = {
 	initial: {
 		opacity: 0,
 		x: '-100%',
-		transition: {
-			duration: 0.2,
-		},
 	},
 }
 
