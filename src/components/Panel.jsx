@@ -1,5 +1,6 @@
 // Module imports
 import classnames from 'classnames'
+import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 
@@ -17,6 +18,10 @@ import { useMemo } from 'react'
  * @param {boolean} [props.isCentered = false] Whether or not the content of this panel should be centered (both horizontally and vertically).
  * @param {boolean} [props.isPrimary = false] Whether or not this button is a primary type panel.
  * @param {string} [props.id] A unique identifier which allows this component to transition between different layouts.
+ * @param {object} [props.variants] An object representing variations of the component's state to be used for animations.
+ * @param {object} [props.variants.animate] The typical state of the component.
+ * @param {object} [props.variants.exit] The state to which the component should be animated when it is unmounted.
+ * @param {object} [props.variants.initial] The state from which the component should be animated when it is mounted.
  */
 export function Panel(props) {
 	const {
@@ -26,6 +31,7 @@ export function Panel(props) {
 		id,
 		isCentered,
 		isPrimary,
+		variants,
 	} = props
 
 	const compiledClassName = useMemo(() => {
@@ -41,11 +47,15 @@ export function Panel(props) {
 	])
 
 	return (
-		<div
+		<motion.div
+			animate={'animate'}
 			className={compiledClassName}
-			id={id}>
+			exit={'exit'}
+			id={id}
+			initial={'initial'}
+			variants={variants}>
 			{children}
-		</div>
+		</motion.div>
 	)
 }
 
@@ -56,6 +66,7 @@ Panel.defaultProps = {
 	id: null,
 	isCentered: false,
 	isPrimary: false,
+	variants: null,
 }
 
 Panel.propTypes = {
@@ -65,4 +76,9 @@ Panel.propTypes = {
 	id: PropTypes.string,
 	isCentered: PropTypes.bool,
 	isPrimary: PropTypes.bool,
+	variants: PropTypes.shape({
+		animate: PropTypes.object,
+		exit: PropTypes.object,
+		initial: PropTypes.object,
+	}),
 }

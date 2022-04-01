@@ -1,9 +1,10 @@
 // Module imports
 import {
-	useEffect,
-	useMemo,
-} from 'react'
+	AnimatePresence,
+	motion,
+} from 'framer-motion'
 import classnames from 'classnames'
+import { useEffect } from 'react'
 
 
 
@@ -15,6 +16,25 @@ import { GameTitle } from './GameTitle.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
+
+
+
+
+
+// Constants
+const LOADING_SCENE_VARIANTS = {
+	animate: {
+		opacity: 1,
+	},
+
+	exit: {
+		opacity: 0,
+	},
+
+	initial: {
+		opacity: 0,
+	},
+}
 
 
 
@@ -43,31 +63,34 @@ export function App() {
 		goToTitle,
 	])
 
-	const mainElementClassNames = useMemo(() => {
-		return classnames('scene', {
-			'loading-game': (scene === 'loadingGame'),
-			'play': (scene === 'play'),
-		})
-	}, [scene])
-
 	return (
 		<WholePixelContainer>
-			<main className={mainElementClassNames}>
+			<AnimatePresence exitBeforeEnter>
 				{(scene === 'loadingGame') && (
-					<>
+					<motion.main
+						key={'loading-game'}
+						animate={'animate'}
+						className={'scene loading-game'}
+						exit={'exit'}
+						initial={'initial'}
+						variants={LOADING_SCENE_VARIANTS}>
 						<GameTitle />
 						<p>{'loading...'}</p>
-					</>
+					</motion.main>
 				)}
 
 				{(scene !== 'loadingGame') && (
-					<div className={'layout panels'}>
-						<LeftPanel />
-
-						<CenterPanel />
-					</div>
+					<main
+						className={classnames('scene', {
+							'play': (scene === 'play'),
+						})}>
+						<div className={'layout panels'}>
+							<LeftPanel />
+							<CenterPanel />
+						</div>
+					</main>
 				)}
-			</main>
+			</AnimatePresence>
 		</WholePixelContainer>
 	)
 }

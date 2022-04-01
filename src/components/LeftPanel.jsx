@@ -20,6 +20,28 @@ import { LeftPanelContents as TitleSceneLeftPanelContents } from './scenes/Title
 
 
 
+// Constants
+const PANEL_VARIANTS = {
+	animate: {
+		opacity: 1,
+		x: 0,
+		transition: {
+			damping: 30,
+			type: 'spring',
+			stiffness: 500,
+		},
+	},
+
+	initial: {
+		opacity: 0,
+		x: '-100%',
+	},
+}
+
+
+
+
+
 /**
  * Renders the game's left panel.
  */
@@ -27,7 +49,7 @@ export function LeftPanel() {
 	const [scene] = useStore(state => [state.scene])
 
 	return (
-		<Panel>
+		<Panel variants={PANEL_VARIANTS}>
 			<h2>{'Menu'}</h2>
 
 			<AnimatePresence exitBeforeEnter>
