@@ -1,5 +1,5 @@
 // Module imports
-import { useMemo } from 'react'
+import { AnimatePresence } from 'framer-motion'
 
 
 
@@ -26,11 +26,15 @@ const PANEL_VARIANTS = {
 		opacity: 1,
 		y: 0,
 		transition: {
-			delay: 0.1,
 			damping: 30,
 			type: 'spring',
 			stiffness: 500,
 		},
+	},
+
+	exit: {
+		opacity: 0,
+		y: '100%',
 	},
 
 	initial: {
@@ -49,41 +53,63 @@ const PANEL_VARIANTS = {
 export function CenterPanel() {
 	const [scene] = useStore(state => [state.scene])
 
-	const isCentered = useMemo(() => {
-		return [
-			'loadingMap',
-			'title',
-		].includes(scene)
-	}, [scene])
-
 	return (
-		<Panel
-			columnSpan={3}
-			isCentered={isCentered}
-			variants={PANEL_VARIANTS}>
+		<AnimatePresence exitBeforeEnter>
 			{(scene === 'loadingMap') && (
-				<LoadingMapSceneCenterPanelContents />
+				<Panel
+					key={'LoadingMapSceneCenterPanelContents'}
+					columnSpan={3}
+					isCentered
+					variants={PANEL_VARIANTS}>
+					<LoadingMapSceneCenterPanelContents />
+				</Panel>
 			)}
 
 			{(scene === 'mapSelect') && (
-				<MapSelectSceneCenterPanelContents />
+				<Panel
+					key={'MapSelectSceneCenterPanelContents'}
+					columnSpan={3}
+					variants={PANEL_VARIANTS}>
+					<MapSelectSceneCenterPanelContents />
+				</Panel>
 			)}
 
 			{(scene === 'play') && (
-				<PlaySceneCenterPanelContents />
+				<Panel
+					key={'PlaySceneCenterPanelContents'}
+					columnSpan={3}
+					variants={PANEL_VARIANTS}>
+					<PlaySceneCenterPanelContents />
+				</Panel>
 			)}
 
 			{(scene === 'saveSelect') && (
-				<SaveSelectSceneCenterPanelContents />
+				<Panel
+					key={'SaveSelectSceneCenterPanelContents'}
+					columnSpan={3}
+					variants={PANEL_VARIANTS}>
+					<SaveSelectSceneCenterPanelContents />
+				</Panel>
 			)}
 
 			{(scene === 'settings') && (
-				<SettingsSceneCenterPanelContents />
+				<Panel
+					key={'SettingsSceneCenterPanelContents'}
+					columnSpan={3}
+					variants={PANEL_VARIANTS}>
+					<SettingsSceneCenterPanelContents />
+				</Panel>
 			)}
 
 			{(scene === 'title') && (
-				<TitleSceneCenterPanelContents />
+				<Panel
+					key={'TitleSceneCenterPanelContents'}
+					columnSpan={3}
+					isCentered
+					variants={PANEL_VARIANTS}>
+					<TitleSceneCenterPanelContents />
+				</Panel>
 			)}
-		</Panel>
+		</AnimatePresence>
 	)
 }
