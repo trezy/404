@@ -1,3 +1,10 @@
+// Module imports
+import { AnimatePresence } from 'framer-motion'
+
+
+
+
+
 // Local imports
 import { Panel } from './Panel.jsx'
 import { useStore } from '../store/react.js'
@@ -23,29 +30,31 @@ export function LeftPanel() {
 		<Panel>
 			<h2>{'Menu'}</h2>
 
-			{(currentScene === 'loadingMap') && (
-				<LoadingMapSceneLeftPanelContents />
-			)}
+			<AnimatePresence exitBeforeEnter>
+				{(currentScene === 'loadingMap') && (
+					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
+				)}
 
-			{(currentScene === 'mapSelect') && (
-				<MapSelectSceneLeftPanelContents />
-			)}
+				{(currentScene === 'mapSelect') && (
+					<MapSelectSceneLeftPanelContents key={'MapSelectSceneLeftPanelContents'} />
+				)}
 
-			{(currentScene === 'play') && (
-				<PlaySceneLeftPanelContents />
-			)}
+				{(currentScene === 'play') && (
+					<PlaySceneLeftPanelContents key={'PlaySceneLeftPanelContents'} />
+				)}
 
-			{(currentScene === 'saveSelect') && (
-				<SaveSelectSceneLeftPanelContents />
-			)}
+				{(currentScene === 'saveSelect') && (
+					<SaveSelectSceneLeftPanelContents key={'SaveSelectSceneLeftPanelContents'} />
+				)}
 
-			{(currentScene === 'settings') && (
-				<SettingsSceneLeftPanelContents />
-			)}
+				{(currentScene === 'settings') && (
+					<SettingsSceneLeftPanelContents key={'SettingsSceneLeftPanelContents'} />
+				)}
 
-			{(currentScene === 'title') && (
-				<TitleSceneLeftPanelContents />
-			)}
+				{(currentScene === 'title') && (
+					<TitleSceneLeftPanelContents key={'TitleSceneLeftPanelContents'} />
+				)}
+			</AnimatePresence>
 		</Panel>
 	)
 }

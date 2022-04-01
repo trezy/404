@@ -1,7 +1,59 @@
 // Module imports
+import {
+	Children,
+	createElement,
+	useMemo,
+} from 'react'
 import classNames from 'classnames'
+import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
+
+
+
+
+
+// Constants
+const BUTTON_VARIANTS = {
+	animate: {
+		opacity: 1,
+		x: 0,
+		transition: {
+			duration: 0.2,
+		},
+	},
+	exit: {
+		opacity: 0,
+		x: '-100%',
+		transition: {
+			duration: 0.2,
+		},
+	},
+	initial: {
+		opacity: 0,
+		x: '-100%',
+		transition: {
+			duration: 0.2,
+		},
+	},
+}
+
+const MENU_VARIANTS = {
+	animate: {
+		transition: {
+			staggerChildren: 0.05,
+		},
+	},
+	exit: {
+		transition: {
+			staggerChildren: 0.05,
+		},
+	},
+	initial: {
+		transition: {
+			staggerChildren: 0.05,
+		},
+	},
+}
 
 
 
@@ -22,10 +74,30 @@ export function ButtonStack(props) {
 
 	const compiledClassName = useMemo(() => classNames('button-stack', className), [className])
 
+	const compiledChildren = useMemo(() => {
+		return Children.map(children, child => {
+			if (child === null) {
+				return child
+			}
+
+			return createElement(child.type, {
+				...child.props,
+				key: child.key,
+				ref: child.ref,
+				variants: BUTTON_VARIANTS,
+			})
+		})
+	}, [children])
+
 	return (
-		<menu className={compiledClassName}>
-			{children}
-		</menu>
+		<motion.menu
+			animate={'animate'}
+			className={compiledClassName}
+			exit={'exit'}
+			initial={'initial'}
+			variants={MENU_VARIANTS}>
+			{compiledChildren}
+		</motion.menu>
 	)
 }
 
