@@ -9,19 +9,19 @@ import { useStore } from '../../../store/react.js'
  * Renders the contents of the center panel for the Settings scene.
  */
 export function CenterPanelContents() {
-	const [currentSettingsPanel] = useStore(state => [state.currentSettingsPanel])
+	const [settingsPanel] = useStore(state => [state.settingsPanel])
 
 	return (
 		<>
-			{(currentSettingsPanel === 'graphics') && (
+			{(settingsPanel === 'graphics') && (
 				'Graphics'
 			)}
 
-			{(currentSettingsPanel === 'sound') && (
+			{(settingsPanel === 'sound') && (
 				'Sound'
 			)}
 
-			{(currentSettingsPanel === 'accessibility') && (
+			{(settingsPanel === 'accessibility') && (
 				'Accessibility'
 			)}
 		</>

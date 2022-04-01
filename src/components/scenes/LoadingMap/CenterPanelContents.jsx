@@ -18,13 +18,13 @@ import { useStore } from '../../../store/react.js'
  */
 export function CenterPanelContents() {
 	const [
-		currentMap,
 		loadMap,
-		map,
+		mapID,
+		mapManager,
 	] = useStore(state => [
-		state.currentMap,
 		state.loadMap,
-		state.map,
+		state.mapID,
+		state.mapManager,
 	])
 
 	useEffect(() => {
@@ -39,12 +39,12 @@ export function CenterPanelContents() {
 
 			<dl>
 				<dt>{'Map Name:'}</dt>
-				<dd>{currentMap}</dd>
+				<dd>{mapID}</dd>
 
-				{Boolean(map) && (
+				{Boolean(mapManager) && (
 					<>
 						<dt>{'Map Size:'}</dt>
-						<dd>{`${map.width} x ${map.height}`}</dd>
+						<dd>{`${mapManager.width} x ${mapManager.height}`}</dd>
 					</>
 				)}
 			</dl>

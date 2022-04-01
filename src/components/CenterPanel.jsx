@@ -24,40 +24,40 @@ import { CenterPanelContents as TitleSceneCenterPanelContents } from './scenes/T
  * Renders the game's center panel.
  */
 export function CenterPanel() {
-	const [currentScene] = useStore(state => [state.currentScene])
+	const [scene] = useStore(state => [state.scene])
 
 	const isCentered = useMemo(() => {
 		return [
 			'loadingMap',
 			'title',
-		].includes(currentScene)
-	}, [currentScene])
+		].includes(scene)
+	}, [scene])
 
 	return (
 		<Panel
 			columnSpan={3}
 			isCentered={isCentered}>
-			{(currentScene === 'loadingMap') && (
+			{(scene === 'loadingMap') && (
 				<LoadingMapSceneCenterPanelContents />
 			)}
 
-			{(currentScene === 'mapSelect') && (
+			{(scene === 'mapSelect') && (
 				<MapSelectSceneCenterPanelContents />
 			)}
 
-			{(currentScene === 'play') && (
+			{(scene === 'play') && (
 				<PlaySceneCenterPanelContents />
 			)}
 
-			{(currentScene === 'saveSelect') && (
+			{(scene === 'saveSelect') && (
 				<SaveSelectSceneCenterPanelContents />
 			)}
 
-			{(currentScene === 'settings') && (
+			{(scene === 'settings') && (
 				<SettingsSceneCenterPanelContents />
 			)}
 
-			{(currentScene === 'title') && (
+			{(scene === 'title') && (
 				<TitleSceneCenterPanelContents />
 			)}
 		</Panel>

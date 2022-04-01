@@ -24,34 +24,34 @@ import { LeftPanelContents as TitleSceneLeftPanelContents } from './scenes/Title
  * Renders the game's left panel.
  */
 export function LeftPanel() {
-	const [currentScene] = useStore(state => [state.currentScene])
+	const [scene] = useStore(state => [state.scene])
 
 	return (
 		<Panel>
 			<h2>{'Menu'}</h2>
 
 			<AnimatePresence exitBeforeEnter>
-				{(currentScene === 'loadingMap') && (
+				{(scene === 'loadingMap') && (
 					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
 				)}
 
-				{(currentScene === 'mapSelect') && (
+				{(scene === 'mapSelect') && (
 					<MapSelectSceneLeftPanelContents key={'MapSelectSceneLeftPanelContents'} />
 				)}
 
-				{(currentScene === 'play') && (
+				{(scene === 'play') && (
 					<PlaySceneLeftPanelContents key={'PlaySceneLeftPanelContents'} />
 				)}
 
-				{(currentScene === 'saveSelect') && (
+				{(scene === 'saveSelect') && (
 					<SaveSelectSceneLeftPanelContents key={'SaveSelectSceneLeftPanelContents'} />
 				)}
 
-				{(currentScene === 'settings') && (
+				{(scene === 'settings') && (
 					<SettingsSceneLeftPanelContents key={'SettingsSceneLeftPanelContents'} />
 				)}
 
-				{(currentScene === 'title') && (
+				{(scene === 'title') && (
 					<TitleSceneLeftPanelContents key={'TitleSceneLeftPanelContents'} />
 				)}
 			</AnimatePresence>

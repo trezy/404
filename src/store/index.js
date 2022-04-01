@@ -18,14 +18,13 @@ import { SaveManager } from '../game/SaveManager.js'
 const FRAME_BUFFER = []
 
 export const store = create((set, get) => ({
-	currentMap: null,
-	currentScene: 'loadingGame',
-	currentSettingsPanel: 'graphics',
+	mapID: null,
 	fps: 0,
 	frame: 0,
 	isRunning: false,
 	gameManager: new GameManager,
-	map: null,
+	previousScene: null,
+	mapManager: null,
 	mostRecentSaveID: (() => {
 		const mostRecentSaveID = localStorage.getItem('debug-game:most-recent-save-id')
 
@@ -40,6 +39,8 @@ export const store = create((set, get) => ({
 	time: 0,
 	saveID: null,
 	saveManager: new SaveManager,
+	scene: 'loadingGame',
+	settingsPanel: 'graphics',
 
 	/**
 	 * Switch to the map loading scene.
@@ -47,10 +48,9 @@ export const store = create((set, get) => ({
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
 	goToLoadingMap(mapID) {
-		set({
-			currentMap: mapID,
-			currentScene: 'loadingMap',
-		})
+		const { gotoScene } = get()
+
+		gotoScene('loadingMap', { mapID })
 	},
 
 	/**
@@ -60,6 +60,7 @@ export const store = create((set, get) => ({
 	 */
 	goToMapSelect(saveID) {
 		const {
+			gotoScene,
 			saveID: currentSaveID,
 			saveManager,
 		} = get()
@@ -68,15 +69,12 @@ export const store = create((set, get) => ({
 			({ id: saveID } = saveManager.createSave())
 		}
 
-		set(state => {
-			localStorage.setItem('debug-game:most-recent-save-id', saveID || state.saveID)
+		localStorage.setItem('debug-game:most-recent-save-id', saveID || currentSaveID)
 
-			return {
-				currentScene: 'mapSelect',
-				currentMap: null,
-				mostRecentSaveID: saveID || state.saveID,
-				saveID: saveID || state.saveID,
-			}
+		gotoScene('mapSelect', {
+			mapID: null,
+			mostRecentSaveID: saveID || currentSaveID,
+			saveID: saveID || currentSaveID,
 		})
 	},
 
@@ -84,18 +82,37 @@ export const store = create((set, get) => ({
 	 * Switch to the save select scene.
 	 */
 	goToSaveSelect() {
-		set({
-			currentMap: null,
-			currentScene: 'saveSelect',
+		const { gotoScene } = get()
+
+		gotoScene('saveSelect', {
+			mapID: null,
 			saveID: null,
 		})
+	},
+
+	/**
+	 * Change the scene.
+	 *
+	 * @param {string} sceneName The key of the scene to switch to.
+	 * @param {object} [options] Additional keys to be set in the state.
+	 */
+	gotoScene(sceneName, options = {}) {
+		set(state => ({
+			scene: sceneName,
+			previousScene: state.scene,
+			...options,
+		}))
 	},
 
 	/**
 	 * Switch to the game settings scene.
 	 */
 	goToSettings() {
-		set({ currentScene: 'settings' })
+		const { gotoScene } = get()
+
+		gotoScene('settings', {
+			settingsPanel: 'graphics',
+		})
 	},
 
 	/**
@@ -104,16 +121,17 @@ export const store = create((set, get) => ({
 	 * @param {'accessibility' | 'graphics' | 'sound'} panelName The name of the panel to change to.
 	 */
 	goToSettingsPanel(panelName) {
-		set({ currentSettingsPanel: panelName })
+		set({ settingsPanel: panelName })
 	},
 
 	/**
 	 * Switch to the main title scene.
 	 */
 	goToTitle() {
-		set({
-			currentMap: null,
-			currentScene: 'title',
+		const { gotoScene } = get()
+
+		gotoScene('title', {
+			mapID: null,
 			saveID: null,
 		})
 	},
@@ -123,17 +141,17 @@ export const store = create((set, get) => ({
 	 */
 	async loadMap() {
 		const {
-			currentMap,
+			mapID,
+			gotoScene,
 			preloadTileset,
 		} = get()
 
-		const { default: mapData } = await import(/* @vite-ignore */ `/maps/${currentMap}.js`)
+		const { default: mapData } = await import(/* @vite-ignore */ `/maps/${mapID}.js`)
 
 		const tileset = await preloadTileset()
 
-		set({
-			currentScene: 'play',
-			map: new Map(mapData, tileset),
+		gotoScene('play', {
+			mapManager: new Map(mapData, tileset),
 			tileset,
 		})
 	},

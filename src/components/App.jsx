@@ -25,42 +25,42 @@ import { WholePixelContainer } from './WholePixelContainer.jsx'
  */
 export function App() {
 	const [
-		currentScene,
 		goToTitle,
+		scene,
 	] = useStore(state => [
-		state.currentScene,
 		state.goToTitle,
+		state.scene,
 	])
 
 	useEffect(() => {
-		if (currentScene === 'loadingGame') {
+		if (scene === 'loadingGame') {
 			const timeoutID = setTimeout(goToTitle, 2000)
 
 			return () => clearTimeout(timeoutID)
 		}
 	}, [
-		currentScene,
+		scene,
 		goToTitle,
 	])
 
 	const mainElementClassNames = useMemo(() => {
 		return classnames('scene', {
-			'loading-game': (currentScene === 'loadingGame'),
-			'play': (currentScene === 'play'),
+			'loading-game': (scene === 'loadingGame'),
+			'play': (scene === 'play'),
 		})
-	}, [currentScene])
+	}, [scene])
 
 	return (
 		<WholePixelContainer>
 			<main className={mainElementClassNames}>
-				{(currentScene === 'loadingGame') && (
+				{(scene === 'loadingGame') && (
 					<>
 						<GameTitle />
 						<p>{'loading...'}</p>
 					</>
 				)}
 
-				{(currentScene !== 'loadingGame') && (
+				{(scene !== 'loadingGame') && (
 					<div className={'layout panels'}>
 						<LeftPanel />
 

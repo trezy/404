@@ -41,19 +41,19 @@ export class GameManager {
 	gameLoop = () => {
 		const {
 			isRunning,
-			map,
+			mapManager,
 			nextFrame,
 		} = store.getState()
 
 		if (isRunning) {
 			nextFrame()
 
-			this.renderer.drawGrid(map.width, map.height)
-			map.render(this.renderer)
+			this.renderer.drawGrid(mapManager.width, mapManager.height)
+			mapManager.render(this.renderer)
 
 			// render.drawEntities(entities)
 
-			// if (currentTile < map.tiles.length) {
+			// if (currentTile < mapManager.tiles.length) {
 			// 	render.drawPlacement()
 			// }
 

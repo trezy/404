@@ -19,13 +19,13 @@ import { useStore } from '../../../store/react.js'
  */
 export function LeftPanelContents() {
 	const [
-		currentSettingsPanel,
 		goToSettingsPanel,
 		goToTitle,
+		settingsPanel,
 	] = useStore(state => [
-		state.currentSettingsPanel,
 		state.goToSettingsPanel,
 		state.goToTitle,
+		state.settingsPanel,
 	])
 
 	const showAccessibilityPanel = useCallback(() => goToSettingsPanel('accessibility'), [goToSettingsPanel])
@@ -36,19 +36,19 @@ export function LeftPanelContents() {
 	return (
 		<ButtonStack className={'panel-bottom'}>
 			<Button
-				isPrimary={currentSettingsPanel === 'graphics'}
+				isPrimary={settingsPanel === 'graphics'}
 				onClick={showGraphicsPanel}>
 				{'Graphics'}
 			</Button>
 
 			<Button
-				isPrimary={currentSettingsPanel === 'sound'}
+				isPrimary={settingsPanel === 'sound'}
 				onClick={showSoundPanel}>
 				{'Sound'}
 			</Button>
 
 			<Button
-				isPrimary={currentSettingsPanel === 'accessibility'}
+				isPrimary={settingsPanel === 'accessibility'}
 				onClick={showAccessibilityPanel}>
 				{'Accessibility'}
 			</Button>
