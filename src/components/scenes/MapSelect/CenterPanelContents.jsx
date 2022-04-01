@@ -9,14 +9,10 @@ import {
 
 
 // Local imports
-import { Button } from '../Button.jsx'
-import { ButtonStack } from '../ButtonStack.jsx'
-import { convertMillisecondsToStopwatchString } from '../../helpers/convertMillisecondsToStopwatchString.js'
-import { Meter } from '../Meter.jsx'
-import { Panel } from '../Panel.jsx'
-import { PanelsLayout } from '../layouts/PanelsLayout.jsx'
-import { Scene } from '../Scene.jsx'
-import { useStore } from '../../store/react.js'
+import { Button } from '../../Button.jsx'
+import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString.js'
+import { Meter } from '../../Meter.jsx'
+import { useStore } from '../../../store/react.js'
 
 
 
@@ -61,18 +57,10 @@ const MAPS = [
 
 
 /**
- * Scene component for selecting a map to load.
+ * Renders the contents of the center panel for the Map Select scene.
  */
-export function MapSelectScene() {
-	const [
-		goToLoadingMap,
-		goToSettings,
-		goToTitle,
-	] = useStore(state => [
-		state.goToLoadingMap,
-		state.goToSettings,
-		state.goToTitle,
-	])
+export function CenterPanelContents() {
+	const [goToLoadingMap] = useStore(state => [state.goToLoadingMap])
 
 	const loadMap = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
 
@@ -104,36 +92,14 @@ export function MapSelectScene() {
 	}, [loadMap])
 
 	return (
-		<Scene id={'map-select'}>
-			<PanelsLayout id={'title'}>
-				<Panel>
-					<h2>{'Menu'}</h2>
+		<>
+			<h2>{'Map Select'}</h2>
 
-					<ButtonStack className={'panel-bottom'}>
-						<Button>
-							{'Statistics'}
-						</Button>
-
-						<Button onClick={goToSettings}>
-							{'Settings'}
-						</Button>
-
-						<Button onClick={goToTitle}>
-							{'Main Menu'}
-						</Button>
-					</ButtonStack>
-				</Panel>
-
-				<Panel columnSpan={3}>
-					<h2>{'Map Select'}</h2>
-
-					<table>
-						<tbody>
-							{mappedMaps}
-						</tbody>
-					</table>
-				</Panel>
-			</PanelsLayout>
-		</Scene>
+			<table>
+				<tbody>
+					{mappedMaps}
+				</tbody>
+			</table>
+		</>
 	)
 }

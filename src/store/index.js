@@ -20,6 +20,7 @@ const FRAME_BUFFER = []
 export const store = create((set, get) => ({
 	currentMap: null,
 	currentScene: 'loadingGame',
+	currentSettingsPanel: 'graphics',
 	fps: 0,
 	frame: 0,
 	isRunning: false,
@@ -77,16 +78,15 @@ export const store = create((set, get) => ({
 				saveID: saveID || state.saveID,
 			}
 		})
-
 	},
 
 	/**
-	 * Switch to the main title scene.
+	 * Switch to the save select scene.
 	 */
-	goToTitle() {
+	goToSaveSelect() {
 		set({
 			currentMap: null,
-			currentScene: 'title',
+			currentScene: 'saveSelect',
 			saveID: null,
 		})
 	},
@@ -99,12 +99,21 @@ export const store = create((set, get) => ({
 	},
 
 	/**
-	 * Switch to the save select scene.
+	 * Change settings panel.
+	 *
+	 * @param {'accessibility' | 'graphics' | 'sound'} panelName The name of the panel to change to.
 	 */
-	goToSaveSelect() {
+	goToSettingsPanel(panelName) {
+		set({ currentSettingsPanel: panelName })
+	},
+
+	/**
+	 * Switch to the main title scene.
+	 */
+	goToTitle() {
 		set({
 			currentMap: null,
-			currentScene: 'saveSelect',
+			currentScene: 'title',
 			saveID: null,
 		})
 	},
