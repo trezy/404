@@ -1,5 +1,8 @@
 // Module imports
-import { useEffect } from 'react'
+import {
+	useCallback,
+	useEffect,
+} from 'react'
 
 
 
@@ -28,6 +31,8 @@ export function LeftPanelContents() {
 		state.goToMapSelect,
 	])
 
+	const handleQuitClick = useCallback(() => goToMapSelect(), [goToMapSelect])
+
 	useEffect(() => {
 		gameManager.start()
 		return gameManager.stop
@@ -46,7 +51,7 @@ export function LeftPanelContents() {
 			</div> */}
 
 			<ButtonStack className={'panel-bottom'}>
-				<Button onClick={goToMapSelect}>
+				<Button onClick={handleQuitClick}>
 					{'Quit'}
 				</Button>
 			</ButtonStack>
