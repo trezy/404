@@ -78,6 +78,8 @@ export class GameManager {
 		const { isRunning } = store.getState()
 
 		if (!isRunning) {
+			this.#renderer = new Renderer
+
 			store.setState({ isRunning: true })
 
 			// window.addEventListener('dblclick', this.handleDoubleClick)
@@ -111,10 +113,6 @@ export class GameManager {
 	 * @returns {Renderer} The `GameManager`'s `Renderer`.
 	 */
 	get renderer() {
-		if (!this.#renderer) {
-			this.#renderer = new Renderer
-		}
-
 		return this.#renderer
 	}
 }
