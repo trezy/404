@@ -1,4 +1,5 @@
 // Local imports
+import { ControlsManager } from './ControlsManager.js'
 import { Renderer } from './Renderer.js'
 import { store } from '../store/index.js'
 
@@ -11,8 +12,10 @@ import { store } from '../store/index.js'
  */
 export class GameManager {
 	/****************************************************************************\
-	 * Private properties
+	 * Private instance properties
 	\****************************************************************************/
+
+	#controlsManager = null
 
 	#renderer = null
 
@@ -21,19 +24,10 @@ export class GameManager {
 
 
 	/****************************************************************************\
-	 * Public properties
+	 * Public instance properties
 	\****************************************************************************/
 
-	controls = null
 	isRunning = true
-
-
-
-
-
-	/****************************************************************************\
-	 * Public methods
-	\****************************************************************************/
 
 	/**
 	 * The main game loop. Calls all major per-frame update functions in the correct order.
@@ -48,6 +42,7 @@ export class GameManager {
 		if (isRunning) {
 			nextFrame()
 
+			this.controlsManager.update()
 			this.renderer.drawGrid(mapManager.width, mapManager.height)
 			mapManager.render(this.renderer)
 
@@ -104,8 +99,32 @@ export class GameManager {
 
 
 	/****************************************************************************\
-	 * Public methods
+	 * Constructor
 	\****************************************************************************/
+
+	/**
+	 * Creates a new `GameManager`
+	 */
+	constructor() {
+		this.#controlsManager = new ControlsManager
+	}
+
+
+
+
+
+	/****************************************************************************\
+	 * Public instance getters/setters
+	\****************************************************************************/
+
+	/**
+	 * Retrieves the `ControlsManager` being used by this `GameManager`.
+	 *
+	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.
+	 */
+	get controlsManager() {
+		return this.#controlsManager
+	}
 
 	/**
 	 * Retrieves the `Renderer` being used by this `GameManager`.
