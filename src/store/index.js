@@ -130,7 +130,7 @@ export const store = create((set, get) => ({
 	/**
 	 * Change settings panel.
 	 *
-	 * @param {'accessibility' | 'graphics' | 'sound'} panelName The name of the panel to change to.
+	 * @param {'accessibility' | 'controls' | 'graphics' | 'sound'} panelName The name of the panel to change to.
 	 */
 	goToSettingsPanel(panelName) {
 		set({ settingsPanel: panelName })

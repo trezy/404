@@ -29,6 +29,7 @@ export function LeftPanelContents() {
 	])
 
 	const showAccessibilityPanel = useCallback(() => goToSettingsPanel('accessibility'), [goToSettingsPanel])
+	const showControlsPanel = useCallback(() => goToSettingsPanel('controls'), [goToSettingsPanel])
 	const showGraphicsPanel = useCallback(() => goToSettingsPanel('graphics'), [goToSettingsPanel])
 	const showSoundPanel = useCallback(() => goToSettingsPanel('sound'), [goToSettingsPanel])
 
@@ -45,6 +46,12 @@ export function LeftPanelContents() {
 				isPrimary={settingsPanel === 'sound'}
 				onClick={showSoundPanel}>
 				{'Sound'}
+			</Button>
+
+			<Button
+				isPrimary={settingsPanel === 'controls'}
+				onClick={showControlsPanel}>
+				{'Controls'}
 			</Button>
 
 			<Button

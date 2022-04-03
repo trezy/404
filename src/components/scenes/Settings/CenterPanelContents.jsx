@@ -13,16 +13,20 @@ export function CenterPanelContents() {
 
 	return (
 		<>
+			{(settingsPanel === 'accessibility') && (
+				<h2>{'Accessibility'}</h2>
+			)}
+
+			{(settingsPanel === 'controls') && (
+				<h2>{'Controls'}</h2>
+			)}
+
 			{(settingsPanel === 'graphics') && (
-				'Graphics'
+				<h2>{'Graphics'}</h2>
 			)}
 
 			{(settingsPanel === 'sound') && (
-				'Sound'
-			)}
-
-			{(settingsPanel === 'accessibility') && (
-				'Accessibility'
+				<h2>{'Sound'}</h2>
 			)}
 		</>
 	)
