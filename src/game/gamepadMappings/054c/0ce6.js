@@ -108,5 +108,5 @@ export const mapping = {
 }
 
 export const template = {
-	name: 'dualsense',
+	name: 'ps5',
 }

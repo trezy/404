@@ -92,5 +92,5 @@ export const mapping = {
 }
 
 export const template = {
-	name: 'xbox-one',
+	name: 'xbox-s',
 }
