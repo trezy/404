@@ -43,6 +43,18 @@ export const store = create((set, get) => ({
 	settingsPanel: 'graphics',
 
 	/**
+	 * Go back to the previous scene.
+	 */
+	goBack() {
+		const {
+			goToScene,
+			previousScene,
+		} = get()
+
+		goToScene(previousScene)
+	},
+
+	/**
 	 * Switch to the map loading scene.
 	 *
 	 * @param {string} mapID The ID of the map to be loaded.

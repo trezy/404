@@ -19,12 +19,12 @@ import { useStore } from '../../../store/react.js'
  */
 export function LeftPanelContents() {
 	const [
+		goBack,
 		goToSettingsPanel,
-		goToTitle,
 		settingsPanel,
 	] = useStore(state => [
+		state.goBack,
 		state.goToSettingsPanel,
-		state.goToTitle,
 		state.settingsPanel,
 	])
 
@@ -53,7 +53,7 @@ export function LeftPanelContents() {
 				{'Accessibility'}
 			</Button>
 
-			<Button onClick={goToTitle}>
+			<Button onClick={goBack}>
 				{'Back'}
 			</Button>
 		</ButtonStack>
