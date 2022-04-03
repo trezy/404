@@ -48,9 +48,9 @@ export const store = create((set, get) => ({
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
 	goToLoadingMap(mapID) {
-		const { gotoScene } = get()
+		const { goToScene } = get()
 
-		gotoScene('loadingMap', { mapID })
+		goToScene('loadingMap', { mapID })
 	},
 
 	/**
@@ -60,7 +60,7 @@ export const store = create((set, get) => ({
 	 */
 	goToMapSelect(saveID) {
 		const {
-			gotoScene,
+			goToScene,
 			saveID: currentSaveID,
 			saveManager,
 		} = get()
@@ -71,7 +71,7 @@ export const store = create((set, get) => ({
 
 		localStorage.setItem('debug-game:most-recent-save-id', saveID || currentSaveID)
 
-		gotoScene('mapSelect', {
+		goToScene('mapSelect', {
 			mapID: null,
 			mostRecentSaveID: saveID || currentSaveID,
 			saveID: saveID || currentSaveID,
@@ -82,9 +82,9 @@ export const store = create((set, get) => ({
 	 * Switch to the save select scene.
 	 */
 	goToSaveSelect() {
-		const { gotoScene } = get()
+		const { goToScene } = get()
 
-		gotoScene('saveSelect', {
+		goToScene('saveSelect', {
 			mapID: null,
 			saveID: null,
 		})
@@ -96,7 +96,7 @@ export const store = create((set, get) => ({
 	 * @param {string} sceneName The key of the scene to switch to.
 	 * @param {object} [options] Additional keys to be set in the state.
 	 */
-	gotoScene(sceneName, options = {}) {
+	goToScene(sceneName, options = {}) {
 		set(state => ({
 			scene: sceneName,
 			previousScene: state.scene,
@@ -108,9 +108,9 @@ export const store = create((set, get) => ({
 	 * Switch to the game settings scene.
 	 */
 	goToSettings() {
-		const { gotoScene } = get()
+		const { goToScene } = get()
 
-		gotoScene('settings', {
+		goToScene('settings', {
 			settingsPanel: 'graphics',
 		})
 	},
@@ -128,9 +128,9 @@ export const store = create((set, get) => ({
 	 * Switch to the main title scene.
 	 */
 	goToTitle() {
-		const { gotoScene } = get()
+		const { goToScene } = get()
 
-		gotoScene('title', {
+		goToScene('title', {
 			mapID: null,
 			saveID: null,
 		})
@@ -142,7 +142,7 @@ export const store = create((set, get) => ({
 	async loadMap() {
 		const {
 			mapID,
-			gotoScene,
+			goToScene,
 			preloadTileset,
 		} = get()
 
@@ -150,7 +150,7 @@ export const store = create((set, get) => ({
 
 		const tileset = await preloadTileset()
 
-		gotoScene('play', {
+		goToScene('play', {
 			mapManager: new Map(mapData, tileset),
 			tileset,
 		})
