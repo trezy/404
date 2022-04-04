@@ -27,8 +27,8 @@ const PANEL_VARIANTS = {
 		x: 0,
 		transition: {
 			damping: 30,
-			type: 'spring',
 			stiffness: 500,
+			type: 'spring',
 		},
 	},
 

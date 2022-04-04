@@ -27,8 +27,8 @@ const PANEL_VARIANTS = {
 		y: 0,
 		transition: {
 			damping: 30,
-			type: 'spring',
 			stiffness: 500,
+			type: 'spring',
 		},
 	},
 
@@ -54,7 +54,9 @@ export function CenterPanel() {
 	const [scene] = useStore(state => [state.scene])
 
 	return (
-		<AnimatePresence exitBeforeEnter>
+		<AnimatePresence
+			exitBeforeEnter
+			initial={false}>
 			{(scene === 'loadingMap') && (
 				<Panel
 					key={'LoadingMapSceneCenterPanelContents'}
