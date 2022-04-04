@@ -3,7 +3,6 @@ import {
 	AnimatePresence,
 	motion,
 } from 'framer-motion'
-import classnames from 'classnames'
 import { useEffect } from 'react'
 
 
@@ -80,10 +79,7 @@ export function App() {
 				)}
 
 				{(scene !== 'loadingGame') && (
-					<main
-						className={classnames('scene', {
-							'play': (scene === 'play'),
-						})}>
+					<main className={'scene'}>
 						<div className={'layout panels'}>
 							<LeftPanel />
 							<CenterPanel />
