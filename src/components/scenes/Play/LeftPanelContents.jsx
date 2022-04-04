@@ -20,9 +20,21 @@ import { useStore } from '../../../store/react.js'
  * Renders the contents of the left panel for the Play scene.
  */
 export function LeftPanelContents() {
-	const [goToMapSelect] = useStore(state => [state.goToMapSelect])
+	const [
+		gameManager,
+		goToMapSelect,
+	] = useStore(state => [
+		state.gameManager,
+		state.goToMapSelect,
+	])
 
-	const handleQuitClick = useCallback(() => goToMapSelect(), [goToMapSelect])
+	const handleQuitClick = useCallback(() => {
+		gameManager.stop()
+		goToMapSelect(null)
+	}, [
+		gameManager,
+		goToMapSelect,
+	])
 
 	return (
 		<>

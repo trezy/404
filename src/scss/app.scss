@@ -55,6 +55,7 @@ Components
 \******************************************************************************/
 
 @import './components/button-stack';
+@import './components/game-canvas';
 @import './components/game-title';
 @import './components/layout';
 @import './components/meter';
@@ -82,4 +83,3 @@ Components
 \******************************************************************************/
 
 @import './scenes/loading-game';
-@import './scenes/play';

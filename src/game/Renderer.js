@@ -1,4 +1,5 @@
 // Local imports
+import { store } from '../store/index.js'
 import { TILE_SIZE } from './Tile.js'
 
 
@@ -21,12 +22,14 @@ export const LAYERS = {
  */
 export class Renderer {
 	/****************************************************************************\
-	 * Instance properties
+	 * Public instance properties
 	\****************************************************************************/
 
 	height = 0
 
 	layer = LAYERS.background
+
+	needsResize = true
 
 	pixelSize = 1
 
@@ -49,43 +52,8 @@ export class Renderer {
 
 
 	/****************************************************************************\
-	 * Public instance methods
+	 * Constructor
 	\****************************************************************************/
-
-	/**
-	 * Resize and update the scale of the main canvas.
-	 *
-	 * @param {object} config Configuration for the resizing operation.
-	 * @param {number} config.height The height that the canvas should be resized to.
-	 * @param {number} config.width The width that the canvas should be resized to.
-	 */
-	resize = config => {
-		const {
-			height,
-			width,
-		} = config
-
-		const shadowCanvas = this.shadow.canvas
-		const targetCanvas = this.target.canvas
-
-		this.height = height
-		this.width = width
-		this.pixelSize = this.uiScale * this.resolution
-
-		// Set display size
-		targetCanvas.style.height = `${height}px`
-		targetCanvas.style.width = `${width}px`
-
-		// Set actual size
-		targetCanvas.height = Math.floor(height * this.resolution)
-		targetCanvas.width = Math.floor(width * this.resolution)
-		shadowCanvas.height = Math.floor(height * this.resolution)
-		shadowCanvas.width = Math.floor(width * this.resolution)
-
-		// Normalise coordinates
-		this.target.scale(this.pixelSize, this.pixelSize)
-		this.shadow.scale(this.pixelSize, this.pixelSize)
-	}
 
 	/**
 	 * Create a new renderer.
@@ -97,6 +65,21 @@ export class Renderer {
 		this.shadow = canvas.cloneNode().getContext('2d')
 
 		this.initialiseResizeObserver()
+	}
+
+
+
+
+
+	/****************************************************************************\
+	 * Public instance methods
+	\****************************************************************************/
+
+	/**
+	 * Disconnect the resize observer.
+	 */
+	disconnectResizeObserver() {
+		this.resizeObserver.disconnect()
 	}
 
 	/**
@@ -267,21 +250,8 @@ export class Renderer {
 	 * Start the resize observer. The resize observer will watch the main canvas's parent element, resizing the renderer when necessary.
 	 */
 	initialiseResizeObserver() {
-		this.resizeObserver = new ResizeObserver(entries => {
-			for (const entry of entries) {
-				const parentHeight = entry.target.offsetHeight
-				const parentWidth = entry.target.offsetWidth
-
-				const canvasHeight = this.target.offsetHeight
-				const canvasWidth = this.target.offsetWidth
-
-				if ((canvasHeight !== parentHeight) || (canvasWidth !== parentWidth)) {
-					this.resize({
-						height: parentHeight,
-						width: parentWidth,
-					})
-				}
-			}
+		this.resizeObserver = new ResizeObserver((/*entries*/) => {
+			this.needsResize = true
 		})
 
 		this.resizeObserver.observe(this.target.canvas.parentElement)
@@ -305,6 +275,41 @@ export class Renderer {
 	 */
 	resetTransform() {
 		this.queue[this.layer].push(['setTransform', this.pixelSize, 0, 0, this.pixelSize, 0, 0])
+	}
+
+	/**
+	 * Resize and update the scale of the main canvas.
+	 */
+	resize() {
+		const { isRunning } = store.getState()
+
+		if (this.needsResize && isRunning) {
+			const height = this.target.canvas.parentNode.offsetHeight
+			const width = this.target.canvas.parentNode.offsetWidth
+
+			const shadowCanvas = this.shadow.canvas
+			const targetCanvas = this.target.canvas
+
+			this.height = height
+			this.width = width
+			this.pixelSize = this.uiScale * this.resolution
+
+			// Set display size
+			targetCanvas.style.height = `${height}px`
+			targetCanvas.style.width = `${width}px`
+
+			// Set actual size
+			targetCanvas.height = Math.floor(height * this.resolution)
+			targetCanvas.width = Math.floor(width * this.resolution)
+			shadowCanvas.height = Math.floor(height * this.resolution)
+			shadowCanvas.width = Math.floor(width * this.resolution)
+
+			// Normalise coordinates
+			this.target.scale(this.pixelSize, this.pixelSize)
+			this.shadow.scale(this.pixelSize, this.pixelSize)
+
+			this.needsResize = false
+		}
 	}
 
 	/**
@@ -340,6 +345,8 @@ export class Renderer {
 	 * Perform all draw operations from the queue on the shadow canvas, then copy those changes to the main canvas.
 	 */
 	update() {
+		this.resize()
+
 		const renderQueue = this.queue.flat()
 		const context = this.shadow
 

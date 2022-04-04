@@ -43,8 +43,8 @@ export class GameManager {
 			nextFrame()
 
 			this.controlsManager.update()
-			this.renderer.drawGrid(mapManager.width, mapManager.height)
-			mapManager.render(this.renderer)
+			this.#renderer.drawGrid(mapManager.width, mapManager.height)
+			mapManager.render(this.#renderer)
 
 			// render.drawEntities(entities)
 
@@ -52,7 +52,7 @@ export class GameManager {
 			// 	render.drawPlacement()
 			// }
 
-			this.renderer.update()
+			this.#renderer.update()
 
 			requestAnimationFrame(this.gameLoop)
 		}
@@ -91,6 +91,7 @@ export class GameManager {
 
 		if (isRunning) {
 			store.setState({ isRunning: false })
+			this.#renderer.disconnectResizeObserver()
 		}
 	}
 
