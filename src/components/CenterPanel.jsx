@@ -54,9 +54,7 @@ export function CenterPanel() {
 	const [scene] = useStore(state => [state.scene])
 
 	return (
-		<AnimatePresence
-			exitBeforeEnter
-			initial={false}>
+		<AnimatePresence exitBeforeEnter>
 			{(scene === 'loadingMap') && (
 				<Panel
 					key={'LoadingMapSceneCenterPanelContents'}
