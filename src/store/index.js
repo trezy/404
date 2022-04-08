@@ -15,7 +15,12 @@ import { SaveManager } from '../game/SaveManager.js'
 
 
 // Constants
+const DEFAULT_SETTINGS_SCENE = 'accessibility'
 const FRAME_BUFFER = []
+
+
+
+
 
 export const store = create((set, get) => ({
 	mapID: null,
@@ -40,7 +45,7 @@ export const store = create((set, get) => ({
 	saveID: null,
 	saveManager: new SaveManager,
 	scene: 'loadingGame',
-	settingsPanel: 'graphics',
+	settingsPanel: DEFAULT_SETTINGS_SCENE,
 
 	/**
 	 * Go back to the previous scene.
@@ -123,7 +128,7 @@ export const store = create((set, get) => ({
 		const { goToScene } = get()
 
 		goToScene('settings', {
-			settingsPanel: 'graphics',
+			settingsPanel: DEFAULT_SETTINGS_SCENE,
 		})
 	},
 

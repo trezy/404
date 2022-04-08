@@ -33,9 +33,20 @@ export function LeftPanelContents() {
 	const showGraphicsPanel = useCallback(() => goToSettingsPanel('graphics'), [goToSettingsPanel])
 	const showSoundPanel = useCallback(() => goToSettingsPanel('sound'), [goToSettingsPanel])
 
-
 	return (
 		<ButtonStack className={'panel-bottom'}>
+			<Button
+				isPrimary={settingsPanel === 'accessibility'}
+				onClick={showAccessibilityPanel}>
+				{'Accessibility'}
+			</Button>
+
+			<Button
+				isPrimary={settingsPanel === 'controls'}
+				onClick={showControlsPanel}>
+				{'Controls'}
+			</Button>
+
 			<Button
 				isPrimary={settingsPanel === 'graphics'}
 				onClick={showGraphicsPanel}>
@@ -46,18 +57,6 @@ export function LeftPanelContents() {
 				isPrimary={settingsPanel === 'sound'}
 				onClick={showSoundPanel}>
 				{'Sound'}
-			</Button>
-
-			<Button
-				isPrimary={settingsPanel === 'controls'}
-				onClick={showControlsPanel}>
-				{'Controls'}
-			</Button>
-
-			<Button
-				isPrimary={settingsPanel === 'accessibility'}
-				onClick={showAccessibilityPanel}>
-				{'Accessibility'}
 			</Button>
 
 			<Button onClick={goBack}>
