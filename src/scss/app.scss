@@ -58,6 +58,8 @@ Components
 @import './components/combobox';
 @import './components/game-canvas';
 @import './components/game-title';
+@import './components/gamepad-spritesheet';
+@import './components/gamepad-template';
 @import './components/layout';
 @import './components/meter';
 @import './components/panel';
@@ -83,4 +85,5 @@ Components
   Scenes
 \******************************************************************************/
 
+@import './scenes/controls-settings';
 @import './scenes/loading-game';

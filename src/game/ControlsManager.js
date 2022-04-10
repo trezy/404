@@ -76,10 +76,16 @@ export class ControlsManager {
 	/**
 	 * Returns the gamepad at the specified index.
 	 *
-	 * @param {number} gamepadIndex The index of the requested gamepad.
+	 * @param {number} [gamepadIndex] The index of the requested gamepad.
 	 * @returns {object} The gamepad at the requested index.
 	 */
 	getGamepad(gamepadIndex) {
+		if (typeof gamepadIndex === 'undefined') {
+			return Object
+				.values(this.#gamepads)
+				.filter(gamepad => gamepad !== null)[0]
+		}
+
 		return this.#gamepads[gamepadIndex]
 	}
 
@@ -113,6 +119,16 @@ export class ControlsManager {
 	/****************************************************************************\
 	 * Public instance getters/setters
 	\****************************************************************************/
+
+	/**
+	 * @returns {object} The number of currently tracked gamepads.
+	 */
+	get gamepadCount() {
+		return Object
+			.values(this.#gamepads)
+			.filter(gamepad => gamepad !== null)
+			.length
+	}
 
 	/**
 	 * @returns {object} An object containing all currently tracked gamepads.

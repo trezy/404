@@ -181,26 +181,30 @@ export class Gamepad {
 	 * Ensures the gamepad can be used with the standard mapping.
 	 */
 	async getMapping() {
-		const {
-			mapping,
-			name,
-			template,
-		} = await import(`./gamepadMappings/${this.#vendorID}/${this.#productID}.js`)
+		try {
+			const {
+				mapping,
+				name,
+				template,
+			} = await import(`./gamepadMappings/${this.#vendorID}/${this.#productID}.js`)
 
-		this.#mapping = mapping
-		this.#name = name
+			this.#mapping = mapping
+			this.#name = name
 
-		const templateImage = new Image
-		templateImage.src = `/gamepads/${template.name}.png`
+			const templateImage = new Image
+			templateImage.src = `/gamepads/${template.name}.png`
 
-		templateImage
-			.decode()
-			.then(() => {
-				return this.#template = templateImage
-			})
-			.catch(() => {
-				console.error(`Failed to load template image: ${template.name}`)
-			})
+			templateImage
+				.decode()
+				.then(() => {
+					return this.#template = templateImage
+				})
+				.catch(() => {
+					console.error(`Failed to load template image: ${template.name}`)
+				})
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	/**
