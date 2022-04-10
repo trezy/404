@@ -51,7 +51,7 @@ export function Button(props) {
 
 			return accumulator
 		}, {
-			className: classnames(className, {
+			className: classnames('button', className, {
 				'is-primary': isPrimary,
 				'is-small': isSmall,
 				'is-text': isText,

@@ -1,0 +1,74 @@
+.combobox {
+	--item-padding: calc(4px * var(--ui-scale));
+
+	position: relative;
+
+	button {
+		background-color: var(--palette-dark-grey);
+		cursor: pointer;
+		padding: var(--item-padding);
+		text-align: left;
+		width: 100%;
+
+		&:hover,
+		&:focus {
+			background-color: var(--palette-light-grey);
+		}
+	}
+
+	.combobox-label button {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		padding: var(--item-padding);
+		position: relative;
+		text-align: left;
+		width: 100%;
+
+		&:after {
+			background-color: var(--palette-white);
+			clip-path: polygon(
+				0 0,
+				100% 0,
+				100% calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+				0 calc(1px * var(--ui-scale)),
+			);
+			content: '';
+			display: block;
+			height: calc(3px * var(--ui-scale));
+			margin-left: calc(5px * var(--ui-scale));
+			width: calc(5px * var(--ui-scale));
+		}
+	}
+
+	.combobox-options {
+		border-top-color: var(--palette-light-grey);
+		border-top-style: solid;
+		border-top-width: calc(1px * var(--ui-scale));
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 100%;
+
+		[role=option] {
+			button {
+				// &:hover,
+				// &:focus {
+				// 	background-color: var(--palette-light-grey);
+				// }
+			}
+
+			&[aria-selected="true"] button {
+				background-color: var(--palette-light-grey);
+			}
+		}
+	}
+}
