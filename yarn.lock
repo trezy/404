@@ -1825,8 +1825,8 @@ __metadata:
     eslint-plugin-unused-imports: ^2.0.0
     framer-motion: ^6.2.8
     prop-types: ^15.8.1
-    react: ^18.0.0-rc.2-next-b9de50d2f-20220308
-    react-dom: ^18.0.0-rc.2-next-b9de50d2f-20220308
+    react: ^18.0.0
+    react-dom: ^18.0.0
     sass: ^1.49.9
     vite: ^2.8.6
     zustand: ^3.7.1
@@ -5242,15 +5242,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.0.0-rc.2-next-b9de50d2f-20220308":
-  version: 18.0.0-rc.2-next-b9de50d2f-20220308
-  resolution: "react-dom@npm:18.0.0-rc.2-next-b9de50d2f-20220308"
+"react-dom@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "react-dom@npm:18.0.0"
   dependencies:
     loose-envify: ^1.1.0
-    scheduler: 0.21.0-rc.2-next-b9de50d2f-20220308
+    scheduler: ^0.21.0
   peerDependencies:
-    react: 18.0.0-rc.2-next-b9de50d2f-20220308
-  checksum: d2619e2019349a376a9a1b7e04f8946fcaa747c8fafef71bca61c174700ce25d773b69d373c2ff9fbdef6dcfc8180275cc7825df4752a8b7c2cfcd3dd12e8a8f
+    react: ^18.0.0
+  checksum: dd0ba9f2f31dd728076c892a95b2f5a8dfe79136431b0289afb46eec39d0ca6b6f0f40a60fd8aa6ef702c98ce7c26100d3d4dbc35c7c9e87429cd04f84cb58bd
   languageName: node
   linkType: hard
 
@@ -5268,12 +5268,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.0.0-rc.2-next-b9de50d2f-20220308":
-  version: 18.0.0-rc.2-next-b9de50d2f-20220308
-  resolution: "react@npm:18.0.0-rc.2-next-b9de50d2f-20220308"
+"react@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "react@npm:18.0.0"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 201f3b7d2fda1460b4776caee512361bbf85baee36268a0e27e68b05de3bc8d0c786146f247e49d12d92c3b275f7da65f6c2addffe0067d51be02bbbd340aa12
+  checksum: 293020b96536b3c7113ee57ca5c990a3f25649d1751b1c7a3aabd16dff0691fe9f1eed1206616d0906d05933536052037340a0c8d0941ff870b0eb469a2f975b
   languageName: node
   linkType: hard
 
@@ -5650,12 +5650,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.21.0-rc.2-next-b9de50d2f-20220308":
-  version: 0.21.0-rc.2-next-b9de50d2f-20220308
-  resolution: "scheduler@npm:0.21.0-rc.2-next-b9de50d2f-20220308"
+"scheduler@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "scheduler@npm:0.21.0"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 760b89623a0589727e7f2ae8eec5f34f3dde60e7fc762f8d86ce7ccccd28991479a2599a02d19f00aecda4b60aafb25f8e32f845c1f2c9dbd9bfbec6f9dea6e7
+  checksum: 4f8285076041ed2c81acdd1faa987f1655fdbd30554bc667c1ea64743fc74fb3a04ca7d27454b3d678735df5a230137a3b84756061b43dc5796e80701b66d124
   languageName: node
   linkType: hard
 
