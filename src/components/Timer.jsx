@@ -1,11 +1,17 @@
 // Module imports
 import {
-	useEffect,
 	useMemo,
 	useState,
 } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import { useRequestAnimationFrame } from '../hooks/useRequestAnimationFrame.js'
 
 
 
@@ -72,34 +78,15 @@ export function Timer(props) {
 		isMonospace,
 	])
 
-	useEffect(() => {
-		let shouldContinue = true
+	useRequestAnimationFrame(() => {
+		setCurrentTime(() => {
+			const delta = performance.now() - startTimestamp
 
-		/**
-		 * Function to be run on every frame.
-		 */
-		const loop = () => {
-			if (!shouldContinue) {
-				return
-			}
-
-			setCurrentTime(() => {
-				const delta = performance.now() - startTimestamp
-
-				return [
-					Math.floor(delta / 1000 / 60),
-					Math.floor((delta / 1000) % 60),
-				]
-			})
-
-			requestAnimationFrame(loop)
-		}
-
-		loop()
-
-		return () => {
-			shouldContinue = false
-		}
+			return [
+				Math.floor(delta / 1000 / 60),
+				Math.floor((delta / 1000) % 60),
+			]
+		})
 	}, [
 		currentTime,
 		setCurrentTime,

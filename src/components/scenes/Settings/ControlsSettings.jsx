@@ -1,7 +1,6 @@
 // Module imports
 import {
 	useCallback,
-	useEffect,
 	useState,
 } from 'react'
 import { motion } from 'framer-motion'
@@ -14,6 +13,7 @@ import PropTypes from 'prop-types'
 // Module imports
 import { Combobox } from '../../Combobox.jsx'
 import { GamepadTemplate } from './GamepadTemplate.jsx'
+import { useRequestAnimationFrame } from '../../../hooks/useRequestAnimationFrame.js'
 import { useStore } from '../../../store/react.js'
 
 
@@ -89,38 +89,21 @@ export function ControlsSettings(props) {
 		setSelectedGamepad,
 	])
 
-	useEffect(() => {
-		let shouldContinue = true
+	useRequestAnimationFrame(() => {
+		if (controlsManager.gamepadCount !== gamepads.length) {
+			updateGamepads()
+		} else {
+			const filteredGamepads = Object
+				.values(controlsManager.gamepads)
+				.filter(gamepad => (gamepad !== null))
 
-		/* eslint-disable-next-line jsdoc/require-jsdoc */
-		const loop = () => {
-			if (!shouldContinue) {
-				return
-			}
+			const haveGamepadsChanged = gamepads.some(({ gamepad }) => {
+				return !filteredGamepads.includes(gamepad)
+			})
 
-			if (controlsManager.gamepadCount !== gamepads.length) {
+			if (haveGamepadsChanged) {
 				updateGamepads()
-			} else {
-				const filteredGamepads = Object
-					.values(controlsManager.gamepads)
-					.filter(gamepad => (gamepad !== null))
-
-				const haveGamepadsChanged = gamepads.some(({ gamepad }) => {
-					return !filteredGamepads.includes(gamepad)
-				})
-
-				if (haveGamepadsChanged) {
-					updateGamepads()
-				}
 			}
-
-			requestAnimationFrame(loop)
-		}
-
-		loop()
-
-		return () => {
-			shouldContinue = false
 		}
 	}, [
 		controlsManager,
