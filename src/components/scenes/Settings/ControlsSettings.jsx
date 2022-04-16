@@ -1,6 +1,7 @@
 // Module imports
 import {
 	useCallback,
+	useEffect,
 	useState,
 } from 'react'
 import { motion } from 'framer-motion'
@@ -13,7 +14,7 @@ import PropTypes from 'prop-types'
 // Module imports
 import { Combobox } from '../../Combobox.jsx'
 import { GamepadTemplate } from './GamepadTemplate.jsx'
-import { useRequestAnimationFrame } from '../../../hooks/useRequestAnimationFrame.js'
+import { useRafael } from '../../../hooks/useRafael.js'
 import { useStore } from '../../../store/react.js'
 
 
@@ -33,6 +34,7 @@ export function ControlsSettings(props) {
 	const { variants } = props
 
 	const [gameManager] = useStore(state => ([state.gameManager]))
+	const [gamepadIsReady, setGamepadIsReady] = useState(false)
 	const { controlsManager } = gameManager
 
 	const [gamepads, setGamepads] = useState(
@@ -54,64 +56,90 @@ export function ControlsSettings(props) {
 
 	const [selectedGamepad, setSelectedGamepad] = useState(gamepads[0])
 
-	const updateGamepads = useCallback(() => {
-		const newGamepads = Object
-			.values(controlsManager.gamepads)
-			.map((gamepad, index) => {
-				if (gamepad === null) {
-					return gamepad
-				}
-
-				return {
-					gamepad,
-					label: gamepad?.name,
-					value: index,
-				}
-			})
-			.filter(gamepad => gamepad !== null)
-
-		setGamepads(newGamepads)
-
-		if (!selectedGamepad) {
-			setSelectedGamepad(newGamepads[0])
-		}
-	}, [
-		controlsManager,
-		selectedGamepad,
-		setGamepads,
-		setSelectedGamepad,
-	])
-
 	const handleGamepadChange = useCallback(selectedOption => {
-		setSelectedGamepad(gamepads[selectedOption.value])
+		const gamepad = gamepads[selectedOption.value]
+		setSelectedGamepad(gamepad)
+		setGamepadIsReady(gamepad.gamepad.isReady)
 	}, [
 		gamepads,
+		setGamepadIsReady,
 		setSelectedGamepad,
 	])
 
-	useRequestAnimationFrame(() => {
-		if (controlsManager.gamepadCount !== gamepads.length) {
-			updateGamepads()
-		} else {
+	const handleGamepadReady = useCallback(() => setGamepadIsReady(true), [setGamepadIsReady])
+
+	const updateGamepadState = useCallback(() => {
+		let shouldUpdate = controlsManager.gamepadCount !== gamepads.length
+
+		if (!shouldUpdate) {
 			const filteredGamepads = Object
 				.values(controlsManager.gamepads)
 				.filter(gamepad => (gamepad !== null))
 
-			const haveGamepadsChanged = gamepads.some(({ gamepad }) => {
+			shouldUpdate = gamepads.some(({ gamepad }) => {
 				return !filteredGamepads.includes(gamepad)
 			})
+		}
 
-			if (haveGamepadsChanged) {
-				updateGamepads()
+		if (shouldUpdate) {
+			const newGamepads = Object
+				.values(controlsManager.gamepads)
+				.map((gamepad, index) => {
+					if (gamepad === null) {
+						return gamepad
+					}
+
+					return {
+						gamepad,
+						label: gamepad?.name,
+						value: index,
+					}
+				})
+				.filter(gamepad => gamepad !== null)
+
+			setGamepads(newGamepads)
+
+			if (!selectedGamepad) {
+				const gamepad = newGamepads[0]
+				setSelectedGamepad(gamepad)
+				setGamepadIsReady(gamepad.gamepad.isReady)
 			}
 		}
 	}, [
 		controlsManager,
-		gameManager,
 		gamepads,
 		selectedGamepad,
+		setGamepadIsReady,
 		setGamepads,
-		updateGamepads,
+		setSelectedGamepad,
+	])
+
+	useRafael({
+		task: updateGamepadState,
+		dependencies: [
+			gameManager,
+			selectedGamepad,
+			setGamepads,
+		],
+	})
+
+	useRafael({
+		task: controlsManager.update,
+		options: {
+			context: controlsManager,
+		},
+		dependencies: [controlsManager],
+	})
+
+	useEffect(() => {
+		if (selectedGamepad) {
+			selectedGamepad.gamepad.once('ready', handleGamepadReady)
+			return () => selectedGamepad.gamepad.off('ready', handleGamepadReady)
+		}
+	}, [
+		handleGamepadReady,
+		selectedGamepad,
+		setGamepadIsReady,
 	])
 
 	return (
@@ -146,9 +174,18 @@ export function ControlsSettings(props) {
 				</dl>
 			</div>
 
-
 			<div className={'mappings-visualiser'}>
-				<GamepadTemplate />
+				{!selectedGamepad && (
+					'Select a gamepad'
+				)}
+
+				{(selectedGamepad && !gamepadIsReady) && (
+					'Loading...'
+				)}
+
+				{(selectedGamepad && gamepadIsReady) && (
+					<GamepadTemplate gamepad={selectedGamepad} />
+				)}
 			</div>
 		</motion.div>
 	)

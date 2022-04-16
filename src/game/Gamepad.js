@@ -1,3 +1,10 @@
+// Local imports
+import { EventEmitter } from './EventEmitter.js'
+
+
+
+
+
 // Constants
 const BUTTON_HOLD_TIME = 200
 
@@ -8,7 +15,7 @@ const BUTTON_HOLD_TIME = 200
 /**
  * Manages a gamepad.
  */
-export class Gamepad {
+export class Gamepad extends EventEmitter {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
@@ -47,7 +54,7 @@ export class Gamepad {
 	 */
 	updateAxis = (axisValue, index) => {
 		const previousAxisValue = this.#state.axes[index].value
-		const { deadzone } = this.#mapping.axes[index]
+		const { deadzone } = this.#mapping?.axes[index] ?? 0
 		let processedAxisValue = Number(axisValue.toFixed(2))
 
 		if (deadzone) {
@@ -60,11 +67,11 @@ export class Gamepad {
 
 		if (previousAxisValue !== processedAxisValue) {
 			this.#state.axes[index] = { value: processedAxisValue }
-			console.log({
-				axis: index,
-				previousValue: previousAxisValue,
-				newValue: processedAxisValue,
-			})
+			// console.log({
+			// 	axis: index,
+			// 	previousValue: previousAxisValue,
+			// 	newValue: processedAxisValue,
+			// })
 		}
 	}
 
@@ -85,8 +92,10 @@ export class Gamepad {
 		 * @property {boolean | number} isPressed Whether or not this button is currently pressed.
 		 */
 		const newButtonState = {
+			...(this.#mapping?.buttons[index] || {}),
 			isHeld: false,
 			isPressed: false,
+			needsMapping: !this.#mapping,
 		}
 
 		if (button.pressed) {
@@ -104,14 +113,14 @@ export class Gamepad {
 		const isHeldHasChanged = newButtonState.isHeld !== previousButtonState.isHeld
 		const isPressedHasChanged = newButtonState.isPressed !== previousButtonState.isPressed
 
-		if (isPressedHasChanged || isHeldHasChanged) {
+		if (previousButtonState.needsMapping || isPressedHasChanged || isHeldHasChanged) {
 			this.#state.buttons[index] = newButtonState
 
-			console.log({
-				button: index,
-				previousValue: previousButtonState,
-				newValue: newButtonState,
-			})
+			// console.log({
+			// 	button: index,
+			// 	previousValue: previousButtonState,
+			// 	newValue: newButtonState,
+			// })
 		}
 	}
 
@@ -129,6 +138,8 @@ export class Gamepad {
 	 * @param {object} gamepad The native gamepad object.
 	 */
 	constructor(gamepad) {
+		super()
+
 		if (/stadia controller/ui.test(gamepad.id)) {
 			/* eslint-disable-next-line no-alert --
 				Because Ian did terrible things that caused Clapton to tell me to. TBF, it's really Google's fault. 🤷🏻‍♂️
@@ -194,14 +205,12 @@ export class Gamepad {
 			const templateImage = new Image
 			templateImage.src = `/gamepads/${template.name}.png`
 
-			templateImage
-				.decode()
-				.then(() => {
-					return this.#template = templateImage
-				})
-				.catch(() => {
-					console.error(`Failed to load template image: ${template.name}`)
-				})
+			await templateImage.decode()
+
+			this.#template = templateImage
+
+			this.update()
+			this.emit('ready')
 		} catch (error) {
 			console.log(error)
 		}
@@ -228,6 +237,7 @@ export class Gamepad {
 				this.#state.buttons.push({
 					isHeld: false,
 					isPressed: false,
+					needsMapping: true,
 				})
 			})
 	}

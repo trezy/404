@@ -10,73 +10,9 @@
 		position: absolute;
 		// top: 50%;
 		top: 0;
-	}
-
-	$gamepads: (
-		(
-			name: 'ps5',
-			positions: (
-				(98px, 50px) // X
-				(107px, 41px) // Circle
-				(89px, 41px) // Square
-				(98px, 32px) // Triangle
-				(94px, -2px) // Right Bumper
-				(18px, -2px) // Left Bumper
-				(102px, 10px) // Right Trigger
-				(10px, 10px) // Left Trigger
-				// (94px, -4px) // Right Bumper
-				// (18px, -4px) // Left Bumper
-				// (94px, 8px) // Right Trigger
-				// (18px, 8px) // Left Trigger
-				(31px, 29px) // Create
-				(92px, 29px) // Options
-				(36px, 58px) // Left Stick
-				(78px, 58px) // Right Stick
-				(20px, 36px) // D-Pad Up
-				(20px, 48px) // D-Pad Down
-				(13px, 43px) // D-Pad Left
-				(25px, 43px) // D-Pad Right
-			),
-			spriteOffsets: (
-				(2px, 2px) // X
-				(2px, 2px) // Circle
-				(2px, 2px) // Square
-				(2px, 2px) // Triangle
-				(0px, 3px) // Left Bumper
-				(0px, 3px) // Right Bumper
-				(0px, 3px) // Left Trigger
-				(0px, 3px) // Right Trigger
-				(5px, 4px) // Create
-				(6px, 4px) // Options
-				(1px, 1px) // Left Stick
-				(1px, 1px) // Right Stick
-				(4px, 3px) // D-Pad Up
-				(4px, 3px) // D-Pad Down
-				(3px, 4px) // D-Pad Left
-				(3px, 4px) // D-Pad Right
-			),
-		),
-	);
-
-	@each $gamepad in $gamepads {
-		$name: map.get($gamepad, 'name');
-		$positions: map.get($gamepad, 'positions');
-		$spriteOffsets: map.get($gamepad, 'spriteOffsets');
-
-		&.#{$name} {
-			@for $index from 1 through list.length($positions) {
-				$positionVector2: list.nth($positions, $index);
-				$offsetVector2: list.nth($spriteOffsets, $index);
-				$xOffset: list.nth($positionVector2, 1) - list.nth($offsetVector2, 1);
-				$yOffset: list.nth($positionVector2, 2) - list.nth($offsetVector2, 2);
-
-				[data-sprite-index="#{$index - 1}"] {
-					transform: translate(
-						calc(#{$xOffset} * var(--ui-scale)),
-						calc(#{$yOffset} * var(--ui-scale))
-					);
-				}
-			}
-		}
+		transform: translate(
+			calc(var(--sprite-x-offset) * var(--ui-scale)),
+			calc(var(--sprite-y-offset) * var(--ui-scale))
+		);
 	}
 }

@@ -1,11 +1,9 @@
 .gamepad-spritesheet {
-	--sprite-size: 16px;
-
 	background-image: url('/gamepads/ps5/spritesheet.png');
 	background-repeat: no-repeat;
 	background-size: calc(256px * var(--ui-scale)) calc(160px * var(--ui-scale));
-	height: calc(var(--sprite-size) * var(--ui-scale));
-	width: calc(var(--sprite-size) * var(--ui-scale));
+	height: calc(var(--sprite-height) * var(--ui-scale));
+	width: calc(var(--sprite-width) * var(--ui-scale));
 
 	&.gamepad {
 		background-position: 0 calc(-32px * var(--ui-scale));
@@ -13,16 +11,20 @@
 		width: calc(128px * var(--ui-scale));
 	}
 
-	@for $index from 0 through 15 {
-		&[data-sprite-index="#{$index}"] {
-			--background-x-offset: calc(#{$index} * var(--sprite-size) * -1);
-			--scaled-background-x-offset: calc(var(--background-x-offset) * var(--ui-scale));
+	&[data-sprite-index] {
+		--background-x-offset: calc(var(--sprite-source-x) * -1);
+		--background-y-offset: calc(var(--sprite-source-y) * -1);
+		--scaled-background-x-offset: calc(var(--background-x-offset) * var(--ui-scale));
+		--scaled-background-y-offset: calc(var(--background-y-offset) * var(--ui-scale));
 
-			background-position: var(--scaled-background-x-offset) 0;
+		background-position:
+			var(--scaled-background-x-offset)
+			var(--scaled-background-y-offset);
 
-			&.is-pressed {
-				background-position: var(--scaled-background-x-offset) calc(var(--sprite-size) * var(--ui-scale) * -1);
-			}
+		&.is-pressed {
+			background-position:
+				var(--scaled-background-x-offset)
+				calc((var(--background-y-offset) - var(--sprite-height)) * var(--ui-scale));
 		}
 	}
 }
