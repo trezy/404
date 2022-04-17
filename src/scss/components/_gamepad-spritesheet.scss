@@ -1,7 +1,8 @@
 .gamepad-spritesheet {
-	background-image: url('/gamepads/ps5/spritesheet.png');
 	background-repeat: no-repeat;
-	background-size: calc(256px * var(--ui-scale)) calc(160px * var(--ui-scale));
+	background-size:
+		calc(var(--sprite-template-width) * var(--ui-scale))
+		calc(var(--sprite-template-height) * var(--ui-scale));
 	height: calc(var(--sprite-height) * var(--ui-scale));
 	width: calc(var(--sprite-width) * var(--ui-scale));
 

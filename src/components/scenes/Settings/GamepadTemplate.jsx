@@ -38,7 +38,7 @@ export function GamepadTemplate(props) {
 	const [gamepadState, setGamepadState] = useState(gamepad.gamepad.state)
 
 	const compiledClassnames = useMemo(() => {
-		return classnames('gamepad-template', 'ps5', className)
+		return classnames('gamepad-template', className)
 	}, [className])
 
 	const controlSprites = useMemo(() => {
@@ -56,10 +56,10 @@ export function GamepadTemplate(props) {
 					key={index}
 					height={button.size.height}
 					isPressed={Boolean(button.isPressed)}
+					source={gamepad.gamepad.spritesheet}
 					sourceX={button.sourcePosition.x}
 					sourceY={button.sourcePosition.y}
 					sprite={index}
-					type={gamepad.gamepad.type}
 					width={button.size.width}
 					xOffset={xOffset}
 					yOffset={yOffset} />
@@ -78,7 +78,9 @@ export function GamepadTemplate(props) {
 
 	return (
 		<div className={compiledClassnames}>
-			<GamepadSpritesheet sprite={'gamepad'} />
+			<GamepadSpritesheet
+				source={gamepad.gamepad.spritesheet}
+				sprite={'gamepad'} />
 			{controlSprites}
 		</div>
 	)

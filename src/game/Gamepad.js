@@ -34,7 +34,7 @@ export class Gamepad extends EventEmitter {
 
 	#state = null
 
-	#template = null
+	#spritesheet = null
 
 	#type = null
 
@@ -204,12 +204,14 @@ export class Gamepad extends EventEmitter {
 			this.#mapping = mapping
 			this.#name = name
 
-			const templateImage = new Image
-			templateImage.src = `/gamepads/${template.type}.png`
+			const spritesheet = new Image
+			spritesheet.height = template.height
+			spritesheet.width = template.width
+			spritesheet.src = `/gamepads/${template.type}/spritesheet.png`
 
-			await templateImage.decode()
+			await spritesheet.decode()
 
-			this.#template = templateImage
+			this.#spritesheet = spritesheet
 			this.#type = template.type
 
 			this.update()
@@ -286,7 +288,7 @@ export class Gamepad extends EventEmitter {
 	 * @returns {boolean} Whether or not this gamepad is ready to be used.
 	 */
 	get isReady() {
-		return Boolean(this.#mapping && this.#template)
+		return Boolean(this.#mapping && this.#spritesheet)
 	}
 
 	/**
@@ -294,6 +296,13 @@ export class Gamepad extends EventEmitter {
 	 */
 	get name() {
 		return this.#name
+	}
+
+	/**
+	 * @returns {Image} The spritesheet for the gamepad template.
+	 */
+	get spritesheet() {
+		return this.#spritesheet
 	}
 
 	/**
