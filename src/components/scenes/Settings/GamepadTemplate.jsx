@@ -59,12 +59,16 @@ export function GamepadTemplate(props) {
 					sourceX={button.sourcePosition.x}
 					sourceY={button.sourcePosition.y}
 					sprite={index}
+					type={gamepad.gamepad.type}
 					width={button.size.width}
 					xOffset={xOffset}
 					yOffset={yOffset} />
 			)
 		})
-	}, [gamepadState])
+	}, [
+		gamepad,
+		gamepadState,
+	])
 
 	useRafael({
 		// eslint-disable-next-line jsdoc/require-jsdoc

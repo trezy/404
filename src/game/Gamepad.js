@@ -36,6 +36,8 @@ export class Gamepad extends EventEmitter {
 
 	#template = null
 
+	#type = null
+
 	#vendorID = null
 
 
@@ -203,11 +205,12 @@ export class Gamepad extends EventEmitter {
 			this.#name = name
 
 			const templateImage = new Image
-			templateImage.src = `/gamepads/${template.name}.png`
+			templateImage.src = `/gamepads/${template.type}.png`
 
 			await templateImage.decode()
 
 			this.#template = templateImage
+			this.#type = template.type
 
 			this.update()
 			this.emit('ready')
@@ -298,5 +301,12 @@ export class Gamepad extends EventEmitter {
 	 */
 	get state() {
 		return this.#state
+	}
+
+	/**
+	 * @returns {object} The gamepad's type.
+	 */
+	get type() {
+		return this.#type
 	}
 }

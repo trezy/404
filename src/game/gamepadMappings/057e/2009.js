@@ -87,5 +87,7 @@ export const mapping = {
 	],
 }
 export const template = {
-	name: 'nintendo-switch-pro',
+	height: 160,
+	type: 'nintendo-switch-pro',
+	width: 256,
 }

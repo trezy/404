@@ -12,12 +12,12 @@ import { useMemo } from 'react'
  *
  * @param {object} props All component props.
  * @param {object} [props.className] Classes to be applied to the component.
- * @param {string} [props.gamepadType] The gamepad spritesheet to use.
  * @param {number} [props.height] The height of the sprite.
  * @param {boolean} [props.isPressed] If the sprite is a button, whether or not it is currently pressed.
  * @param {number} [props.sourceX] The X position of the sprite in the spritesheet.
  * @param {number} [props.sourceY] The Y position of the sprite in the spritesheet.
  * @param {number | 'gamepad'} [props.sprite] The sprite to displayed from the spritesheet.
+ * @param {string} [props.type] The gamepad spritesheet to use.
  * @param {number} [props.xOffset] A number of pixels by which the sprite should be offset on the X axis.
  * @param {number} [props.yOffset] A number of pixels by which the sprite should be offset on the Y axis.
  * @param {number} [props.width] The width of the sprite.
@@ -25,12 +25,12 @@ import { useMemo } from 'react'
 export function GamepadSpritesheet(props) {
 	const {
 		className,
-		gamepadType,
 		height,
 		isPressed,
 		sourceX,
 		sourceY,
 		sprite,
+		type,
 		xOffset,
 		yOffset,
 		width,
@@ -44,7 +44,7 @@ export function GamepadSpritesheet(props) {
 			}),
 			role: 'image',
 			style: {
-				backgroundImage: `url('/gamepads/${gamepadType}/spritesheet.png')`,
+				backgroundImage: `url('/gamepads/${type}/spritesheet.png')`,
 				'--sprite-height': `${height}px`,
 				'--sprite-source-x': `${sourceX}px`,
 				'--sprite-source-y': `${sourceY}px`,
@@ -61,12 +61,12 @@ export function GamepadSpritesheet(props) {
 		return result
 	}, [
 		className,
-		gamepadType,
 		height,
 		isPressed,
 		sourceX,
 		sourceY,
 		sprite,
+		type,
 		xOffset,
 		yOffset,
 		width,
@@ -79,7 +79,7 @@ export function GamepadSpritesheet(props) {
 
 GamepadSpritesheet.defaultProps = {
 	className: '',
-	gamepadType: 'ps5',
+	type: 'ps5',
 	height: 0,
 	isPressed: false,
 	sourceX: 0,
@@ -91,7 +91,6 @@ GamepadSpritesheet.defaultProps = {
 
 GamepadSpritesheet.propTypes = {
 	className: PropTypes.string,
-	gamepadType: PropTypes.string,
 	height: PropTypes.number,
 	isPressed: PropTypes.bool,
 	sourceX: PropTypes.number,
@@ -100,6 +99,7 @@ GamepadSpritesheet.propTypes = {
 		PropTypes.number,
 		PropTypes.string,
 	]).isRequired,
+	type: PropTypes.string,
 	width: PropTypes.number,
 	xOffset: PropTypes.number,
 	yOffset: PropTypes.number,

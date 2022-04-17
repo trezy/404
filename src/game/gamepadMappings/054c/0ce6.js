@@ -400,5 +400,7 @@ export const mapping = {
 }
 
 export const template = {
-	name: 'ps5',
+	height: 160,
+	type: 'ps5',
+	width: 256,
 }

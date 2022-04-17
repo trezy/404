@@ -92,5 +92,7 @@ export const mapping = {
 }
 
 export const template = {
-	name: 'xbox-s',
+	height: 160,
+	type: 'xbox-s',
+	width: 272,
 }

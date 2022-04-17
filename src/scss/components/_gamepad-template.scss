@@ -5,10 +5,8 @@
 	position: relative;
 
 	[data-sprite-index] {
-		// left: 50%;
 		left: 0;
 		position: absolute;
-		// top: 50%;
 		top: 0;
 		transform: translate(
 			calc(var(--sprite-x-offset) * var(--ui-scale)),
