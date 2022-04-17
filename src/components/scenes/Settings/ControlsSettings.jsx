@@ -34,7 +34,6 @@ export function ControlsSettings(props) {
 	const { variants } = props
 
 	const [gameManager] = useStore(state => ([state.gameManager]))
-	const [gamepadIsReady, setGamepadIsReady] = useState(false)
 	const { controlsManager } = gameManager
 
 	const [gamepads, setGamepads] = useState(
@@ -55,6 +54,7 @@ export function ControlsSettings(props) {
 	)
 
 	const [selectedGamepad, setSelectedGamepad] = useState(gamepads[0])
+	const [gamepadIsReady, setGamepadIsReady] = useState(selectedGamepad?.gamepad.isReady || false)
 
 	const handleGamepadChange = useCallback(selectedOption => {
 		const gamepad = gamepads[selectedOption.value]
