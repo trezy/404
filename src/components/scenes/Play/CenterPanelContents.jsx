@@ -20,7 +20,7 @@ export function CenterPanelContents() {
 
 	useEffect(() => {
 		gameManager.start()
-		return gameManager.stop
+		return () => gameManager.stop()
 	}, [gameManager])
 
 	return (

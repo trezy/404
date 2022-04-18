@@ -1,3 +1,13 @@
+// Module imports
+import {
+	schedule,
+	unschedule,
+} from 'rafael'
+
+
+
+
+
 // Local imports
 import { ControlsManager } from './ControlsManager.js'
 import { Renderer } from './Renderer.js'
@@ -27,8 +37,6 @@ export class GameManager {
 	 * Public instance properties
 	\****************************************************************************/
 
-	isRunning = true
-
 	/**
 	 * The main game loop. Calls all major per-frame update functions in the correct order.
 	 */
@@ -53,8 +61,6 @@ export class GameManager {
 			// }
 
 			this.#renderer.update()
-
-			requestAnimationFrame(this.gameLoop)
 		}
 	}
 
@@ -70,7 +76,7 @@ export class GameManager {
 	 * Start the game manager.
 	 */
 	start = () => {
-		const { isRunning } = store.getState()
+		schedule(this.gameLoop, { id: 'game loop' })
 
 		if (!isRunning) {
 			this.#renderer = new Renderer
@@ -78,9 +84,6 @@ export class GameManager {
 			store.setState({ isRunning: true })
 
 			// window.addEventListener('dblclick', this.handleDoubleClick)
-
-			this.gameLoop()
-		}
 	}
 
 	/**
@@ -92,6 +95,8 @@ export class GameManager {
 		if (isRunning) {
 			store.setState({ isRunning: false })
 			this.#renderer.disconnectResizeObserver()
+
+		unschedule('game loop')
 		}
 	}
 
