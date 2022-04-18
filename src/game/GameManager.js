@@ -10,6 +10,8 @@ import {
 
 // Local imports
 import { ControlsManager } from './ControlsManager.js'
+import { EntitiesManager } from './EntitiesManager.js'
+import { Entity } from './Entity.js'
 import { MapManager } from '../game/MapManager.js'
 import { Renderer } from './Renderer.js'
 import { store } from '../store/index.js'
@@ -28,9 +30,13 @@ export class GameManager {
 
 	#controlsManager = null
 
+	#entitiesManager = null
+
 	#mapManager = null
 
 	#renderer = null
+
+	#robot = null
 
 	#tileset = null
 
@@ -48,7 +54,6 @@ export class GameManager {
 	gameLoop = () => {
 		const {
 			isRunning,
-			mapManager,
 			nextFrame,
 		} = store.getState()
 
@@ -58,6 +63,7 @@ export class GameManager {
 			this.#controlsManager.update()
 			this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
 			this.#mapManager.render(this.#renderer)
+			this.#entitiesManager.render(this.#renderer)
 
 			// render.drawEntities(entities)
 
@@ -69,6 +75,37 @@ export class GameManager {
 		}
 	}
 
+	/**
+	 * Start the game manager.
+	 */
+	start = () => {
+		schedule(this.gameLoop, { id: 'game loop' })
+
+		this.#renderer.initialise()
+
+		this.#robot = new Entity({
+			isAnimated: true,
+			position: { ...this.#mapManager.startingPosition },
+		})
+		this.#entitiesManager.add(this.#robot)
+
+		store.setState({ isRunning: true })
+
+		// window.addEventListener('dblclick', this.handleDoubleClick)
+	}
+
+	/**
+	 * Stop the game manager.
+	 */
+	stop = () => {
+		store.setState({ isRunning: false })
+
+		this.#renderer.disconnectResizeObserver()
+		this.#entitiesManager.reset()
+
+		unschedule('game loop')
+	}
+
 	// handleDoubleClick = () => {
 	// 	if (document.fullscreenElement) {
 	// 		document.exitFullscreen()
@@ -76,34 +113,6 @@ export class GameManager {
 	// 		this.canvas.requestFullscreen()
 	// 	}
 	// }
-
-	/**
-	 * Start the game manager.
-	 */
-	start = () => {
-		schedule(this.gameLoop, { id: 'game loop' })
-
-		if (!isRunning) {
-			this.#renderer = new Renderer
-
-			store.setState({ isRunning: true })
-
-			// window.addEventListener('dblclick', this.handleDoubleClick)
-	}
-
-	/**
-	 * Stop the game manager.
-	 */
-	stop = () => {
-		const { isRunning } = store.getState()
-
-		if (isRunning) {
-			store.setState({ isRunning: false })
-			this.#renderer.disconnectResizeObserver()
-
-		unschedule('game loop')
-		}
-	}
 
 
 
@@ -118,6 +127,9 @@ export class GameManager {
 	 */
 	constructor() {
 		this.#controlsManager = new ControlsManager
+		this.#entitiesManager = new EntitiesManager({ gameManager: this })
+		this.#renderer = new Renderer
+	}
 
 
 
@@ -167,8 +179,6 @@ export class GameManager {
 	\****************************************************************************/
 
 	/**
-	 * Retrieves the `ControlsManager` being used by this `GameManager`.
-	 *
 	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.
 	 */
 	get controlsManager() {

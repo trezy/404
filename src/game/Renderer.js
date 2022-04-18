@@ -52,26 +52,6 @@ export class Renderer {
 
 
 	/****************************************************************************\
-	 * Constructor
-	\****************************************************************************/
-
-	/**
-	 * Create a new renderer.
-	 */
-	constructor() {
-		const canvas = document.querySelector('#game-canvas')
-
-		this.target = canvas.getContext('2d')
-		this.shadow = canvas.cloneNode().getContext('2d')
-
-		this.initialiseResizeObserver()
-	}
-
-
-
-
-
-	/****************************************************************************\
 	 * Public instance methods
 	\****************************************************************************/
 
@@ -79,7 +59,7 @@ export class Renderer {
 	 * Disconnect the resize observer.
 	 */
 	disconnectResizeObserver() {
-		this.resizeObserver.disconnect()
+		this.resizeObserver?.disconnect()
 	}
 
 	/**
@@ -147,7 +127,7 @@ export class Renderer {
 	 * Draw an image to the shadow canvas.
 	 *
 	 * @param {object} config Configuration for the draw operation.
-	 * @param {Image} config.image The source image to be drawn.
+	 * @param {HTMLImageElement} config.image The source image to be drawn.
 	 * @param {object} config.source Configuration for the source image.
 	 * @param {number} config.source.height The height of the section of the source image to be rendered.
 	 * @param {number} config.source.width The width of the section of the source image to be rendered.
@@ -244,6 +224,19 @@ export class Renderer {
 		} = config
 
 		this.queue[this.layer].push([`${mode}Rect`, x, y, width, height, ...options])
+	}
+
+	/**
+	 * Initialise the renderer.
+	 */
+	initialise() {
+		/** @type {HTMLCanvasElement} */
+		const canvas = document.querySelector('#game-canvas')
+
+		this.target = canvas.getContext('2d')
+		this.shadow = canvas.cloneNode().getContext('2d')
+
+		this.initialiseResizeObserver()
 	}
 
 	/**
