@@ -7,7 +7,6 @@ import create from 'zustand/vanilla'
 
 // Local imports
 import { GameManager } from '../game/GameManager.js'
-import { Map } from '../game/Map.js'
 import { SaveManager } from '../game/SaveManager.js'
 
 
@@ -23,12 +22,12 @@ const FRAME_BUFFER = []
 
 
 export const store = create((set, get) => ({
-	mapID: null,
-	fps: 0,
+	controlsManager: null,
 	frame: 0,
-	isRunning: false,
+	fps: 0,
 	gameManager: new GameManager,
-	previousScene: null,
+	isRunning: false,
+	mapID: null,
 	mapManager: null,
 	mostRecentSaveID: (() => {
 		const mostRecentSaveID = localStorage.getItem('debug-game:most-recent-save-id')
@@ -39,7 +38,7 @@ export const store = create((set, get) => ({
 
 		return null
 	})(),
-	tileset: null,
+	previousScene: null,
 	timeDelta: 0,
 	time: 0,
 	saveID: null,
@@ -158,19 +157,14 @@ export const store = create((set, get) => ({
 	 */
 	async loadMap() {
 		const {
+			gameManager,
 			mapID,
 			goToScene,
-			preloadTileset,
 		} = get()
 
-		const { default: mapData } = await import(/* @vite-ignore */ `/maps/${mapID}.js`)
+		await gameManager.loadMap(mapID)
 
-		const tileset = await preloadTileset()
-
-		goToScene('play', {
-			mapManager: new Map(mapData, tileset),
-			tileset,
-		})
+		goToScene('play', { mapManager: gameManager.mapManager })
 	},
 
 	/**
@@ -193,17 +187,10 @@ export const store = create((set, get) => ({
 			timeDelta: now - state.time,
 		}))
 	},
-
-	/**
-	 * Preload the game's tileset.
-	 */
-	async preloadTileset() {
-		const tileset = new Image
-
-		tileset.src = '/tileset.png'
-
-		await tileset.decode()
-
-		return tileset
-	},
 }))
+
+store.setState(state => {
+	return {
+		controlsManager: state.gameManager.controlsManager,
+	}
+})

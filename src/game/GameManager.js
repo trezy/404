@@ -10,6 +10,7 @@ import {
 
 // Local imports
 import { ControlsManager } from './ControlsManager.js'
+import { MapManager } from '../game/MapManager.js'
 import { Renderer } from './Renderer.js'
 import { store } from '../store/index.js'
 
@@ -27,7 +28,11 @@ export class GameManager {
 
 	#controlsManager = null
 
+	#mapManager = null
+
 	#renderer = null
+
+	#tileset = null
 
 
 
@@ -50,9 +55,9 @@ export class GameManager {
 		if (isRunning) {
 			nextFrame()
 
-			this.controlsManager.update()
-			this.#renderer.drawGrid(mapManager.width, mapManager.height)
-			mapManager.render(this.#renderer)
+			this.#controlsManager.update()
+			this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
+			this.#mapManager.render(this.#renderer)
 
 			// render.drawEntities(entities)
 
@@ -113,6 +118,44 @@ export class GameManager {
 	 */
 	constructor() {
 		this.#controlsManager = new ControlsManager
+
+
+
+
+
+	/****************************************************************************\
+	 * Public instance methods
+	\****************************************************************************/
+
+	/**
+	 * Loads a map.
+	 *
+	 * @param {string} mapID The ID of the map to be loaded.
+	 */
+	async loadMap(mapID) {
+		await this.preloadTileset()
+
+		this.#mapManager = new MapManager({
+			gameManager: this,
+			mapID,
+		})
+
+		await this.#mapManager.load()
+
+		store.setState({ mapManager: this.#mapManager })
+	}
+
+	/**
+	 * Preload the tileset.
+	 */
+	async preloadTileset() {
+		if (!this.#tileset) {
+			this.#tileset = new Image
+
+			this.#tileset.src = '/tileset.png'
+
+			await this.#tileset.decode()
+		}
 	}
 
 
@@ -133,11 +176,23 @@ export class GameManager {
 	}
 
 	/**
-	 * Retrieves the `Renderer` being used by this `GameManager`.
-	 *
+	 * @returns {MapManager} The current `MapManager`.
+	 */
+	get mapManager() {
+		return this.#mapManager
+	}
+
+	/**
 	 * @returns {Renderer} The `GameManager`'s `Renderer`.
 	 */
 	get renderer() {
 		return this.#renderer
+	}
+
+	/**
+	 * @returns {HTMLImageElement} The current tileset.
+	 */
+	get tileset() {
+		return this.#tileset
 	}
 }

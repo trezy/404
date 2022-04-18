@@ -14,7 +14,7 @@ import { TILE_SIZE } from '../game/Tile.js'
  * @param {object} config.renderer The renderer instance which will be used to render this tile.
  * @param {number} config.sourceX The left most position position (in pixels) of the tile in the `tileset` image.
  * @param {number} config.sourceY The top most position position (in pixels) of the tile in the `tileset` image.
- * @param {Image} config.tileset The base image from which the will be rendered.
+ * @param {HTMLImageElement} config.tileset The base image from which the will be rendered.
  */
 export function renderStandardSizeTile(config) {
 	const {

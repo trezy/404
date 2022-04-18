@@ -1,5 +1,6 @@
+/* eslint-disable array-element-newline */
 // Local imports
-import { Tile } from '../../src/game/Tile.js'
+import { Tile } from '../Tile.js'
 
 
 
@@ -35,7 +36,7 @@ export default {
 		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
 		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
 		emptyTile, wallAdjacentUp, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wallAdjacentUp, emptyTile,
-		emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile
+		emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile,
 	],
 	width: 14,
 }

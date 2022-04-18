@@ -7,6 +7,7 @@ import {
 	TILE_RENDERERS,
 	TILE_SIZE,
 } from './Tile.js'
+import { GameManager } from './GameManager.js'
 
 
 
@@ -15,12 +16,42 @@ import {
 /**
  * Represents a game map.
  */
-export class Map {
+export class MapManager {
 	/****************************************************************************\
-	 * Public instance properties
+	 * Private instance properties
 	\****************************************************************************/
 
-	mapData = null
+	#gameManager = null
+
+	#mapData = null
+
+	#mapID = null
+
+
+
+
+
+	/****************************************************************************\
+	 * Constructor
+	\****************************************************************************/
+
+	/**
+	 * Creates a new map.
+	 *
+	 * @param {object} options All options.
+	 * @param {GameManager} options.gameManager The `GameManager` this map belongs to.
+	 * @param {string} options.mapID The ID of this map.
+	 */
+	// constructor(mapData, tileset) {
+	constructor(options) {
+		const {
+			gameManager,
+			mapID,
+		} = options
+
+		this.#gameManager = gameManager
+		this.#mapID = mapID
+	}
 
 
 
@@ -31,14 +62,14 @@ export class Map {
 	\****************************************************************************/
 
 	/**
-	 * Creates a new map.
-	 *
-	 * @param {object} mapData The contents of the original map file.
-	 * @param {Image} tileset The image from which tiles should be rendered.
+	 * Load the data for this map.
 	 */
-	constructor(mapData, tileset) {
-		this.mapData = mapData
-		this.tileset = tileset
+	async load() {
+		const { default: mapData } = await import(`./maps/${this.#mapID}.js`)
+
+		this.#mapData = mapData
+
+		console.log(mapData)
 	}
 
 	/**
@@ -69,7 +100,7 @@ export class Map {
 					destinationX: x * TILE_SIZE.width,
 					destinationY: y * TILE_SIZE.height,
 					renderer,
-					tileset: this.tileset,
+					tileset: this.#gameManager.tileset,
 				}, tileConfig)
 			}
 		})
@@ -84,38 +115,37 @@ export class Map {
 	\****************************************************************************/
 
 	/**
-	 * Convenience getter for the map's height (in grid cells).
-	 *
 	 * @returns {number} The map's height.
 	 */
 	get height() {
-		return this.mapData.height
+		return this.#mapData.height
 	}
 
 	/**
-	 * Convenience getter for the map's name.
-	 *
 	 * @returns {string} The map's name.
 	 */
 	get name() {
-		return this.mapData.name
+		return this.#mapData.name
 	}
 
 	/**
-	 * Convenience getter for the map's tile array.
-	 *
+	 * @returns {object} The starting coordinates.
+	 */
+	get startingPosition() {
+		return this.#mapData.startingPosition
+	}
+
+	/**
 	 * @returns {Array} An array of tile configs.
 	 */
 	get tiles() {
-		return this.mapData.tiles
+		return this.#mapData.tiles
 	}
 
 	/**
-	 * Convenience getter for the map's width (in grid cells).
-	 *
 	 * @returns {number} The map's width.
 	 */
 	get width() {
-		return this.mapData.width
+		return this.#mapData.width
 	}
 }
