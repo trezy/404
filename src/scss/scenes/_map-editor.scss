@@ -1,0 +1,23 @@
+.scene.map-editor {
+	display: grid;
+	grid-template-columns: 1fr 4fr;
+	height: 100%;
+	width: 100%;
+
+	menu {
+		.tiles {
+			display: grid;
+			gap: 5px;
+			grid-template-columns: repeat(4, 1fr);
+
+			.tile {
+				height: 16px;
+				width: 16px;
+			}
+		}
+	}
+
+	canvas {
+		width: 100%;
+	}
+}

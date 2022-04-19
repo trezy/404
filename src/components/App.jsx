@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
+import { MapEditor } from './MapEditor.jsx'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
 
@@ -24,6 +25,22 @@ import { WholePixelContainer } from './WholePixelContainer.jsx'
 const LOADING_SCENE_VARIANTS = {
 	animate: {
 		opacity: 1,
+	},
+
+	exit: {
+		opacity: 0,
+	},
+
+	initial: {
+		opacity: 0,
+	},
+}
+const MAIN_SCENE_VARIANTS = {
+	animate: {
+		opacity: 1,
+		transition: {
+			duration: 0,
+		},
 	},
 
 	exit: {
@@ -78,13 +95,32 @@ export function App() {
 					</motion.main>
 				)}
 
-				{(scene !== 'loadingGame') && (
+				{/* {(scene === 'mapEditor') && (
 					<main className={'scene'}>
 						<div className={'layout panels'}>
 							<LeftPanel />
 							<CenterPanel />
 						</div>
 					</main>
+				)} */}
+
+				{(scene === 'mapEditor') && (
+					<MapEditor key={'map-editor'} />
+				)}
+
+				{(!['loadingGame', 'mapEditor'].includes(scene)) && (
+					<motion.main
+						key={'main'}
+						animate={'animate'}
+						className={'scene'}
+						exit={'exit'}
+						initial={'initial'}
+						variants={MAIN_SCENE_VARIANTS}>
+						<div className={'layout panels'}>
+							<LeftPanel />
+							<CenterPanel />
+						</div>
+					</motion.main>
 				)}
 			</AnimatePresence>
 		</WholePixelContainer>

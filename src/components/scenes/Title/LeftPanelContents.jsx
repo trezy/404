@@ -24,12 +24,14 @@ export function LeftPanelContents() {
   const [
 		goToSaveSelect,
 		goToSettings,
+		goToMapEditor,
 		goToMapSelect,
 		mostRecentSaveID,
 		saveManager,
 	] = useStore(state => [
 		state.goToSaveSelect,
     state.goToSettings,
+    state.goToMapEditor,
     state.goToMapSelect,
     state.mostRecentSaveID,
     state.saveManager,
@@ -80,6 +82,10 @@ export function LeftPanelContents() {
 
 			<Button onClick={handleSettingsClick}>
 				{'Settings'}
+			</Button>
+
+			<Button onClick={goToMapEditor}>
+				{'Map Editor'}
 			</Button>
 		</ButtonStack>
 	)

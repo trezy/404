@@ -70,6 +70,15 @@ export const store = create((set, get) => ({
 	},
 
 	/**
+	 * Switch to the map editor scene.
+	 */
+	goToMapEditor() {
+		const { goToScene } = get()
+
+		goToScene('mapEditor')
+	},
+
+	/**
 	 * Switch to the map select scene. Also sets the saveID if one is passed.
 	 *
 	 * @param {number} [saveID] The ID of the save that has been selected.
