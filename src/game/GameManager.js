@@ -61,11 +61,12 @@ export class GameManager {
 			nextFrame()
 
 			this.#controlsManager.update()
+			this.#robot.update()
+
 			this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
 			this.#mapManager.render(this.#renderer)
 			this.#entitiesManager.render(this.#renderer)
 
-			// render.drawEntities(entities)
 
 			// if (currentTile < mapManager.tiles.length) {
 			// 	render.drawPlacement()
@@ -85,9 +86,11 @@ export class GameManager {
 
 		this.#robot = new Entity({
 			isAnimated: true,
+			mapManager: this.#mapManager,
 			position: { ...this.#mapManager.startingPosition },
 		})
 		this.#entitiesManager.add(this.#robot)
+		this.#robot.go()
 
 		store.setState({ isRunning: true })
 

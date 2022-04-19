@@ -1,13 +1,17 @@
+// Module imports
+import PF from 'pathfinding'
+
+
+
+
+
 // Local imports
 import {
 	LAYERS,
 	Renderer,
 } from './Renderer.js'
-import {
-	TILE_RENDERERS,
-	TILE_SIZE,
-} from './Tile.js'
 import { GameManager } from './GameManager.js'
+import { Tile } from './Tile.js'
 
 
 
@@ -26,6 +30,10 @@ export class MapManager {
 	#mapData = null
 
 	#mapID = null
+
+	#pathfindingGrid = null
+
+	#tiles = []
 
 
 
@@ -69,7 +77,38 @@ export class MapManager {
 
 		this.#mapData = mapData
 
-		console.log(mapData)
+		this.#pathfindingGrid = new PF.Grid(mapData.width, mapData.height)
+
+		const tileCount = mapData.width * mapData.height
+		let tileIndex = 0
+
+		while (tileIndex < tileCount) {
+			const tileConfig = {
+				layers: [],
+				mapManager: this,
+				position: {
+					x: tileIndex % mapData.width,
+					y: Math.floor((tileIndex - (tileIndex % mapData.width)) / mapData.height),
+				},
+			}
+
+			this.#mapData.tiles.forEach(layer => {
+				let tileData = layer[tileIndex]
+
+				if (tileData === null) {
+					tileData = { type: 'empty' }
+				}
+
+				tileConfig.layers.push(tileData)
+			})
+
+			const tile = new Tile(tileConfig)
+
+			this.#tiles.push(tile)
+			this.#pathfindingGrid.setWalkableAt(tile.position.x, tile.position.y, tile.isTraversable)
+
+			tileIndex += 1
+		}
 	}
 
 	/**
@@ -80,29 +119,8 @@ export class MapManager {
 	render(renderer) {
 		renderer.layer = LAYERS.foreground
 
-		this.tiles.forEach((tileData, index) => {
-			if (!Array.isArray(tileData)) {
-				tileData = [tileData]
-			}
-
-			const [
-				rendererIndex,
-				tileConfig = {},
-			] = tileData
-
-			const x = index % this.width
-			const y = Math.floor((index - x) / this.height)
-
-			const tileRenderer = TILE_RENDERERS[rendererIndex]
-
-			if (tileRenderer) {
-				tileRenderer({
-					destinationX: x * TILE_SIZE.width,
-					destinationY: y * TILE_SIZE.height,
-					renderer,
-					tileset: this.#gameManager.tileset,
-				}, tileConfig)
-			}
+		this.#tiles.forEach(tile => {
+			tile.render(renderer, this.#gameManager.tileset)
 		})
 	}
 
@@ -129,6 +147,13 @@ export class MapManager {
 	}
 
 	/**
+	 * @returns {PF.Grid} The pathfinding grid.
+	 */
+	get pathfindingGrid() {
+		return this.#pathfindingGrid
+	}
+
+	/**
 	 * @returns {object} The starting coordinates.
 	 */
 	get startingPosition() {
@@ -139,7 +164,7 @@ export class MapManager {
 	 * @returns {Array} An array of tile configs.
 	 */
 	get tiles() {
-		return this.#mapData.tiles
+		return this.#tiles
 	}
 
 	/**

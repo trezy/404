@@ -1,4 +1,12 @@
+// Module imports
+import PF from 'pathfinding'
+
+
+
+
+
 // Local imports
+import { MapManager } from './MapManager.js'
 import { Renderer } from './Renderer.js'
 import { TILE_SIZE } from './Tile.js'
 
@@ -29,6 +37,8 @@ export class Entity {
 
 	#frame = 0
 
+	#destination = null
+
 	/** @type {'down' | 'left' | 'right' | 'up'} */
 	#direction = 'right'
 
@@ -38,13 +48,16 @@ export class Entity {
 
 	#lastFrameUpdate = 0
 
+	#mapManager = null
+
+	#path = null
+
 	#position = {
 		x: 0,
 		y: 0,
 	}
 
-	/** @type {'idle' | 'push' | 'walk'} */
-	#state = 'idle'
+	#speed = 0.5
 
 
 
@@ -61,15 +74,28 @@ export class Entity {
 	 * @param {'down' | 'left' | 'right' | 'up'} [config.direction = 'right'] The direction this entity is currently pointing.
 	 * @param {number} [config.frameRate = 15] The rate at which to update the frame being rendered for animated entities.
 	 * @param {boolean} [config.isAnimated = false] Whether or not this entity is animated.
-	 * @param {object} [config.position] The grid cell at which this entity should be rendered.
+	 * @param {MapManager} config.mapManager The `MapManager` to use for pathfinding.
+	 * @param {object} config.position The grid cell at which this entity should be rendered.
 	 */
 	constructor(config) {
 		const {
 			direction,
 			frameRate,
 			isAnimated,
+			mapManager,
 			position,
 		} = config
+
+		if (!mapManager) {
+			throw new Error('Entities must be created with an instance of a `MapManager`.')
+		}
+
+		if (!position) {
+			throw new Error('Entities must be created with an initial position.')
+		}
+
+		this.#mapManager = mapManager
+		this.#position = position
 
 		if (direction) {
 			this.#direction = direction
@@ -82,10 +108,6 @@ export class Entity {
 		if (isAnimated) {
 			this.#isAnimated = isAnimated
 		}
-
-		if (position) {
-			this.#position = position
-		}
 	}
 
 
@@ -97,6 +119,26 @@ export class Entity {
 	\****************************************************************************/
 
 	/**
+	 * Starts the entity's pathfinding queue.
+	 */
+	go() {
+		const grid = this.#mapManager.pathfindingGrid.clone()
+		const finder = new PF.AStarFinder({
+			diagonalMovement: PF.DiagonalMovement.Never,
+		})
+
+		this.#path = finder.findPath(
+			this.#position.x,
+			this.#position.y,
+			12,
+			6,
+			grid,
+		)
+
+		this.#destination = this.#path.shift()
+	}
+
+	/**
 	 * Render the current frame of this entity to the canvas.
 	 *
 	 * @param {Renderer} renderer The renderer to be used for drawing the entity.
@@ -105,7 +147,7 @@ export class Entity {
 	render(renderer, tileset) {
 		const now = performance.now()
 
-		const frameCount = ANIMATION_FRAME_COUNTS[this.#state]
+		const frameCount = ANIMATION_FRAME_COUNTS[this.state]
 
 		if (this.isAnimated) {
 			const frameUpdateDelta = now - this.#lastFrameUpdate
@@ -141,7 +183,7 @@ export class Entity {
 		}
 
 		// eslint-disable-next-line default-case
-		switch (this.#state) {
+		switch (this.state) {
 			case 'push':
 				sourcePosition.x += 112
 				break
@@ -164,9 +206,38 @@ export class Entity {
 				height: TILE_SIZE.height,
 				width: TILE_SIZE.width,
 				x: this.#position.x * TILE_SIZE.width,
-				y: this.#position.y * TILE_SIZE.width,
+				y: (this.#position.y * TILE_SIZE.height) - 2,
 			},
 		})
+	}
+
+	/**
+	 * Updates the entity's position and path.
+	 */
+	update() {
+		if (this.#destination) {
+			const xSpeed = this.#speed / TILE_SIZE.width
+			const ySpeed = this.#speed / TILE_SIZE.height
+
+			if (this.#position.x > this.#destination[0]) {
+				this.#position.x -= xSpeed
+				this.#direction = 'left'
+			} else if (this.#position.x < this.#destination[0]) {
+				this.#position.x += xSpeed
+				this.#direction = 'right'
+			} else if (this.#position.y > this.#destination[1]) {
+				this.#position.y -= ySpeed
+				this.#direction = 'up'
+			} else if (this.#position.y < this.#destination[1]) {
+				this.#position.y += ySpeed
+				this.#direction = 'down'
+			} else if (this.#path?.length) {
+				this.#destination = this.#path.shift()
+			} else {
+				this.#destination = null
+				this.#path = null
+			}
+		}
 	}
 
 
@@ -206,7 +277,14 @@ export class Entity {
 	}
 
 	/**
-	 * @returns {object} Whether or not this entity is animated.
+	 * @returns {import('./Tile.js').Vector2} The path the entity is travelling.
+	 */
+	get path() {
+		return this.#path
+	}
+
+	/**
+	 * @returns {import('./Tile.js').Vector2} This entity's current position.
 	 */
 	get position() {
 		return this.#position
@@ -216,7 +294,10 @@ export class Entity {
 	 * @returns {'idle' | 'push' | 'walk'} The current animation state.
 	 */
 	get state() {
-		return this.#state
+		if (this.#destination) {
+			return 'walk'
+		}
+		return 'idle'
 	}
 
 

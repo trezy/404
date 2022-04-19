@@ -1824,6 +1824,7 @@ __metadata:
     eslint-plugin-sort-class-members: ^1.14.1
     eslint-plugin-unused-imports: ^2.0.0
     framer-motion: ^6.2.8
+    pathfinding: ^0.4.18
     prop-types: ^15.8.1
     rafael: ^5.0.2
     react: ^18.0.0
@@ -3442,6 +3443,13 @@ __metadata:
   version: 1.0.0
   resolution: "hasurl@npm:1.0.0"
   checksum: 2ce603c3f2afc3708443af0de582c0eda1b8a0d2d7d6e99698ae0aa3f563baba5aa28fa2bdc6d5834cbea3ebfbf8ad45cb975cc58d9d3b499b1c5f69a071bf95
+  languageName: node
+  linkType: hard
+
+"heap@npm:0.2.5":
+  version: 0.2.5
+  resolution: "heap@npm:0.2.5"
+  checksum: 1f178a62cef3a29c1dc19783b2a478f4b8f1b85bd2ceb70fa535cf368fdd8fee141f08af0af5c55cd32e1b8a6b1ed200d8d18cd33fa4700ba97476d9c27162d3
   languageName: node
   linkType: hard
 
@@ -5067,6 +5075,15 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"pathfinding@npm:^0.4.18":
+  version: 0.4.18
+  resolution: "pathfinding@npm:0.4.18"
+  dependencies:
+    heap: 0.2.5
+  checksum: 2d08ee0b28a337d7daa4c5b4fafb2add203d868372a928dd7b81db1ce69de427267bdb12863c9285ac0c92b901350cd407b4dfa943784fe6a0f28279c1aefb43
   languageName: node
   linkType: hard
 

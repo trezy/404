@@ -1,20 +1,13 @@
 /* eslint-disable array-element-newline */
-// Local imports
-import { Tile } from '../Tile.js'
 
-
-
-
-
-// Constants
-const emptyTile = (new Tile).compile()
-const wall = (new Tile).wall().compile()
-const wallAdjacentDown = (new Tile).wall().group('down').compile()
-const wallAdjacentUp = (new Tile).wall().group('up').compile()
-const wallAdjacentVertical = (new Tile).wall().group('vertical').compile()
-const greyFloorTile = (new Tile).floor().color('dark grey').compile()
-const greyFloorTileFadeLeft = (new Tile).floor().color('dark grey').fade('left').compile()
-const greyFloorTileFadeRight = (new Tile).floor().color('dark grey').fade('right').compile()
+const exitTile = {
+	type: 'exit',
+}
+const floorTile = {
+	color: 'dark grey',
+	type: 'floor',
+}
+const wallTile = { type: 'wall' }
 
 export default {
 	height: 13,
@@ -24,19 +17,51 @@ export default {
 		y: 6,
 	},
 	tiles: [
-		emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile,
-		emptyTile, wallAdjacentDown, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wallAdjacentDown, emptyTile,
-		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
-		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
-		emptyTile, wallAdjacentUp, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentUp, emptyTile,
-		emptyTile, greyFloorTile, greyFloorTile, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, greyFloorTile, greyFloorTile, emptyTile,
-		greyFloorTileFadeLeft, greyFloorTile, greyFloorTile, greyFloorTile, emptyTile, emptyTile, greyFloorTile, greyFloorTile, emptyTile, emptyTile, greyFloorTile, greyFloorTile, greyFloorTile, greyFloorTileFadeRight,
-		emptyTile, greyFloorTile, greyFloorTile, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, greyFloorTile, greyFloorTile, emptyTile,
-		emptyTile, wallAdjacentDown, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentDown, emptyTile,
-		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
-		emptyTile, wallAdjacentVertical, greyFloorTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, greyFloorTile, wallAdjacentVertical, emptyTile,
-		emptyTile, wallAdjacentUp, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wallAdjacentUp, emptyTile,
-		emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile, emptyTile,
+		[
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, floorTile, null, null, null, null, null, null, null, null, floorTile, null, null,
+			null, null, floorTile, null, floorTile, floorTile, floorTile, null, null, null, null, floorTile, null, null,
+			null, null, floorTile, null, floorTile, null, floorTile, null, null, null, null, floorTile, null, null,
+			null, floorTile, floorTile, null, floorTile, null, floorTile, null, null, null, null, floorTile, floorTile, null,
+			floorTile, floorTile, floorTile, floorTile, floorTile, null, floorTile, null, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile,
+			null, floorTile, floorTile, null, null, null, floorTile, null, floorTile, null, null, floorTile, floorTile, null,
+			null, null, floorTile, null, null, null, floorTile, null, floorTile, null, null, floorTile, null, null,
+			null, null, floorTile, null, null, null, floorTile, floorTile, floorTile, null, null, floorTile, null, null,
+			null, null, floorTile, null, null, null, null, null, null, null, null, floorTile, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+		],
+		[
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, wallTile, null, null, null, null, null, null, null, null, null, null, wallTile, null,
+			null, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, wallTile, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+		],
+		[
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, exitTile, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+		],
 	],
 	width: 14,
 }

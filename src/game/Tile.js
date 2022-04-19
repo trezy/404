@@ -1,76 +1,67 @@
 // Local imports
+import { MapManager } from './MapManager.js'
+import { Renderer } from './Renderer.js'
 import { renderStandardSizeTile } from '../helpers/renderStandardSizeTile.js'
+import { TileSprite } from './TileSprite.js'
 
 
 
 
 
+/**
+ * @typedef {object} Vector2
+ * @property {number} x Coordinates on the horizontal axis.
+ * @property {number} y Coordinates on the vertical axis.
+ */
+/**
+ * @typedef {object} TileConfig
+ * @property {object[]} [layers] The sprite stack for this tile.
+ * @property {MapManager} mapManager The `MapManager` managing this tile.
+ * @property {Vector2} position The position at which to render the tile.
+ */
+
+
+
+
+
+// Constants
 export const TILE_SIZE = {
 	height: 16,
 	width: 16,
 }
 
-export const TILE_RENDERERS = [
-	// empty
-	() => {},
+export const TILE_RENDERERS = {
+	/**
+	 * Renders an empty tile.
+	 */
+	empty() {},
 
-	// wall
-	(rendererConfig, tileConfig) => {
+	/**
+	 * Renders a floor tile.
+	 *
+	 * @param {object} config Configuration for rendering.
+	 * @param {number} config.destinationY The Y position at which to render the tile.
+	 * @param {MapManager} config.mapManager The `MapManager` managing this tile.
+	 * @param {Renderer} config.renderer The Renderer to use to draw this tile.
+	 * @param {object} config.sprite The sprite config.
+	 * @param {Tile} config.tile The tile to be rendered.
+	 */
+	floor(config) {
 		const {
 			destinationY,
+			mapManager,
 			renderer,
-		} = rendererConfig
-
-		let sourceX = 144
-		let sourceY = 48
-
-		switch (tileConfig.grouping) {
-			case 'down':
-				sourceY = 16
-				break
-
-			case 'up':
-				sourceX = 112
-				break
-
-			case 'vertical':
-				sourceX = 112
-				sourceY = 16
-				break
-
-			default:
-				break
-		}
-
-		renderStandardSizeTile({
-			...rendererConfig,
-			sourceX,
-			sourceY,
-		})
-
-		renderer.setAlpha(0.5)
-		renderStandardSizeTile({
-			...rendererConfig,
-			destinationY: destinationY + TILE_SIZE.height,
-			sourceX: 16,
-			sourceY: 176,
-		})
-		renderer.setAlpha(1)
-	},
-
-	// floor
-	(rendererConfig, tileConfig) => {
-		const {
-			color,
-			fade = false,
-		} = tileConfig
+			sprite,
+			tile,
+		} = config
+		const { position } = tile
 		const baseX = 48
 		const baseY = 176
 
 		let xMod = 0
 		let yMod = 0
 
-		switch (color) {
+		switch (sprite.color) {
 			case 'dark grey':
 				xMod += 2
 				break
@@ -100,141 +91,261 @@ export const TILE_RENDERERS = [
 				xMod = 0
 		}
 
-		switch (fade) {
-			case 'down':
-				yMod = 2
-				break
-
-			case 'left':
-				yMod = 1
-				break
-
-			case 'right':
-				yMod = 3
-				break
-
-			case 'up':
-				yMod = 4
-				break
-
-			// no fade
-			default:
-				yMod = 0
+		if (position.y === 0) {
+			yMod = 4
+		} else if (position.y === (mapManager.height - 1)) {
+			yMod = 2
+		} else if (position.x === 0) {
+			yMod = 1
+		} else if (position.x === (mapManager.width - 1)) {
+			yMod = 3
 		}
 
+		// @ts-ignore
 		renderStandardSizeTile({
-			...rendererConfig,
+			...config,
 			sourceX: baseX + (xMod * TILE_SIZE.width * 2),
 			sourceY: baseY + (yMod * TILE_SIZE.height * 2),
 		})
+
+		if (yMod === 0) {
+			renderer.setAlpha(0.5)
+			// @ts-ignore
+			renderStandardSizeTile({
+				...config,
+				destinationY: destinationY + TILE_SIZE.height,
+				sourceX: 16,
+				sourceY: 176,
+			})
+			renderer.setAlpha(1)
+		}
 	},
-]
+
+	/**
+	 * Renders a wall tile.
+	 *
+	 * @param {object} config Configuration for rendering.
+	 * @param {number} config.destinationY The Y position at which to render the tile.
+	 * @param {MapManager} config.mapManager The `MapManager` managing this tile.
+	 * @param {Renderer} config.renderer The Renderer to use to draw this tile.
+	 * @param {Tile} config.tile The tile to be rendered.
+	 */
+	wall(config) {
+		const {
+			destinationY,
+			mapManager,
+			renderer,
+			tile,
+		} = config
+		const { position } = tile
+
+		let sourceX = 144
+		let sourceY = 48
+
+		const hasWallAbove = mapManager
+			.tiles[(mapManager.width * (position.y - 1)) + position.x]
+			.layers
+			.some(sprite => (sprite.type === 'wall'))
+		const hasWallBelow = mapManager
+			.tiles[(mapManager.width * (position.y + 1)) + position.x]
+			.layers
+			.some(sprite => (sprite.type === 'wall'))
+
+		if (hasWallAbove && hasWallBelow) {
+			sourceX = 112
+			sourceY = 16
+		} else if (hasWallAbove) {
+			sourceX = 112
+		} else if (hasWallBelow) {
+			sourceY = 16
+		}
+
+		// @ts-ignore
+		renderStandardSizeTile({
+			...config,
+			sourceX,
+			sourceY,
+		})
+
+		renderer.setAlpha(0.5)
+		// @ts-ignore
+		renderStandardSizeTile({
+			...config,
+			destinationY: destinationY + TILE_SIZE.height,
+			sourceX: 16,
+			sourceY: 176,
+		})
+		renderer.setAlpha(1)
+	},
+}
+
+
+
+
 
 /**
  * Constructs a tile config that can be compiled and used in map files.
  */
 export class Tile {
-	hasShadow = {}
-	tileConfig = {}
-	tileType = 'empty'
+	/****************************************************************************\
+	 * Private instance properties
+	\****************************************************************************/
+
+	#layers = null
+
+	#mapManager = null
+
+	#position = {
+		x: 0,
+		y: 0,
+	}
+
+
+
+
+
+	/****************************************************************************\
+	 * Constructor
+	\****************************************************************************/
 
 	/**
-	 * Sets the color to be used for floor tiles.
+	 * Creates a new Tile.
 	 *
-	 * @param {'dark grey' | 'green' | 'hazard' | 'grey' | 'orange' | 'red'} color The floor color to be used for this tile.
-	 * @returns {Tile} The initial tile instance; useful for chaining.
+	 * @param {TileConfig} config Initial configuration for this tile.
 	 */
-	color(color) {
-		if (this.tileType !== 'floor') {
-			throw new Error('Tile.color() method is only allowed for tiles of type `floor`')
+	constructor(config) {
+		if (!this.#validateConfig(config)) {
+			throw new Error('Attempted to create new `Tile` with invalid configuration.')
 		}
 
-		this.tileConfig.color = color
-		return this
+		this.#mapManager = config.mapManager
+		this.#position = config.position
+
+		this.#layers = config.layers.map(spriteConfig => {
+			return new TileSprite(spriteConfig)
+		})
 	}
 
+
+
+
+
+	/****************************************************************************\
+	 * Private instance methods
+	\****************************************************************************/
+
 	/**
-	 * Sets the fade direction for floor tiles.
+	 * Validates a configuration object.
 	 *
-	 * @param {'down' | 'left' | 'right' | 'up'} fadeDirection The direction to fade the tile.
-	 * @returns {Tile} The initial tile instance; useful for chaining.
+	 * @param {TileConfig} config The configuration object to be validated.
+	 * @returns {boolean} Whether or not the configuration object is valid.
 	 */
-	fade(fadeDirection) {
-		if (this.tileType !== 'floor') {
-			throw new Error('Tile.color() method is only allowed for tiles of type `floor`')
+	#validateConfig(config) {
+		if (typeof config !== 'object') {
+			return false
 		}
 
-		this.tileConfig.fade = fadeDirection
-		return this
-	}
-
-	/**
-	 * Sets this tile to type `floor`.
-	 *
-	 * @returns {Tile} The initial tile instance; useful for chaining.
-	 */
-	floor() {
-		this.tileType = 'floor'
-		return this
-	}
-
-	/**
-	 * Compiles the tile's config object for use in map files.
-	 *
-	 * @returns {number | Array} The config to be used in map files.
-	 */
-	compile() {
-		if (Object.keys(this.tileConfig).length) {
-			return [
-				this.rendererIndex,
-				this.tileConfig,
-			]
+		if (!config.mapManager) {
+			return false
 		}
 
-		return this.rendererIndex
-	}
-
-	/**
-	 * Sets the grouping value for wall tiles.
-	 *
-	 * @param {'down' | 'up' | 'vertical'} grouping Which sides of this wall tile are adjacent to other wall tiles.
-	 * @returns {Tile} The initial tile instance; useful for chaining.
-	 */
-	group(grouping) {
-		if (this.tileType !== 'wall') {
-			throw new Error('Tile.group() method is only allowed for tiles of type `wall`')
+		if (!config.layers) {
+			return false
 		}
 
-		this.tileConfig.grouping = grouping
+		return true
+	}
 
-		return this
+
+
+
+
+	/****************************************************************************\
+	 * Public instance methods
+	\****************************************************************************/
+
+	/**
+	 * Renders this tile to a canvas.
+	 *
+	 * @param {Renderer} renderer The renderer to use for drawing this tile.
+	 * @param {HTMLImageElement} tileset The tileset to draw this tile from.
+	 */
+	render(renderer, tileset) {
+		this.#layers.forEach(sprite => {
+			const spriteRenderer = TILE_RENDERERS[sprite.type]
+
+			if (!spriteRenderer) {
+				console.log(`Encountered unrecognised tile type: ${sprite.type}`)
+				return
+			}
+
+			spriteRenderer({
+				destinationX: this.#position.x * TILE_SIZE.width,
+				destinationY: this.#position.y * TILE_SIZE.height,
+				mapManager: this.#mapManager,
+				renderer,
+				sprite,
+				tile: this,
+				tileset,
+			})
+		})
+	}
+
+
+
+
+
+	/****************************************************************************\
+	 * Public instance getters/setters
+	\****************************************************************************/
+
+	/**
+	 * @returns {boolean} Whether or not this tile is traversable.
+	 */
+	get isTraversable() {
+		const {
+			hasFloor,
+			hasObstacles,
+		} = this.#layers.reduce((accumulator, sprite) => {
+			if (sprite.type === 'empty') {
+				return accumulator
+			}
+
+			if (sprite.type === 'floor') {
+				accumulator.hasFloor = true
+			}
+
+			if (!sprite.isTraversable) {
+				accumulator.hasObstacles = true
+			}
+
+			return accumulator
+		}, {
+			hasFloor: false,
+			hasObstacles: false,
+		})
+
+		return hasFloor && !hasObstacles
 	}
 
 	/**
-	 * Sets this tile to type `wall`.
-	 *
-	 * @returns {Tile} The initial tile instance; useful for chaining.
+	 * @returns {object[]} The sprite stack for this tile.
 	 */
-	wall() {
-		this.tileType = 'wall'
-		return this
+	get layers() {
+		return this.#layers
 	}
 
 	/**
-	 * Determines which renderer function will be used for this tile.
-	 *
-	 * @returns {0 | 1 | 2} The index of the renderer function to be used for this tile.
+	 * @returns {MapManager} This tiles `MapManager`.
 	 */
-	get rendererIndex() {
-		switch (this.tileType) {
-			case 'wall':
-				return 1
+	get mapManager() {
+		return this.#mapManager
+	}
 
-			case 'floor':
-				return 2
-
-			default:
-				return 0
-		}
+	/**
+	 * @returns {Vector2} This tiles cell position.
+	 */
+	get position() {
+		return this.#position
 	}
 }
