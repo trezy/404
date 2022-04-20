@@ -20,21 +20,6 @@ module.exports = [
 		},
 	},
 
-	// Add SCSS support
-	{
-		test: /\.scss$/ui,
-		use: [
-			// Creates `style` nodes from JS strings
-			'style-loader',
-			// Translates CSS into CommonJS
-			'css-loader',
-			// Update static asset paths
-			'resolve-url-loader',
-			// Compiles Sass to CSS
-			'sass-loader',
-		],
-	},
-
 	// Add support for static files
 	{
 		test: /\.png$/u,
@@ -48,6 +33,21 @@ module.exports = [
 					publicPath: '../static',
 				},
 			},
+		],
+	},
+
+	// Add SCSS support
+	{
+		test: /\.scss$/ui,
+		use: [
+			// Creates `style` nodes from JS strings
+			'style-loader',
+			// Translates CSS into CommonJS
+			'css-loader',
+			// Update static asset paths
+			'resolve-url-loader',
+			// Compiles Sass to CSS
+			'sass-loader',
 		],
 	},
 

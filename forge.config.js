@@ -1,11 +1,4 @@
 /* eslint-env node */
-// Module imports
-const path = require('path')
-
-
-
-
-
 module.exports = {
 	packagerConfig: {
 		asar: true,
@@ -36,14 +29,6 @@ module.exports = {
 		// ['@electron-forge/plugin-auto-unpack-natives', {}],
 		['@electron-forge/plugin-webpack', {
 			devContentSecurityPolicy: 'default-src \'self\' \'unsafe-inline\' data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:; img-src \'self\' blob:',
-			devServer: {
-				liveReload: false,
-				static: {
-					directory: path.resolve(process.cwd(), 'public'),
-					publicPath: '/static',
-					serveIndex: true,
-				},
-			},
 			mainConfig: './webpack.main.config.js',
 			renderer: {
 				config: './webpack.renderer.config.js',
