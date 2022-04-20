@@ -14,6 +14,7 @@ import PropTypes from 'prop-types'
 import { capitalise } from '../../../helpers/capitalise.js'
 import { Combobox } from '../../Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
+import { Switch } from '../../Switch.jsx'
 
 
 
@@ -63,6 +64,13 @@ export function AccessibilitySettings(props) {
 		})
 	})())
 
+
+	const [
+		/** @type {boolean} */
+		usePixelFonts,
+		setUsePixelFonts,
+	] = useState(configStore.get('settings.accessibility.usePixelFonts'))
+
 	return (
 		<motion.div
 			animate={'animate'}
@@ -79,6 +87,15 @@ export function AccessibilitySettings(props) {
 					options={COLORBLIND_OPTIONS}
 					value={colorblindType} />
 			</div>
+
+			<div>
+				{`Use Pixel Fonts: ${JSON.stringify(usePixelFonts)}`}
+				<Switch
+					// @ts-ignore
+					isOn={usePixelFonts}
+					onChange={setUsePixelFonts} />
+			</div>
+
 		</motion.div>
 	)
 }
