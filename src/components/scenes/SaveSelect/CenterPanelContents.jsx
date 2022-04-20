@@ -9,7 +9,7 @@ import {
 
 
 // Local imports
-import { Button } from '../../Button'
+import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString'
 import { useStore } from '../../../store/react'
 

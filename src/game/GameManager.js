@@ -167,7 +167,7 @@ export class GameManager {
 		if (!this.#tileset) {
 			this.#tileset = new Image
 
-			this.#tileset.src = '/tileset.png'
+			this.#tileset.src = '/static/tileset.png'
 
 			await this.#tileset.decode()
 		}
