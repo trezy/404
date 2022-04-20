@@ -12,7 +12,6 @@ import { BrowserWindow } from 'electron'
  * Creates a new window.
  */
 export function createWindow() {
-	// new ConfigStore(configSchema)
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		autoHideMenuBar: true,

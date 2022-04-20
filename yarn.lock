@@ -4568,6 +4568,7 @@ __metadata:
     danger: ^11.0.2
     danger-plugin-eslint: ^0.1.0
     electron: 18.0.4
+    electron-log: ^4.4.6
     electron-squirrel-startup: ^1.0.0
     electron-store: ^8.0.1
     eslint: ^8.13.0
@@ -5047,6 +5048,13 @@ __metadata:
   bin:
     electron-installer-redhat: src/cli.js
   conditions: (os=darwin | os=linux)
+  languageName: node
+  linkType: hard
+
+"electron-log@npm:^4.4.6":
+  version: 4.4.6
+  resolution: "electron-log@npm:4.4.6"
+  checksum: cb385a3d220eaf13ff5a7d7ae2f6421ee6b4a3cf9c4026ae66dad37fc005c04ef224a511a01731c489c82a8ed78202dd6ead99e93d0fe951bdc215684df0b3b5
   languageName: node
   linkType: hard
 

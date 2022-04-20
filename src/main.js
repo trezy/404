@@ -1,8 +1,5 @@
 // Module imports
-import {
-	app,
-	// ipcMain,
-} from 'electron'
+import { app } from 'electron'
 import ConfigStore from 'electron-store'
 import ElectronSquirrelStartup from 'electron-squirrel-startup'
 
