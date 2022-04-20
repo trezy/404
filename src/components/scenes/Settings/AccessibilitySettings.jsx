@@ -1,6 +1,42 @@
 // Module imports
+import {
+	useCallback,
+	useState,
+} from 'react'
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import { capitalise } from '../../../helpers/capitalise.js'
+import { Combobox } from '../../Combobox.jsx'
+import { configStore } from '../../../helpers/configStore.js'
+
+
+
+
+
+const COLORBLIND_OPTIONS = [
+	{
+		label: 'None',
+		value: 'none',
+	},
+	{
+		label: 'Deuteranopia',
+		value: 'deuteranopia',
+	},
+	{
+		label: 'Protanopia',
+		value: 'protanopia',
+	},
+	{
+		label: 'Tritanopia',
+		value: 'tritanopia',
+	},
+]
 
 
 
@@ -18,6 +54,15 @@ import PropTypes from 'prop-types'
 export function AccessibilitySettings(props) {
 	const { variants } = props
 
+	const [colorblindType, setColorblindType] = useState((() => {
+		/** @type {string} */
+		const currentValue = configStore.get('settings.accessibility.colorblindType')
+
+		return COLORBLIND_OPTIONS.find(colorblindOption => {
+			return colorblindOption.value === currentValue
+		})
+	})())
+
 	return (
 		<motion.div
 			animate={'animate'}
@@ -26,7 +71,14 @@ export function AccessibilitySettings(props) {
 			variants={variants}>
 			<h2>{'Accessibility'}</h2>
 
-			<div />
+			<div>
+				{'Colorblind Type'}
+				<Combobox
+					emptyMessage={'No gamepads connected'}
+					onChange={setColorblindType}
+					options={COLORBLIND_OPTIONS}
+					value={colorblindType} />
+			</div>
 		</motion.div>
 	)
 }

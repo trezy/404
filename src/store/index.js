@@ -51,7 +51,9 @@ export const store = create((set, get) => ({
 	 */
 	goBack() {
 		const {
+			// @ts-ignore
 			goToScene,
+			// @ts-ignore
 			previousScene,
 		} = get()
 
@@ -64,6 +66,7 @@ export const store = create((set, get) => ({
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
 	goToLoadingMap(mapID) {
+		// @ts-ignore
 		const { goToScene } = get()
 
 		goToScene('loadingMap', { mapID })
@@ -73,6 +76,7 @@ export const store = create((set, get) => ({
 	 * Switch to the map editor scene.
 	 */
 	goToMapEditor() {
+		// @ts-ignore
 		const { goToScene } = get()
 
 		goToScene('mapEditor')
@@ -85,8 +89,11 @@ export const store = create((set, get) => ({
 	 */
 	goToMapSelect(saveID) {
 		const {
+			// @ts-ignore
 			goToScene,
+			// @ts-ignore
 			saveID: currentSaveID,
+			// @ts-ignore
 			saveManager,
 		} = get()
 
@@ -107,6 +114,7 @@ export const store = create((set, get) => ({
 	 * Switch to the save select scene.
 	 */
 	goToSaveSelect() {
+		// @ts-ignore
 		const { goToScene } = get()
 
 		goToScene('saveSelect', {
@@ -124,6 +132,7 @@ export const store = create((set, get) => ({
 	goToScene(sceneName, options = {}) {
 		set(state => ({
 			scene: sceneName,
+			// @ts-ignore
 			previousScene: state.scene,
 			...options,
 		}))
@@ -133,6 +142,7 @@ export const store = create((set, get) => ({
 	 * Switch to the game settings scene.
 	 */
 	goToSettings() {
+		// @ts-ignore
 		const { goToScene } = get()
 
 		goToScene('settings', {
@@ -153,6 +163,7 @@ export const store = create((set, get) => ({
 	 * Switch to the main title scene.
 	 */
 	goToTitle() {
+		// @ts-ignore
 		const { goToScene } = get()
 
 		goToScene('title', {
@@ -166,8 +177,11 @@ export const store = create((set, get) => ({
 	 */
 	async loadMap() {
 		const {
+			// @ts-ignore
 			gameManager,
+			// @ts-ignore
 			mapID,
+			// @ts-ignore
 			goToScene,
 		} = get()
 
@@ -191,8 +205,10 @@ export const store = create((set, get) => ({
 
 		set(state => ({
 			fps: FRAME_BUFFER.length,
+			// @ts-ignore
 			frame: state.frame + 1,
 			time: now,
+			// @ts-ignore
 			timeDelta: now - state.time,
 		}))
 	},
@@ -200,6 +216,7 @@ export const store = create((set, get) => ({
 
 store.setState(state => {
 	return {
+		// @ts-ignore
 		controlsManager: state.gameManager.controlsManager,
 	}
 })
