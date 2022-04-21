@@ -12,7 +12,7 @@
 
 		&:hover,
 		&:focus {
-			background-color: var(--palette-light-grey);
+			background-color: var(--palette-indigo);
 		}
 	}
 
@@ -50,9 +50,7 @@
 	}
 
 	.combobox-options {
-		border-top-color: var(--palette-light-grey);
-		border-top-style: solid;
-		border-top-width: calc(1px * var(--ui-scale));
+		flex-direction: column;
 		left: 0;
 		max-height: 50vh;
 		overflow: auto;
@@ -61,17 +59,27 @@
 		top: 100%;
 		z-index: 1;
 
-		[role=option] {
-			button {
-				// &:hover,
-				// &:focus {
-				// 	background-color: var(--palette-light-grey);
-				// }
+		.combobox-options-group {
+			display: block;
+			position: relative;
+
+			header {
+				background-color: var(--palette-indigo);
+				padding: var(--item-padding);
+				position: sticky;
+				text-align: left;
+				top: 0;
+				width: 100%;
 			}
 
-			&[aria-selected="true"] button {
-				background-color: var(--palette-light-grey);
+			[role=option] button:before {
+				content: '↳';
+				margin-right: calc(2px * var(--ui-scale));
 			}
+		}
+
+		[role=option][aria-selected="true"] button {
+			background-color: var(--palette-purple);
 		}
 	}
 }

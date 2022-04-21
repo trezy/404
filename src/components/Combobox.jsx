@@ -6,6 +6,7 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 
@@ -56,6 +57,7 @@ function isElementInView(element) {
  * An interactive component that displays a list of options when activated.
  *
  * @param {object} props All component props.
+ * @param {string} [props.className] Classes to be applied to the rendered component.
  * @param {string} [props.emptyMessage] Text to be displayed when there are no options.
  * @param {boolean} [props.isDisabled] Whether or not the component is currently interactive.
  * @param {Function} [props.onChange] A function to be called when the selected option changes.
@@ -64,6 +66,7 @@ function isElementInView(element) {
  */
 export function Combobox(props) {
 	const {
+		className,
 		emptyMessage,
 		isDisabled,
 		onChange,
@@ -74,6 +77,8 @@ export function Combobox(props) {
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const comboboxID = useId()
+
+	const compiledClassName = useMemo(() => classnames('combobox', className), [className])
 
 	const getOptionKey = useCallback(option => {
 		return `${comboboxID}-options-${option.value}`
@@ -131,13 +136,18 @@ export function Combobox(props) {
 	])
 
 	const mappedOptions = useMemo(() => {
-		return options.map(option => {
-			const id = getOptionKey(option)
+		const optionGroups = options.reduce((accumulator, option) => {
+			if (option.group && !accumulator[option.group]) {
+				accumulator[option.group] = []
+			}
 
-			return (
+			const id = getOptionKey(option)
+			const isSelected = selectedOption === option
+
+			accumulator[option.group || 'Other'].push((
 				<div
 					key={id}
-					aria-selected={selectedOption === option}
+					aria-selected={isSelected}
 					id={id}
 					role={'option'} >
 					{/* eslint-disable-next-line react/forbid-elements */}
@@ -147,6 +157,31 @@ export function Combobox(props) {
 						type={'button'}>
 						{option.label ?? option.value}
 					</button>
+				</div>
+			))
+
+			return accumulator
+		}, {
+			Other: [],
+		})
+
+		const optionGroupEntries = Object.entries(optionGroups)
+
+		if (optionGroupEntries.length === 1) {
+			return optionGroups.Other
+		}
+
+		return optionGroupEntries.map(([optionGroupName, items]) => {
+			if (!items.length) {
+				return null
+			}
+
+			return (
+				<div
+					key={optionGroupName}
+					className={'combobox-options-group'}>
+					<header>{optionGroupName}</header>
+					{items}
 				</div>
 			)
 		})
@@ -215,7 +250,7 @@ export function Combobox(props) {
 	])
 
 	return (
-		<div className={'combobox'}>
+		<div className={compiledClassName}>
 			<label
 				aria-activedescendant={selectedOption ? getOptionKey(selectedOption) : null}
 				className={'combobox-label'}
@@ -244,6 +279,7 @@ export function Combobox(props) {
 }
 
 Combobox.defaultProps = {
+	className: '',
 	emptyMessage: 'No options available.',
 	isDisabled: false,
 	/* eslint-disable-next-line jsdoc/require-jsdoc */
@@ -253,6 +289,7 @@ Combobox.defaultProps = {
 }
 
 Combobox.propTypes = {
+	className: PropTypes.string,
 	emptyMessage: PropTypes.string,
 	isDisabled: PropTypes.bool,
 	onChange: PropTypes.func,
