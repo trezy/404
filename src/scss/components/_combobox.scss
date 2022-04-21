@@ -54,6 +54,8 @@
 		border-top-style: solid;
 		border-top-width: calc(1px * var(--ui-scale));
 		left: 0;
+		max-height: 50vh;
+		overflow: auto;
 		position: absolute;
 		right: 0;
 		top: 100%;
