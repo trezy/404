@@ -1,0 +1,32 @@
+::-webkit-scrollbar {
+	--scrollbar-size: calc(5px * var(--ui-scale));
+
+	/* Horizontal scrollbar size */
+	height: var(--scrollbar-size);
+
+	/* Vertical scrollbar size */
+	width: var(--scrollbar-size);
+}
+
+/* Foreground */
+::-webkit-scrollbar-thumb {
+	background: var(--palette-light-grey);
+	border-left-color: var(--palette-black);
+	border-left-style: solid;
+	border-left-width: calc(1px * var(--ui-scale));
+	box-shadow: none;
+	cursor: pointer;
+
+	&:hover {
+		background: var(--palette-white);
+	}
+}
+
+/* Background */
+::-webkit-scrollbar-track {
+	background: var(--palette-dark-grey);
+	border-left-color: var(--palette-black);
+	border-left-style: solid;
+	border-left-width: calc(1px * var(--ui-scale));
+	box-shadow: none;
+}
