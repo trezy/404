@@ -26,7 +26,7 @@ module.exports = {
 		},
 	],
 	plugins: [
-		// ['@electron-forge/plugin-auto-unpack-natives', {}],
+		['@electron-forge/plugin-auto-unpack-natives', {}],
 		['@electron-forge/plugin-webpack', {
 			devContentSecurityPolicy: 'default-src \'self\' \'unsafe-inline\' data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:; img-src \'self\' blob:',
 			devServer: { liveReload: false },
