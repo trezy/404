@@ -16,12 +16,14 @@ import PropTypes from 'prop-types'
  *
  * @param {object} props All props.
  * @param {boolean} [props.defaultOn] Whether or not this switch will be activated by default.
+ * @param {string} [props.id] A unique identifier for this component.
  * @param {boolean} [props.isOn] Whether or not this switch is currently activated.
  * @param {Function} [props.onChange] A function to be called when the value changes.
  */
 export function Switch(props) {
 	const {
 		defaultOn,
+		id,
 		isOn,
 		onChange,
 	} = props
@@ -29,7 +31,7 @@ export function Switch(props) {
 	const [state, setState] = useState(Boolean(defaultOn))
 
 	const compiledIsOn = useMemo(() => {
-		if (typeof isOn !== 'undefined') {
+		if (typeof isOn === 'boolean') {
 			return isOn
 		}
 
@@ -67,9 +69,12 @@ export function Switch(props) {
 	])
 
 	return (
-		<label className={'switch'}>
+		<label
+			className={'switch'}
+			htmlFor={id}>
 			<input
 				checked={compiledIsOn}
+				id={id}
 				onChange={handleChange}
 				type={'checkbox'} />
 			{JSON.stringify(compiledIsOn)}
@@ -78,16 +83,15 @@ export function Switch(props) {
 }
 
 Switch.defaultProps = {
-	// eslint-disable-next-line no-undefined
-	defaultOn: undefined,
-	// eslint-disable-next-line no-undefined
-	isOn: undefined,
-	// eslint-disable-next-line no-undefined
-	onChange: undefined,
+	defaultOn: null,
+	id: null,
+	isOn: null,
+	onChange: null,
 }
 
 Switch.propTypes = {
 	defaultOn: PropTypes.bool,
+	id: PropTypes.string,
 	isOn: PropTypes.bool,
 	onChange: PropTypes.func,
 }

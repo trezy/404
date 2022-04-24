@@ -3,6 +3,10 @@
 
 	position: relative;
 
+	&.is-open .combobox-label button {
+		z-index: 2;
+	}
+
 	button {
 		background-color: var(--palette-dark-grey);
 		cursor: pointer;
@@ -12,7 +16,7 @@
 
 		&:hover,
 		&:focus {
-			background-color: var(--palette-indigo);
+			background-color: var(--palette-green);
 		}
 	}
 
@@ -50,21 +54,59 @@
 	}
 
 	.combobox-options {
+		background-color: var(--palette-dark-grey);
+		box-shadow:
+			0 0 0 calc(2px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6),
+			0 0 0 calc(4px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6),
+			0 0 0 calc(6px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6);
 		flex-direction: column;
 		left: 0;
 		max-height: 50vh;
 		overflow: auto;
 		position: absolute;
 		right: 0;
-		top: 100%;
+		top: calc(100% + (3px * var(--ui-scale)));
 		z-index: 1;
+
+		&:before {
+			background-color: var(--palette-white);
+			bottom: 100%;
+			clip-path: polygon(
+				0 0,
+				100% 0,
+				100% calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+				0 calc(1px * var(--ui-scale)),
+			);
+			content: '';
+			display: block;
+			height: calc(3px * var(--ui-scale));
+			position: absolute;
+			right: 0;
+			width: calc(5px * var(--ui-scale));
+			z-index: 1;
+		}
 
 		.combobox-options-group {
 			display: block;
 			position: relative;
 
+			&:not(:first-child) {
+				padding-top: calc(8px * var(--ui-scale));
+			}
+
 			header {
-				background-color: var(--palette-indigo);
+				background-color: var(--palette-dark-grey);
+				border-color: var(--palette-white);
+				border-style: solid;
+				border-bottom-width: calc(1px * var(--ui-scale));
 				padding: var(--item-padding);
 				position: sticky;
 				text-align: left;

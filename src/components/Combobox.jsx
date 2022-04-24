@@ -4,10 +4,18 @@ import {
 	useEffect,
 	useId,
 	useMemo,
+	useRef,
 	useState,
 } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import { useForeignInteractionHandler } from '../hooks/useForeignInteractionHandler.js'
 
 
 
@@ -58,6 +66,7 @@ function isElementInView(element) {
  *
  * @param {object} props All component props.
  * @param {string} [props.className] Classes to be applied to the rendered component.
+ * @param {string} [props.id] A unique identifier for this component.
  * @param {string} [props.emptyMessage] Text to be displayed when there are no options.
  * @param {boolean} [props.isDisabled] Whether or not the component is currently interactive.
  * @param {Function} [props.onChange] A function to be called when the selected option changes.
@@ -68,24 +77,36 @@ export function Combobox(props) {
 	const {
 		className,
 		emptyMessage,
+		id,
 		isDisabled,
 		onChange,
 		options,
 		value,
 	} = props
 
+	const comboboxRef = useRef(null)
+
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const comboboxID = useId()
 
-	const compiledClassName = useMemo(() => classnames('combobox', className), [className])
+	const compiledClassName = useMemo(() => {
+		return classnames('combobox', className, {
+			'is-open': isOpen,
+		})
+	}, [
+		className,
+		isOpen,
+	])
 
 	const getOptionKey = useCallback(option => {
 		return `${comboboxID}-options-${option.value}`
 	}, [comboboxID])
 
 	const selectOption = useCallback(option => {
-		onChange(option)
+		if (typeof onChange === 'function') {
+			onChange(option)
+		}
 
 		if (value) {
 			return
@@ -141,14 +162,14 @@ export function Combobox(props) {
 				accumulator[option.group] = []
 			}
 
-			const id = getOptionKey(option)
+			const optionID = getOptionKey(option)
 			const isSelected = selectedOption === option
 
 			accumulator[option.group || 'Other'].push((
 				<div
-					key={id}
+					key={optionID}
 					aria-selected={isSelected}
-					id={id}
+					id={optionID}
 					role={'option'} >
 					{/* eslint-disable-next-line react/forbid-elements */}
 					<button
@@ -249,8 +270,12 @@ export function Combobox(props) {
 		value,
 	])
 
+	useForeignInteractionHandler(comboboxRef, hideOptions)
+
 	return (
-		<div className={compiledClassName}>
+		<div
+			ref={comboboxRef}
+			className={compiledClassName}>
 			<label
 				aria-activedescendant={selectedOption ? getOptionKey(selectedOption) : null}
 				className={'combobox-label'}
@@ -259,6 +284,7 @@ export function Combobox(props) {
 				tabIndex={0}>
 				{/* eslint-disable-next-line react/forbid-elements */}
 				<button
+					id={id}
 					onClick={handleLabelInteraction}
 					onKeyUp={handleLabelInteraction}
 					type={'button'}>
@@ -281,9 +307,9 @@ export function Combobox(props) {
 Combobox.defaultProps = {
 	className: '',
 	emptyMessage: 'No options available.',
+	id: null,
 	isDisabled: false,
-	/* eslint-disable-next-line jsdoc/require-jsdoc */
-	onChange: () => {},
+	onChange: null,
 	options: [],
 	value: null,
 }
@@ -291,6 +317,7 @@ Combobox.defaultProps = {
 Combobox.propTypes = {
 	className: PropTypes.string,
 	emptyMessage: PropTypes.string,
+	id: PropTypes.string,
 	isDisabled: PropTypes.bool,
 	onChange: PropTypes.func,
 	options: PropTypes.array,

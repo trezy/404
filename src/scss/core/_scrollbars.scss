@@ -11,9 +11,6 @@
 /* Foreground */
 ::-webkit-scrollbar-thumb {
 	background: var(--palette-light-grey);
-	border-left-color: var(--palette-black);
-	border-left-style: solid;
-	border-left-width: calc(1px * var(--ui-scale));
 	box-shadow: none;
 	cursor: pointer;
 
@@ -25,8 +22,5 @@
 /* Background */
 ::-webkit-scrollbar-track {
 	background: var(--palette-dark-grey);
-	border-left-color: var(--palette-black);
-	border-left-style: solid;
-	border-left-width: calc(1px * var(--ui-scale));
 	box-shadow: none;
 }

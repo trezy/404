@@ -1,4 +1,15 @@
 /******************************************************************************\
+  Mixins
+\******************************************************************************/
+
+@import './mixins/generateHSLCustomProperties';
+@import './mixins/generateHSLCustomPropertiesFromColor';
+
+
+
+
+
+/******************************************************************************\
   Functions
 \******************************************************************************/
 
@@ -41,6 +52,7 @@
 
 @import './core/button';
 @import './core/dl';
+@import './core/form';
 @import './core/headings';
 @import './core/main';
 @import './core/p';
@@ -57,6 +69,7 @@ Components
 
 @import './components/button-stack';
 @import './components/combobox';
+@import './components/field';
 @import './components/game-canvas';
 @import './components/game-title';
 @import './components/gamepad-spritesheet';
@@ -86,6 +99,7 @@ Components
   Scenes
 \******************************************************************************/
 
+@import './scenes/accessibility-settings';
 @import './scenes/controls-settings';
 @import './scenes/loading-game';
 @import './scenes/map-editor';

@@ -1,0 +1,15 @@
+#accessibility-settings {
+	.font-list {
+		.combobox-label .sample {
+			display: none;
+		}
+
+		[role=option] button {
+			display: flex;
+
+			.sample {
+				margin-left: auto;
+			}
+		}
+	}
+}

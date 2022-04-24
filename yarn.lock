@@ -4585,6 +4585,7 @@ __metadata:
     eslint-plugin-sort-class-members: ^1.14.1
     eslint-plugin-unused-imports: ^2.0.0
     framer-motion: ^6.3.0
+    local-fonts-manager: ^0.9.1
     node-loader: ^2.0.0
     pathfinding: ^0.4.18
     prop-types: ^15.8.1
@@ -8295,6 +8296,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"local-fonts-manager@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "local-fonts-manager@npm:0.9.1"
+  dependencies:
+    node-addon-api: 4.1.0
+    node-gyp: latest
+  checksum: adad70e1aa99691d86ff52a4b3eada4051447a15b5a7e8ccd92740eddfcebe357240d57df3672eeb9587824f47f4cc09fa2a99027845144f36b1e02bdb0c4feb
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^2.0.0":
   version: 2.0.0
   resolution: "locate-path@npm:2.0.0"
@@ -9110,6 +9121,15 @@ __metadata:
   dependencies:
     semver: ^7.3.5
   checksum: 8fb0374d11f4d02beaacfedf5e536006f0c5f4c479cd2ff6cfda39b0a8f1f9230dbac865f80e98f030dae5ae8e197806b8683547dad1b79af16246e32a441e24
+  languageName: node
+  linkType: hard
+
+"node-addon-api@npm:4.1.0":
+  version: 4.1.0
+  resolution: "node-addon-api@npm:4.1.0"
+  dependencies:
+    node-gyp: latest
+  checksum: 7aa921be140f60b18f753f2123cc036185c2ff82dda8399e95af31afcc99fa6fee93f735b44ead3fdc83cb0cfa16c186d5b7310ce0d3331e38623e0d8ce0ff0a
   languageName: node
   linkType: hard
 
