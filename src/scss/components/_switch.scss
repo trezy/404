@@ -1,0 +1,89 @@
+.switch {
+	--switch-shadow-size: calc(1px * var(--ui-scale));
+	--switch-thumb-size: calc(8px * var(--ui-scale));
+
+	background-color: var(--palette-red);
+	clip-path: polygon(
+		0 calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) 0,
+		calc(100% - (1px * var(--ui-scale))) 0,
+		calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+		100% calc(1px * var(--ui-scale)),
+		100% calc(100% - (1px * var(--ui-scale))),
+		calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+		calc(100% - (1px * var(--ui-scale))) 100%,
+		calc(1px * var(--ui-scale)) 100%,
+		calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+		0 calc(100% - (1px * var(--ui-scale))),
+	);
+	cursor: pointer;
+	display: flex;
+	justify-content: flex-start;
+	transition-duration: 0.2s;
+	transition-property: background-color;
+	width: calc(
+		/* thumb size * 2 */
+		(var(--switch-thumb-size) * 2)
+
+		/* shadow size * 2 */
+		+ (var(--switch-shadow-size) * 2)
+
+		/* extra width */
+		+ (3px * var(--ui-scale))
+	);
+
+	&[data-is-on="true"] {
+		background-color: var(--palette-green);
+		justify-content: flex-end;
+	}
+
+	.thumb {
+		background-color: hsla(var(--palette-black-hsl), 0.2);
+		clip-path: polygon(
+			0 calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) 0,
+			calc(100% - (1px * var(--ui-scale))) 0,
+			calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+			100% calc(1px * var(--ui-scale)),
+			100% calc(100% - (1px * var(--ui-scale))),
+			calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+			calc(100% - (1px * var(--ui-scale))) 100%,
+			calc(1px * var(--ui-scale)) 100%,
+			calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+			0 calc(100% - (1px * var(--ui-scale))),
+		);
+		display: block;
+		height: calc(var(--switch-thumb-size) + (2 * var(--switch-shadow-size)));
+		position: relative;
+		width: calc(var(--switch-thumb-size) + (2 * var(--switch-shadow-size)));
+
+		&:after {
+			background-color: var(--palette-white);
+			height: var(--switch-thumb-size);
+			clip-path: polygon(
+				0 calc(1px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) 0,
+				calc(100% - (1px * var(--ui-scale))) 0,
+				calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+				100% calc(1px * var(--ui-scale)),
+				100% calc(100% - (1px * var(--ui-scale))),
+				calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+				calc(100% - (1px * var(--ui-scale))) 100%,
+				calc(1px * var(--ui-scale)) 100%,
+				calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+				0 calc(100% - (1px * var(--ui-scale))),
+			);
+			content: '';
+			inset: calc(1px * var(--ui-scale));
+			position: absolute;
+			width: var(--switch-thumb-size);
+		}
+	}
+
+	input {
+		display: none;
+	}
+}

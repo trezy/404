@@ -5,6 +5,7 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
 
 
@@ -71,13 +72,17 @@ export function Switch(props) {
 	return (
 		<label
 			className={'switch'}
+			data-is-on={isOn}
 			htmlFor={id}>
+			<motion.span
+				className={'thumb'}
+				layout />
+
 			<input
 				checked={compiledIsOn}
 				id={id}
 				onChange={handleChange}
 				type={'checkbox'} />
-			{JSON.stringify(compiledIsOn)}
 		</label>
 	)
 }

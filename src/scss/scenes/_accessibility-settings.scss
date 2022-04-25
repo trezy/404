@@ -1,4 +1,8 @@
 #accessibility-settings {
+	h2 {
+		margin-bottom: calc(6px * var(--ui-scale));
+	}
+
 	.font-list {
 		.combobox-label .sample {
 			display: none;
