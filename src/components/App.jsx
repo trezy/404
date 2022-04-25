@@ -14,6 +14,7 @@ import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
 import { MapEditor } from './MapEditor.jsx'
+import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
 
@@ -68,6 +69,8 @@ export function App() {
 		state.scene,
 	])
 
+	useConfigWatcher()
+
 	useEffect(() => {
 		if (scene === 'loadingGame') {
 			const timeoutID = setTimeout(goToTitle, 2000)
@@ -94,15 +97,6 @@ export function App() {
 						<p>{'loading...'}</p>
 					</motion.main>
 				)}
-
-				{/* {(scene === 'mapEditor') && (
-					<main className={'scene'}>
-						<div className={'layout panels'}>
-							<LeftPanel />
-							<CenterPanel />
-						</div>
-					</main>
-				)} */}
 
 				{(scene === 'mapEditor') && (
 					<MapEditor key={'map-editor'} />

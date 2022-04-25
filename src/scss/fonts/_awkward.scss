@@ -1,5 +1,5 @@
 @font-face {
-	font-family: 'awkward';
+	font-family: 'Awkward';
 	src: url('../../assets/fonts/awkward.woff2') format('woff2'),
 			 url('../../assets/fonts/awkward.woff') format('woff');
 	font-weight: normal;
@@ -15,7 +15,7 @@
 
 @for $index from 1 through 5 {
 	%awkward-#{$index}x {
-		font-family: awkward, monospace;
+		font-family: var(--text-font-face, 'Awkward', monospace);
 		font-size: var(--fonts-awkward-size-#{$index}x);
 		letter-spacing: calc(1px * #{$index} * var(--ui-scale));
 		line-height: var(--fonts-awkward-line-height-#{$index}x);

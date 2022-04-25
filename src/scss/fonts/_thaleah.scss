@@ -1,5 +1,5 @@
 @font-face {
-	font-family: 'thaleah';
+	font-family: 'Thaleah';
 	src: url('../../assets/fonts/thaleah.woff2') format('woff2'),
 			 url('../../assets/fonts/thaleah.woff') format('woff');
 	font-weight: normal;
@@ -15,7 +15,7 @@
 
 @for $index from 1 through 5 {
 	%thaleah-#{$index}x {
-		font-family: thaleah, monospace;
+		font-family: var(--heading-font-face, Thaleah), monospace;
 		font-size: var(--fonts-thaleah-size-#{$index}x);
 		letter-spacing: calc(1px * #{$index} * var(--ui-scale));
 		line-height: var(--fonts-thaleah-line-height-#{$index}x);
