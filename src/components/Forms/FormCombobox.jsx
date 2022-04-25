@@ -1,6 +1,9 @@
 // Module imports
+import {
+	useCallback,
+	useEffect,
+} from 'react'
 import PropTypes from 'prop-types'
-import { useCallback } from 'react'
 
 
 
@@ -24,7 +27,8 @@ import { useFormField } from './FormField.jsx'
  * @param {boolean} [props.isDisabled] Whether or not the component is currently interactive.
  * @param {Array} [props.options] A list of options to be displayed in the list.
  * @param {object} [props.initialValue] Allows the current value of the combobox to be maintained externally.
- * @param {Function} [props.validate] A function to be used to validate the value of this combobox.
+ * @param {object} [props.isRequired] Whether or not the value of this field must be non-empty.
+ * @param {Function} [props.validate] A function to be used to validate the value of this component.
  */
 export function FormCombobox(props) {
 	const {
@@ -32,10 +36,13 @@ export function FormCombobox(props) {
 		emptyMessage,
 		initialValue,
 		isDisabled,
+		isRequired,
 		options,
 		validate,
 	} = props
 	const {
+		resetField,
+		setInitialValue,
 		updateValidity,
 		updateValue,
 		values,
@@ -70,6 +77,27 @@ export function FormCombobox(props) {
 		internalValidate,
 	])
 
+	useEffect(() => {
+		setInitialValue(fieldID, initialValue)
+
+		return () => resetField(fieldID)
+	}, [
+		fieldID,
+		initialValue,
+		resetField,
+		setInitialValue,
+	])
+
+	useEffect(() => {
+		if (!isRequired) {
+			updateValidity(fieldID, [])
+		}
+	}, [
+		fieldID,
+		isRequired,
+		updateValidity,
+	])
+
 	return (
 		<Combobox
 			className={className}
@@ -86,7 +114,8 @@ FormCombobox.defaultProps = {
 	className: '',
 	emptyMessage: null,
 	initialValue: null,
-	isDisabled: null,
+	isDisabled: false,
+	isRequired: false,
 	options: null,
 	validate: null,
 }
@@ -96,6 +125,7 @@ FormCombobox.propTypes = {
 	emptyMessage: PropTypes.string,
 	initialValue: PropTypes.object,
 	isDisabled: PropTypes.bool,
+	isRequired: PropTypes.bool,
 	options: PropTypes.array,
 	validate: PropTypes.func,
 }

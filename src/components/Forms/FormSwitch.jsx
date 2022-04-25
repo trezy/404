@@ -1,6 +1,9 @@
 // Module imports
+import {
+	useCallback,
+	useEffect,
+} from 'react'
 import PropTypes from 'prop-types'
-import { useCallback } from 'react'
 
 
 
@@ -20,10 +23,16 @@ import { useFormField } from './FormField.jsx'
  *
  * @param {object} props All props.
  * @param {boolean} [props.initialValue = false] The initial state of this switch.
+ * @param {Function} [props.validate] A function to be used to validate the value of this component.
  */
 export function FormSwitch(props) {
-	const { initialValue } = props
 	const {
+		initialValue,
+		validate,
+	} = props
+	const {
+		resetField,
+		setInitialValue,
 		updateValidity,
 		updateValue,
 		values,
@@ -31,11 +40,11 @@ export function FormSwitch(props) {
 
 	const { fieldID } = useFormField()
 
-	const validate = useCallback(async(state, initialProps) => {
+	const internalValidate = useCallback(async(state, initialProps) => {
 		const errors = []
 
-		if (typeof initialProps.validate === 'function') {
-			const customError = await initialProps.validate(state)
+		if (typeof validate === 'function') {
+			const customError = await validate(state, initialProps)
 			if (customError) {
 				errors.push(customError)
 			}
@@ -45,16 +54,33 @@ export function FormSwitch(props) {
 	}, [
 		fieldID,
 		updateValidity,
+		validate,
 	])
 
 	const handleChange = useCallback(value => {
 		updateValue(fieldID, value)
-		validate(value, props)
+		internalValidate(value, props)
 	}, [
 		fieldID,
+		internalValidate,
 		props,
 		updateValue,
-		validate,
+	])
+
+	useEffect(() => {
+		setInitialValue(fieldID, initialValue)
+
+		return () => resetField(fieldID)
+	}, [
+		fieldID,
+		initialValue,
+		resetField,
+		setInitialValue,
+	])
+
+	useEffect(() => updateValidity(fieldID, []), [
+		fieldID,
+		updateValidity,
 	])
 
 	return (
@@ -67,8 +93,10 @@ export function FormSwitch(props) {
 
 FormSwitch.defaultProps = {
 	initialValue: false,
+	validate: null,
 }
 
 FormSwitch.propTypes = {
 	initialValue: PropTypes.bool,
+	validate: PropTypes.func,
 }

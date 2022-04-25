@@ -15,6 +15,7 @@ import PropTypes from 'prop-types'
 // Constants
 const INITIAL_STATE = {
 	errors: {},
+	initialValues: {},
 	isValid: false,
 	isTouched: false,
 	touched: {},
@@ -31,7 +32,7 @@ const INITIAL_STATE = {
  *
  * @param {object} state The current state.
  * @param {object} action The action to be used to modify the state.
- * @param {*} action.payload The action payload.
+ * @param {*} [action.payload] The action payload.
  * @param {string} action.type The action type.
  * @returns {object} The modified state.
  */
@@ -46,6 +47,55 @@ function reducer(state, action) {
 	}
 
 	switch (type) {
+		case 'freshen':
+			newState.initialValues = newState.values
+			newState.isTouched = false
+			newState.isValid = true
+
+			Object.keys(newState.values).forEach(fieldName => {
+				newState.errors[fieldName] = []
+				newState.touched[fieldName] = false
+				newState.validity[fieldName] = true
+			})
+			break
+
+		case 'initial value':
+			newState.errors = {
+				...newState.errors,
+				[payload.fieldName]: [],
+			}
+			newState.initialValues = {
+				...newState.initialValues,
+				[payload.fieldName]: payload.value,
+			}
+			newState.touched = {
+				...newState.touched,
+				[payload.fieldName]: false,
+			}
+			newState.validity = {
+				...newState.validity,
+				[payload.fieldName]: false,
+			}
+			newState.values = {
+				...newState.values,
+				[payload.fieldName]: payload.value,
+			}
+			break
+
+		case 'reset field':
+			delete newState.errors[payload.fieldName]
+			delete newState.initialValues[payload.fieldName]
+			delete newState.touched[payload.fieldName]
+			delete newState.validity[payload.fieldName]
+			delete newState.values[payload.fieldName]
+			newState.isTouched = Object
+				.values(newState.touched)
+				.some(isTouched => isTouched)
+			newState.isValid = !Object
+				.values(newState.validity)
+				.some(isValid => !isValid)
+			break
+
 		case 'validity changed':
 			newState.validity = {
 				...newState.validity,
@@ -88,6 +138,9 @@ function reducer(state, action) {
 
 export const FormContext = createContext({
 	...INITIAL_STATE,
+	reset: null,
+	resetField: null,
+	setInitialValue: null,
 	updateValidity: null,
 	updateValue: null,
 })
@@ -98,40 +151,25 @@ export const FormContext = createContext({
  * @param {object} props All props
  * @param {import('react').ReactNode} props.children Children of the form.
  * @param {string} props.className Classes to be applied to the rendered component.
- * @param {object} props.initialValues The initial values to be used for form fields.
  * @param {Function} props.onSubmit The function to be called when this form is submitted.
  */
 export function Form(props) {
 	const {
 		children,
 		className,
-		initialValues,
 		onSubmit,
 	} = props
 
-	const [state, dispatch] = useReducer(reducer, {
-		...INITIAL_STATE,
-		errors: Object
-			.keys(initialValues)
-			.reduce((accumulator, key) => {
-				accumulator[key] = []
-				return accumulator
-			}, {}),
-		initialValues,
-		touched: Object
-			.keys(initialValues)
-			.reduce((accumulator, key) => {
-				accumulator[key] = false
-				return accumulator
-			}, {}),
-		validity: Object
-			.keys(initialValues)
-			.reduce((accumulator, key) => {
-				accumulator[key] = false
-				return accumulator
-			}, {}),
-		values: { ...initialValues },
-	})
+	const [state, dispatch] = useReducer(reducer, { ...INITIAL_STATE })
+
+	const freshen = useCallback(() => dispatch({ type: 'freshen' }), [])
+
+	const resetField = useCallback(fieldName => {
+		dispatch({
+			payload: { fieldName },
+			type: 'reset field',
+		})
+	}, [dispatch])
 
 	const handleSubmit = useCallback(event => {
 		event.preventDefault()
@@ -139,10 +177,23 @@ export function Form(props) {
 		if (typeof onSubmit === 'function') {
 			onSubmit(state)
 		}
+
+		freshen()
 	}, [
+		freshen,
 		onSubmit,
 		state,
 	])
+
+	const setInitialValue = useCallback((fieldName, value) => {
+		dispatch({
+			payload: {
+				fieldName,
+				value,
+			},
+			type: 'initial value',
+		})
+	}, [dispatch])
 
 	const updateValidity = useCallback((fieldName, errors) => {
 		dispatch({
@@ -162,17 +213,21 @@ export function Form(props) {
 			},
 			type: 'value changed',
 		})
-	}, [
-		dispatch,
-	])
+	}, [dispatch])
 
 	const providerState = useMemo(() => {
 		return {
 			...state,
+			freshen,
+			resetField,
+			setInitialValue,
 			updateValidity,
 			updateValue,
 		}
 	}, [
+		freshen,
+		resetField,
+		setInitialValue,
 		state,
 		updateValidity,
 		updateValue,
@@ -192,14 +247,12 @@ export function Form(props) {
 
 Form.defaultProps = {
 	className: null,
-	initialValues: {},
 	onSubmit: null,
 }
 
 Form.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
-	initialValues: PropTypes.object,
 	onSubmit: PropTypes.func,
 }
 

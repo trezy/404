@@ -1,0 +1,15 @@
+menu {
+	align-content: stretch;
+	display: flex;
+
+	.menu-left,
+	.menu-right {
+		display: flex;
+		flex-basis: 50%;
+		flex-grow: 1;
+	}
+
+	.menu-right {
+		justify-content: flex-end;
+	}
+}

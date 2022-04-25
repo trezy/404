@@ -91,34 +91,40 @@ export function AccessibilityFormContents() {
 	const [isLoadingFonts, setIsLoadingFonts] = useState(false)
 	const [fontOptions, setFontOptions] = useState(null)
 
-	const colorblindType = useMemo(() => {
-		if (typeof values['colorblindType'] !== 'undefined') {
-			return values['colorblindType']
-		}
-
+	const colorblindTypeInitialValue = useMemo(() => {
 		/** @type {string} */
 		const currentValue = configStore.get('settings.accessibility.colorblindType')
 
 		return COLORBLIND_OPTIONS.find(colorblindOption => {
 			return colorblindOption.value === currentValue
 		})
-	}, [values])
+	}, [])
 
-	const headingFontFace = useMemo(() => {
-		if (typeof values['headingFontFace'] !== 'undefined') {
-			return values['headingFontFace']
+	const headingFontFaceInitialValue = useMemo(() => {
+		if (!fontOptions) {
+			return null
 		}
 
-		return GAME_FONT_OPTIONS[configStore.get('settings.accessibility.headingFontFace')]
-	}, [values])
+		/** @type {string} */
+		const currentValue = configStore.get('settings.accessibility.headingFontFace')
 
-	const textFontFace = useMemo(() => {
-		if (typeof values['textFontFace'] !== 'undefined') {
-			return values['textFontFace']
+		return fontOptions.find(fontOption => {
+			return fontOption.value === currentValue
+		})
+	}, [fontOptions])
+
+	const textFontFaceInitialValue = useMemo(() => {
+		if (!fontOptions) {
+			return null
 		}
 
-		return GAME_FONT_OPTIONS[configStore.get('settings.accessibility.textFontFace')]
-	}, [values])
+		/** @type {string} */
+		const currentValue = configStore.get('settings.accessibility.textFontFace')
+
+		return fontOptions.find(fontOption => {
+			return fontOption.value === currentValue
+		})
+	}, [fontOptions])
 
 	const usePixelFonts = useMemo(() => {
 		if (typeof values['usePixelFonts'] !== 'undefined') {
@@ -160,7 +166,7 @@ export function AccessibilityFormContents() {
 	])
 
 	useEffect(() => {
-		if (!usePixelFonts && !isLoadingFonts && !fontOptions) {
+		if (!isLoadingFonts && !fontOptions) {
 			getFonts()
 		}
 	}, [
@@ -177,14 +183,14 @@ export function AccessibilityFormContents() {
 				id={'colorblindType'}
 				label={'Colorblind Type'}>
 				<FormCombobox
-					initialValue={colorblindType}
+					initialValue={colorblindTypeInitialValue}
 					options={COLORBLIND_OPTIONS} />
 			</FormField>
 
 			<FormField
 				id={'usePixelFonts'}
 				label={'Use Pixel Fonts'}>
-				<FormSwitch initialValue={usePixelFonts} />
+				<FormSwitch initialValue={configStore.get('settings.accessibility.usePixelFonts')} />
 			</FormField>
 
 			{!usePixelFonts && (
@@ -192,19 +198,23 @@ export function AccessibilityFormContents() {
 					{!fontOptions && 'Loading fonts...'}
 
 					{Boolean(fontOptions) && (
-						<FormField label={'Heading Font'}>
+						<FormField
+							id={'headingFontFace'}
+							label={'Heading Font'}>
 							<FormCombobox
 								className={'font-list'}
-								initialValue={headingFontFace}
+								initialValue={headingFontFaceInitialValue}
 								options={fontOptions} />
 						</FormField>
 					)}
 
 					{Boolean(fontOptions) && (
-						<FormField label={'Text Font'}>
+						<FormField
+							id={'textFontFace'}
+							label={'Text Font'}>
 							<FormCombobox
 								className={'font-list'}
-								initialValue={textFontFace}
+								initialValue={textFontFaceInitialValue}
 								options={fontOptions} />
 						</FormField>
 					)}
