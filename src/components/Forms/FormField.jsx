@@ -28,6 +28,7 @@ export const FormFieldContext = createContext({})
  * @param {import('react').ReactNode} props.children The form control(s) to be rendered.
  * @param {string} props.className Classes to be applied to the wrapper.
  * @param {import('react').ReactNode} props.helperText Text to be displayed in small font below the control.
+ * @param {string} props.id A unique identifier for this component.
  * @param {boolean} props.isRequired Whether or not this field is required for the form to be valid.
  * @param {import('react').ReactNode} props.label The contents of the label.
  */
@@ -36,11 +37,13 @@ export function FormField(props) {
 		children,
 		className,
 		helperText,
+		id,
 		isRequired,
 		label,
 	} = props
 	const { errors: formErrors } = useForm()
-	const fieldID = useId()
+	const generatedID = useId()
+	const fieldID = id ?? generatedID
 
 	const renderedHelpers = useMemo(() => {
 		if (formErrors[fieldID]?.length) {
@@ -114,6 +117,7 @@ FormField.defaultProps = {
 	children: null,
 	className: null,
 	helperText: null,
+	id: null,
 	isRequired: false,
 	label: null,
 }
@@ -122,6 +126,7 @@ FormField.propTypes = {
 	children: PropTypes.node,
 	className: PropTypes.string,
 	helperText: PropTypes.node,
+	id: PropTypes.string,
 	isRequired: PropTypes.bool,
 	label: PropTypes.node,
 }
