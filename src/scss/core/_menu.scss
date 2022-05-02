@@ -7,6 +7,7 @@ menu {
 		display: flex;
 		flex-basis: 50%;
 		flex-grow: 1;
+		gap: calc(4px * var(--ui-scale));
 	}
 
 	.menu-right {

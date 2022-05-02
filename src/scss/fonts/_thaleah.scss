@@ -9,7 +9,7 @@
 :root {
 	@for $index from 1 through 5 {
 		--fonts-thaleah-line-height-#{$index}x: calc((7px * #{$index}) * (var(--ui-scale) - 1));
-		--fonts-thaleah-size-#{$index}x: var(--fonts-thaleah-line-height-#{$index}x);
+		--fonts-thaleah-size-#{$index}x: calc(var(--fonts-thaleah-line-height-#{$index}x) * var(--base-font-size-multiplier));
 	}
 }
 

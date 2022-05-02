@@ -1,0 +1,13 @@
+.layout.columns {
+	display: grid;
+	gap: calc(var(--column-gutter) * var(--ui-scale));
+	grid-template-columns: repeat(4, 1fr);
+
+	.column {
+		@for $index from 1 through 4 {
+			&.span-#{$index} {
+				grid-column: span #{$index};
+			}
+		}
+	}
+}

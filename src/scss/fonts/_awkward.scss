@@ -9,7 +9,7 @@
 :root {
 	@for $index from 1 to 5 {
 		--fonts-awkward-line-height-#{$index}x: calc((5px * #{$index}) * (var(--ui-scale) - 1));
-		--fonts-awkward-size-#{$index}x: calc((7px * #{$index}) * (var(--ui-scale) - 1));
+		--fonts-awkward-size-#{$index}x: calc((7px * #{$index}) * (var(--ui-scale) - 1) * var(--base-font-size-multiplier));
 	}
 }
 

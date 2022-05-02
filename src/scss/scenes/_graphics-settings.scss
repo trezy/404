@@ -1,0 +1,17 @@
+#graphics-settings {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+	form {
+		flex-grow: 1;
+	}
+
+	h2 {
+		margin-bottom: calc(6px * var(--ui-scale));
+	}
+
+	menu {
+		margin-top: auto;
+	}
+}

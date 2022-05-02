@@ -58,7 +58,7 @@ export function Button(props) {
 			}),
 			disabled: isDisabled,
 			key: id,
-			onClick: onClick,
+			onClick,
 			type: isSubmit ? 'submit' : 'button',
 			variants,
 		})

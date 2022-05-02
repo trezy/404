@@ -3,7 +3,6 @@ import {
 	app,
 	ipcMain,
 } from 'electron'
-import ConfigStore from 'electron-store'
 import ElectronSquirrelStartup from 'electron-squirrel-startup'
 
 
@@ -11,9 +10,11 @@ import ElectronSquirrelStartup from 'electron-squirrel-startup'
 
 
 // Local imports
+import './helpers/configStore.js'
 import { createWindow } from './helpers/createWindow.js'
 import { handleActivate } from './helpers/handleActivate.js'
 import { handleAllWindowsClosed } from './helpers/handleAllWindowsClosed.js'
+import { handleGetDisplaysInformation } from './helpers/handleGetDisplaysInformation.js'
 import { handleGetFonts } from './helpers/handleGetFonts.js'
 
 
@@ -25,10 +26,9 @@ if (ElectronSquirrelStartup) {
 	app.quit()
 }
 
-ConfigStore.initRenderer()
-
 app.on('activate', handleActivate)
 app.on('ready', createWindow)
 app.on('window-all-closed', handleAllWindowsClosed)
 
 ipcMain.handle('getFonts', handleGetFonts)
+ipcMain.handle('getDisplaysInformation', handleGetDisplaysInformation)

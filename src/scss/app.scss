@@ -92,6 +92,7 @@ Components
   Layouts
 \******************************************************************************/
 
+@import './layouts/column-layout';
 @import './layouts/panels-layout';
 
 
@@ -104,5 +105,6 @@ Components
 
 @import './scenes/accessibility-settings';
 @import './scenes/controls-settings';
+@import './scenes/graphics-settings';
 @import './scenes/loading-game';
 @import './scenes/map-editor';

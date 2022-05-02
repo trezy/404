@@ -99,7 +99,6 @@ export const configStore = new ConfigStore({
 							enum: [
 								'fullscreen',
 								'windowed',
-								'fullscreen borderless',
 								'fullscreen extended window',
 							],
 						},
@@ -113,6 +112,10 @@ export const configStore = new ConfigStore({
 						pixelScale: {
 							minimum: 1,
 							type: 'number',
+						},
+						preferredDisplay: {
+							default: 'primary',
+							type: 'string',
 						},
 						screenRefreshRate: {
 							enum: [
@@ -163,4 +166,5 @@ export const configStore = new ConfigStore({
 			},
 		},
 	},
+	watch: true,
 })

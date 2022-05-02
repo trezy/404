@@ -33,6 +33,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "sass": "^1.50.1",
+    "systeminformation": "^5.11.14",
     "zustand": "^4.0.0-rc.0"
   },
   "devDependencies": {

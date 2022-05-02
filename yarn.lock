@@ -4651,6 +4651,7 @@ __metadata:
     sass: ^1.50.1
     sass-loader: ^12.6.0
     style-loader: ^3.3.1
+    systeminformation: ^5.11.14
     url-loader: ^4.1.1
     zustand: ^4.0.0-rc.0
   languageName: unknown
@@ -11796,6 +11797,16 @@ __metadata:
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
   checksum: 6e8fc7e1486b8b54bea91199d9535bb72f10842e40c79e882fc94fb7b14b89866adf2fd79efa5ebb5b658bc07fb459ccce5ac0e99ef3d72f474e74aaf284029d
+  languageName: node
+  linkType: hard
+
+"systeminformation@npm:^5.11.14":
+  version: 5.11.14
+  resolution: "systeminformation@npm:5.11.14"
+  bin:
+    systeminformation: lib/cli.js
+  checksum: 4e40f71da55899df2722288bd4b44562c22d9427e08591bb39e285303a4cce98b32ef0ccd1570a0264dca7863786fdf8cb71f75da85f77594361b8b7108898c9
+  conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
 
