@@ -69,7 +69,9 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<h2>{'Load Save'}</h2>
+			<header className={'panel-header'}>
+				<h2>{'Load Save'}</h2>
+			</header>
 
 			<table>
 				<tbody>{mappedMaps}</tbody>

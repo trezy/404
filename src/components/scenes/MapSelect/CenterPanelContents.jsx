@@ -93,7 +93,9 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<h2>{'Map Select'}</h2>
+			<header className={'panel-header'}>
+				<h2>{'Map Select'}</h2>
+			</header>
 
 			<table>
 				<tbody>

@@ -50,7 +50,9 @@ export function LeftPanel() {
 
 	return (
 		<Panel variants={PANEL_VARIANTS}>
-			<h2>{'Menu'}</h2>
+			<header className={'panel-header'}>
+				<h2>{'Menu'}</h2>
+			</header>
 
 			<AnimatePresence exitBeforeEnter>
 				{(scene === 'loadingMap') && (

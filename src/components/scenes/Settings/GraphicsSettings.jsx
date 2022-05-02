@@ -151,7 +151,9 @@ export function GraphicsSettings(props) {
 			id={'graphics-settings'}
 			initial={'initial'}
 			variants={variants}>
+			<header className={'panel-header'}>
 			<h2>{'Graphics'}</h2>
+			</header>
 
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>

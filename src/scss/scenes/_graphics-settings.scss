@@ -7,11 +7,11 @@
 		flex-grow: 1;
 	}
 
-	h2 {
-		margin-bottom: calc(6px * var(--ui-scale));
-	}
-
 	menu {
 		margin-top: auto;
+	}
+
+	.panel-header {
+		margin-bottom: calc(6px * var(--ui-scale));
 	}
 }

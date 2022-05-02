@@ -202,7 +202,9 @@ export function AccessibilitySettings(props) {
 			id={'accessibility-settings'}
 			initial={'initial'}
 			variants={variants}>
+			<header className={'panel-header'}>
 			<h2>{'Accessibility'}</h2>
+			</header>
 
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>
