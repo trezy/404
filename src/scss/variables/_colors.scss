@@ -2,6 +2,7 @@
 	--hue-shift: 0deg;
 
 	/* Palette */
+	@include generateHSLCustomPropertiesFromColor('palette-pure-black', #000);
 	@include generateHSLCustomPropertiesFromColor('palette-black', #140c1c);
 	@include generateHSLCustomPropertiesFromColor('palette-indigo', #442434);
 	@include generateHSLCustomPropertiesFromColor('palette-purple', #30346d);
