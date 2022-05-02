@@ -150,7 +150,7 @@ export function ControlsSettings(props) {
 			initial={'initial'}
 			variants={variants}>
 			<header className={'panel-header'}>
-			<h2>{'Controls'}</h2>
+				<h2>{'Controls'}</h2>
 			</header>
 
 			<div className={'mappings-wrapper'}>

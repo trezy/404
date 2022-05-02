@@ -203,7 +203,7 @@ export function AccessibilitySettings(props) {
 			initial={'initial'}
 			variants={variants}>
 			<header className={'panel-header'}>
-			<h2>{'Accessibility'}</h2>
+				<h2>{'Accessibility'}</h2>
 			</header>
 
 			<form onSubmit={handleSubmit}>
@@ -257,9 +257,9 @@ export function AccessibilitySettings(props) {
 				<menu type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button
-							isPrimary
+							isAffirmative
 							isSubmit>
-							{'Save'}
+							{'Apply Changes'}
 						</Button>
 					</div>
 				</menu>

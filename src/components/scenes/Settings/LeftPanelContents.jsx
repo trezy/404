@@ -36,25 +36,25 @@ export function LeftPanelContents() {
 	return (
 		<ButtonStack className={'panel-bottom'}>
 			<Button
-				isPrimary={settingsPanel === 'accessibility'}
+				isAffirmative={settingsPanel === 'accessibility'}
 				onClick={showAccessibilityPanel}>
 				{'Accessibility'}
 			</Button>
 
 			<Button
-				isPrimary={settingsPanel === 'controls'}
+				isAffirmative={settingsPanel === 'controls'}
 				onClick={showControlsPanel}>
 				{'Controls'}
 			</Button>
 
 			<Button
-				isPrimary={settingsPanel === 'graphics'}
+				isAffirmative={settingsPanel === 'graphics'}
 				onClick={showGraphicsPanel}>
 				{'Graphics'}
 			</Button>
 
 			<Button
-				isPrimary={settingsPanel === 'sound'}
+				isAffirmative={settingsPanel === 'sound'}
 				onClick={showSoundPanel}>
 				{'Sound'}
 			</Button>

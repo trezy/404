@@ -152,7 +152,7 @@ export function GraphicsSettings(props) {
 			initial={'initial'}
 			variants={variants}>
 			<header className={'panel-header'}>
-			<h2>{'Graphics'}</h2>
+				<h2>{'Graphics'}</h2>
 			</header>
 
 			<form onSubmit={handleSubmit}>
@@ -181,7 +181,7 @@ export function GraphicsSettings(props) {
 						</Button>
 
 						<Button
-							isPrimary
+							isAffirmative
 							isSubmit>
 							{'Apply Changes'}
 						</Button>

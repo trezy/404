@@ -16,11 +16,14 @@ import { useMemo } from 'react'
  * @param {string} [props.className] A string of classes to be set on the button.
  * @param {string} [props.forceAnimationInclusion] Whether or not to set animation variants forcefully.
  * @param {string} [props.id] A unique identifier for this button.
+ * @param {boolean} [props.isAffirmative = false] Whether or not this button will cause an affirmative action.
  * @param {boolean} [props.isDisabled = false] Whether or not this button is disabled.
- * @param {boolean} [props.isPrimary = false] Whether or not this button is a primary type button.
+ * @param {boolean} [props.isFullWidth = false] Whether or not this button should take up the full width of its parent.
+ * @param {boolean} [props.isNegative = false] Whether or not this button will cause an negative action.
  * @param {boolean} [props.isSmall = false] Whether or not this button should be smaller than normal.
  * @param {boolean} [props.isSubmit = false] Whether or not this button should be smaller than normal.
  * @param {boolean} [props.isText = false] Whether or not this button should be rendered as only text.
+ * @param {boolean} [props.isUniformlyPadded = false] Whether or not this button shoudl have the same padding on all sides.
  * @param {Function} [props.onClick] The function to be executed when this button is clicked.
  * @param {object} [props.variants] An object representing variations of the component's state to be used for animations.
  * @param {object} [props.variants.animate] The typical state of the component.
@@ -33,11 +36,14 @@ export function Button(props) {
 		className,
 		forceAnimationInclusion,
 		id,
+		isAffirmative,
 		isDisabled,
-		isPrimary,
+		isFullWidth,
+		isNegative,
 		isSmall,
 		isSubmit,
 		isText,
+		isUniformlyPadded,
 		onClick,
 		variants,
 	} = props
@@ -52,9 +58,12 @@ export function Button(props) {
 			return accumulator
 		}, {
 			className: classnames('button', className, {
-				'is-primary': isPrimary,
+				'is-affirmative': isAffirmative,
+				'is-full-width': isFullWidth,
+				'is-negative': isNegative,
 				'is-small': isSmall,
 				'is-text': isText,
+				'is-uniformly-padded': isUniformlyPadded,
 			}),
 			disabled: isDisabled,
 			key: id,
@@ -74,11 +83,14 @@ export function Button(props) {
 		className,
 		forceAnimationInclusion,
 		id,
+		isAffirmative,
 		isDisabled,
-		isPrimary,
+		isFullWidth,
+		isNegative,
 		isSmall,
 		isSubmit,
 		isText,
+		isUniformlyPadded,
 		onClick,
 		props,
 		variants,
@@ -96,11 +108,14 @@ Button.defaultProps = {
 	className: '',
 	forceAnimationInclusion: false,
 	id: '',
+	isAffirmative: false,
 	isDisabled: false,
-	isPrimary: false,
+	isFullWidth: false,
+	isNegative: false,
 	isSmall: false,
 	isSubmit: false,
 	isText: false,
+	isUniformlyPadded: false,
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	onClick: () => {},
 	variants: null,
@@ -111,11 +126,14 @@ Button.propTypes = {
 	className: PropTypes.string,
 	forceAnimationInclusion: PropTypes.bool,
 	id: PropTypes.string,
+	isAffirmative: PropTypes.bool,
 	isDisabled: PropTypes.bool,
-	isPrimary: PropTypes.bool,
+	isFullWidth: PropTypes.bool,
+	isNegative: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	isSubmit: PropTypes.bool,
 	isText: PropTypes.bool,
+	isUniformlyPadded: PropTypes.bool,
 	onClick: PropTypes.func,
 	variants: PropTypes.shape({
 		animate: PropTypes.object,

@@ -64,7 +64,7 @@ export function LeftPanelContents() {
 		<ButtonStack className={'panel-bottom'}>
 			{Boolean(mostRecentSaveID) && (
 				<Button
-					isPrimary
+					isAffirmative
 					onClick={handleContinueClick}>
 					{'Continue'}
 				</Button>

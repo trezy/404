@@ -35,7 +35,9 @@ export function CenterPanelContents() {
 
 	return (
 		<div>
-			<h2>{'Loading Map'}</h2>
+			<header className={'panel-header'}>
+				<h2>{'Loading Map'}</h2>
+			</header>
 
 			<dl>
 				<dt>{'Map Name:'}</dt>

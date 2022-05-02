@@ -32,7 +32,7 @@ button {
 		background-color: var(--palette-grey);
 	}
 
-	&.is-primary {
+	&.is-affirmative {
 		background-color: var(--palette-green);
 		color: var(--palette-white);
 
@@ -42,7 +42,29 @@ button {
 		}
 	}
 
+	&.is-full-width {
+		width: 100%;
+	}
+
+	&.is-negative {
+		background-color: hsl(var(--palette-red-hsl));
+		color: var(--palette-white);
+
+		&:not([disabled]):hover,
+		&[disabled="true"]:hover {
+			background-color: hsl(var(--palette-red-h), calc(var(--palette-red-s) + 30%), var(--palette-red-l));
+		}
+	}
+
 	&.is-small {
 		padding: calc(1px * var(--ui-scale)) calc(10px * var(--ui-scale));
+
+		&.is-uniformly-padded {
+			padding: calc(1px * var(--ui-scale));
+		}
+	}
+
+	&.is-uniformly-padded {
+		padding: calc(3px * var(--ui-scale));
 	}
 }
