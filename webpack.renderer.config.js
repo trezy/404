@@ -2,6 +2,7 @@
 // Module imports
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 
 
@@ -15,7 +16,7 @@ const rules = require('./webpack.rules.js')
 
 
 rules.push({
-	test: /\.css$/,
+	test: /\.css$/u,
 	use: [
 		{ loader: 'style-loader' },
 		{
@@ -53,5 +54,6 @@ module.exports = {
 				},
 			],
 		}),
+		new ReactRefreshWebpackPlugin({}),
 	],
 }
