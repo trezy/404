@@ -13,9 +13,12 @@ import PropTypes from 'prop-types'
 
 
 export const AssetsContext = createContext({
+	assets: {},
+
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	addAssets: () => {},
-	assets: {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	removeAsset: () => {},
 })
 
 
@@ -34,14 +37,26 @@ export function AssetsContextProvider(props) {
 		}))
 	}, [setAssets])
 
+	const removeAsset = useCallback(assetID => {
+		setAssets(oldAssets => {
+			const newAssets = { ...oldAssets }
+
+			delete newAssets[assetID]
+
+			return newAssets
+		})
+	}, [setAssets])
+
 	const providerState = useMemo(() => {
 		return {
 			addAssets,
 			assets,
+			removeAsset,
 		}
 	}, [
 		addAssets,
 		assets,
+		removeAsset,
 	])
 
 	return (

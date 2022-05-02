@@ -24,6 +24,7 @@ export function AssetsPanel() {
 	const {
 		addAssets,
 		assets,
+		removeAsset,
 	} = useAssets()
 	const { openItem } = useEditor()
 	const [showNewAssetModal, setShowNewAssetModal] = useState(false)
@@ -46,6 +47,10 @@ export function AssetsPanel() {
 		assets,
 		openItem,
 	])
+
+	const handleRemoveAssetClick = useCallback(assetID => () => {
+		removeAsset(assetID)
+	}, [removeAsset])
 
 	const handleNewAssetClick = useCallback(() => setShowNewAssetModal(true), [setShowNewAssetModal])
 
@@ -86,7 +91,7 @@ export function AssetsPanel() {
 									<Button
 										isNegative
 										isSmall
-										onClick={() => {}}>
+										onClick={handleRemoveAssetClick(assetID)}>
 										{'Remove'}
 									</Button>
 								</div>
