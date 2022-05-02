@@ -28,8 +28,11 @@ module.exports = {
 	plugins: [
 		['@electron-forge/plugin-auto-unpack-natives', {}],
 		['@electron-forge/plugin-webpack', {
-			devContentSecurityPolicy: 'default-src \'self\' \'unsafe-inline\' data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:; img-src \'self\' blob:',
-			devServer: { liveReload: false },
+			devContentSecurityPolicy: 'default-src \'self\' \'unsafe-inline\' data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:; img-src \'self\' blob: data:',
+			devServer: {
+				client: { overlay: false },
+				liveReload: false,
+			},
 			mainConfig: './webpack.main.config.js',
 			renderer: {
 				config: './webpack.renderer.config.js',
