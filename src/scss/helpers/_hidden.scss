@@ -1,0 +1,5 @@
+[hidden] {
+	&:not([hidden="false"]) {
+		display: none !important;
+	}
+}

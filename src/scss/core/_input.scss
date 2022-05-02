@@ -1,0 +1,26 @@
+input {
+	&:not([type]),
+	&[type="text"] {
+		background-color: var(--palette-grey);
+		border: none;
+		clip-path: polygon(
+			0 calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) 0,
+			100% 0,
+			100% 100%,
+			0 100%,
+		);
+		color: inherit;
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		letter-spacing: inherit;
+		line-height: inherit;
+		padding: calc(3px * var(--ui-scale));
+	}
+}

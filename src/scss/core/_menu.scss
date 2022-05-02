@@ -1,6 +1,7 @@
 menu {
 	align-content: stretch;
 	display: flex;
+	gap: calc(4px * var(--ui-scale));
 
 	.menu-left,
 	.menu-right {
