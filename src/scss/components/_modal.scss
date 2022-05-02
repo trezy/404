@@ -1,0 +1,99 @@
+.modal {
+	background-color: var(--palette-black);
+	max-height: 80vh;
+	max-width: 50vw;
+	min-width: 50rem;
+	overflow: auto;
+
+	.content {
+		position: relative;
+	}
+
+	.loader {
+		align-items: center;
+		background-color: hsla(var(--black-hsl), 0.7);
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+
+	footer {
+		border-color: var(--palette-dark-grey);
+		border-style: solid;
+		border-top-width: calc(1px * var(--ui-scale));
+		margin-top: calc(var(--app-padding) * var(--ui-scale));
+		padding-top: calc(var(--app-padding) * var(--ui-scale));
+	}
+
+	header {
+		align-items: center;
+		margin-bottom: calc(6px * var(--ui-scale));
+
+		button.close {
+			margin-left: auto;
+
+			&:before {
+				background-color: currentColor;
+				clip-path: polygon(
+					/* top */
+					0 0,
+					calc(1px * var(--ui-scale)) 0,
+					calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+					calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+					calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+					calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+					calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) 0,
+					100% 0,
+
+					/* right */
+					100% calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+					calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+					calc(100% - (2px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
+					calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
+					calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+					100% calc(100% - (1px * var(--ui-scale))),
+					100% 100%,
+
+					/* bottom */
+					calc(100% - (1px * var(--ui-scale))) 100%,
+					calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+					calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+					calc(100% - (2px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
+					calc(2px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
+					calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) 100%,
+					0 100%,
+
+					/* left */
+					0 calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
+					calc(2px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
+					calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+					calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+					calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+					0 calc(1px * var(--ui-scale)),
+				);
+				content: '';
+				display: block;
+				height: calc(5px * var(--ui-scale));
+				margin: 0 calc(2px * var(--ui-scale));
+				width: calc(5px * var(--ui-scale));
+			}
+		}
+
+		div {
+			display: flex;
+			flex-direction: row;
+		}
+	}
+}

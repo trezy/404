@@ -1,0 +1,19 @@
+#modal-portal {
+	align-items: center;
+	background-color: hsla(var(--palette-black-hsl), 0.7);
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	left: 0;
+	opacity: 1;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition-duration: 0.2s;
+	transition-property: opacity;
+
+	&:empty {
+		opacity: 0;
+		pointer-events: none;
+	}
+}

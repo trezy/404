@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
-import { MapEditor } from './MapEditor.jsx'
+import { MapEditor } from './scenes/MapEditor/MapEditor.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
@@ -83,40 +83,44 @@ export function App() {
 	])
 
 	return (
-		<WholePixelContainer>
-			<AnimatePresence exitBeforeEnter>
-				{(scene === 'loadingGame') && (
-					<motion.main
-						key={'loading-game'}
-						animate={'animate'}
-						className={'scene loading-game'}
-						exit={'exit'}
-						initial={'initial'}
-						variants={LOADING_SCENE_VARIANTS}>
-						<GameTitle />
-						<p>{'loading...'}</p>
-					</motion.main>
-				)}
+		<>
+			<WholePixelContainer>
+				<AnimatePresence exitBeforeEnter>
+					{(scene === 'loadingGame') && (
+						<motion.main
+							key={'loading-game'}
+							animate={'animate'}
+							className={'scene loading-game'}
+							exit={'exit'}
+							initial={'initial'}
+							variants={LOADING_SCENE_VARIANTS}>
+							<GameTitle />
+							<p>{'loading...'}</p>
+						</motion.main>
+					)}
 
-				{(scene === 'mapEditor') && (
-					<MapEditor key={'map-editor'} />
-				)}
+					{(scene === 'mapEditor') && (
+						<MapEditor key={'map-editor'} />
+					)}
 
-				{(!['loadingGame', 'mapEditor'].includes(scene)) && (
-					<motion.main
-						key={'main'}
-						animate={'animate'}
-						className={'scene'}
-						exit={'exit'}
-						initial={'initial'}
-						variants={MAIN_SCENE_VARIANTS}>
-						<div className={'layout panels'}>
-							<LeftPanel />
-							<CenterPanel />
-						</div>
-					</motion.main>
-				)}
-			</AnimatePresence>
-		</WholePixelContainer>
+					{(!['loadingGame', 'mapEditor'].includes(scene)) && (
+						<motion.main
+							key={'main'}
+							animate={'animate'}
+							className={'scene'}
+							exit={'exit'}
+							initial={'initial'}
+							variants={MAIN_SCENE_VARIANTS}>
+							<div className={'layout panels'}>
+								<LeftPanel />
+								<CenterPanel />
+							</div>
+						</motion.main>
+					)}
+				</AnimatePresence>
+			</WholePixelContainer>
+
+			<div id={'modal-portal'} />
+		</>
 	)
 }
