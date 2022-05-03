@@ -6,6 +6,7 @@ import {
 	useRef,
 	useState,
 } from 'react'
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
 
@@ -35,6 +36,11 @@ export function Editor(props) {
 		x: 0,
 		y: 0,
 	})
+	const [cursorIsOverCanvas, setCursorIsOverCanvas] = useState(false)
+	const [cursorPosition, setCursorPosition] = useState({
+		x: 0,
+		y: 0,
+	})
 	const [dragOffset, setDragOffset] = useState({
 		x: 0,
 		y: 0,
@@ -45,23 +51,8 @@ export function Editor(props) {
 	})
 	const [isDragging, setIsDragging] = useState(false)
 
-	const cursor = useMemo(() => {
-		if (keyState['meta'] && isDragging) {
-			return 'grabbing'
-		}
-
-		if (keyState['meta']) {
-			return 'grab'
-		}
-
-		return 'auto'
-	}, [
-		keyState,
-		isDragging,
-	])
-
 	const handleCanvasClick = useCallback(event => {
-		if (keyState['meta']) {
+		if (keyState[' ']) {
 			setDragStart({
 				x: event.screenX,
 				y: event.screenY,
@@ -94,7 +85,21 @@ export function Editor(props) {
 		setIsDragging,
 	])
 
+	const handleMouseLeave = useCallback(() => {
+		setCursorIsOverCanvas(false)
+		handleCanvasRelease()
+	}, [
+		handleCanvasRelease,
+		setCursorIsOverCanvas,
+	])
+
 	const handleMouseMove = useCallback(event => {
+		setCursorIsOverCanvas(true)
+		setCursorPosition({
+			x: event.nativeEvent.layerX,
+			y: event.nativeEvent.layerY,
+		})
+
 		if (isDragging) {
 			const {
 				screenX,
@@ -111,6 +116,8 @@ export function Editor(props) {
 	}, [
 		dragStart,
 		isDragging,
+		setCursorIsOverCanvas,
+		setCursorPosition,
 		setDragOffset,
 	])
 
@@ -148,6 +155,7 @@ export function Editor(props) {
 			0,
 			0,
 		)
+		context.globalCompositeOperation = 'source-over'
 		context.imageSmoothingEnabled = false
 
 		const {
@@ -185,17 +193,104 @@ export function Editor(props) {
 		}
 
 		context.drawImage(image, 0, 0, width, height, offsetX, offsetY, width, height)
+
+		if (cursorIsOverCanvas) {
+			const nativePixelSize = 1 / zoom
+			const lineWidth = nativePixelSize * 4
+
+			const targetPixel = {
+				x: Math.ceil(cursorPosition.x / zoom),
+				y: Math.ceil(cursorPosition.y / zoom),
+			}
+
+			context.fillStyle = 'white'
+			context.strokeStyle = 'white'
+			context.lineWidth = lineWidth
+			context.globalCompositeOperation = 'difference'
+
+			// top left
+			context.beginPath()
+			context.moveTo(
+				targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
+				targetPixel.y - (lineWidth / 2) - 1,
+			)
+			context.lineTo(
+				targetPixel.x - (lineWidth / 2) - 1,
+				targetPixel.y - (lineWidth / 2) - 1,
+			)
+			context.lineTo(
+				targetPixel.x - (lineWidth / 2) - 1,
+				targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
+			)
+			context.stroke()
+
+			// top right
+			context.beginPath()
+			context.moveTo(
+				targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
+				targetPixel.y - (lineWidth / 2) - 1,
+			)
+			context.lineTo(
+				targetPixel.x + (lineWidth / 2),
+				targetPixel.y - (lineWidth / 2) - 1,
+			)
+			context.lineTo(
+				targetPixel.x + (lineWidth / 2),
+				targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
+			)
+			context.stroke()
+
+			// bottom right
+			context.beginPath()
+			context.moveTo(
+				targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
+				targetPixel.y + (lineWidth / 2),
+			)
+			context.lineTo(
+				targetPixel.x + (lineWidth / 2),
+				targetPixel.y + (lineWidth / 2),
+			)
+			context.lineTo(
+				targetPixel.x + (lineWidth / 2),
+				targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
+			)
+			context.stroke()
+
+			// bottom left
+			context.beginPath()
+			context.moveTo(
+				targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
+				targetPixel.y + (lineWidth / 2),
+			)
+			context.lineTo(
+				targetPixel.x - (lineWidth / 2) - 1,
+				targetPixel.y + (lineWidth / 2),
+			)
+			context.lineTo(
+				targetPixel.x - (lineWidth / 2) - 1,
+				targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
+			)
+			context.stroke()
+		}
 	}, [
+		cursorIsOverCanvas,
 		canvasOffset,
 		canvasSize,
+		cursorPosition,
 		dragOffset,
 		image,
 		zoom,
 	])
 
-	const canvasStyles = useMemo(() => {
-		return { cursor }
-	}, [cursor])
+	const compiledClassName = useMemo(() => {
+		return classnames('editor', {
+			'is-movable': keyState[' '] && !isDragging,
+			'is-moving': keyState[' '] && isDragging,
+		})
+	}, [
+		isDragging,
+		keyState,
+	])
 
 	useEffect(() => {
 		window.addEventListener('resize', updateCanvas)
@@ -212,15 +307,14 @@ export function Editor(props) {
 	return (
 		<div
 			ref={parentRef}
-			className={'editor'}>
+			className={compiledClassName}>
 			<canvas
 				ref={canvasRef}
 				height={canvasSize.height}
 				onMouseDown={handleCanvasClick}
-				onMouseLeave={handleCanvasRelease}
+				onMouseLeave={handleMouseLeave}
 				onMouseMove={handleMouseMove}
 				onMouseUp={handleCanvasRelease}
-				style={canvasStyles}
 				width={canvasSize.width} />
 		</div>
 	)
