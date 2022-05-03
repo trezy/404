@@ -14,10 +14,11 @@ export function Panel(props) {
 	const {
 		children,
 		className,
+		defaultIsOpen,
 		menu,
 		title,
 	} = props
-	const [isOpen, setIsOpen] = useState(false)
+	const [isOpen, setIsOpen] = useState(defaultIsOpen)
 
 	const handleHeaderClick = useCallback(() => {
 		setIsOpen(previousState => !previousState)
@@ -64,12 +65,14 @@ export function Panel(props) {
 
 Panel.defaultProps = {
 	className: '',
+	defaultIsOpen: true,
 	menu: null,
 }
 
 Panel.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.node,
+	defaultIsOpen: PropTypes.bool,
 	menu: PropTypes.node,
 	title: PropTypes.node.isRequired,
 }
