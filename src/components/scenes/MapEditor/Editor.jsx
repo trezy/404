@@ -22,10 +22,110 @@ import { useRafael } from '../../../hooks/useRafael.js'
 
 
 
+const CURSOR_RENDERERS = {
+	/**
+	 * Renders the marquee cursor to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which the cursor will be drawn.
+	 * @param {object} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {object} options.zoom The current zoom level.
+	 */
+	marquee(options) {
+		const {
+			context,
+			cursorPosition,
+			zoom,
+		} = options
+
+		const nativePixelSize = 1 / zoom
+		const lineWidth = nativePixelSize * 4
+
+		const targetPixel = {
+			x: Math.ceil(cursorPosition.x / zoom),
+			y: Math.ceil(cursorPosition.y / zoom),
+		}
+
+		context.fillStyle = 'white'
+		context.strokeStyle = 'white'
+		context.lineWidth = lineWidth
+		context.globalCompositeOperation = 'difference'
+
+		// top left
+		context.beginPath()
+		context.moveTo(
+			targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
+			targetPixel.y - (lineWidth / 2) - 1,
+		)
+		context.lineTo(
+			targetPixel.x - (lineWidth / 2) - 1,
+			targetPixel.y - (lineWidth / 2) - 1,
+		)
+		context.lineTo(
+			targetPixel.x - (lineWidth / 2) - 1,
+			targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
+		)
+		context.stroke()
+
+		// top right
+		context.beginPath()
+		context.moveTo(
+			targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
+			targetPixel.y - (lineWidth / 2) - 1,
+		)
+		context.lineTo(
+			targetPixel.x + (lineWidth / 2),
+			targetPixel.y - (lineWidth / 2) - 1,
+		)
+		context.lineTo(
+			targetPixel.x + (lineWidth / 2),
+			targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
+		)
+		context.stroke()
+
+		// bottom right
+		context.beginPath()
+		context.moveTo(
+			targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
+			targetPixel.y + (lineWidth / 2),
+		)
+		context.lineTo(
+			targetPixel.x + (lineWidth / 2),
+			targetPixel.y + (lineWidth / 2),
+		)
+		context.lineTo(
+			targetPixel.x + (lineWidth / 2),
+			targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
+		)
+		context.stroke()
+
+		// bottom left
+		context.beginPath()
+		context.moveTo(
+			targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
+			targetPixel.y + (lineWidth / 2),
+		)
+		context.lineTo(
+			targetPixel.x - (lineWidth / 2) - 1,
+			targetPixel.y + (lineWidth / 2),
+		)
+		context.lineTo(
+			targetPixel.x - (lineWidth / 2) - 1,
+			targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
+		)
+		context.stroke()
+
+		context.globalCompositeOperation = 'source-over'
+	},
+}
+
 export function Editor(props) {
 	const { image } = props
 	const { keyState } = useKeyState()
-	const { zoom } = useEditor()
+	const {
+		tool,
+		zoom,
+	} = useEditor()
 	const canvasRef = useRef(null)
 	const parentRef = useRef(null)
 	const [canvasSize, setCanvasSize] = useState({
@@ -51,8 +151,15 @@ export function Editor(props) {
 	})
 	const [isDragging, setIsDragging] = useState(false)
 
+	const isMovable = useMemo(() => {
+		return keyState[' '] || (tool === 'hand')
+	}, [
+		keyState,
+		tool,
+	])
+
 	const handleCanvasClick = useCallback(event => {
-		if (keyState[' ']) {
+		if (isMovable) {
 			setDragStart({
 				x: event.screenX,
 				y: event.screenY,
@@ -60,7 +167,7 @@ export function Editor(props) {
 			setIsDragging(true)
 		}
 	}, [
-		keyState,
+		isMovable,
 		setDragStart,
 		setIsDragging,
 	])
@@ -147,6 +254,7 @@ export function Editor(props) {
 
 		const context = canvasRef.current.getContext('2d')
 
+		context.imageSmoothingEnabled = false
 		context.setTransform(
 			zoom,
 			0,
@@ -155,8 +263,6 @@ export function Editor(props) {
 			0,
 			0,
 		)
-		context.globalCompositeOperation = 'source-over'
-		context.imageSmoothingEnabled = false
 
 		const {
 			height,
@@ -194,83 +300,12 @@ export function Editor(props) {
 
 		context.drawImage(image, 0, 0, width, height, offsetX, offsetY, width, height)
 
-		if (cursorIsOverCanvas) {
-			const nativePixelSize = 1 / zoom
-			const lineWidth = nativePixelSize * 4
-
-			const targetPixel = {
-				x: Math.ceil(cursorPosition.x / zoom),
-				y: Math.ceil(cursorPosition.y / zoom),
-			}
-
-			context.fillStyle = 'white'
-			context.strokeStyle = 'white'
-			context.lineWidth = lineWidth
-			context.globalCompositeOperation = 'difference'
-
-			// top left
-			context.beginPath()
-			context.moveTo(
-				targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
-				targetPixel.y - (lineWidth / 2) - 1,
-			)
-			context.lineTo(
-				targetPixel.x - (lineWidth / 2) - 1,
-				targetPixel.y - (lineWidth / 2) - 1,
-			)
-			context.lineTo(
-				targetPixel.x - (lineWidth / 2) - 1,
-				targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
-			)
-			context.stroke()
-
-			// top right
-			context.beginPath()
-			context.moveTo(
-				targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
-				targetPixel.y - (lineWidth / 2) - 1,
-			)
-			context.lineTo(
-				targetPixel.x + (lineWidth / 2),
-				targetPixel.y - (lineWidth / 2) - 1,
-			)
-			context.lineTo(
-				targetPixel.x + (lineWidth / 2),
-				targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
-			)
-			context.stroke()
-
-			// bottom right
-			context.beginPath()
-			context.moveTo(
-				targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
-				targetPixel.y + (lineWidth / 2),
-			)
-			context.lineTo(
-				targetPixel.x + (lineWidth / 2),
-				targetPixel.y + (lineWidth / 2),
-			)
-			context.lineTo(
-				targetPixel.x + (lineWidth / 2),
-				targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
-			)
-			context.stroke()
-
-			// bottom left
-			context.beginPath()
-			context.moveTo(
-				targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
-				targetPixel.y + (lineWidth / 2),
-			)
-			context.lineTo(
-				targetPixel.x - (lineWidth / 2) - 1,
-				targetPixel.y + (lineWidth / 2),
-			)
-			context.lineTo(
-				targetPixel.x - (lineWidth / 2) - 1,
-				targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
-			)
-			context.stroke()
+		if (cursorIsOverCanvas && !isMovable && (typeof CURSOR_RENDERERS[tool] === 'function')) {
+			CURSOR_RENDERERS[tool]({
+				context,
+				cursorPosition,
+				zoom,
+			})
 		}
 	}, [
 		cursorIsOverCanvas,
@@ -279,17 +314,19 @@ export function Editor(props) {
 		cursorPosition,
 		dragOffset,
 		image,
+		isMovable,
+		tool,
 		zoom,
 	])
 
 	const compiledClassName = useMemo(() => {
 		return classnames('editor', {
-			'is-movable': keyState[' '] && !isDragging,
-			'is-moving': keyState[' '] && isDragging,
+			'is-movable': isMovable && !isDragging,
+			'is-moving': isMovable && isDragging,
 		})
 	}, [
 		isDragging,
-		keyState,
+		isMovable,
 	])
 
 	useEffect(() => {
