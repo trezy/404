@@ -44,6 +44,7 @@
 	}
 
 	.editor {
+		cursor: none;
 		display: flex;
 		grid-area: editor;
 		position: relative;
@@ -52,6 +53,14 @@
 		canvas {
 			position: absolute;
 			transform-origin: 0 0;
+		}
+
+		&.is-movable {
+			cursor: grab;
+		}
+
+		&.is-moving {
+			cursor: grabbing;
 		}
 	}
 
@@ -65,8 +74,17 @@
 	}
 
 	.editor-controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: calc(10px * var(--ui-scale));
 		grid-area: editor-controls;
 		padding-top: calc(var(--app-padding) * var(--ui-scale));
+
+		.control {
+			align-items: center;
+			display: flex;
+			gap: calc(3px * var(--ui-scale));
+		}
 	}
 
 	.fieldset {

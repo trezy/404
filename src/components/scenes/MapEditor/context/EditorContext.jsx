@@ -15,16 +15,25 @@ import { v4 as uuid } from 'uuid'
 
 
 export const EditorContext = createContext({
+	defaultZoom: 1,
 	focusedItemID: null,
 	openItems: {},
+	tile: null,
+	tool: 'marquee',
 	zoom: 1,
 
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateHandTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateMarqueeTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	focusItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	openItem: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -41,7 +50,13 @@ export function EditorContextProvider(props) {
 	const [defaultZoom, setDefaultZoom] = useState(1)
 	const [focusedItemID, setFocusedItemID] = useState(null)
 	const [openItems, setOpenItems] = useState({})
+	const [tile, setTile] = useState(null)
+	const [tool, setTool] = useState('marquee')
 	const [zoom, setZoom] = useState(defaultZoom)
+
+	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
+
+	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
 
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
@@ -100,6 +115,8 @@ export function EditorContextProvider(props) {
 		setFocusedItemID,
 	])
 
+	const setActiveTile = useCallback(tileID => setTile(tileID), [setTile])
+
 	const zoomIn = useCallback(() => {
 		setZoom(previousValue => {
 			if (previousValue === 0.1) {
@@ -124,21 +141,33 @@ export function EditorContextProvider(props) {
 
 	const providerState = useMemo(() => {
 		return {
+			activateHandTool,
+			activateMarqueeTool,
 			closeItem,
+			defaultZoom,
 			focusedItemID,
 			focusItem,
 			openItem,
 			openItems,
+			setActiveTile,
+			tile,
+			tool,
 			zoom,
 			zoomIn,
 			zoomOut,
 		}
 	}, [
+		activateHandTool,
+		activateMarqueeTool,
 		closeItem,
+		defaultZoom,
 		focusedItemID,
 		focusItem,
 		openItem,
 		openItems,
+		setActiveTile,
+		tile,
+		tool,
 		zoom,
 		zoomIn,
 		zoomOut,

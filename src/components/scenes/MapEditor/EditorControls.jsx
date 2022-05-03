@@ -1,5 +1,5 @@
 // Module imports
-import { useRef } from 'react'
+// import { useRef } from 'react'
 
 
 
@@ -15,11 +15,16 @@ import { useEditor } from './context/EditorContext.jsx'
 
 export function EditorControls() {
 	const {
-		setScale,
+		activateHandTool,
+		activateMarqueeTool,
+		defaultZoom,
+		// setScale,
+		tool,
+		zoom,
 		zoomIn,
 		zoomOut,
 	} = useEditor()
-	const canvasRef = useRef(null)
+	// const canvasRef = useRef(null)
 
 	// useEffect(() => {
 	//	preventDefaultForKey(['meta', '+'])
@@ -45,22 +50,44 @@ export function EditorControls() {
 		<menu
 			className={'editor-controls'}
 			type={'toolbar'}>
-			<div className={'field'}>
-				<label>{'Zoom'}</label>
+			<div className={'control'}>
+				<label>{'Tools'}</label>
 
-				<div>
+				<div className={'button-group'}>
 					<Button
-						// isSmall
-						// isUniformlyPadded
-						onClick={zoomIn}>
-						{'+'}
+						isAffirmative={tool === 'hand'}
+						isUniformlyPadded
+						onClick={activateHandTool}>
+						{'Hand'}
 					</Button>
 
 					<Button
-						// isSmall
-						// isUniformlyPadded
+						isAffirmative={tool === 'marquee'}
+						isUniformlyPadded
+						onClick={activateMarqueeTool}>
+						{'Marquee'}
+					</Button>
+				</div>
+			</div>
+
+			<div className={'control'}>
+				<label>{'Zoom'}</label>
+
+				<div className={'button-group'}>
+					<Button
+						isUniformlyPadded
 						onClick={zoomOut}>
 						{'-'}
+					</Button>
+
+					<div>
+						{`${(zoom - defaultZoom + 1) * 100}%`}
+					</div>
+
+					<Button
+						isUniformlyPadded
+						onClick={zoomIn}>
+						{'+'}
 					</Button>
 				</div>
 			</div>
