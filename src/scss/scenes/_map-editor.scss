@@ -23,6 +23,14 @@
 			display: flex;
 			grid-area: menu;
 		}
+
+		&.empty-message	{
+			align-items: center;
+			color: var(--palette-dark-grey);
+			display: flex;
+			justify-content: center;
+			text-align: center;
+		}
 	}
 }
 

@@ -71,6 +71,12 @@ export function AssetsPanel() {
 				menu={Menu}
 				title={'Assets'}>
 				<ol className={'block-list layers-list'}>
+					{!Object.keys(assets).length && (
+						<li className={'empty-message'}>
+							{'Create a new asset.'}
+						</li>
+					)}
+
 					{Object.entries(assets).map(([assetID, asset]) => (
 						<li key={assetID}>
 							<img
