@@ -3,6 +3,7 @@ import {
 	createContext,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
 	useState,
 } from 'react'
@@ -37,9 +38,10 @@ export const EditorContext = createContext({
 export function EditorContextProvider(props) {
 	const { children } = props
 
+	const [defaultZoom, setDefaultZoom] = useState(1)
 	const [focusedItemID, setFocusedItemID] = useState(null)
 	const [openItems, setOpenItems] = useState({})
-	const [zoom, setZoom] = useState(1)
+	const [zoom, setZoom] = useState(defaultZoom)
 
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
@@ -81,14 +83,22 @@ export function EditorContextProvider(props) {
 			[newItemID]: newItem,
 		}))
 
-		setZoom(1)
+		setZoom(defaultZoom)
 		setFocusedItemID(newItemID)
-	}, [setOpenItems])
+	}, [
+		defaultZoom,
+		setFocusedItemID,
+		setOpenItems,
+		setZoom,
+	])
 
 	const focusItem = useCallback(itemID => {
-		setZoom(1)
+		setZoom(defaultZoom)
 		setFocusedItemID(itemID)
-	}, [setFocusedItemID])
+	}, [
+		defaultZoom,
+		setFocusedItemID,
+	])
 
 	const zoomIn = useCallback(() => {
 		setZoom(previousValue => {
@@ -134,9 +144,20 @@ export function EditorContextProvider(props) {
 		zoomOut,
 	])
 
+	useEffect(() => {
+		const rootElement = document.querySelector(':root')
+		const rootStyles = getComputedStyle(rootElement)
+		const rootScale = Number(rootStyles.getPropertyValue('--ui-scale'))
+
+		setDefaultZoom(rootScale)
+		setZoom(rootScale)
+	}, [
+		setDefaultZoom,
+		setZoom,
+	])
+
 	return (
-		<EditorContext.Provider
-			value={providerState}>
+		<EditorContext.Provider value={providerState}>
 			{children}
 		</EditorContext.Provider>
 	)
