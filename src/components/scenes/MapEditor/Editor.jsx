@@ -14,6 +14,7 @@ import PropTypes from 'prop-types'
 
 // Local imports
 import { TILE_SIZE } from '../../../game/Tile.js'
+import { useDOMEvent } from '../../../hooks/useDOMEvent.js'
 import { useEditor } from './context/EditorContext.jsx'
 import { useKeyState } from './context/KeyStateContext.jsx'
 import { useRafael } from '../../../hooks/useRafael.js'
@@ -104,7 +105,6 @@ const RENDERERS = {
 	 * @param {import('../../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
 	 * @param {import('../../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
 	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
 	 * @param {number} options.zoom The current zoom level.
 	 */
 	marquee(options) {
@@ -114,7 +114,6 @@ const RENDERERS = {
 			dragOffset,
 			dragStart,
 			isDragging,
-			renderOffset,
 			zoom,
 		} = options
 
@@ -286,7 +285,7 @@ const RENDERERS = {
 				const cellX = gridX - gridOffsetX
 				const cellY = gridY - gridOffsetY
 
-				if ((cellX + cellY) % 2) {
+				if (!((cellX + cellY) % 2)) {
 					context.fillRect(
 						(cellX * TILE_SIZE.width) + renderOffset.x,
 						(cellY * TILE_SIZE.height) + renderOffset.y,
@@ -345,8 +344,10 @@ export function Editor(props) {
 		tool,
 	])
 
-	const handleCanvasClick = useCallback(event => {
+	const handleCanvasDragStart = useCallback(event => {
 		const { nativeEvent } = event
+
+		event.preventDefault()
 
 		setDragStart({
 			x: Math.floor(nativeEvent.layerX / zoom),
@@ -392,6 +393,41 @@ export function Editor(props) {
 		setIsDragging,
 		setSelection,
 		tool,
+	])
+
+	const handleDoubleClick = useCallback(event => {
+		const x = Math.floor((event.layerX / zoom) / TILE_SIZE.width) * TILE_SIZE.width
+		const y = Math.floor((event.layerY / zoom) / TILE_SIZE.height) * TILE_SIZE.height
+
+		setSelection(previousState => {
+			const newState = {
+				height: TILE_SIZE.height,
+				width: TILE_SIZE.width,
+				x,
+				y,
+			}
+
+			if (event.shiftKey) {
+				if (newState.x > previousState.x) {
+					newState.width = (x - previousState.x) + TILE_SIZE.width
+					newState.x = previousState.x
+				} else {
+					newState.width = (previousState.x - x) + TILE_SIZE.width
+				}
+
+				if (newState.y > previousState.y) {
+					newState.height = (y - previousState.y) + TILE_SIZE.height
+					newState.y = previousState.y
+				} else {
+					newState.height = (previousState.y - y) + TILE_SIZE.height
+				}
+			}
+
+			return newState
+		})
+	}, [
+		setSelection,
+		zoom,
 	])
 
 	const handleKeyUp = useCallback(event => {
@@ -524,7 +560,6 @@ export function Editor(props) {
 	}, [
 		cursorIsOverCanvas,
 		canvasOffset,
-		canvasSize,
 		cursorPosition,
 		dragOffset,
 		dragStart,
@@ -562,14 +597,21 @@ export function Editor(props) {
 		handler: handleKeyUp,
 	})
 
+	useDOMEvent({
+		elementRef: canvasRef,
+		event: 'dblclick',
+		handler: handleDoubleClick,
+	})
+
 	return (
 		<div
 			ref={parentRef}
 			className={compiledClassName}>
 			<canvas
 				ref={canvasRef}
+				draggable
 				height={canvasSize.height}
-				onMouseDown={handleCanvasClick}
+				onDragStart={handleCanvasDragStart}
 				onMouseLeave={handleMouseLeave}
 				onMouseMove={handleMouseMove}
 				onMouseUp={handleCanvasRelease}
