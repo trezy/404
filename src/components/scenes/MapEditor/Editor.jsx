@@ -344,6 +344,17 @@ export function Editor(props) {
 		tool,
 	])
 
+	const renderOffset = useMemo(() => {
+		return {
+			x: Math.floor(canvasOffset.x + (isMovable ? dragOffset.x : 0)),
+			y: Math.floor(canvasOffset.y + (isMovable ? dragOffset.y : 0)),
+		}
+	}, [
+		canvasOffset,
+		dragOffset,
+		isMovable,
+	])
+
 	const handleCanvasDragStart = useCallback(event => {
 		const { nativeEvent } = event
 
@@ -396,8 +407,8 @@ export function Editor(props) {
 	])
 
 	const handleDoubleClick = useCallback(event => {
-		const x = Math.floor((event.layerX / zoom) / TILE_SIZE.width) * TILE_SIZE.width
-		const y = Math.floor((event.layerY / zoom) / TILE_SIZE.height) * TILE_SIZE.height
+		const x = Math.floor(((event.layerX / zoom) - renderOffset.x) / TILE_SIZE.width) * TILE_SIZE.width
+		const y = Math.floor(((event.layerY / zoom) - renderOffset.y) / TILE_SIZE.height) * TILE_SIZE.height
 
 		setSelection(previousState => {
 			const newState = {
@@ -426,6 +437,7 @@ export function Editor(props) {
 			return newState
 		})
 	}, [
+		renderOffset,
 		setSelection,
 		zoom,
 	])
@@ -511,11 +523,6 @@ export function Editor(props) {
 			0,
 		)
 
-		const renderOffset = {
-			x: Math.floor(canvasOffset.x + (isMovable ? dragOffset.x : 0)),
-			y: Math.floor(canvasOffset.y + (isMovable ? dragOffset.y : 0)),
-		}
-
 		context.clearRect(
 			0,
 			0,
@@ -559,13 +566,13 @@ export function Editor(props) {
 		}
 	}, [
 		cursorIsOverCanvas,
-		canvasOffset,
 		cursorPosition,
 		dragOffset,
 		dragStart,
 		image,
 		isDragging,
 		isMovable,
+		renderOffset,
 		selection,
 		tool,
 		zoom,
