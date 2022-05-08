@@ -1,7 +1,6 @@
 // Module imports
 import {
 	useCallback,
-	useEffect,
 	useMemo,
 	useRef,
 	useState,
@@ -14,108 +13,294 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
+import { TILE_SIZE } from '../../../game/Tile.js'
 import { useEditor } from './context/EditorContext.jsx'
 import { useKeyState } from './context/KeyStateContext.jsx'
 import { useRafael } from '../../../hooks/useRafael.js'
+import { useWindowEvent } from '../../../hooks/useWindowEvent.js'
 
 
 
 
 
-const CURSOR_RENDERERS = {
+// Constants
+const MARQUEE_CURSOR_PATHS = [
+	// top left
+	[
+		[-2, 0],
+		[0, 0],
+		[0, -2],
+		[-1, -2],
+		[-1, -1],
+		[-2, -1],
+	],
+
+	// top right
+	[
+		[3, 0],
+		[1, 0],
+		[1, -2],
+		[2, -2],
+		[2, -1],
+		[3, -1],
+	],
+
+	// bottom left
+	[
+		[-2, 1],
+		[0, 1],
+		[0, 3],
+		[-1, 3],
+		[-1, 2],
+		[-2, 2],
+	],
+
+	// bottom left
+	[
+		[3, 1],
+		[1, 1],
+		[1, 3],
+		[2, 3],
+		[2, 2],
+		[3, 2],
+	],
+]
+
+const RENDERERS = {
 	/**
 	 * Renders the marquee cursor to the canvas.
 	 *
 	 * @param {object} options All options.
-	 * @param {CanvasRenderingContext2D} options.context The context to which the cursor will be drawn.
-	 * @param {object} options.cursorPosition The current Vector2 of the cursor.
-	 * @param {object} options.zoom The current zoom level.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {HTMLImageElement} options.image The Image of the asset to be rendered.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	asset(options) {
+		const {
+			context,
+			image,
+			renderOffset,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			renderOffset.x * zoom,
+			renderOffset.y * zoom,
+		)
+		context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height)
+	},
+
+	/**
+	 * Renders the marquee cursor to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
+	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
 	 */
 	marquee(options) {
 		const {
 			context,
 			cursorPosition,
+			dragOffset,
+			dragStart,
+			isDragging,
+			renderOffset,
 			zoom,
 		} = options
 
-		const nativePixelSize = 1 / zoom
-		const lineWidth = nativePixelSize * 4
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
 
 		const targetPixel = {
-			x: Math.ceil(cursorPosition.x / zoom),
-			y: Math.ceil(cursorPosition.y / zoom),
+			x: Math.floor(cursorPosition.x),
+			y: Math.floor(cursorPosition.y),
 		}
 
 		context.fillStyle = 'white'
 		context.strokeStyle = 'white'
-		context.lineWidth = lineWidth
+		context.lineWidth = 1
 		context.globalCompositeOperation = 'difference'
 
-		// top left
-		context.beginPath()
-		context.moveTo(
-			targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
-			targetPixel.y - (lineWidth / 2) - 1,
-		)
-		context.lineTo(
-			targetPixel.x - (lineWidth / 2) - 1,
-			targetPixel.y - (lineWidth / 2) - 1,
-		)
-		context.lineTo(
-			targetPixel.x - (lineWidth / 2) - 1,
-			targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
-		)
-		context.stroke()
+		MARQUEE_CURSOR_PATHS.forEach(cursorPath => {
+			context.beginPath()
 
-		// top right
-		context.beginPath()
-		context.moveTo(
-			targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
-			targetPixel.y - (lineWidth / 2) - 1,
-		)
-		context.lineTo(
-			targetPixel.x + (lineWidth / 2),
-			targetPixel.y - (lineWidth / 2) - 1,
-		)
-		context.lineTo(
-			targetPixel.x + (lineWidth / 2),
-			targetPixel.y - (lineWidth / 2) - 1 - (lineWidth * 2),
-		)
-		context.stroke()
+			cursorPath.forEach((cursorPathPoint, index) => {
+				let method = 'lineTo'
 
-		// bottom right
-		context.beginPath()
-		context.moveTo(
-			targetPixel.x + (lineWidth / 2) + (lineWidth * 2),
-			targetPixel.y + (lineWidth / 2),
-		)
-		context.lineTo(
-			targetPixel.x + (lineWidth / 2),
-			targetPixel.y + (lineWidth / 2),
-		)
-		context.lineTo(
-			targetPixel.x + (lineWidth / 2),
-			targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
-		)
-		context.stroke()
+				if (index === 0) {
+					method = 'moveTo'
+				}
 
-		// bottom left
-		context.beginPath()
-		context.moveTo(
-			targetPixel.x - (lineWidth / 2) - 1 - (lineWidth * 2),
-			targetPixel.y + (lineWidth / 2),
-		)
-		context.lineTo(
-			targetPixel.x - (lineWidth / 2) - 1,
-			targetPixel.y + (lineWidth / 2),
-		)
-		context.lineTo(
-			targetPixel.x - (lineWidth / 2) - 1,
-			targetPixel.y + (lineWidth / 2) + (lineWidth * 2),
-		)
-		context.stroke()
+				context[method](
+					targetPixel.x + cursorPathPoint[0],
+					targetPixel.y + cursorPathPoint[1],
+				)
+			})
+			context.closePath()
+			context.fill()
+		})
+
+		if (isDragging) {
+			const lineWidth = 1
+			context.strokeStyle = 'white'
+			context.lineWidth = lineWidth
+
+			context.setTransform(
+				zoom,
+				0,
+				0,
+				zoom,
+				0,
+				0,
+			)
+
+			const renderHeight = Math.round(dragOffset.y)
+			const renderWidth = Math.round(dragOffset.x)
+			const renderX = Math.round(dragStart.x) + (lineWidth / 2)
+			const renderY = Math.round(dragStart.y) + (lineWidth / 2)
+
+			context.strokeRect(
+				renderX,
+				renderY,
+				renderWidth,
+				renderHeight,
+			)
+		}
 
 		context.globalCompositeOperation = 'source-over'
+	},
+
+	/**
+	 * Renders the marquee cursor to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {object} options.selection The location and size of the current selection.
+	 * @param {number} options.selection.height The height of the current selection.
+	 * @param {number} options.selection.width The width of the current selection.
+	 * @param {number} options.selection.x The horizontal location of the current selection.
+	 * @param {number} options.selection.y The vertical location of the current selection.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	selection(options) {
+		const {
+			context,
+			renderOffset,
+			selection,
+			zoom,
+		} = options
+
+		const lineWidth = 1
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+		context.globalCompositeOperation = 'difference'
+		context.lineDashOffset = performance.now() * -0.01
+		context.lineWidth = lineWidth
+		context.setLineDash([3, 3])
+
+		context.strokeRect(
+			Math.floor(selection.x + renderOffset.x) + (lineWidth / 2),
+			Math.floor(selection.y + renderOffset.y) + (lineWidth / 2),
+			Math.floor(selection.width) - 1,
+			Math.floor(selection.height) - 1,
+		)
+
+		context.globalCompositeOperation = 'source-over'
+		context.lineDashOffset = 0
+		context.setLineDash([])
+	},
+
+	/**
+	 * Renders the transparency grid to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	transparencyGrid(options) {
+		const {
+			canvasElement,
+			context,
+			renderOffset,
+			zoom,
+		} = options
+
+		// Draw light background
+		context.fillStyle = '#eee'
+		context.fillRect(
+			0,
+			0,
+			canvasElement.width,
+			canvasElement.height,
+		)
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		// Draw darker grid squares
+		const gridCellsX = Math.ceil(canvasElement.width / TILE_SIZE.width)
+		const gridCellsY = Math.ceil(canvasElement.height / TILE_SIZE.height)
+		const gridOffsetX = Math.floor(renderOffset.x / TILE_SIZE.width)
+		const gridOffsetY = Math.floor(renderOffset.y / TILE_SIZE.height)
+		const gridStartX = -1
+		const gridStartY = -1
+
+		context.fillStyle = '#ddd'
+
+		let gridX = gridStartX
+		let gridY = gridStartY
+		while (gridY < gridCellsY) {
+			while (gridX < gridCellsX) {
+				const cellX = gridX - gridOffsetX
+				const cellY = gridY - gridOffsetY
+
+				if ((cellX + cellY) % 2) {
+					context.fillRect(
+						(cellX * TILE_SIZE.width) + renderOffset.x,
+						(cellY * TILE_SIZE.height) + renderOffset.y,
+						TILE_SIZE.width,
+						TILE_SIZE.height,
+					)
+				}
+
+				gridX += 1
+			}
+
+			gridX = gridStartX
+			gridY += 1
+		}
 	},
 }
 
@@ -123,6 +308,8 @@ export function Editor(props) {
 	const { image } = props
 	const { keyState } = useKeyState()
 	const {
+		selection,
+		setSelection,
 		tool,
 		zoom,
 	} = useEditor()
@@ -159,25 +346,35 @@ export function Editor(props) {
 	])
 
 	const handleCanvasClick = useCallback(event => {
-		if (isMovable) {
-			setDragStart({
-				x: event.screenX,
-				y: event.screenY,
-			})
-			setIsDragging(true)
-		}
+		const { nativeEvent } = event
+
+		setDragStart({
+			x: Math.floor(nativeEvent.layerX / zoom),
+			y: Math.floor(nativeEvent.layerY / zoom),
+		})
+		setIsDragging(true)
 	}, [
-		isMovable,
 		setDragStart,
 		setIsDragging,
+		zoom,
 	])
 
 	const handleCanvasRelease = useCallback(() => {
 		if (isDragging) {
-			setCanvasOffset(previousValue => ({
-				x: previousValue.x + dragOffset.x,
-				y: previousValue.y + dragOffset.y,
-			}))
+			if (isMovable) {
+				setCanvasOffset(previousValue => ({
+					x: previousValue.x + dragOffset.x,
+					y: previousValue.y + dragOffset.y,
+				}))
+			} else if (tool === 'marquee') {
+				setSelection({
+					height: dragOffset.y + canvasOffset.y + 1,
+					width: dragOffset.x + canvasOffset.x + 1,
+					x: dragStart.x,
+					y: dragStart.y,
+				})
+			}
+
 			setDragOffset(() => ({
 				x: 0,
 				y: 0,
@@ -185,11 +382,27 @@ export function Editor(props) {
 			setIsDragging(false)
 		}
 	}, [
+		canvasOffset,
 		dragOffset,
+		dragStart,
 		isDragging,
+		isMovable,
 		setCanvasOffset,
 		setDragOffset,
 		setIsDragging,
+		setSelection,
+		tool,
+	])
+
+	const handleKeyUp = useCallback(event => {
+		if (event.key.toLowerCase() === 'escape') {
+			if (selection) {
+				setSelection(null)
+			}
+		}
+	}, [
+		selection,
+		setSelection,
 	])
 
 	const handleMouseLeave = useCallback(() => {
@@ -201,22 +414,19 @@ export function Editor(props) {
 	])
 
 	const handleMouseMove = useCallback(event => {
+		const { nativeEvent } = event
+
 		setCursorIsOverCanvas(true)
 		setCursorPosition({
-			x: event.nativeEvent.layerX,
-			y: event.nativeEvent.layerY,
+			x: Math.floor(nativeEvent.layerX / zoom),
+			y: Math.floor(nativeEvent.layerY / zoom),
 		})
 
 		if (isDragging) {
-			const {
-				screenX,
-				screenY,
-			} = event
-
 			setDragOffset(() => {
 				return {
-					x: screenX - dragStart.x,
-					y: screenY - dragStart.y,
+					x: Math.floor(nativeEvent.layerX / zoom) - dragStart.x,
+					y: Math.floor(nativeEvent.layerY / zoom) - dragStart.y,
 				}
 			})
 		}
@@ -226,6 +436,7 @@ export function Editor(props) {
 		setCursorIsOverCanvas,
 		setCursorPosition,
 		setDragOffset,
+		zoom,
 	])
 
 	const updateCanvas = useCallback(() => {
@@ -264,46 +475,49 @@ export function Editor(props) {
 			0,
 		)
 
-		const {
-			height,
-			width,
-		} = image
-		const offsetX = Math.floor((canvasOffset.x + dragOffset.x) / zoom)
-		const offsetY = Math.floor((canvasOffset.y + dragOffset.y) / zoom)
-
-		context.clearRect(0, 0, canvasElement.width, canvasElement.height)
-
-		// Draw the grid
-		const gridOffsetX = (32 - (offsetX % 32)) * -1
-		const gridOffsetY = (32 - (offsetY % 32)) * -1
-		const gridWidth = ((Math.ceil(canvasSize.width / 16) * 16) / zoom) + 64
-		const gridHeight = ((Math.ceil(canvasSize.height / 16) * 16) / zoom) + 64
-
-		context.fillStyle = '#eee'
-		context.fillRect(gridOffsetX, gridOffsetY, gridWidth, gridHeight)
-
-		context.fillStyle = '#ddd'
-
-		for (let i = 0; i < gridWidth; i += 16) {
-			const shouldOffset = Boolean((i / 16) % 2)
-			const x = gridOffsetX + i
-			let y = gridOffsetY
-
-			if (shouldOffset) {
-				y += 16
-			}
-
-			for (let iY = 0; iY < gridHeight; iY += 32) {
-				context.fillRect(x, y + iY, 16, 16)
-			}
+		const renderOffset = {
+			x: Math.floor(canvasOffset.x + (isMovable ? dragOffset.x : 0)),
+			y: Math.floor(canvasOffset.y + (isMovable ? dragOffset.y : 0)),
 		}
 
-		context.drawImage(image, 0, 0, width, height, offsetX, offsetY, width, height)
+		context.clearRect(
+			0,
+			0,
+			canvasElement.width,
+			canvasElement.height,
+		)
 
-		if (cursorIsOverCanvas && !isMovable && (typeof CURSOR_RENDERERS[tool] === 'function')) {
-			CURSOR_RENDERERS[tool]({
+		RENDERERS.transparencyGrid({
+			canvasElement,
+			context,
+			renderOffset,
+			zoom,
+		})
+
+		RENDERERS.asset({
+			context,
+			image,
+			renderOffset,
+			zoom,
+		})
+
+		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[tool] === 'function')) {
+			RENDERERS[tool]({
 				context,
 				cursorPosition,
+				dragOffset,
+				dragStart,
+				isDragging,
+				renderOffset,
+				zoom,
+			})
+		}
+
+		if (selection) {
+			RENDERERS.selection({
+				context,
+				renderOffset,
+				selection,
 				zoom,
 			})
 		}
@@ -313,8 +527,11 @@ export function Editor(props) {
 		canvasSize,
 		cursorPosition,
 		dragOffset,
+		dragStart,
 		image,
+		isDragging,
 		isMovable,
+		selection,
 		tool,
 		zoom,
 	])
@@ -329,16 +546,20 @@ export function Editor(props) {
 		isMovable,
 	])
 
-	useEffect(() => {
-		window.addEventListener('resize', updateCanvas)
-		updateCanvas()
-
-		return () => window.removeEventListener('resize', updateCanvas)
-	}, [updateCanvas])
-
 	useRafael({
 		task: render,
 		dependencies: [render],
+	})
+
+	useWindowEvent({
+		event: 'resize',
+		invokeImmediately: true,
+		handler: updateCanvas,
+	})
+
+	useWindowEvent({
+		event: 'keyup',
+		handler: handleKeyUp,
 	})
 
 	return (

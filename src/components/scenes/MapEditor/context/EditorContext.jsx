@@ -18,6 +18,7 @@ export const EditorContext = createContext({
 	defaultZoom: 1,
 	focusedItemID: null,
 	openItems: {},
+	selection: null,
 	tile: null,
 	tool: 'marquee',
 	zoom: 1,
@@ -35,6 +36,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	setSelection: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomOut: () => {},
@@ -50,6 +53,7 @@ export function EditorContextProvider(props) {
 	const [defaultZoom, setDefaultZoom] = useState(1)
 	const [focusedItemID, setFocusedItemID] = useState(null)
 	const [openItems, setOpenItems] = useState({})
+	const [selection, setSelection] = useState(null)
 	const [tile, setTile] = useState(null)
 	const [tool, setTool] = useState('marquee')
 	const [zoom, setZoom] = useState(defaultZoom)
@@ -98,8 +102,9 @@ export function EditorContextProvider(props) {
 			[newItemID]: newItem,
 		}))
 
-		setZoom(defaultZoom)
 		setFocusedItemID(newItemID)
+		setSelection(null)
+		setZoom(defaultZoom)
 	}, [
 		defaultZoom,
 		setFocusedItemID,
@@ -108,8 +113,9 @@ export function EditorContextProvider(props) {
 	])
 
 	const focusItem = useCallback(itemID => {
-		setZoom(defaultZoom)
 		setFocusedItemID(itemID)
+		setSelection(null)
+		setZoom(defaultZoom)
 	}, [
 		defaultZoom,
 		setFocusedItemID,
@@ -149,7 +155,9 @@ export function EditorContextProvider(props) {
 			focusItem,
 			openItem,
 			openItems,
+			selection,
 			setActiveTile,
+			setSelection,
 			tile,
 			tool,
 			zoom,
@@ -165,7 +173,9 @@ export function EditorContextProvider(props) {
 		focusItem,
 		openItem,
 		openItems,
+		selection,
 		setActiveTile,
+		setSelection,
 		tile,
 		tool,
 		zoom,
