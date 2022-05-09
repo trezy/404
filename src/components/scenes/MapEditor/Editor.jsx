@@ -420,17 +420,17 @@ export function Editor(props) {
 
 			if (event.shiftKey) {
 				if (newState.x > previousState.x) {
-					newState.width = (x - previousState.x) + TILE_SIZE.width
+					newState.width = Math.max(previousState.width, (x - previousState.x) + TILE_SIZE.width)
 					newState.x = previousState.x
 				} else {
-					newState.width = (previousState.x - x) + TILE_SIZE.width
+					newState.width = Math.max(previousState.width, (previousState.x - x) + TILE_SIZE.width)
 				}
 
 				if (newState.y > previousState.y) {
-					newState.height = (y - previousState.y) + TILE_SIZE.height
+					newState.height = Math.max(previousState.height, (y - previousState.y) + TILE_SIZE.height)
 					newState.y = previousState.y
 				} else {
-					newState.height = (previousState.y - y) + TILE_SIZE.height
+					newState.height = Math.max(previousState.height, (previousState.y - y) + TILE_SIZE.height)
 				}
 			}
 
