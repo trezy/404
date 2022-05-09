@@ -380,10 +380,10 @@ export function Editor(props) {
 				}))
 			} else if (tool === 'marquee') {
 				setSelection({
-					height: dragOffset.y + canvasOffset.y + 1,
-					width: dragOffset.x + canvasOffset.x + 1,
-					x: dragStart.x,
-					y: dragStart.y,
+					height: dragOffset.y + 1,
+					width: dragOffset.x + 1,
+					x: dragStart.x - renderOffset.x,
+					y: dragStart.y - renderOffset.y,
 				})
 			}
 
@@ -394,11 +394,11 @@ export function Editor(props) {
 			setIsDragging(false)
 		}
 	}, [
-		canvasOffset,
 		dragOffset,
 		dragStart,
 		isDragging,
 		isMovable,
+		renderOffset,
 		setCanvasOffset,
 		setDragOffset,
 		setIsDragging,
