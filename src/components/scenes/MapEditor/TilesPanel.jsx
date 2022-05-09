@@ -14,7 +14,7 @@ import { Button } from '../../Button.jsx'
 import { NewTileModal } from './NewTileModal.jsx'
 import { Panel } from './Panel.jsx'
 import { useAssets } from './context/AssetsContext.jsx'
-// import { useEditor } from './context/EditorContext.jsx'
+import { useEditor } from './context/EditorContext.jsx'
 
 
 
@@ -22,7 +22,7 @@ import { useAssets } from './context/AssetsContext.jsx'
 
 export function TilesPanel() {
 	const { assets } = useAssets()
-	// const { setActiveTile } = useEditor()
+	const { selection } = useEditor()
 
 	const [showNewTileModal, setShowNewTileModal] = useState(false)
 
@@ -32,16 +32,21 @@ export function TilesPanel() {
 
 	const handleNewTileModalClose = useCallback(() => setShowNewTileModal(false), [setShowNewTileModal])
 
+	const hasAssets = useMemo(() => {
+		return Boolean(Object.keys(assets).length)
+	}, [assets])
+
 	const Menu = useMemo(() => (
 		<Button
-			isDisabled={!Object.keys(assets).length}
+			isDisabled={!hasAssets || !selection}
 			isFullWidth
 			onClick={handleNewTileClick}>
 			{'+ New Tile'}
 		</Button>
 	), [
-		assets,
 		handleNewTileClick,
+		hasAssets,
+		selection,
 	])
 
 	return (
@@ -51,13 +56,19 @@ export function TilesPanel() {
 				menu={Menu}
 				title={'Tiles'}>
 				<ol className={'block-list layers-list'}>
-					{!Object.keys(assets).length && (
+					{!hasAssets && (
 						<li className={'empty-message'}>
 							{'Load an asset to create tiles.'}
 						</li>
 					)}
 
-					{Boolean(Object.keys(assets).length) && (
+					{(hasAssets && !selection) && (
+						<li className={'empty-message'}>
+							{'Selection part of the image to create a tile.'}
+						</li>
+					)}
+
+					{(hasAssets && selection) && (
 						<li className={'empty-message'}>
 							{'Create a new tile.'}
 						</li>
