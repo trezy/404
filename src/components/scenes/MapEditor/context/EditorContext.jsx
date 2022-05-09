@@ -58,6 +58,14 @@ export function EditorContextProvider(props) {
 	const [tool, setTool] = useState('marquee')
 	const [zoom, setZoom] = useState(defaultZoom)
 
+	const scale = useMemo(() => {
+		const rootElement = document.querySelector(':root')
+		const rootStyles = getComputedStyle(rootElement)
+		const rootScale = Number(rootStyles.getPropertyValue('--ui-scale'))
+
+		return rootScale
+	}, [])
+
 	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
 
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
@@ -155,6 +163,7 @@ export function EditorContextProvider(props) {
 			focusItem,
 			openItem,
 			openItems,
+			scale,
 			selection,
 			setActiveTile,
 			setSelection,
@@ -173,6 +182,7 @@ export function EditorContextProvider(props) {
 		focusItem,
 		openItem,
 		openItems,
+		scale,
 		selection,
 		setActiveTile,
 		setSelection,
@@ -184,13 +194,10 @@ export function EditorContextProvider(props) {
 	])
 
 	useEffect(() => {
-		const rootElement = document.querySelector(':root')
-		const rootStyles = getComputedStyle(rootElement)
-		const rootScale = Number(rootStyles.getPropertyValue('--ui-scale'))
-
-		setDefaultZoom(rootScale)
-		setZoom(rootScale)
+		setDefaultZoom(scale)
+		setZoom(scale)
 	}, [
+		scale,
 		setDefaultZoom,
 		setZoom,
 	])
