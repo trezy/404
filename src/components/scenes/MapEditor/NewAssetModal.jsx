@@ -53,7 +53,6 @@ export function NewAssetModal(props) {
 					dataURL: result,
 					file,
 					image,
-					isSpritesheet: false,
 					name: file.name,
 				})
 			}
