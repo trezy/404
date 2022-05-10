@@ -10,7 +10,7 @@ export function TileQueuePanel() {
 		<Panel
 			className={'queue-panel'}
 			title={'Queue'}>
-			<ol className={'block-list layers-list'} />
+			<ol className={'block-list'} />
 		</Panel>
 	)
 }

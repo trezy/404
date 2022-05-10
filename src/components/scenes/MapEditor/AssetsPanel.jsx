@@ -26,7 +26,10 @@ export function AssetsPanel() {
 		assets,
 		removeAsset,
 	} = useAssets()
-	const { openItem } = useEditor()
+	const {
+		closeItem,
+		openItem,
+	} = useEditor()
 	const [showNewAssetModal, setShowNewAssetModal] = useState(false)
 
 	const handleAddToProject = useCallback(files => {
@@ -50,7 +53,11 @@ export function AssetsPanel() {
 
 	const handleRemoveAssetClick = useCallback(assetID => () => {
 		removeAsset(assetID)
-	}, [removeAsset])
+		closeItem(assetID)
+	}, [
+		closeItem,
+		removeAsset,
+	])
 
 	const handleNewAssetClick = useCallback(() => setShowNewAssetModal(true), [setShowNewAssetModal])
 
@@ -70,7 +77,7 @@ export function AssetsPanel() {
 				className={'assets'}
 				menu={Menu}
 				title={'Assets'}>
-				<ol className={'block-list layers-list'}>
+				<ol className={'block-list'}>
 					{!Object.keys(assets).length && (
 						<li className={'empty-message'}>
 							{'Create a new asset.'}

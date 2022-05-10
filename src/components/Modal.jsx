@@ -2,6 +2,7 @@
 import classnames from 'classnames'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
+import { useCallback } from 'react'
 
 
 
@@ -9,6 +10,7 @@ import PropTypes from 'prop-types'
 
 // Module imports
 import { Button } from './Button.jsx'
+import { useWindowEvent } from '../hooks/useWindowEvent.js'
 
 
 
@@ -22,6 +24,24 @@ export function Modal(props) {
 		onClose,
 		title,
 	} = props
+
+	const handleClose = useCallback(() => {
+		if (typeof onClose === 'function') {
+			onClose()
+		}
+	}, [onClose])
+
+	const handleKeyUp = useCallback(event => {
+		if (event.key.toLowerCase() === 'escape') {
+			event.preventDefault()
+			handleClose()
+		}
+	}, [handleClose])
+
+	useWindowEvent({
+		event: 'keyup',
+		handler: handleKeyUp,
+	})
 
 	if (typeof window === 'undefined') {
 		return null
@@ -39,7 +59,7 @@ export function Modal(props) {
 							className={'close'}
 							isNegative
 							isUniformlyPadded
-							onClick={onClose} />
+							onClick={handleClose} />
 					)}
 				</div>
 			</header>

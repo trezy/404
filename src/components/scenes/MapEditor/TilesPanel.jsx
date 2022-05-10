@@ -21,7 +21,11 @@ import { useEditor } from './context/EditorContext.jsx'
 
 
 export function TilesPanel() {
-	const { assets } = useAssets()
+	const {
+		assets,
+		tiles,
+	} = useAssets()
+
 	const { selection } = useEditor()
 
 	const [showNewTileModal, setShowNewTileModal] = useState(false)
@@ -35,6 +39,29 @@ export function TilesPanel() {
 	const hasAssets = useMemo(() => {
 		return Boolean(Object.keys(assets).length)
 	}, [assets])
+
+	const hasTiles = useMemo(() => {
+		return Boolean(Object.keys(tiles).length)
+	}, [tiles])
+
+	const mappedTiles = useMemo(() => {
+		const tileEntries = Object.entries(tiles)
+
+		return tileEntries.map(([tileID, tile]) => {
+			return (
+				<li key={tileID}>
+					<img
+						alt={tile.name}
+						src={tile.dataURI}
+						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+						style={{
+							height: `calc(${tile.height}px * var(--ui-scale))`,
+							width: `calc(${tile.width}px * var(--ui-scale))`,
+						}} />
+				</li>
+			)
+		})
+	}, [tiles])
 
 	const Menu = useMemo(() => (
 		<Button
@@ -55,24 +82,26 @@ export function TilesPanel() {
 				className={'tiles-panel'}
 				menu={Menu}
 				title={'Tiles'}>
-				<ol className={'block-list layers-list'}>
-					{!hasAssets && (
+				<ol className={'block-list'}>
+					{(!hasAssets && !hasTiles && !selection) && (
 						<li className={'empty-message'}>
 							{'Load an asset to create tiles.'}
 						</li>
 					)}
 
-					{(hasAssets && !selection) && (
+					{(hasAssets && !hasTiles && !selection) && (
 						<li className={'empty-message'}>
 							{'Selection part of the image to create a tile.'}
 						</li>
 					)}
 
-					{(hasAssets && selection) && (
+					{(hasAssets && !hasTiles && selection) && (
 						<li className={'empty-message'}>
 							{'Create a new tile.'}
 						</li>
 					)}
+
+					{hasTiles && mappedTiles}
 				</ol>
 			</Panel>
 

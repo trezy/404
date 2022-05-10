@@ -4,6 +4,7 @@ import {
 	useEffect,
 	useMemo,
 	useRef,
+	useState,
 } from 'react'
 import PropTypes from 'prop-types'
 // import { v4 as uuid } from 'uuid'
@@ -14,7 +15,9 @@ import PropTypes from 'prop-types'
 
 // Local imports
 import { Button } from '../../Button.jsx'
+import { Input } from '../../Input.jsx'
 import { Modal } from '../../Modal.jsx'
+import { useAssets } from './context/AssetsContext.jsx'
 import { useEditor } from './context/EditorContext.jsx'
 
 
@@ -27,12 +30,15 @@ export function NewTileModal(props) {
 		onAddToProject,
 	} = props
 
+	const { addTile } = useAssets()
 	const {
 		focusedItemID,
 		openItems,
 		scale,
 		selection,
 	} = useEditor()
+
+	const [tileName, setTileName] = useState('')
 
 	const canvasRef = useRef(null)
 
@@ -47,8 +53,36 @@ export function NewTileModal(props) {
 		onAddToProject()
 	}, [onAddToProject])
 
+	const handleSubmit = useCallback(event => {
+		event.preventDefault()
+
+		const canvasElement = canvasRef.current
+
+		addTile({
+			assetID: focusedItemID,
+			dataURI: canvasElement.toDataURL(),
+			name: tileName,
+			height: selection.height,
+			width: selection.width,
+		})
+
+		onClose()
+	}, [
+		addTile,
+		focusedItemID,
+		onClose,
+		selection,
+		tileName,
+	])
+
+	const handleTileNameChange = useCallback(event => {
+		setTileName(event.target.value)
+	}, [setTileName])
+
 	useEffect(() => {
-		if (canvasRef.current) {
+		if (!selection) {
+			onClose()
+		} else if (canvasRef.current) {
 			const context = canvasRef.current.getContext('2d')
 
 			context.imageSmoothingEnabled = false
@@ -74,6 +108,7 @@ export function NewTileModal(props) {
 		}
 	}, [
 		focusedItem,
+		onClose,
 		scale,
 		selection,
 	])
@@ -86,35 +121,66 @@ export function NewTileModal(props) {
 			<figure>
 				<canvas
 					ref={canvasRef}
-					height={selection.height * scale}
-					width={selection.width * scale} />
+					height={(selection?.height || 0) * scale}
+					width={(selection?.width || 0) * scale} />
 			</figure>
 
-			<dl>
-				<dt>{'Width:'}</dt>
-				<dd>{`${selection.width}px`}</dd>
+			<form onSubmit={handleSubmit}>
+				<div className={'form-contents'}>
+					<div className={'field'}>
+						<label>
+							{'Width'}
+						</label>
 
-				<dt>{'Height:'}</dt>
-				<dd>{`${selection.height}px`}</dd>
-			</dl>
-
-			<footer>
-				<menu type={'toolbar'}>
-					<div className={'menu-right'}>
-						<Button
-							isNegative
-							onClick={onClose}>
-							{'Cancel'}
-						</Button>
-
-						<Button
-							isAffirmative
-							onClick={handleAddToProject}>
-							{'Add to Project'}
-						</Button>
+						<Input
+							readOnly
+							type={'text'}
+							value={`${selection?.width || 0}px`} />
 					</div>
-				</menu>
-			</footer>
+
+					<div className={'field'}>
+						<label>
+							{'Height'}
+						</label>
+
+						<Input
+							readOnly
+							type={'text'}
+							value={`${selection?.height || 0}px`} />
+					</div>
+
+					<div className={'field'}>
+						<label htmlFor={'new-tile-name'}>
+							{'Name'}
+						</label>
+
+						<Input
+							id={'new-tile-name'}
+							name={'name'}
+							onChange={handleTileNameChange}
+							value={tileName} />
+					</div>
+				</div>
+
+				<footer>
+					<menu type={'toolbar'}>
+						<div className={'menu-right'}>
+							<Button
+								isNegative
+								onClick={onClose}>
+								{'Cancel'}
+							</Button>
+
+							<Button
+								isAffirmative
+								isSubmit
+								onClick={handleAddToProject}>
+								{'Create Tile'}
+							</Button>
+						</div>
+					</menu>
+				</footer>
+			</form>
 		</Modal>
 	)
 }

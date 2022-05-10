@@ -87,28 +87,6 @@
 		}
 	}
 
-	.fieldset {
-		align-items: baseline;
-		display: flex;
-		flex-direction: column;
-
-		> label {
-			margin-bottom: 0.5rem;
-		}
-
-		&.horizontal {
-			flex-direction: row;
-
-			> label {
-				margin-right: var(--gutter);
-			}
-		}
-
-		+ .fieldset {
-			margin-top: var(--gutter);
-		}
-	}
-
 	.panel { // <details>
 		display: flex;
 		flex-direction: column;
@@ -298,8 +276,9 @@
 
 .modal.new-tile {
 	.content {
+		align-items: start;
 		display: grid;
-		column-gap: calc(5px * var(--ui-scale));
+		column-gap: calc(10px * var(--ui-scale));
 		grid-template-areas:
 		'preview details'
 		'footer footer';

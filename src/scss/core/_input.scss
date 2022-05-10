@@ -1,6 +1,17 @@
 input {
 	&:not([type]),
-	&[type="text"] {
+	&[type="date"],
+	&[type="datetime-local"],
+	&[type="email"],
+	&[type="month"],
+	&[type="number"],
+	&[type="password"],
+	&[type="search"],
+	&[type="tel"],
+	&[type="text"],
+	&[type="time"],
+	&[type="url"],
+	&[type="week"] {
 		background-color: var(--palette-grey);
 		border: none;
 		clip-path: polygon(
@@ -22,5 +33,9 @@ input {
 		letter-spacing: inherit;
 		line-height: inherit;
 		padding: calc(3px * var(--ui-scale));
+
+		&[readonly]:not([readonly="false"]) {
+			cursor: not-allowed;
+		}
 	}
 }
