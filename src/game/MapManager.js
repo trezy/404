@@ -10,7 +10,6 @@ import {
 	LAYERS,
 	Renderer,
 } from './Renderer.js'
-import { GameManager } from './GameManager.js'
 import { Tile } from './Tile.js'
 
 
@@ -47,7 +46,7 @@ export class MapManager {
 	 * Creates a new map.
 	 *
 	 * @param {object} options All options.
-	 * @param {GameManager} options.gameManager The `GameManager` this map belongs to.
+	 * @param {import('./GameManager.js').GameManager} options.gameManager The `GameManager` this map belongs to.
 	 * @param {string} options.mapID The ID of this map.
 	 */
 	// constructor(mapData, tileset) {

@@ -1,6 +1,4 @@
 // Local imports
-import { MapManager } from './MapManager.js'
-import { Renderer } from './Renderer.js'
 import { renderStandardSizeTile } from '../helpers/renderStandardSizeTile.js'
 import { TileSprite } from './TileSprite.js'
 
@@ -16,7 +14,7 @@ import { TileSprite } from './TileSprite.js'
 /**
  * @typedef {object} TileConfig
  * @property {object[]} [layers] The sprite stack for this tile.
- * @property {MapManager} mapManager The `MapManager` managing this tile.
+ * @property {import('./MapManager').MapManager} mapManager The `MapManager` managing this tile.
  * @property {Vector2} position The position at which to render the tile.
  */
 
@@ -41,8 +39,8 @@ export const TILE_RENDERERS = {
 	 *
 	 * @param {object} config Configuration for rendering.
 	 * @param {number} config.destinationY The Y position at which to render the tile.
-	 * @param {MapManager} config.mapManager The `MapManager` managing this tile.
-	 * @param {Renderer} config.renderer The Renderer to use to draw this tile.
+	 * @param {import('./MapManager').MapManager} config.mapManager The `MapManager` managing this tile.
+	 * @param {import('./Renderer.js').Renderer} config.renderer The Renderer to use to draw this tile.
 	 * @param {object} config.sprite The sprite config.
 	 * @param {Tile} config.tile The tile to be rendered.
 	 */
@@ -126,8 +124,8 @@ export const TILE_RENDERERS = {
 	 *
 	 * @param {object} config Configuration for rendering.
 	 * @param {number} config.destinationY The Y position at which to render the tile.
-	 * @param {MapManager} config.mapManager The `MapManager` managing this tile.
-	 * @param {Renderer} config.renderer The Renderer to use to draw this tile.
+	 * @param {import('./MapManager').MapManager} config.mapManager The `MapManager` managing this tile.
+	 * @param {import('./Renderer.js').Renderer} config.renderer The Renderer to use to draw this tile.
 	 * @param {Tile} config.tile The tile to be rendered.
 	 */
 	wall(config) {
@@ -267,7 +265,7 @@ export class Tile {
 	/**
 	 * Renders this tile to a canvas.
 	 *
-	 * @param {Renderer} renderer The renderer to use for drawing this tile.
+	 * @param {import('./Renderer.js').Renderer} renderer The renderer to use for drawing this tile.
 	 * @param {HTMLImageElement} tileset The tileset to draw this tile from.
 	 */
 	render(renderer, tileset) {
@@ -336,7 +334,7 @@ export class Tile {
 	}
 
 	/**
-	 * @returns {MapManager} This tiles `MapManager`.
+	 * @returns {import('./MapManager.js').MapManager} This tiles `MapManager`.
 	 */
 	get mapManager() {
 		return this.#mapManager
