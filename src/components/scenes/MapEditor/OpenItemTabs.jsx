@@ -1,18 +1,21 @@
 // Module imports
-import classnames from 'classnames'
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 
 
 
 
 
 // Local imports
+import { Tabs } from '../../Tabs.jsx'
 import { useEditor } from './context/EditorContext.jsx'
 
 
 
 
 
+/**
+ * Renders a list of open tab items for the Map Editor.
+ */
 export function OpenItemTabs() {
 	const {
 		closeItem,
@@ -21,49 +24,21 @@ export function OpenItemTabs() {
 		focusedItemID,
 	} = useEditor()
 
-	const handleCloseItem = useCallback(({ target }) => closeItem(target.value), [closeItem])
-
-	const handleFocusItem = useCallback(({ target }) => focusItem(target.value), [focusItem])
-
-	const openItemValues = Object.values(openItems)
+	const tabs = useMemo(() => {
+		return Object.entries(openItems).map(([id, { item }]) => {
+			return {
+				id,
+				label: item.name,
+			}
+		})
+	}, [openItems])
 
 	return (
-		<div className={'tabs'}>
-			{Boolean(openItemValues.length) && (
-				<ol>
-					{openItemValues.map(openItemValue => {
-						const {
-							item,
-							itemID,
-						} = openItemValue
-
-						return (
-							<li
-								key={itemID}
-								className={classnames({
-									active: focusedItemID === itemID,
-									tab: true,
-								})}>
-								<button
-									className={'focus-item'}
-									onClick={handleFocusItem}
-									type={'button'}
-									value={itemID}>
-									{item.name}
-								</button>
-
-								<button
-									className={'close-item'}
-									onClick={handleCloseItem}
-									type={'button'}
-									value={itemID}>
-									&times;
-								</button>
-							</li>
-						)
-					})}
-				</ol>
-			)}
-		</div>
+		<Tabs
+			activeTabID={focusedItemID}
+			onClose={closeItem}
+			onFocus={focusItem}
+			showClose
+			tabs={tabs} />
 	)
 }

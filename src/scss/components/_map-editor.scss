@@ -34,7 +34,6 @@
 	}
 }
 
-.scene.map-editor {
 	display: grid;
 	gap: calc(var(--app-padding) * var(--ui-scale));
 	grid-template-columns: 1fr 3fr 1fr;
@@ -187,59 +186,6 @@
 
 	.tabs {
 		grid-area: tabs;
-		max-width: 100%;
-		overflow: hidden;
-
-		ol {
-			display: flex;
-			max-width: 100%;
-			overflow: auto;
-		}
-
-		.tab {
-			background-color: var(--palette-dark-grey);
-			clip-path: polygon(
-				0 calc(3px * var(--ui-scale)),
-				calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
-				calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
-				calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
-				calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-				calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-				calc(3px * var(--ui-scale)) 0,
-				100% 0,
-				100% 100%,
-				0 100%,
-			);
-			cursor: pointer;
-			display: flex;
-			transition-duration: 0.1s;
-			transition-property: background-color;
-
-			&.active {
-				background-color: var(--palette-green);
-			}
-
-			&:focus,
-			&:focus-within,
-			&:hover {
-				background-color: var(--palette-light-green);
-			}
-
-			button {
-				cursor: pointer;
-				outline: none;
-			}
-		}
-
-		.close-item {
-			padding: calc(4px * var(--ui-scale));
-		}
-
-		.focus-item {
-			padding: calc(4px * var(--ui-scale));
-			padding-right: 0;
-			white-space: nowrap;
-		}
 	}
 }
 

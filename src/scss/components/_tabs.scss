@@ -1,0 +1,61 @@
+.tabs {
+	border-bottom-color: var(--palette-dark-grey);
+	border-bottom-style: solid;
+	border-bottom-width: calc(2px * var(--ui-scale));
+	max-width: 100%;
+	overflow: hidden;
+
+	ol {
+		display: flex;
+		max-width: 100%;
+		overflow: auto;
+	}
+
+	.tab {
+		background-color: var(--palette-indigo);
+		clip-path: polygon(
+			0 calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) 0,
+			100% 0,
+			100% 100%,
+			0 100%,
+		);
+		cursor: pointer;
+		display: flex;
+		transition-duration: 0.1s;
+		transition-property: background-color;
+
+		&.active {
+			background-color: var(--palette-dark-grey);
+		}
+
+		&:focus,
+		&:focus-within,
+		&:hover {
+			background-color: var(--palette-grey);
+		}
+
+		button {
+			cursor: pointer;
+			outline: none;
+		}
+	}
+
+	.close-item {
+		padding: calc(4px * var(--ui-scale));
+	}
+
+	.focus-item {
+		padding: calc(4px * var(--ui-scale));
+		white-space: nowrap;
+
+		&:not(:last-child) {
+			padding-right: 0;
+		}
+	}
+}
