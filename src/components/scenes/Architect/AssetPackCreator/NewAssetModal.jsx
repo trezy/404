@@ -11,8 +11,8 @@ import { v4 as uuid } from 'uuid'
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
-import { Modal } from '../../Modal.jsx'
+import { Button } from '../../../Button.jsx'
+import { Modal } from '../../../Modal.jsx'
 
 
 

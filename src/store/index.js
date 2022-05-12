@@ -61,6 +61,16 @@ export const store = create((set, get) => ({
 	},
 
 	/**
+	 * Switch to the map editor scene.
+	 */
+	goToArchitect() {
+		// @ts-ignore
+		const { goToScene } = get()
+
+		goToScene('architect')
+	},
+
+	/**
 	 * Switch to the map loading scene.
 	 *
 	 * @param {string} mapID The ID of the map to be loaded.

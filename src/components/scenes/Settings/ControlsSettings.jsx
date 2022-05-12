@@ -149,7 +149,7 @@ export function ControlsSettings(props) {
 			id={'controls-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Controls'}</h2>
 			</header>
 

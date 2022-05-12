@@ -22,16 +22,16 @@ import { useStore } from '../../../store/react.js'
  */
 export function LeftPanelContents() {
   const [
+		goToArchitect,
 		goToSaveSelect,
 		goToSettings,
-		goToMapEditor,
 		goToMapSelect,
 		mostRecentSaveID,
 		saveManager,
 	] = useStore(state => [
+    state.goToArchitect,
 		state.goToSaveSelect,
     state.goToSettings,
-    state.goToMapEditor,
     state.goToMapSelect,
     state.mostRecentSaveID,
     state.saveManager,
@@ -84,8 +84,8 @@ export function LeftPanelContents() {
 				{'Settings'}
 			</Button>
 
-			<Button onClick={goToMapEditor}>
-				{'Map Editor'}
+			<Button onClick={goToArchitect}>
+				{'The Architect'}
 			</Button>
 		</ButtonStack>
 	)

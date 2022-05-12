@@ -14,11 +14,11 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
-import { Input } from '../../Input.jsx'
-import { Modal } from '../../Modal.jsx'
-import { useAssets } from './context/AssetsContext.jsx'
-import { useEditor } from './context/EditorContext.jsx'
+import { Button } from '../../../Button.jsx'
+import { Input } from '../../../Input.jsx'
+import { Modal } from '../../../Modal.jsx'
+import { useAssets } from '../context/AssetsContext.jsx'
+import { useEditor } from '../context/EditorContext.jsx'
 
 
 

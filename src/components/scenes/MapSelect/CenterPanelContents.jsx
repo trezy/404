@@ -93,7 +93,7 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Map Select'}</h2>
 			</header>
 

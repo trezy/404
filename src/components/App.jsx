@@ -10,10 +10,10 @@ import { useEffect } from 'react'
 
 
 // Local imports
+import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
-import { MapEditor } from './scenes/MapEditor/MapEditor.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
@@ -99,11 +99,11 @@ export function App() {
 						</motion.main>
 					)}
 
-					{(scene === 'mapEditor') && (
-						<MapEditor key={'map-editor'} />
+					{(scene === 'architect') && (
+						<Architect key={'architect'} />
 					)}
 
-					{(!['loadingGame', 'mapEditor'].includes(scene)) && (
+					{(!['loadingGame', 'architect'].includes(scene)) && (
 						<motion.main
 							key={'main'}
 							animate={'animate'}

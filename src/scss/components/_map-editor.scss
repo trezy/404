@@ -1,46 +1,9 @@
-%block-list {
-	> li {
-		background-color: var(--palette-pure-black);
-		display: grid;
-		gap: calc(4px * var(--ui-scale));
-		grid-template-areas:
-			'image details'
-			'image menu';
-		grid-template-columns: 20% auto;
-		overflow: hidden;
-		padding: calc(6px * var(--ui-scale));
-
-		> img {
-			grid-area: image;
-			max-width: 100%;
-		}
-
-		> .details {
-			grid-area: details;
-		}
-
-		> menu {
-			display: flex;
-			grid-area: menu;
-		}
-
-		&.empty-message	{
-			align-items: center;
-			color: var(--palette-dark-grey);
-			display: flex;
-			justify-content: center;
-			text-align: center;
-		}
-	}
-}
-
+.map-editor {
 	display: grid;
+	flex-shrink: 1;
 	gap: calc(var(--app-padding) * var(--ui-scale));
-	grid-template-columns: 1fr 3fr 1fr;
-
-	.block-list {
-		@extend %block-list;
-	}
+	grid-template-columns: auto 1fr;
+	overflow: hidden;
 
 	.editor {
 		cursor: none;
@@ -86,95 +49,6 @@
 		}
 	}
 
-	.panel { // <details>
-		display: flex;
-		flex-direction: column;
-		flex-shrink: 0;
-		max-height: 100%;
-		overflow: hidden;
-
-		&[data-open="true"] {
-			flex-shrink: 1;
-
-			> header:after {
-				transform: rotate(180deg);
-			}
-		}
-
-		> header {
-			align-items: center;
-			background-color: var(--deep-grey);
-			cursor: pointer;
-			display: flex;
-			padding: var(--gutter);
-
-			&:after {
-				background-color: var(--palette-white);
-				clip-path: polygon(
-					/* top left */
-					0 0,
-					calc(1px * var(--ui-scale)) 0,
-					calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-					calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-					calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
-
-					/* top right */
-					calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
-					calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-					calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-					calc(100% - (1px * var(--ui-scale))) 0,
-					100% 0,
-
-					/* bottom right */
-					100% calc(100% - (2px * var(--ui-scale))),
-					calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
-					calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-					calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-					calc(100% - (2px * var(--ui-scale))) 100%,
-
-					/* bottom left */
-					calc(2px * var(--ui-scale)) 100%,
-					calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-					calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-					calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
-					0 calc(100% - (2px * var(--ui-scale))),
-				);
-				content: '';
-				display: block;
-				margin-left: auto;
-				height: calc(3px * var(--ui-scale));
-				transform: rotate(0deg);
-				width: calc(5px * var(--ui-scale));
-			}
-		}
-
-		> .panel-content {
-			display: grid;
-			flex-grow: 0;
-			flex-shrink: 1;
-			grid-template-rows: 1fr auto;
-			margin-top: calc(4px * var(--ui-scale));
-			max-height: 100%;
-			overflow: hidden;
-
-			> .panel-scroller {
-				flex-grow: 1;
-				flex-shrink: 1;
-				max-height: 100%;
-				overflow: auto;
-
-				> menu,
-				> .content {
-					padding: var(--gutter);
-				}
-			}
-
-			> menu {
-				margin-top: calc(4px * var(--ui-scale));
-			}
-		}
-	}
-
 	.panel-container {
 		background-color: var(--deep-grey);
 		display: flex;
@@ -213,10 +87,6 @@
 				bottom: 0;
 			}
 		}
-	}
-
-	.block-list {
-		@extend %block-list;
 	}
 }
 

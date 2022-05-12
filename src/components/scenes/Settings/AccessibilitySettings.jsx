@@ -202,7 +202,7 @@ export function AccessibilitySettings(props) {
 			id={'accessibility-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Accessibility'}</h2>
 			</header>
 

@@ -24,7 +24,7 @@ export function SoundSettings(props) {
 			exit={'exit'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Sound'}</h2>
 			</header>
 

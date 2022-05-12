@@ -10,11 +10,11 @@ import {
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
+import { Button } from '../../../Button.jsx'
 import { NewAssetModal } from './NewAssetModal.jsx'
-import { Panel } from './Panel.jsx'
-import { useAssets } from './context/AssetsContext.jsx'
-import { useEditor } from './context/EditorContext.jsx'
+import { Panel } from '../Panel.jsx'
+import { useAssets } from '../context/AssetsContext.jsx'
+import { useEditor } from '../context/EditorContext.jsx'
 
 
 
@@ -35,8 +35,17 @@ export function AssetsPanel() {
 	const handleAddToProject = useCallback(files => {
 		addAssets(files)
 		setShowNewAssetModal(false)
+
+		Object.entries(files).forEach(([itemID, item]) => {
+			openItem({
+				item,
+				itemID,
+				type: 'asset',
+			})
+		})
 	}, [
 		addAssets,
+		openItem,
 		setShowNewAssetModal,
 	])
 
@@ -75,6 +84,7 @@ export function AssetsPanel() {
 		<>
 			<Panel
 				className={'assets'}
+				isCollapsible
 				menu={Menu}
 				title={'Assets'}>
 				<ol className={'block-list'}>
@@ -93,21 +103,19 @@ export function AssetsPanel() {
 							<div className={'details'}>{asset.name}</div>
 
 							<menu type={'toolbar'}>
-								<div className={'menu-right'}>
-									<Button
-										data-assetid={assetID}
-										isSmall
-										onClick={handleEditAssetClick(assetID)}>
-										{'Edit'}
-									</Button>
+								<Button
+									data-assetid={assetID}
+									isSmall
+									onClick={handleEditAssetClick(assetID)}>
+									{'Edit'}
+								</Button>
 
-									<Button
-										isNegative
-										isSmall
-										onClick={handleRemoveAssetClick(assetID)}>
-										{'Remove'}
-									</Button>
-								</div>
+								<Button
+									isNegative
+									isSmall
+									onClick={handleRemoveAssetClick(assetID)}>
+									{'Remove'}
+								</Button>
 							</menu>
 						</li>
 					))}

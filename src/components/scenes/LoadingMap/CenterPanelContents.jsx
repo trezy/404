@@ -35,7 +35,7 @@ export function CenterPanelContents() {
 
 	return (
 		<div>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Loading Map'}</h2>
 			</header>
 

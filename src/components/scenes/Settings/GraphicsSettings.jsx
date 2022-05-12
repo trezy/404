@@ -151,7 +151,7 @@ export function GraphicsSettings(props) {
 			id={'graphics-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Graphics'}</h2>
 			</header>
 

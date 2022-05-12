@@ -10,11 +10,11 @@ import {
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
+import { Button } from '../../../Button.jsx'
 import { NewTileModal } from './NewTileModal.jsx'
-import { Panel } from './Panel.jsx'
-import { useAssets } from './context/AssetsContext.jsx'
-import { useEditor } from './context/EditorContext.jsx'
+import { Panel } from '../Panel.jsx'
+import { useAssets } from '../context/AssetsContext.jsx'
+import { useEditor } from '../context/EditorContext.jsx'
 
 
 
@@ -23,6 +23,7 @@ import { useEditor } from './context/EditorContext.jsx'
 export function TilesPanel() {
 	const {
 		assets,
+		removeTile,
 		tiles,
 	} = useAssets()
 
@@ -35,6 +36,14 @@ export function TilesPanel() {
 	const handleNewTileClick = useCallback(() => setShowNewTileModal(true), [setShowNewTileModal])
 
 	const handleNewTileModalClose = useCallback(() => setShowNewTileModal(false), [setShowNewTileModal])
+
+	const handleEditTileClick = useCallback(tileID => () => {
+		console.log('handleEditTileClick', tileID)
+	}, [])
+
+	const handleRemoveTileClick = useCallback(tileID => () => {
+		removeTile(tileID)
+	}, [removeTile])
 
 	const hasAssets = useMemo(() => {
 		return Boolean(Object.keys(assets).length)
@@ -58,10 +67,31 @@ export function TilesPanel() {
 							height: `calc(${tile.height}px * var(--ui-scale))`,
 							width: `calc(${tile.width}px * var(--ui-scale))`,
 						}} />
+
+					<div className={'details'}>{tile.name}</div>
+
+					<menu type={'toolbar'}>
+						<Button
+							isSmall
+							onClick={handleEditTileClick(tileID)}>
+							{'Edit'}
+						</Button>
+
+						<Button
+							isNegative
+							isSmall
+							onClick={handleRemoveTileClick(tileID)}>
+							{'Remove'}
+						</Button>
+					</menu>
 				</li>
 			)
 		})
-	}, [tiles])
+	}, [
+		handleEditTileClick,
+		handleRemoveTileClick,
+		tiles,
+	])
 
 	const Menu = useMemo(() => (
 		<Button
@@ -80,6 +110,7 @@ export function TilesPanel() {
 		<>
 			<Panel
 				className={'tiles-panel'}
+				isCollapsible
 				menu={Menu}
 				title={'Tiles'}>
 				<ol className={'block-list'}>

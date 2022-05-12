@@ -74,7 +74,7 @@ const RENDERERS = {
 	 * @param {object} options All options.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
 	 * @param {HTMLImageElement} options.image The Image of the asset to be rendered.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
 	 * @param {number} options.zoom The current zoom level.
 	 */
 	asset(options) {
@@ -101,9 +101,9 @@ const RENDERERS = {
 	 *
 	 * @param {object} options All options.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
+	 * @param {import('../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
 	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
 	 * @param {number} options.zoom The current zoom level.
 	 */
@@ -190,7 +190,7 @@ const RENDERERS = {
 	 *
 	 * @param {object} options All options.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
 	 * @param {object} options.selection The location and size of the current selection.
 	 * @param {number} options.selection.height The height of the current selection.
 	 * @param {number} options.selection.width The width of the current selection.
@@ -239,7 +239,7 @@ const RENDERERS = {
 	 * @param {object} options All options.
 	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
-	 * @param {import('../../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
 	 * @param {number} options.zoom The current zoom level.
 	 */
 	transparencyGrid(options) {

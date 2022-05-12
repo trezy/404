@@ -69,7 +69,7 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Load Save'}</h2>
 			</header>
 

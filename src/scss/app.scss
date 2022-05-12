@@ -70,20 +70,23 @@
 Components
 \******************************************************************************/
 
+@import './components/asset-pack-creator';
+@import './components/block-list';
 @import './components/button-group';
 @import './components/button-stack';
 @import './components/combobox';
+@import './components/decorated-header';
 @import './components/field';
 @import './components/game-canvas';
 @import './components/game-title';
 @import './components/gamepad-spritesheet';
 @import './components/gamepad-template';
 @import './components/layout';
+@import './components/map-editor';
 @import './components/meter';
 @import './components/modal';
 @import './components/modal-portal';
 @import './components/panel';
-@import './components/panel-header';
 @import './components/scene';
 @import './components/switch';
 @import './components/tabs';
@@ -110,10 +113,10 @@ Components
 \******************************************************************************/
 
 @import './scenes/accessibility-settings';
+@import './scenes/architect';
 @import './scenes/controls-settings';
 @import './scenes/graphics-settings';
 @import './scenes/loading-game';
-@import './scenes/map-editor';
 
 
 

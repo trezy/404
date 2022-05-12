@@ -50,7 +50,7 @@ export function LeftPanel() {
 
 	return (
 		<Panel variants={PANEL_VARIANTS}>
-			<header className={'panel-header'}>
+			<header className={'decorated-header'}>
 				<h2>{'Menu'}</h2>
 			</header>
 
