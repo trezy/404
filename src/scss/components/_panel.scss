@@ -1,19 +1,32 @@
 .panel {
 	--clip-point: calc((var(--panel-corner-clip-size) - (var(--panel-border-size) / 2)) * var(--ui-scale) * 1px);
 
-	clip-path: polygon(
-		0 var(--clip-point),
-		var(--clip-point) 0,
-		100% 0,
-		100% calc(100% - var(--clip-point)),
-		calc(100% - var(--clip-point)) 100%,
-		0 100%
-	);
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
+	overflow: visible;
 	padding: calc((var(--panel-border-size) + var(--panel-padding)) * var(--ui-scale) * 1px);
 	position: relative;
+
+	&:after,
+	&:before {
+		content: '';
+		display: flex;
+		inset: 0;
+		position: absolute;
+		transition-duration: 0.2s;
+		transition-property: background-color;
+		z-index: 0;
+	}
+
+	&:before {
+		background-color: var(--palette-black);
+		clip-path: generateCornerCutPath((
+			'borderSize': $panelBorderSize,
+			'clipSize': $panelCornerClipSize,
+			'isBorder': false,
+			'uiScale': var(--ui-scale),
+		));
+	}
 
 	&:after {
 		background-color: var(--panel-border-color);
@@ -23,12 +36,6 @@
 			'isBorder': true,
 			'uiScale': var(--ui-scale),
 		));
-		content: '';
-		display: flex;
-		inset: 0;
-		position: absolute;
-		transition-duration: 0.2s;
-		transition-property: background-color;
 	}
 
 	&[data-open]:not([data-open="false"]) {
@@ -44,51 +51,60 @@
 		justify-content: center;
 	}
 
-	&.is-collapsible > header {
-		align-items: center;
+	&.is-collapsible {
+		overflow: hidden;
 
-		&:after {
-			background-color: var(--palette-white);
-			clip-path: polygon(
-				/* top left */
-				0 0,
-				calc(1px * var(--ui-scale)) 0,
-				calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-				calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-				calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		> header {
+			align-items: center;
 
-				/* top right */
-				calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
-				calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-				calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-				calc(100% - (1px * var(--ui-scale))) 0,
-				100% 0,
+			&:after {
+				background-color: var(--palette-white);
+				clip-path: polygon(
+					/* top left */
+					0 0,
+					calc(1px * var(--ui-scale)) 0,
+					calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+					calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+					calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
 
-				/* bottom right */
-				100% calc(100% - (2px * var(--ui-scale))),
-				calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
-				calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-				calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-				calc(100% - (2px * var(--ui-scale))) 100%,
+					/* top right */
+					calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+					calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+					calc(100% - (1px * var(--ui-scale))) 0,
+					100% 0,
 
-				/* bottom left */
-				calc(2px * var(--ui-scale)) 100%,
-				calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-				calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-				calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
-				0 calc(100% - (2px * var(--ui-scale))),
-			);
-			content: '';
-			display: block;
-			margin-left: auto;
-			height: calc(3px * var(--ui-scale));
-			transform: rotate(0deg);
-			width: calc(5px * var(--ui-scale));
+					/* bottom right */
+					100% calc(100% - (2px * var(--ui-scale))),
+					calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
+					calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+					calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+					calc(100% - (2px * var(--ui-scale))) 100%,
+
+					/* bottom left */
+					calc(2px * var(--ui-scale)) 100%,
+					calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+					calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
+					0 calc(100% - (2px * var(--ui-scale))),
+				);
+				content: '';
+				display: block;
+				margin-left: auto;
+				height: calc(3px * var(--ui-scale));
+				transform: rotate(0deg);
+				width: calc(5px * var(--ui-scale));
+			}
 		}
 	}
 
 	&.is-primary {
 		--panel-border-color: var(--palette-white);
+	}
+
+	> * {
+		position: relative;
+		z-index: 2;
 	}
 
 	> header {
