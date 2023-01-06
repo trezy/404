@@ -18,7 +18,7 @@ import { dialog } from 'electron'
  */
 export async function handleExportTileset(event, tilesetData) {
 	const { filePath } = await dialog.showSaveDialog({
-		defaultPath: `${tilesetData.name}.debugtileset`,
+		defaultPath: `${tilesetData.name}.debugresourcepack`,
 		properties: [
 			'createDirectory',
 			'dontAddToRecent',
