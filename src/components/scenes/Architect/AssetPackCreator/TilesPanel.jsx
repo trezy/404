@@ -11,7 +11,7 @@ import {
 
 // Local imports
 import { Button } from '../../../Button.jsx'
-import { NewTileModal } from './NewTileModal.jsx'
+import { EditTileModal } from './EditTileModal.jsx'
 import { Panel } from '../Panel.jsx'
 import { useAssets } from '../context/AssetsContext.jsx'
 import { useEditor } from '../context/EditorContext.jsx'
@@ -20,8 +20,12 @@ import { useEditor } from '../context/EditorContext.jsx'
 
 
 
+/**
+ * Renders the panel for managing tiles in an asset pack.
+ */
 export function TilesPanel() {
 	const {
+		updateTile,
 		assets,
 		removeTile,
 		tiles,
@@ -29,17 +33,23 @@ export function TilesPanel() {
 
 	const { selection } = useEditor()
 
-	const [showNewTileModal, setShowNewTileModal] = useState(false)
+	const [tileIDToEdit, setTileIDToEdit] = useState(null)
+	const [showEditTileModal, setShowEditTileModal] = useState(false)
 
-	const handleAddToProject = useCallback(() => {}, [])
+	const handleNewTileClick = useCallback(() => setShowEditTileModal(true), [setShowEditTileModal])
 
-	const handleNewTileClick = useCallback(() => setShowNewTileModal(true), [setShowNewTileModal])
-
-	const handleNewTileModalClose = useCallback(() => setShowNewTileModal(false), [setShowNewTileModal])
+	const handleEditTileModalClose = useCallback(() => {
+		setShowEditTileModal(false)
+		setTileIDToEdit(null)
+	}, [
+		setShowEditTileModal,
+		setTileIDToEdit,
+	])
 
 	const handleEditTileClick = useCallback(tileID => () => {
-		console.log('handleEditTileClick', tileID)
-	}, [])
+		setTileIDToEdit(tileID)
+		setShowEditTileModal(true)
+	}, [setShowEditTileModal])
 
 	const handleRemoveTileClick = useCallback(tileID => () => {
 		removeTile(tileID)
@@ -136,10 +146,11 @@ export function TilesPanel() {
 				</ol>
 			</Panel>
 
-			{showNewTileModal && (
-				<NewTileModal
-					onAddToProject={handleAddToProject}
-					onClose={handleNewTileModalClose} />
+			{showEditTileModal && (
+				<EditTileModal
+					onAddToProject={updateTile}
+					onClose={handleEditTileModalClose}
+					tileID={tileIDToEdit} />
 			)}
 		</>
 	)

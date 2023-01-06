@@ -16,15 +16,20 @@ import { v4 as uuid } from 'uuid'
 export const AssetsContext = createContext({
 	assets: {},
 	tiles: {},
+	tilesetName: 'Untitled',
 
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	addAssets: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
-	addTile: () => {},
+	compileTileset: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	removeAsset: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	removeTile: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	updateTilesetName: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	updateTile: () => {},
 })
 
 
@@ -36,6 +41,7 @@ export function AssetsContextProvider(props) {
 
 	const [assets, setAssets] = useState({})
 	const [tiles, setTiles] = useState({})
+	const [tilesetName, setTilesetName] = useState('Untitled')
 
 	const addAssets = useCallback(newAssets => {
 		setAssets(oldAssets => ({
@@ -44,12 +50,28 @@ export function AssetsContextProvider(props) {
 		}))
 	}, [setAssets])
 
-	const addTile = useCallback(newTile => {
-		setTiles(oldTiles => ({
-			...oldTiles,
-			[uuid()]: newTile,
-		}))
-	}, [setTiles])
+	const compileTileset = useCallback(() => {
+		const parsedAssets = Object
+			.entries(assets)
+			.reduce((accumulator, [assetID, assetData]) => {
+				accumulator[assetID] = {
+					dataURL: assetData.dataURL,
+					name: assetData.name,
+				}
+
+				return accumulator
+			}, {})
+
+		return {
+			assets: parsedAssets,
+			name: tilesetName,
+			tiles,
+		}
+	}, [
+		assets,
+		tiles,
+		tilesetName,
+	])
 
 	const removeAsset = useCallback(assetID => {
 		setAssets(previousState => {
@@ -84,22 +106,42 @@ export function AssetsContextProvider(props) {
 		})
 	}, [setTiles])
 
+	const updateTilesetName = useCallback(name => setTilesetName(name), [setTilesetName])
+
+	const updateTile = useCallback(newTile => {
+		const { tileID } = newTile
+		const tileObject = { ...newTile }
+
+		delete tileObject.tileID
+
+		setTiles(oldTiles => ({
+			...oldTiles,
+			[tileID || uuid()]: tileObject,
+		}))
+	}, [setTiles])
+
 	const providerState = useMemo(() => {
 		return {
 			addAssets,
-			addTile,
 			assets,
+			compileTileset,
 			removeAsset,
 			removeTile,
 			tiles,
+			tilesetName,
+			updateTilesetName,
+			updateTile,
 		}
 	}, [
 		addAssets,
-		addTile,
 		assets,
+		compileTileset,
 		removeAsset,
 		removeTile,
 		tiles,
+		tilesetName,
+		updateTilesetName,
+		updateTile,
 	])
 
 	return (

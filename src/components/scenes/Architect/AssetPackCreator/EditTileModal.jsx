@@ -17,6 +17,7 @@ import PropTypes from 'prop-types'
 import { Button } from '../../../Button.jsx'
 import { Input } from '../../../Input.jsx'
 import { Modal } from '../../../Modal.jsx'
+import { TilesetIDCombobox } from './TilesetIDCombobox.jsx'
 import { useAssets } from '../context/AssetsContext.jsx'
 import { useEditor } from '../context/EditorContext.jsx'
 
@@ -24,13 +25,21 @@ import { useEditor } from '../context/EditorContext.jsx'
 
 
 
-export function NewTileModal(props) {
+/**
+ * Renders a modal for creating or editing a tile.
+ *
+ * @param {*} props
+ */
+export function EditTileModal(props) {
 	const {
 		onClose,
 		onAddToProject,
+		tileID,
 	} = props
 
-	const { addTile } = useAssets()
+	const {
+		tiles,
+	} = useAssets()
 	const {
 		focusedItemID,
 		openItems,
@@ -38,7 +47,8 @@ export function NewTileModal(props) {
 		selection,
 	} = useEditor()
 
-	const [tileName, setTileName] = useState('')
+	const [tilesetID, setTilesetID] = useState(null)
+	const [tileName, setTileName] = useState(tileID ? tiles[tileID].name : '')
 
 	const canvasRef = useRef(null)
 
@@ -49,29 +59,63 @@ export function NewTileModal(props) {
 		openItems,
 	])
 
-	const handleAddToProject = useCallback(() => {
-		onAddToProject()
-	}, [onAddToProject])
+	const tile = useMemo(() => {
+		if (tileID) {
+			return tiles[tileID]
+		}
+
+		return null
+	}, [
+		tileID,
+		tiles,
+	])
+
+	const tileSize = useMemo(() => {
+		let height = selection?.height || 0
+		let width = selection?.width || 0
+
+		if (tile) {
+			height = tile.height
+			width = tile.width
+		}
+
+		return {
+			height: height * scale,
+			width: width * scale,
+		}
+	}, [
+		scale,
+		selection,
+		tile,
+	])
 
 	const handleSubmit = useCallback(event => {
 		event.preventDefault()
 
-		const canvasElement = canvasRef.current
-
-		addTile({
-			assetID: focusedItemID,
-			dataURI: canvasElement.toDataURL(),
+		const tileObject = {
+			...(tile || {}),
 			name: tileName,
-			height: selection.height,
-			width: selection.width,
-		})
+			tileID,
+		}
 
+		if (!tile) {
+			const canvasElement = canvasRef.current
+
+			tileObject.assetID = focusedItemID
+			tileObject.dataURI = canvasElement.toDataURL()
+			tileObject.height = selection.height
+			tileObject.width = selection.width
+		}
+
+		onAddToProject(tileObject)
 		onClose()
 	}, [
-		addTile,
 		focusedItemID,
+		onAddToProject,
 		onClose,
 		selection,
+		tile,
+		tileID,
 		tileName,
 	])
 
@@ -80,6 +124,10 @@ export function NewTileModal(props) {
 	}, [setTileName])
 
 	useEffect(() => {
+		if (tile) {
+			return
+		}
+
 		if (!selection) {
 			onClose()
 		} else if (canvasRef.current) {
@@ -111,18 +159,29 @@ export function NewTileModal(props) {
 		onClose,
 		scale,
 		selection,
+		tile,
 	])
 
 	return (
 		<Modal
 			className={'new-tile'}
 			onClose={onClose}
-			title={'Create New Tile'}>
+			title={tile ? 'Edit Tile' : 'Create New Tile'}>
 			<figure>
-				<canvas
-					ref={canvasRef}
-					height={(selection?.height || 0) * scale}
-					width={(selection?.width || 0) * scale} />
+				{Boolean(tile) && (
+					<img
+						alt={tile.name}
+						height={tileSize.height}
+						src={tile.dataURI}
+						width={tileSize.width} />
+				)}
+
+				{!tile && (
+					<canvas
+						ref={canvasRef}
+						height={tileSize.height}
+						width={tileSize.width} />
+				)}
 			</figure>
 
 			<form onSubmit={handleSubmit}>
@@ -135,7 +194,7 @@ export function NewTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${selection?.width || 0}px`} />
+							value={`${tileSize.width}px`} />
 					</div>
 
 					<div className={'field'}>
@@ -146,19 +205,26 @@ export function NewTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${selection?.height || 0}px`} />
+							value={`${tileSize.height}px`} />
 					</div>
 
 					<div className={'field'}>
 						<label htmlFor={'new-tile-name'}>
-							{'Name'}
+							{'ID'}
 						</label>
 
-						<Input
+						{/* <Combobox
+							onChange={setColorblindType}
+							options={COLORBLIND_OPTIONS}
+							value={colorblindType} /> */}
+
+						{/* <Combobox
 							id={'new-tile-name'}
 							name={'name'}
 							onChange={handleTileNameChange}
-							value={tileName} />
+							value={tileName} /> */}
+
+						<TilesetIDCombobox />
 					</div>
 				</div>
 
@@ -173,9 +239,9 @@ export function NewTileModal(props) {
 
 							<Button
 								isAffirmative
-								isSubmit
-								onClick={handleAddToProject}>
-								{'Create Tile'}
+								isSubmit>
+								{!tileID && 'Create Tile'}
+								{Boolean(tileID) && 'Update Tile'}
 							</Button>
 						</div>
 					</menu>
@@ -185,7 +251,12 @@ export function NewTileModal(props) {
 	)
 }
 
-NewTileModal.propTypes = {
+EditTileModal.defaultProps = {
+	tileID: null,
+}
+
+EditTileModal.propTypes = {
 	onAddToProject: PropTypes.func.isRequired,
 	onClose: PropTypes.func.isRequired,
+	tileID: PropTypes.string,
 }

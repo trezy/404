@@ -85,7 +85,7 @@ export function LeftPanelContents() {
 			</Button>
 
 			<Button onClick={goToArchitect}>
-				{'The Architect'}
+				{'Architect'}
 			</Button>
 		</ButtonStack>
 	)

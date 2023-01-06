@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle.jsx'
+import { ipcRenderer } from 'electron'
 import { LeftPanel } from './LeftPanel.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
@@ -52,6 +53,7 @@ const MAIN_SCENE_VARIANTS = {
 		opacity: 0,
 	},
 }
+const MINIMUM_DURATION = 2000
 
 
 
@@ -62,9 +64,11 @@ const MAIN_SCENE_VARIANTS = {
  */
 export function App() {
 	const [
+		contentManager,
 		goToTitle,
 		scene,
 	] = useStore(state => [
+		state.contentManager,
 		state.goToTitle,
 		state.scene,
 	])
@@ -73,11 +77,35 @@ export function App() {
 
 	useEffect(() => {
 		if (scene === 'loadingGame') {
-			const timeoutID = setTimeout(goToTitle, 2000)
+			const startedAt = performance.now()
+
+			let timeoutID = null
+
+			ipcRenderer
+				.invoke('initialiseDirectories')
+				.then(() => {
+					return contentManager.loadMeta()
+				})
+				.then(() => {
+					const loadingDuration = performance.now() - startedAt
+
+					return new Promise(resolve => {
+						if (loadingDuration < MINIMUM_DURATION) {
+							timeoutID = setTimeout(() => {
+								goToTitle()
+								resolve()
+							}, MINIMUM_DURATION - loadingDuration)
+						}
+					})
+				})
+				.catch(error => {
+					throw error
+				})
 
 			return () => clearTimeout(timeoutID)
 		}
 	}, [
+		contentManager,
 		scene,
 		goToTitle,
 	])

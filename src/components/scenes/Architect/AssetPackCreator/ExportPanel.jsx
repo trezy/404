@@ -4,6 +4,7 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import { ipcRenderer } from 'electron'
 
 
 
@@ -11,7 +12,7 @@ import {
 
 // Local imports
 import { Button } from '../../../Button.jsx'
-import { NewAssetModal } from './NewAssetModal.jsx'
+import { Modal } from '../../../Modal.jsx'
 import { Panel } from '../Panel.jsx'
 import { useAssets } from '../context/AssetsContext.jsx'
 
@@ -24,11 +25,37 @@ import { useAssets } from '../context/AssetsContext.jsx'
  */
 export function ExportPanel() {
 	const {
+		compileTileset,
 		tiles,
+		tilesetName,
+		updateTilesetName,
 	} = useAssets()
+	const [isSaving, setIsSaving] = useState(false)
+	const [isExporting, setIsExporting] = useState(false)
 
-	const handleExportAsFileClick = useCallback(() => {}, [])
-	const handleSubmitToMarketplaceClick = useCallback(() => {}, [])
+	const handleExportClick = useCallback(async() => {
+		setIsExporting(true)
+		const compiledTileset = compileTileset()
+		const isSuccess = await ipcRenderer.invoke('exportTileset', compiledTileset)
+		setIsExporting(false)
+	}, [
+		compileTileset,
+		setIsExporting,
+	])
+
+	const handleSaveClick = useCallback(async() => {
+		setIsSaving(true)
+		const compiledTileset = compileTileset()
+		const isSuccess = await ipcRenderer.invoke('saveTileset', compiledTileset)
+		setIsSaving(false)
+	}, [
+		compileTileset,
+		setIsSaving,
+	])
+
+	const handlePublishClick = useCallback(() => {}, [])
+
+	const handleTilesetNameChange = useCallback(event => updateTilesetName(event.target.value), [updateTilesetName])
 
 	const hasTiles = useMemo(() => {
 		return Boolean(Object.keys(tiles).length)
@@ -37,20 +64,34 @@ export function ExportPanel() {
 	const Menu = useMemo(() => (
 		<>
 			<Button
-				isDisabled={!hasTiles}
+				isDisabled={!hasTiles || isSaving || isExporting}
 				isFullWidth
-				onClick={handleExportAsFileClick}>
-				{'Export as File'}
+				onClick={handleSaveClick}>
+				{'Save'}
 			</Button>
 
 			<Button
-				isDisabled={!hasTiles}
+				isDisabled={!hasTiles || isSaving || isExporting}
 				isFullWidth
-				onClick={handleSubmitToMarketplaceClick}>
-				{'Submit to Marketplace'}
+				onClick={handleExportClick}>
+				{'Export'}
+			</Button>
+
+			<Button
+				isDisabled={!hasTiles || isSaving || isExporting}
+				isFullWidth
+				onClick={handlePublishClick}>
+				{'Publish'}
 			</Button>
 		</>
-	), [hasTiles])
+	), [
+		handleExportClick,
+		handlePublishClick,
+		handleSaveClick,
+		hasTiles,
+		isExporting,
+		isSaving,
+	])
 
 	return (
 		<>
@@ -58,13 +99,30 @@ export function ExportPanel() {
 				className={'export'}
 				isCollapsible
 				menu={Menu}
-				title={'Export'} />
+				title={'Export'}>
+				<div className={'field'}>
+					<label>
+						{'Name'}
+					</label>
 
-			{/* {showNewAssetModal && (
-				<NewAssetModal
-					onAddToProject={handleAddToProject}
-					onClose={handleNewAssetModalClose} />
-			)} */}
+					<input
+						onChange={handleTilesetNameChange}
+						type={'text'}
+						value={tilesetName} />
+				</div>
+			</Panel>
+
+			{isExporting && (
+				<Modal
+					isLoading
+					title={'Exporting Tileset...'} />
+			)}
+
+			{isSaving && (
+				<Modal
+					isLoading
+					title={'Saving Tileset...'} />
+			)}
 		</>
 	)
 }

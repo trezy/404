@@ -6,6 +6,7 @@ import create from 'zustand/vanilla'
 
 
 // Local imports
+import { ContentManager } from '../game/ContentManager.js'
 import { GameManager } from '../game/GameManager.js'
 import { SaveManager } from '../game/SaveManager.js'
 
@@ -22,6 +23,7 @@ const FRAME_BUFFER = []
 
 
 export const store = create((set, get) => ({
+	contentManager: new ContentManager,
 	controlsManager: null,
 	frame: 0,
 	fps: 0,
