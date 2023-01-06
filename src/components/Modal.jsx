@@ -78,13 +78,14 @@ export function Modal(props) {
 }
 
 Modal.defaultProps = {
+	children: null,
 	className: '',
 	isLoading: false,
 	onClose: null,
 }
 
 Modal.propTypes = {
-	children: PropTypes.node.isRequired,
+	children: PropTypes.node,
 	className: PropTypes.string,
 	isLoading: PropTypes.bool,
 	onClose: PropTypes.func,
