@@ -2,6 +2,7 @@
 
 // Module imports
 import path from 'node:path'
+import { v4 as uuid } from 'uuid'
 
 
 
@@ -23,10 +24,11 @@ import { getAppDataPath } from './getAppDataPath.js'
  * @returns {boolean} Whether the file was saved successfully.
  */
 export async function handleSaveTileset(event, tilesetData) {
-	const filePath = path.join(getAppDataPath(), 'tilesets', `${tilesetData.name}.debugtileset`)
+	const id = tilesetData.id || uuid()
 
 	const result = {
 		filePath,
+		id,
 		size: 0,
 	}
 
@@ -34,6 +36,7 @@ export async function handleSaveTileset(event, tilesetData) {
 		'assets.json': JSON.stringify(tilesetData.assets),
 		'tiles.json': JSON.stringify(tilesetData.tiles),
 		'meta.json': JSON.stringify({
+			id,
 			name: tilesetData.name,
 			version: '0.0.0-development',
 		}),
