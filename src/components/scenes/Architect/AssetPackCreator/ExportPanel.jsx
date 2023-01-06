@@ -2,9 +2,7 @@
 import {
 	useCallback,
 	useMemo,
-	useState,
 } from 'react'
-import { ipcRenderer } from 'electron'
 
 
 
@@ -25,33 +23,18 @@ import { useAssets } from '../context/AssetsContext.jsx'
  */
 export function ExportPanel() {
 	const {
-		compileTileset,
+		exportTileset,
+		isExporting,
+		isSaving,
+		saveTileset,
 		tiles,
 		tilesetName,
 		updateTilesetName,
 	} = useAssets()
-	const [isSaving, setIsSaving] = useState(false)
-	const [isExporting, setIsExporting] = useState(false)
 
-	const handleExportClick = useCallback(async() => {
-		setIsExporting(true)
-		const compiledTileset = compileTileset()
-		const isSuccess = await ipcRenderer.invoke('exportTileset', compiledTileset)
-		setIsExporting(false)
-	}, [
-		compileTileset,
-		setIsExporting,
-	])
+	const handleExportClick = useCallback(() => exportTileset(), [exportTileset])
 
-	const handleSaveClick = useCallback(async() => {
-		setIsSaving(true)
-		const compiledTileset = compileTileset()
-		const isSuccess = await ipcRenderer.invoke('saveTileset', compiledTileset)
-		setIsSaving(false)
-	}, [
-		compileTileset,
-		setIsSaving,
-	])
+	const handleSaveClick = useCallback(() => saveTileset(), [saveTileset])
 
 	const handlePublishClick = useCallback(() => {}, [])
 

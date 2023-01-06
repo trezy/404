@@ -6,6 +6,7 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import { ipcRenderer } from 'electron'
 import PropTypes from 'prop-types'
 import { v4 as uuid } from 'uuid'
 
@@ -15,6 +16,8 @@ import { v4 as uuid } from 'uuid'
 
 export const AssetsContext = createContext({
 	assets: {},
+	isExporting: false,
+	isSaving: false,
 	tiles: {},
 	tilesetName: 'Untitled',
 
@@ -23,9 +26,13 @@ export const AssetsContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	compileTileset: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	exportTileset: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	removeAsset: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	removeTile: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	saveTileset: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	updateTilesetName: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -40,6 +47,8 @@ export function AssetsContextProvider(props) {
 	const { children } = props
 
 	const [assets, setAssets] = useState({})
+	const [isExporting, setIsExporting] = useState(false)
+	const [isSaving, setIsSaving] = useState(false)
 	const [tiles, setTiles] = useState({})
 	const [tilesetName, setTilesetName] = useState('Untitled')
 
@@ -71,6 +80,26 @@ export function AssetsContextProvider(props) {
 		assets,
 		tiles,
 		tilesetName,
+	])
+
+	const exportTileset = useCallback(async() => {
+		setIsExporting(true)
+		const compiledTileset = compileTileset()
+		await ipcRenderer.invoke('exportTileset', compiledTileset)
+		setIsExporting(false)
+	}, [
+		compileTileset,
+		setIsExporting,
+	])
+
+	const saveTileset = useCallback(async() => {
+		setIsSaving(true)
+		const compiledTileset = compileTileset()
+		await ipcRenderer.invoke('saveTileset', compiledTileset)
+		setIsSaving(false)
+	}, [
+		compileTileset,
+		setIsSaving,
 	])
 
 	const removeAsset = useCallback(assetID => {
@@ -125,8 +154,12 @@ export function AssetsContextProvider(props) {
 			addAssets,
 			assets,
 			compileTileset,
+			exportTileset,
+			isExporting,
+			isSaving,
 			removeAsset,
 			removeTile,
+			saveTileset,
 			tiles,
 			tilesetName,
 			updateTilesetName,
@@ -136,8 +169,12 @@ export function AssetsContextProvider(props) {
 		addAssets,
 		assets,
 		compileTileset,
+		exportTileset,
+		isExporting,
+		isSaving,
 		removeAsset,
 		removeTile,
+		saveTileset,
 		tiles,
 		tilesetName,
 		updateTilesetName,
