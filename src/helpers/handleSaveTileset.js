@@ -24,7 +24,7 @@ import { getAppDataPath } from './getAppDataPath.js'
  * @returns {boolean} Whether the file was saved successfully.
  */
 export async function handleSaveTileset(event, tilesetData) {
-	const filePath = path.join(getAppDataPath(), 'tilesets', `${tilesetData.name}.debugresourcepack`)
+	const filePath = path.join(getAppDataPath(), 'resourcepacks', `${tilesetData.name}.debugresourcepack`)
 	const id = tilesetData.id || uuid()
 
 	const result = {

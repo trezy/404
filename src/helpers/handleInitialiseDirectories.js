@@ -16,7 +16,7 @@ import { getAppDataPath } from './getAppDataPath.js'
 // Constants
 const appDataDirectories = [
 	'maps',
-	'tilesets',
+	'resourcepacks',
 ]
 
 

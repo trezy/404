@@ -15,6 +15,6 @@ import { getContentManifest } from './getContentManifest.js'
 export async function handleGetContentMeta() {
 	return {
 		maps: await getContentManifest('maps', '.debugmap'),
-		tilesets: await getContentManifest('tilesets', '.debugresourcepack'),
+		tilesets: await getContentManifest('resourcepacks', '.debugresourcepack'),
 	}
 }
