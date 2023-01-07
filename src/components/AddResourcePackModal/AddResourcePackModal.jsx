@@ -1,8 +1,10 @@
 // Module imports
 import {
 	useCallback,
+	useMemo,
 	useState,
 } from 'react'
+import numeral from 'numeral'
 import PropTypes from 'prop-types'
 
 
@@ -35,24 +37,38 @@ export function AddResourcePackModal(props) {
 		}
 	})
 
-	const [selectedResourcePacks, setSelectedResourcePacks] = useState(Object.keys(contentManager.resourcepacks).reduce((accumulator, resourcepackID) => {
+	const [selectedResourcepacks, setSelectedResourcepacks] = useState(Object.keys(contentManager.resourcepacks).reduce((accumulator, resourcepackID) => {
 		accumulator[resourcepackID] = false
 		return accumulator
 	}, {}))
 
 	const handleResourcePackClick = useCallback((resourcepackID, isChecked) => {
-		setSelectedResourcePacks(previousState => {
+		setSelectedResourcepacks(previousState => {
 			const newState = { ...previousState }
 
 			newState[resourcepackID] = isChecked
 
 			return newState
 		})
-	}, [setSelectedResourcePacks])
+	}, [setSelectedResourcepacks])
 
 	const handleSubmit = useCallback(event => {
 		event.preventDefault()
 	}, [])
+
+	const totalResourcepacksSize = useMemo(() => {
+		const selectedResourcepackIDs = Object
+			.entries(selectedResourcepacks)
+			.filter(([, isSelected]) => isSelected)
+			.map(([id]) => id)
+
+		return selectedResourcepackIDs.reduce((accumulator, resourcepackID) => {
+			return accumulator + contentManager.resourcepacks[resourcepackID].size
+		}, 0)
+	}, [
+		contentManager,
+		selectedResourcepacks,
+	])
 
 	return (
 		<Modal
@@ -66,7 +82,7 @@ export function AddResourcePackModal(props) {
 							return (
 								<li key={resourcepack.id}>
 									<Resourcepack
-										isSelected={selectedResourcePacks[resourcepack.id]}
+										isSelected={selectedResourcepacks[resourcepack.id]}
 										onSelect={handleResourcePackClick}
 										resourcepack={resourcepack} />
 								</li>
@@ -77,6 +93,10 @@ export function AddResourcePackModal(props) {
 
 				<footer>
 					<menu type={'toolbar'}>
+						<div className={'menu-left'}>
+							{numeral(totalResourcepacksSize).format('0.00 b')}
+						</div>
+
 						<div className={'menu-right'}>
 							<Button
 								isNegative
