@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 // Local imports
-import { getContentManifest } from './getContentManifest.js'
+import { getAllContentManifests } from './getAllContentManifests.js'
 
 
 
@@ -12,9 +12,6 @@ import { getContentManifest } from './getContentManifest.js'
  *
  * @returns {boolean} A hash of local content metadata.
  */
-export async function handleGetContentMeta() {
-	return {
-		maps: await getContentManifest('maps', '.debugmap'),
-		tilesets: await getContentManifest('resourcepacks', '.debugresourcepack'),
-	}
+export function handleGetContentMeta() {
+	return getAllContentManifests()
 }

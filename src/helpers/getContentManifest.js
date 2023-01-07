@@ -35,10 +35,11 @@ export async function getContentManifest(directory, fileExtension) {
 		return getArchiveMeta(path.join(getAppDataPath(), directory, archive))
 	})
 
-	const manifest = []
+	const manifest = {}
 
-	for await (const metadata of metadataPromises) {
-		manifest.push(JSON.parse(metadata))
+	for await (const metadataString of metadataPromises) {
+		const metadata = metadataString
+		manifest[metadata.id] = metadata
 	}
 
 	return manifest

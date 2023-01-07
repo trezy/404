@@ -13,9 +13,11 @@ export class ContentManager {
 	 * Private instance properties
 	\****************************************************************************/
 
+	#isContentWatcherInitialised = false
+
 	#manifests = {
-		maps: [],
-		tilesets: [],
+		maps: {},
+		resourcepacks: {},
 	}
 
 
@@ -30,7 +32,10 @@ export class ContentManager {
 	 * Create a new content manager.
 	 */
 	constructor() {
-		ipcRenderer.on('contentChanged', this.#handleContentChanged)
+		ipcRenderer.on('contentAdded', (...args) => this.#handleContentAddedOrChanged(...args))
+		ipcRenderer.on('contentChanged', (...args) => this.#handleContentAddedOrChanged(...args))
+		ipcRenderer.on('contentRemoved', (...args) => this.#handleContentRemoved(...args))
+		this.initialiseContentWatcher()
 	}
 
 
@@ -38,17 +43,30 @@ export class ContentManager {
 
 
 	/****************************************************************************\
-	 * Private instance methods
+	 * Private instance properties
 	\****************************************************************************/
 
 	/**
-	 * Fired any time changes occur in the content directories.
+	 * Fired any time a file is added or changed in the content directories.
 	 *
 	 * @param {object} event The event object.
 	 * @param {object} contentMeta Metadata for the content.
 	 */
-	#handleContentChanged(event, contentMeta) {
-		console.log(event, contentMeta)
+	#handleContentAddedOrChanged(event, contentMeta) {
+		this.#manifests[contentMeta.type][contentMeta.id] = {
+			...contentMeta,
+			isLoaded: false,
+		}
+	}
+
+	/**
+	 * Fired any time changes a file is deleted in the content directories.
+	 *
+	 * @param {object} event The event object.
+	 * @param {object} contentMeta Metadata for the content.
+	 */
+	#handleContentRemoved(event, contentMeta) {
+		delete this.#manifests[contentMeta.type][contentMeta.id]
 	}
 
 
@@ -58,6 +76,16 @@ export class ContentManager {
 	/****************************************************************************\
 	 * Public instance methods
 	\****************************************************************************/
+
+	/**
+	 * Initialises the content watcher.
+	 */
+	initialiseContentWatcher() {
+		if (!this.#isContentWatcherInitialised) {
+			ipcRenderer.invoke('initialiseContentWatcher')
+			this.#isContentWatcherInitialised = true
+		}
+	}
 
 	/**
 	 * Loads data for a map.
@@ -71,15 +99,14 @@ export class ContentManager {
 	 */
 	async loadMeta() {
 		this.#manifests = await ipcRenderer.invoke('getContentMeta')
-		ipcRenderer.invoke('initialiseContentWatcher')
 	}
 
 	/**
-	 * Loads data for a tileset.
+	 * Loads data for a resourcepack.
 	 *
-	 * @param {string} tilesetID The ID of the tileset to be loaded.
+	 * @param {string} resourcepackID The ID of the resourcepack to be loaded.
 	 */
-	loadTileset(tilesetID) {}
+	loadResourcepack(resourcepackID) {}
 
 	/**
 	 * Removes a map's data from the ContentManager.
@@ -89,11 +116,11 @@ export class ContentManager {
 	unloadMap(mapID) {}
 
 	/**
-	 * Removes a tileset's data from the ContentManager.
+	 * Removes a resourcepack's data from the ContentManager.
 	 *
-	 * @param {string} tilesetID The ID of the tileset to be unloaded.
+	 * @param {string} resourcepackID The ID of the resourcepack to be unloaded.
 	 */
-	unloadTileset(tilesetID) {}
+	unloadResourcepack(resourcepackID) {}
 
 
 
@@ -104,16 +131,9 @@ export class ContentManager {
 	\****************************************************************************/
 
 	/**
-	 * @returns {object} A hash of all maps that are currently available.
+	 * @returns {object} A hash of all available resourcepacks.
 	 */
-	get maps() {
-		return this.#manifests.maps
-	}
-
-	/**
-	 * @returns {object} A hash of all tilesets that are currently available.
-	 */
-	get tilesets() {
-		return this.#manifests.tilesets
+	get resourcepacks() {
+		return this.#manifests.resourcepacks
 	}
 }

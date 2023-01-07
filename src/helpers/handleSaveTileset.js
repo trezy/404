@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid'
 // Local imports
 import { createArchive } from './createArchive.js'
 import { getAppDataPath } from './getAppDataPath.js'
+import { STATE } from './state.js'
 
 
 
@@ -39,9 +40,12 @@ export async function handleSaveTileset(event, tilesetData) {
 		'meta.json': JSON.stringify({
 			id,
 			name: tilesetData.name,
+			type: 'resourcepacks',
 			version: '0.0.0-development',
 		}),
 	})
+
+	STATE.contentWatcher.add(filePath)
 
 	return Boolean(result)
 }

@@ -1,4 +1,4 @@
 export const STATE = {
-	contentWatcherAbortController: null,
+	contentWatcher: null,
 	metaCache: {},
 }
