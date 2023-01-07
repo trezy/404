@@ -1,0 +1,5 @@
+.add-resource-pack-modal {}
+
+.resourcepacks li:not(:last-child) {
+	margin-bottom: calc(1px * var(--ui-scale));
+}

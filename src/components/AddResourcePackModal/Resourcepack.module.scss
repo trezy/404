@@ -1,0 +1,18 @@
+.resourcepack {
+	cursor: pointer;
+	display: grid;
+	grid-template-columns: calc(9px * var(--ui-scale)) 1fr;
+}
+
+.resourcepack-checkbox,
+.resourcepack-details {
+	padding: calc(2px * var(--ui-scale));
+}
+
+.resourcepack-checkbox {
+	background-color: var(--palette-grey);
+}
+
+.resourcepack-details {
+	background-color: var(--palette-dark-grey);
+}
