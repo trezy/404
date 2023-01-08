@@ -14,10 +14,18 @@ import { v4 as uuid } from 'uuid'
 
 
 
+// Local imports
+import { useStore } from '../../../../store/react.js'
+
+
+
+
+
 export const EditorContext = createContext({
 	defaultZoom: 1,
 	focusedItemID: null,
 	openItems: {},
+	resourcepacks: [],
 	selection: null,
 	tile: null,
 	tool: 'marquee',
@@ -27,6 +35,8 @@ export const EditorContext = createContext({
 	activateHandTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	addResourcepacks: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -53,10 +63,13 @@ export function EditorContextProvider(props) {
 	const [defaultZoom, setDefaultZoom] = useState(1)
 	const [focusedItemID, setFocusedItemID] = useState(null)
 	const [openItems, setOpenItems] = useState({})
+	const [resourcepacks, setResourcepacks] = useState({})
 	const [selection, setSelection] = useState(null)
 	const [tile, setTile] = useState(null)
 	const [tool, setTool] = useState('marquee')
 	const [zoom, setZoom] = useState(defaultZoom)
+
+	const contentManager = useStore(state => state.contentManager)
 
 	const scale = useMemo(() => {
 		const rootElement = document.querySelector(':root')
@@ -69,6 +82,31 @@ export function EditorContextProvider(props) {
 	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
 
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
+
+	const addResourcepacks = useCallback(resourcepackIDs => {
+		resourcepackIDs.forEach(resourcepackID => contentManager.loadResourcepack(resourcepackID))
+		setResourcepacks(previousState => {
+			return {
+				...previousState,
+				...resourcepackIDs.reduce((accumulator, resourcepackID) => {
+					accumulator[resourcepackID] = { ...contentManager.getResourcepack(resourcepackID) }
+					return accumulator
+				}, {}),
+			}
+		})
+	}, [
+		contentManager,
+		setResourcepacks,
+	])
+
+	const handleResourcepackLoaded = useCallback(resourcepackID => {
+		setResourcepacks(previousState => {
+			return {
+				...previousState,
+				[resourcepackID]: { ...contentManager.getResourcepack(resourcepackID) },
+			}
+		})
+	}, [contentManager])
 
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
@@ -157,12 +195,14 @@ export function EditorContextProvider(props) {
 		return {
 			activateHandTool,
 			activateMarqueeTool,
+			addResourcepacks,
 			closeItem,
 			defaultZoom,
 			focusedItemID,
 			focusItem,
 			openItem,
 			openItems,
+			resourcepacks,
 			scale,
 			selection,
 			setActiveTile,
@@ -176,12 +216,14 @@ export function EditorContextProvider(props) {
 	}, [
 		activateHandTool,
 		activateMarqueeTool,
+		addResourcepacks,
 		closeItem,
 		defaultZoom,
 		focusedItemID,
 		focusItem,
 		openItem,
 		openItems,
+		resourcepacks,
 		scale,
 		selection,
 		setActiveTile,
@@ -200,6 +242,17 @@ export function EditorContextProvider(props) {
 		scale,
 		setDefaultZoom,
 		setZoom,
+	])
+
+	useEffect(() => {
+		contentManager.on('resourcepack:loaded', handleResourcepackLoaded)
+
+		return () => {
+			contentManager.off('resourcepack:loaded', handleResourcepackLoaded)
+		}
+	}, [
+		contentManager,
+		handleResourcepackLoaded,
 	])
 
 	return (

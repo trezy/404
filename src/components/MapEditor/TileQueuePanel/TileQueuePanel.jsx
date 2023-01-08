@@ -1,5 +1,5 @@
 // Local imports
-import { Panel } from '../Panel.jsx'
+import { Panel } from '../../scenes/Architect/Panel.jsx'
 
 
 

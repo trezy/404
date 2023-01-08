@@ -28,6 +28,7 @@ export async function handleInitialiseContentWatcher() {
 		.map(manifest => Object.values(manifest))
 		.flat()
 		.forEach(archiveMeta => {
+			STATE.metaCache[archiveMeta.path] = archiveMeta
 			mainWindow.webContents.send('contentAdded', archiveMeta)
 		})
 

@@ -7,12 +7,13 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import { AssetsContextProvider } from '../context/AssetsContext.jsx'
-import { EditorContainer } from '../EditorContainer.jsx'
-import { EditorContextProvider } from '../context/EditorContext.jsx'
-import { KeyStateContextProvider } from '../context/KeyStateContext.jsx'
-import { PanelContainer } from '../../../PanelContainer.jsx'
-import { TileQueuePanel } from './TileQueuePanel.jsx'
+import { AssetsContextProvider } from '../scenes/Architect/context/AssetsContext.jsx'
+import { EditorContainer } from '../scenes/Architect/EditorContainer.jsx'
+import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
+import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { PanelContainer } from '../PanelContainer.jsx'
+import { ResourcepacksPanel } from './ResourcepacksPanel/ResourcepacksPanel.jsx'
+import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
 
 
 
@@ -43,6 +44,7 @@ const VARIANTS = {
 export function MapEditor() {
 	const leftPanels = useMemo(() => {
 		return [
+			ResourcepacksPanel,
 			TileQueuePanel,
 		]
 	}, [])

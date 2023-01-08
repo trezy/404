@@ -20,6 +20,7 @@ import { handleGetDisplaysInformation } from './helpers/handleGetDisplaysInforma
 import { handleGetFonts } from './helpers/handleGetFonts.js'
 import { handleInitialiseContentWatcher } from './helpers/handleInitialiseContentWatcher.js'
 import { handleInitialiseDirectories } from './helpers/handleInitialiseDirectories.js'
+import { handleLoadResourcepack } from './helpers/handleLoadResourcepack.js'
 import { handleSaveTileset } from './helpers/handleSaveTileset.js'
 
 
@@ -35,10 +36,11 @@ app.on('activate', handleActivate)
 app.on('ready', createWindow)
 app.on('window-all-closed', handleAllWindowsClosed)
 
+ipcMain.handle('exportTileset', handleExportTileset)
 ipcMain.handle('getContentMeta', handleGetContentMeta)
 ipcMain.handle('getDisplaysInformation', handleGetDisplaysInformation)
 ipcMain.handle('getFonts', handleGetFonts)
-ipcMain.handle('exportTileset', handleExportTileset)
 ipcMain.handle('initialiseContentWatcher', handleInitialiseContentWatcher)
 ipcMain.handle('initialiseDirectories', handleInitialiseDirectories)
+ipcMain.handle('loadResourcepack', handleLoadResourcepack)
 ipcMain.handle('saveTileset', handleSaveTileset)

@@ -29,7 +29,10 @@ import { useStore } from '../../store/react.js'
  * @param {*} props
  */
 export function AddResourcePackModal(props) {
-	const { onClose } = props
+	const {
+		onClose,
+		onSave,
+	} = props
 
 	const { contentManager } = useStore(state => {
 		return {
@@ -52,10 +55,6 @@ export function AddResourcePackModal(props) {
 		})
 	}, [setSelectedResourcepacks])
 
-	const handleSubmit = useCallback(event => {
-		event.preventDefault()
-	}, [])
-
 	const totalResourcepacksSize = useMemo(() => {
 		const selectedResourcepackIDs = Object
 			.entries(selectedResourcepacks)
@@ -67,6 +66,14 @@ export function AddResourcePackModal(props) {
 		}, 0)
 	}, [
 		contentManager,
+		selectedResourcepacks,
+	])
+
+	const handleSubmit = useCallback(event => {
+		event.preventDefault()
+		onSave(Object.keys(selectedResourcepacks))
+	}, [
+		onSave,
 		selectedResourcepacks,
 	])
 
@@ -117,9 +124,7 @@ export function AddResourcePackModal(props) {
 	)
 }
 
-AddResourcePackModal.defaultProps = {
-}
-
 AddResourcePackModal.propTypes = {
 	onClose: PropTypes.func.isRequired,
+	onSave: PropTypes.func.isRequired,
 }

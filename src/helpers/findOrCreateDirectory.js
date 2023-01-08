@@ -17,9 +17,11 @@ export async function findOrCreateDirectory(directoryPath) {
 	} catch (readdirError) {
 		try {
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			await fs.mkdir(directoryPath)
+			await fs.mkdir(directoryPath, { recursive: true })
 
 		// eslint-disable-next-line no-empty
-		} catch (mkdirError) {}
+		} catch (mkdirError) {
+			console.log(mkdirError)
+		}
 	}
 }

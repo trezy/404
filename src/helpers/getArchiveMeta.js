@@ -5,7 +5,6 @@ import { stat } from 'node:fs/promises'
 
 // Local imports
 import { extractFileFromArchive } from './extractFileFromArchive.js'
-import { getAppDataPath } from './getAppDataPath.js'
 
 
 
@@ -24,7 +23,7 @@ export async function getArchiveMeta(archivePath) {
 
 	metadata.createdAt = fileStat.birthtime
 	// eslint-disable-next-line security/detect-non-literal-regexp
-	metadata.path = archivePath.replace(new RegExp(`^${getAppDataPath()}\\/?`, 'u'), '')
+	metadata.path = archivePath
 	metadata.size = fileStat.size
 
 	return metadata

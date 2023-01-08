@@ -10,10 +10,11 @@ import {
 
 
 // Local imports
-import { AddResourcePackModal } from '../../../AddResourcePackModal/AddResourcePackModal.jsx'
-import { Button } from '../../../Button.jsx'
-import { Panel } from '../Panel.jsx'
-import { useEditor } from '../context/EditorContext.jsx'
+import { AddResourcePackModal } from '../../AddResourcePackModal/AddResourcePackModal.jsx'
+import { Button } from '../../Button.jsx'
+import { Panel } from '../../scenes/Architect/Panel.jsx'
+import { Resourcepack } from './Resourcepack.jsx'
+import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
 
 
@@ -24,11 +25,22 @@ import { useEditor } from '../context/EditorContext.jsx'
  */
 export function ResourcepacksPanel() {
 	const [showManageResourcePacksModal, setShowManageResourcePacksModal] = useState(false)
-	const { resourcepacks } = useEditor()
+	const {
+		addResourcepacks,
+		resourcepacks,
+	} = useEditor()
 
 	const handleManageResourcePacksClick = useCallback(() => setShowManageResourcePacksModal(true), [setShowManageResourcePacksModal])
 
 	const handleManageResourcePacksModalClose = useCallback(() => setShowManageResourcePacksModal(false), [setShowManageResourcePacksModal])
+
+	const handleSaveResourcepacks = useCallback(resourcepackIDs => {
+		addResourcepacks(resourcepackIDs)
+		setShowManageResourcePacksModal(false)
+	}, [
+		addResourcepacks,
+		setShowManageResourcePacksModal,
+	])
 
 	const Menu = useMemo(() => (
 		<Button
@@ -37,6 +49,16 @@ export function ResourcepacksPanel() {
 			{'Manage'}
 		</Button>
 	), [handleManageResourcePacksClick])
+
+	const mappedItems = useMemo(() => {
+		return Object.values(resourcepacks).map(resourcepack => {
+			return (
+				<li key={resourcepack.id}>
+					<Resourcepack resourcepack={resourcepack} />
+				</li>
+			)
+		})
+	}, [resourcepacks])
 
 	return (
 		<>
@@ -51,11 +73,15 @@ export function ResourcepacksPanel() {
 							{'No resource packs.'}
 						</li>
 					)}
+
+					{Boolean(Object.keys(resourcepacks).length) && mappedItems}
 				</ol>
 			</Panel>
 
 			{showManageResourcePacksModal && (
-				<AddResourcePackModal onClose={handleManageResourcePacksModalClose} />
+				<AddResourcePackModal
+					onClose={handleManageResourcePacksModalClose}
+					onSave={handleSaveResourcepacks} />
 			)}
 		</>
 	)

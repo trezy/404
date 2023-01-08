@@ -5,10 +5,17 @@ import { ipcRenderer } from 'electron'
 
 
 
+// Local imports
+import { EventEmitter } from './EventEmitter.js'
+
+
+
+
+
 /**
  * Controls loading and unloading of maps and assets.
  */
-export class ContentManager {
+export class ContentManager extends EventEmitter {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
@@ -32,6 +39,7 @@ export class ContentManager {
 	 * Create a new content manager.
 	 */
 	constructor() {
+		super()
 		ipcRenderer.on('contentAdded', (...args) => this.#handleContentAddedOrChanged(...args))
 		ipcRenderer.on('contentChanged', (...args) => this.#handleContentAddedOrChanged(...args))
 		ipcRenderer.on('contentRemoved', (...args) => this.#handleContentRemoved(...args))
@@ -56,6 +64,7 @@ export class ContentManager {
 		this.#manifests[contentMeta.type][contentMeta.id] = {
 			...contentMeta,
 			isLoaded: false,
+			isLoading: false,
 		}
 	}
 
@@ -76,6 +85,22 @@ export class ContentManager {
 	/****************************************************************************\
 	 * Public instance methods
 	\****************************************************************************/
+
+	/**
+	 * Returns the data for a resourcepack.
+	 *
+	 * @param {string} resourcepackID The ID of the resourcepack to be retrieved.
+	 * @returns {object} The resourcepack's data/
+	 */
+	getResourcepack(resourcepackID) {
+		const { resourcepacks } = this.#manifests
+
+		if (!resourcepacks[resourcepackID]) {
+			throw new Error(`Resourcepack with ID ${resourcepackID} doesn't exist.`)
+		}
+
+		return resourcepacks[resourcepackID]
+	}
 
 	/**
 	 * Initialises the content watcher.
@@ -106,7 +131,27 @@ export class ContentManager {
 	 *
 	 * @param {string} resourcepackID The ID of the resourcepack to be loaded.
 	 */
-	loadResourcepack(resourcepackID) {}
+	async loadResourcepack(resourcepackID) {
+		const { resourcepacks } = this.#manifests
+
+		if (!resourcepacks[resourcepackID]) {
+			throw new Error(`Resourcepack with ID ${resourcepackID} doesn't exist.`)
+		}
+
+		this.emit('resourcepack:loading', resourcepackID)
+
+		resourcepacks[resourcepackID].isLoading = true
+
+		const tiles = await ipcRenderer.invoke('loadResourcepack', resourcepackID)
+
+		resourcepacks[resourcepackID].isLoaded = false
+		resourcepacks[resourcepackID].isLoading = false
+		resourcepacks[resourcepackID].tiles = tiles
+
+		this.emit('resourcepack:loaded', resourcepackID)
+
+		return resourcepacks[resourcepackID]
+	}
 
 	/**
 	 * Removes a map's data from the ContentManager.
