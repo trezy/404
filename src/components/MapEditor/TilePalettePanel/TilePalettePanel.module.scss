@@ -1,0 +1,7 @@
+.tile-palette-panel {}
+
+.tile-grid {
+	display: grid;
+	gap: calc(1px * var(--ui-scale));
+	grid-template-columns: repeat(4, 1fr);
+}

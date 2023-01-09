@@ -17,7 +17,6 @@ import PropTypes from 'prop-types'
 import { Button } from '../../../Button.jsx'
 import { Input } from '../../../Input.jsx'
 import { Modal } from '../../../Modal.jsx'
-import { TilesetIDCombobox } from './TilesetIDCombobox.jsx'
 import { useAssets } from '../context/AssetsContext.jsx'
 import { useEditor } from '../context/EditorContext.jsx'
 
@@ -103,8 +102,8 @@ export function EditTileModal(props) {
 
 			tileObject.assetID = focusedItemID
 			tileObject.dataURI = canvasElement.toDataURL()
-			tileObject.height = selection.height
-			tileObject.width = selection.width
+			tileObject.height = selection.height / scale
+			tileObject.width = selection.width / scale
 		}
 
 		onAddToProject(tileObject)
@@ -113,6 +112,7 @@ export function EditTileModal(props) {
 		focusedItemID,
 		onAddToProject,
 		onClose,
+		scale,
 		selection,
 		tile,
 		tileID,
@@ -187,6 +187,17 @@ export function EditTileModal(props) {
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>
 					<div className={'field'}>
+						<label htmlFor={'new-tile-name'}>
+							{'Name'}
+						</label>
+
+						<Input
+							onChange={handleTileNameChange}
+							type={'text'}
+							value={tileName} />
+					</div>
+
+					<div className={'field'}>
 						<label>
 							{'Width'}
 						</label>
@@ -194,7 +205,7 @@ export function EditTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${tileSize.width}px`} />
+							value={`${tileSize.width / scale}px`} />
 					</div>
 
 					<div className={'field'}>
@@ -205,26 +216,7 @@ export function EditTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${tileSize.height}px`} />
-					</div>
-
-					<div className={'field'}>
-						<label htmlFor={'new-tile-name'}>
-							{'ID'}
-						</label>
-
-						{/* <Combobox
-							onChange={setColorblindType}
-							options={COLORBLIND_OPTIONS}
-							value={colorblindType} /> */}
-
-						{/* <Combobox
-							id={'new-tile-name'}
-							name={'name'}
-							onChange={handleTileNameChange}
-							value={tileName} /> */}
-
-						<TilesetIDCombobox />
+							value={`${tileSize.height / scale}px`} />
 					</div>
 				</div>
 

@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 
 
 // Local imports
-import { Panel } from './Panel.jsx'
+import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
 import { LeftPanelContents as LoadingMapSceneLeftPanelContents } from './scenes/LoadingMap/LeftPanelContents.jsx'

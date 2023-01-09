@@ -1,0 +1,39 @@
+.block-list-item {
+	background-color: var(--palette-pure-black);
+	overflow: hidden;
+	padding: calc(6px * var(--ui-scale));
+
+	&.has-thumbnail {
+		display: grid;
+		gap: calc(4px * var(--ui-scale));
+		grid-template-areas:
+			'image details'
+			'image menu';
+		grid-template-columns: 20% auto;
+	}
+
+	&.is-centered {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		text-align: center;
+	}
+
+	&.is-empty {
+		color: var(--palette-dark-grey);
+	}
+
+	> img {
+		grid-area: image;
+		max-width: 100%;
+	}
+
+	> .details {
+		grid-area: details;
+	}
+
+	> menu {
+		display: flex;
+		grid-area: menu;
+	}
+}

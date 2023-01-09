@@ -13,6 +13,7 @@ import { EditorContextProvider } from '../scenes/Architect/context/EditorContext
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
 import { PanelContainer } from '../PanelContainer.jsx'
 import { ResourcepacksPanel } from './ResourcepacksPanel/ResourcepacksPanel.jsx'
+import { TilePalettePanel } from './TilePalettePanel/TilePalettePanel.jsx'
 import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
 
 
@@ -45,6 +46,7 @@ export function MapEditor() {
 	const leftPanels = useMemo(() => {
 		return [
 			ResourcepacksPanel,
+			TilePalettePanel,
 			TileQueuePanel,
 		]
 	}, [])

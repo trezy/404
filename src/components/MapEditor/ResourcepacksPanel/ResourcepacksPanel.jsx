@@ -11,6 +11,8 @@ import {
 
 // Local imports
 import { AddResourcePackModal } from '../../AddResourcePackModal/AddResourcePackModal.jsx'
+import { BlockList } from '../../BlockList/BlockList.jsx'
+import { BlockListItem } from '../../BlockList/BlockListItem.jsx'
 import { Button } from '../../Button.jsx'
 import { Panel } from '../../scenes/Architect/Panel.jsx'
 import { Resourcepack } from './Resourcepack.jsx'
@@ -53,9 +55,9 @@ export function ResourcepacksPanel() {
 	const mappedItems = useMemo(() => {
 		return Object.values(resourcepacks).map(resourcepack => {
 			return (
-				<li key={resourcepack.id}>
+				<BlockListItem key={resourcepack.id}>
 					<Resourcepack resourcepack={resourcepack} />
-				</li>
+				</BlockListItem>
 			)
 		})
 	}, [resourcepacks])
@@ -67,15 +69,15 @@ export function ResourcepacksPanel() {
 				isCollapsible
 				menu={Menu}
 				title={'Resources'}>
-				<ol className={'block-list'}>
+				<BlockList>
 					{!Object.keys(resourcepacks).length && (
-						<li className={'empty-message'}>
+						<BlockListItem isEmpty>
 							{'No resource packs.'}
-						</li>
+						</BlockListItem>
 					)}
 
 					{Boolean(Object.keys(resourcepacks).length) && mappedItems}
-				</ol>
+				</BlockList>
 			</Panel>
 
 			{showManageResourcePacksModal && (

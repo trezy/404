@@ -8,6 +8,13 @@ import { useMemo } from 'react'
 
 
 
+// Local imports
+import styles from './Panel.module.scss'
+
+
+
+
+
 /**
  * A visual container for UI sections.
  *
@@ -36,8 +43,8 @@ export function Panel(props) {
 
 	const compiledClassName = useMemo(() => {
 		return classnames('panel', `span-${columnSpan}`, className, {
-			'is-centered': isCentered,
-			'is-primary': isPrimary,
+			[styles['is-centered']]: isCentered,
+			[styles['is-primary']]: isPrimary,
 		})
 	}, [
 		columnSpan,
