@@ -16,7 +16,7 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
 
 /**
- * Allows managing of asset packs.
+ * Handles selecting which tile to paint with.
  */
 export function TilePalettePanel() {
 	const { resourcepacks } = useEditor()
@@ -29,7 +29,6 @@ export function TilePalettePanel() {
 					Object
 						.entries(resourcepack.tiles)
 						.forEach(([tileID, tileData]) => {
-							console.log(tileData)
 							accumulator.push((
 								<li key={tileID}>
 									<img

@@ -10,8 +10,8 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { Combobox } from '../../../Combobox.jsx'
-import { TILESET_IDS } from '../../../../data/TILE_IDS.js'
+import { Combobox } from '../Combobox.jsx'
+import { TILESET_IDS } from '../../data/TILE_IDS.js'
 
 
 
@@ -80,8 +80,6 @@ export function TilesetIDCombobox(props) {
 		const foo = Object
 			.entries(TILESET_IDS)
 			.reduce(reduceTilesetIDs, [])
-
-		console.log(foo)
 
 		return foo
 	}, [])

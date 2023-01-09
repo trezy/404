@@ -9,10 +9,10 @@ import {
 
 
 // Local imports
-import { Button } from '../../../Button.jsx'
-import { Modal } from '../../../Modal.jsx'
-import { Panel } from '../Panel.jsx'
-import { useAssets } from '../context/AssetsContext.jsx'
+import { Button } from '../Button.jsx'
+import { Modal } from '../Modal.jsx'
+import { Panel } from '../scenes/Architect/Panel.jsx'
+import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 
 
 
@@ -30,7 +30,7 @@ export function ExportPanel() {
 		tiles,
 		tilesetName,
 		updateTilesetName,
-	} = useAssets()
+	} = useResourcepackEditor()
 
 	const handleExportClick = useCallback(() => exportTileset(), [exportTileset])
 

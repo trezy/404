@@ -7,8 +7,8 @@ import { useState } from 'react'
 
 
 // Local imports
-import { AssetPackCreator } from './AssetPackCreator/AssetPackCreator.jsx'
 import { MapEditor } from '../../MapEditor/MapEditor.jsx'
+import { ResourcepackEditor } from '../../ResourcepackEditor/ResourcepackEditor.jsx'
 import { Tabs } from '../../Tabs.jsx'
 
 
@@ -46,7 +46,7 @@ export function Architect() {
 
 			<AnimatePresence exitBeforeEnter>
 				{(activeTab === 'asset-creator') && (
-					<AssetPackCreator key={'asset-creator'} />
+					<ResourcepackEditor key={'asset-creator'} />
 				)}
 
 				{(activeTab === 'map-editor') && (

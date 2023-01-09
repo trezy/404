@@ -23,7 +23,7 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
 
 /**
- * Allows managing of asset packs.
+ * Allows managing of resourcepacks.
  */
 export function ResourcepacksPanel() {
 	const [showManageResourcePacksModal, setShowManageResourcePacksModal] = useState(false)

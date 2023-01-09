@@ -10,22 +10,25 @@ import {
 
 
 // Local imports
-import { Button } from '../../../Button.jsx'
+import { Button } from '../Button.jsx'
 import { NewAssetModal } from './NewAssetModal.jsx'
-import { Panel } from '../Panel.jsx'
-import { useAssets } from '../context/AssetsContext.jsx'
-import { useEditor } from '../context/EditorContext.jsx'
+import { Panel } from '../scenes/Architect/Panel.jsx'
+import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
+import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 
 
 
 
 
+/**
+ * Allows management of assets.
+ */
 export function AssetsPanel() {
 	const {
 		addAssets,
 		assets,
 		removeAsset,
-	} = useAssets()
+	} = useResourcepackEditor()
 	const {
 		closeItem,
 		openItem,

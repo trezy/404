@@ -69,7 +69,7 @@ const MARQUEE_CURSOR_PATHS = [
 
 const RENDERERS = {
 	/**
-	 * Renders the marquee cursor to the canvas.
+	 * Renders an asset cursor to the canvas.
 	 *
 	 * @param {object} options All options.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
@@ -94,6 +94,92 @@ const RENDERERS = {
 			renderOffset.y * zoom,
 		)
 		context.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height)
+	},
+
+	/**
+	 * Renders the tile brush to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
+	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	tileBrush(options) {
+
+	},
+
+	/**
+	 * Renders the transparency grid to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	mapGrid(options) {
+		const {
+			canvasElement,
+			context,
+			renderOffset,
+			zoom,
+		} = options
+
+		const computedStyles = getComputedStyle(canvasElement)
+		const gridColor = computedStyles.getPropertyValue('--palette-purple')
+
+		const gridColumnsOffset = Math.floor(renderOffset.x / TILE_SIZE.width)
+
+		const gridRowsOffset = Math.floor(renderOffset.y / TILE_SIZE.height)
+
+		context.clearRect(
+			0,
+			0,
+			0xffff,
+			0xffff,
+		)
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		let gridColumn = 0
+		let gridRow = 0
+
+		context.globalAlpha = 0.1
+		context.strokeStyle = gridColor
+
+		while (gridRow <= canvasElement.height) {
+			const rowWidth = gridRow - gridRowsOffset
+			const y = (rowWidth * TILE_SIZE.height) + renderOffset.y + 0.5
+
+			context.beginPath()
+			context.moveTo(0, y)
+			context.lineTo(canvasElement.width, y)
+			context.stroke()
+			gridRow += 1
+		}
+
+		while (gridColumn <= canvasElement.height) {
+			const columnWidth = gridColumn - gridColumnsOffset
+			const x = (columnWidth * TILE_SIZE.height) + renderOffset.x + 0.5
+
+			context.beginPath()
+			context.moveTo(x, 0)
+			context.lineTo(x, canvasElement.height)
+			context.stroke()
+			gridColumn += 1
+		}
+
+		context.globalAlpha = 1
 	},
 
 	/**
@@ -186,7 +272,7 @@ const RENDERERS = {
 	},
 
 	/**
-	 * Renders the marquee cursor to the canvas.
+	 * Renders the selection marquee to the canvas.
 	 *
 	 * @param {object} options All options.
 	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
@@ -304,8 +390,14 @@ const RENDERERS = {
 }
 
 export function Editor(props) {
-	const { image } = props
+	const {
+		image,
+		showMapGrid,
+		showTransparencyGrid,
+	} = props
+
 	const { keyState } = useKeyState()
+
 	const {
 		selection,
 		setSelection,
@@ -530,19 +622,32 @@ export function Editor(props) {
 			canvasElement.height,
 		)
 
-		RENDERERS.transparencyGrid({
-			canvasElement,
-			context,
-			renderOffset,
-			zoom,
-		})
+		if (showTransparencyGrid) {
+			RENDERERS.transparencyGrid({
+				canvasElement,
+				context,
+				renderOffset,
+				zoom,
+			})
+		}
 
-		RENDERERS.asset({
-			context,
-			image,
-			renderOffset,
-			zoom,
-		})
+		if (showMapGrid) {
+			RENDERERS.mapGrid({
+				canvasElement,
+				context,
+				renderOffset,
+				zoom,
+			})
+		}
+
+		if (image) {
+			RENDERERS.asset({
+				context,
+				image,
+				renderOffset,
+				zoom,
+			})
+		}
 
 		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[tool] === 'function')) {
 			RENDERERS[tool]({
@@ -574,6 +679,8 @@ export function Editor(props) {
 		isMovable,
 		renderOffset,
 		selection,
+		showMapGrid,
+		showTransparencyGrid,
 		tool,
 		zoom,
 	])
@@ -627,6 +734,14 @@ export function Editor(props) {
 	)
 }
 
+Editor.defaultProps = {
+	image: null,
+	showMapGrid: false,
+	showTransparencyGrid: true,
+}
+
 Editor.propTypes = {
-	image: PropTypes.instanceOf(Image).isRequired,
+	image: PropTypes.instanceOf(Image),
+	showMapGrid: PropTypes.bool,
+	showTransparencyGrid: PropTypes.bool,
 }

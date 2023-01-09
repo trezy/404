@@ -7,11 +7,11 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import { AssetsContextProvider } from '../scenes/Architect/context/AssetsContext.jsx'
-import { EditorContainer } from '../scenes/Architect/EditorContainer.jsx'
 import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { MapEditorCanvas } from './MapEditorCanvas.jsx'
 import { PanelContainer } from '../PanelContainer.jsx'
+import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 import { ResourcepacksPanel } from './ResourcepacksPanel/ResourcepacksPanel.jsx'
 import { TilePalettePanel } from './TilePalettePanel/TilePalettePanel.jsx'
 import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
@@ -58,15 +58,15 @@ export function MapEditor() {
 			exit={'exit'}
 			initial={'initial'}
 			variants={VARIANTS}>
-			<AssetsContextProvider>
+			<ResourcepackEditorContextProvider>
 				<EditorContextProvider>
 					<KeyStateContextProvider>
 						<PanelContainer panels={leftPanels} />
 
-						<EditorContainer />
+						<MapEditorCanvas />
 					</KeyStateContextProvider>
 				</EditorContextProvider>
-			</AssetsContextProvider>
+			</ResourcepackEditorContextProvider>
 		</motion.main>
 	)
 }

@@ -7,13 +7,13 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import { AssetsContextProvider } from '../context/AssetsContext.jsx'
 import { AssetsPanel } from './AssetsPanel.jsx'
-import { EditorContainer } from '../EditorContainer.jsx'
-import { EditorContextProvider } from '../context/EditorContext.jsx'
+import { EditorContainer } from '../scenes/Architect/EditorContainer.jsx'
+import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
 import { ExportPanel } from './ExportPanel.jsx'
-import { KeyStateContextProvider } from '../context/KeyStateContext.jsx'
-import { PanelContainer } from '../../../PanelContainer.jsx'
+import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { PanelContainer } from '../PanelContainer.jsx'
+import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 import { TilesPanel } from './TilesPanel.jsx'
 
 
@@ -42,7 +42,7 @@ const VARIANTS = {
 /**
  * Renders the map editor.
  */
-export function AssetPackCreator() {
+export function ResourcepackEditor() {
 	const leftPanels = useMemo(() => {
 		return [
 			AssetsPanel,
@@ -58,7 +58,7 @@ export function AssetPackCreator() {
 			exit={'exit'}
 			initial={'initial'}
 			variants={VARIANTS}>
-			<AssetsContextProvider>
+			<ResourcepackEditorContextProvider>
 				<EditorContextProvider>
 					<KeyStateContextProvider>
 						<PanelContainer panels={leftPanels} />
@@ -66,7 +66,7 @@ export function AssetPackCreator() {
 						<EditorContainer />
 					</KeyStateContextProvider>
 				</EditorContextProvider>
-			</AssetsContextProvider>
+			</ResourcepackEditorContextProvider>
 		</motion.main>
 	)
 }

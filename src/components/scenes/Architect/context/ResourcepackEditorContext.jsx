@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid'
 
 
 
-export const AssetsContext = createContext({
+export const ResourcepackEditorContext = createContext({
 	assets: {},
 	isExporting: false,
 	isSaving: false,
@@ -43,7 +43,7 @@ export const AssetsContext = createContext({
 
 
 
-export function AssetsContextProvider(props) {
+export function ResourcepackEditorContextProvider(props) {
 	const { children } = props
 
 	const [assets, setAssets] = useState({})
@@ -182,14 +182,14 @@ export function AssetsContextProvider(props) {
 	])
 
 	return (
-		<AssetsContext.Provider
+		<ResourcepackEditorContext.Provider
 			value={providerState}>
 			{children}
-		</AssetsContext.Provider>
+		</ResourcepackEditorContext.Provider>
 	)
 }
 
-AssetsContextProvider.propTypes = {
+ResourcepackEditorContextProvider.propTypes = {
 	children: PropTypes.node.isRequired,
 }
 
@@ -198,4 +198,4 @@ AssetsContextProvider.propTypes = {
 
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-export const useAssets = () => useContext(AssetsContext)
+export const useResourcepackEditor = () => useContext(ResourcepackEditorContext)
