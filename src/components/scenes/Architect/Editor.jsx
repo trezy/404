@@ -134,11 +134,13 @@ const RENDERERS = {
 
 		const cursorPositionX = Math.floor(cursorPosition.x)
 		const cursorPositionY = Math.floor(cursorPosition.y)
+		const cursorCellX = Math.floor((cursorPositionX - renderOffset.x) / TILE_SIZE.width)
+		const cursorCellY = Math.floor((cursorPositionY - renderOffset.y) / TILE_SIZE.height)
 
-		const gridCellX = cursorPositionX - (cursorPositionX % TILE_SIZE.width)
-		const gridCellY = cursorPositionY - (cursorPositionY % TILE_SIZE.height)
-		const gridOffsetX = Math.floor(renderOffset.x / TILE_SIZE.width)
-		const gridOffsetY = Math.floor(renderOffset.y / TILE_SIZE.height)
+		const gridCellX = cursorCellX * TILE_SIZE.width
+		const gridCellY = cursorCellY * TILE_SIZE.height
+		const gridOffsetX = renderOffset.x
+		const gridOffsetY = renderOffset.y
 
 		const targetCell = {
 			x: gridCellX + gridOffsetX,
