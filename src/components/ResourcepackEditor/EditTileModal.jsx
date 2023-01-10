@@ -36,9 +36,7 @@ export function EditTileModal(props) {
 		tileID,
 	} = props
 
-	const {
-		tiles,
-	} = useResourcepackEditor()
+	const { tiles } = useResourcepackEditor()
 	const {
 		focusedItemID,
 		openItems,
@@ -46,7 +44,6 @@ export function EditTileModal(props) {
 		selection,
 	} = useEditor()
 
-	const [tilesetID, setTilesetID] = useState(null)
 	const [tileName, setTileName] = useState(tileID ? tiles[tileID].name : '')
 
 	const canvasRef = useRef(null)
@@ -100,7 +97,6 @@ export function EditTileModal(props) {
 		if (!tile) {
 			const canvasElement = canvasRef.current
 
-			tileObject.assetID = focusedItemID
 			tileObject.dataURI = canvasElement.toDataURL()
 			tileObject.height = selection.height / scale
 			tileObject.width = selection.width / scale
@@ -109,7 +105,6 @@ export function EditTileModal(props) {
 		onAddToProject(tileObject)
 		onClose()
 	}, [
-		focusedItemID,
 		onAddToProject,
 		onClose,
 		scale,

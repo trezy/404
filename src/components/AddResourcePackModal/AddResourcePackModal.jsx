@@ -71,7 +71,7 @@ export function AddResourcePackModal(props) {
 
 	const handleSubmit = useCallback(event => {
 		event.preventDefault()
-		onSave(Object.keys(selectedResourcepacks))
+		onSave(Object.keys(selectedResourcepacks).filter(id => selectedResourcepacks[id]))
 	}, [
 		onSave,
 		selectedResourcepacks,

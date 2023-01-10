@@ -109,9 +109,10 @@ export class ContentManager extends EventEmitter {
 	 * @returns {object} The requested tile.
 	 */
 	getTile(tileID) {
+		const { resourcepacks } = this.#manifests
 		return Object
-			.values(this.#manifests.resourcepacks)
-			.map(resourcepack => Object.entries(resourcepack.tiles))
+			.values(resourcepacks)
+			.map(resourcepack => Object.entries(resourcepack.tiles ?? {}))
 			.flat()
 			.find(([id]) => tileID === id)?.[1]
 	}
@@ -185,7 +186,15 @@ export class ContentManager extends EventEmitter {
 	 *
 	 * @param {string} resourcepackID The ID of the resourcepack to be unloaded.
 	 */
-	unloadResourcepack(resourcepackID) {}
+	unloadResourcepack(resourcepackID) {
+		const resourcepack = this.#manifests.resourcepacks[resourcepackID]
+
+		resourcepack.isLoaded = false
+		resourcepack.isLoading = false
+		delete resourcepack.tiles
+
+		this.emit('resourcepack:unloaded', resourcepackID)
+	}
 
 
 
