@@ -103,6 +103,20 @@ export class ContentManager extends EventEmitter {
 	}
 
 	/**
+	 * Retrieves a tile by ID.
+	 *
+	 * @param {string} tileID The ID of the tile to be retrieved.
+	 * @returns {object} The requested tile.
+	 */
+	getTile(tileID) {
+		return Object
+			.values(this.#manifests.resourcepacks)
+			.map(resourcepack => Object.entries(resourcepack.tiles))
+			.flat()
+			.find(([id]) => tileID === id)?.[1]
+	}
+
+	/**
 	 * Initialises the content watcher.
 	 */
 	initialiseContentWatcher() {
