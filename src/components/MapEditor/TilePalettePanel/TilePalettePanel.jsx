@@ -1,5 +1,8 @@
 // Module imports
-import { useMemo } from 'react'
+import {
+	useCallback,
+	useMemo,
+} from 'react'
 
 
 
@@ -8,6 +11,7 @@ import { useMemo } from 'react'
 // Local imports
 import styles from './TilePalettePanel.module.scss'
 
+import { Button } from '../../Button.jsx'
 import { Panel } from '../../scenes/Architect/Panel.jsx'
 import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
@@ -19,7 +23,19 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
  * Handles selecting which tile to paint with.
  */
 export function TilePalettePanel() {
-	const { resourcepacks } = useEditor()
+	const {
+		activateBrushTool,
+		resourcepacks,
+		setActiveTile,
+	} = useEditor()
+
+	const handleTileClick = useCallback(tileID => () => {
+		activateBrushTool()
+		setActiveTile(tileID)
+	}, [
+		activateBrushTool,
+		setActiveTile,
+	])
 
 	const mappedTiles = useMemo(() => {
 		return Object
@@ -31,9 +47,13 @@ export function TilePalettePanel() {
 						.forEach(([tileID, tileData]) => {
 							accumulator.push((
 								<li key={tileID}>
-									<img
-										alt={''}
-										src={tileData.dataURI} />
+									<Button
+										isStyled={false}
+										onClick={handleTileClick(tileID)}>
+										<img
+											alt={''}
+											src={tileData.dataURI} />
+									</Button>
 								</li>
 							))
 						})
@@ -41,7 +61,10 @@ export function TilePalettePanel() {
 
 				return accumulator
 			}, [])
-	}, [resourcepacks])
+	}, [
+		handleTileClick,
+		resourcepacks,
+	])
 
 	return (
 		<Panel

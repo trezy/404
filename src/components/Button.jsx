@@ -21,6 +21,7 @@ import { useMemo } from 'react'
  * @param {boolean} [props.isFullWidth = false] Whether or not this button should take up the full width of its parent.
  * @param {boolean} [props.isNegative = false] Whether or not this button will cause an negative action.
  * @param {boolean} [props.isSmall = false] Whether or not this button should be smaller than normal.
+ * @param {boolean} [props.isStyled = true] Whether or not to apply styles to this component.
  * @param {boolean} [props.isSubmit = false] Whether or not this button should be smaller than normal.
  * @param {boolean} [props.isText = false] Whether or not this button should be rendered as only text.
  * @param {boolean} [props.isUniformlyPadded = false] Whether or not this button shoudl have the same padding on all sides.
@@ -41,6 +42,7 @@ export function Button(props) {
 		isFullWidth,
 		isNegative,
 		isSmall,
+		isStyled,
 		isSubmit,
 		isText,
 		isUniformlyPadded,
@@ -57,20 +59,23 @@ export function Button(props) {
 
 			return accumulator
 		}, {
-			className: classnames('button', className, {
-				'is-affirmative': isAffirmative,
-				'is-full-width': isFullWidth,
-				'is-negative': isNegative,
-				'is-small': isSmall,
-				'is-text': isText,
-				'is-uniformly-padded': isUniformlyPadded,
-			}),
 			disabled: isDisabled,
 			key: id,
 			onClick,
 			type: isSubmit ? 'submit' : 'button',
 			variants,
 		})
+
+		if (isStyled) {
+			result.className = classnames('button', className, {
+				'is-affirmative': isAffirmative,
+				'is-full-width': isFullWidth,
+				'is-negative': isNegative,
+				'is-small': isSmall,
+				'is-text': isText,
+				'is-uniformly-padded': isUniformlyPadded,
+			})
+		}
 
 		if (forceAnimationInclusion) {
 			result.animate = 'animate'
@@ -88,6 +93,7 @@ export function Button(props) {
 		isFullWidth,
 		isNegative,
 		isSmall,
+		isStyled,
 		isSubmit,
 		isText,
 		isUniformlyPadded,
@@ -113,6 +119,7 @@ Button.defaultProps = {
 	isFullWidth: false,
 	isNegative: false,
 	isSmall: false,
+	isStyled: true,
 	isSubmit: false,
 	isText: false,
 	isUniformlyPadded: false,
@@ -131,6 +138,7 @@ Button.propTypes = {
 	isFullWidth: PropTypes.bool,
 	isNegative: PropTypes.bool,
 	isSmall: PropTypes.bool,
+	isStyled: PropTypes.bool,
 	isSubmit: PropTypes.bool,
 	isText: PropTypes.bool,
 	isUniformlyPadded: PropTypes.bool,

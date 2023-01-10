@@ -32,6 +32,8 @@ export const EditorContext = createContext({
 	zoom: 1,
 
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateBrushTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateHandTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
@@ -78,6 +80,8 @@ export function EditorContextProvider(props) {
 
 		return rootScale
 	}, [])
+
+	const activateBrushTool = useCallback(() => setTool('brush'), [setTool])
 
 	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
 
@@ -193,6 +197,7 @@ export function EditorContextProvider(props) {
 
 	const providerState = useMemo(() => {
 		return {
+			activateBrushTool,
 			activateHandTool,
 			activateMarqueeTool,
 			addResourcepacks,
@@ -214,6 +219,7 @@ export function EditorContextProvider(props) {
 			zoomOut,
 		}
 	}, [
+		activateBrushTool,
 		activateHandTool,
 		activateMarqueeTool,
 		addResourcepacks,

@@ -107,8 +107,48 @@ const RENDERERS = {
 	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
 	 * @param {number} options.zoom The current zoom level.
 	 */
-	tileBrush(options) {
+	brush(options) {
+		const {
+			context,
+			cursorPosition,
+			dragOffset,
+			dragStart,
+			isDragging,
+			zoom,
+		} = options
 
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		context.globalAlpha = 0.3
+
+		const cursorPositionX = Math.floor(cursorPosition.x)
+		const cursorPositionY = Math.floor(cursorPosition.y)
+
+		const targetCell = {
+			x: cursorPositionX - (cursorPositionX % TILE_SIZE.width),
+			y: cursorPositionY - (cursorPositionY % TILE_SIZE.height),
+		}
+
+		context.fillStyle = 'red'
+		context.fillRect(targetCell.x, targetCell.y, TILE_SIZE.width, TILE_SIZE.height)
+		context.drawImage(
+			targetCell.x,
+			targetCell.y,
+			TILE_SIZE.width,
+			TILE_SIZE.height,
+		)
+
+		context.globalAlpha = 1
+
+		context.fillStyle = 'white'
+		context.fillRect(cursorPositionX, cursorPositionY, 1, 1)
 	},
 
 	/**
