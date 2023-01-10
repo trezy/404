@@ -144,6 +144,12 @@ export class ContentManager extends EventEmitter {
 
 		const tiles = await ipcRenderer.invoke('loadResourcepack', resourcepackID)
 
+		for await (const tile of Object.values(tiles)) {
+			tile.image = new Image
+			tile.image.src = tile.dataURI
+			await tile.image.decode()
+		}
+
 		resourcepacks[resourcepackID].isLoaded = false
 		resourcepacks[resourcepackID].isLoading = false
 		resourcepacks[resourcepackID].tiles = tiles
