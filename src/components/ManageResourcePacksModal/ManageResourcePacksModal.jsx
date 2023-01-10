@@ -12,11 +12,12 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import styles from './AddResourcePackModal.module.scss'
+import styles from './ManageResourcePacksModal.module.scss'
 
 import { Button } from '../Button.jsx'
 import { Modal } from '../Modal.jsx'
 import { Resourcepack } from './ResourcePack.jsx'
+import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
 import { useStore } from '../../store/react.js'
 
 
@@ -28,11 +29,13 @@ import { useStore } from '../../store/react.js'
  *
  * @param {*} props
  */
-export function AddResourcePackModal(props) {
+export function ManageResourcePacksModal(props) {
 	const {
 		onClose,
 		onSave,
 	} = props
+
+	const { resourcepacks } = useEditor()
 
 	const { contentManager } = useStore(state => {
 		return {
@@ -40,10 +43,12 @@ export function AddResourcePackModal(props) {
 		}
 	})
 
-	const [selectedResourcepacks, setSelectedResourcepacks] = useState(Object.keys(contentManager.resourcepacks).reduce((accumulator, resourcepackID) => {
-		accumulator[resourcepackID] = false
-		return accumulator
-	}, {}))
+	const [selectedResourcepacks, setSelectedResourcepacks] = useState(
+		Object.keys(contentManager.resourcepacks).reduce((accumulator, resourcepackID) => {
+			accumulator[resourcepackID] = Boolean(resourcepacks[resourcepackID])
+			return accumulator
+		}, {}),
+	)
 
 	const handleResourcePackClick = useCallback((resourcepackID, isChecked) => {
 		setSelectedResourcepacks(previousState => {
@@ -71,7 +76,7 @@ export function AddResourcePackModal(props) {
 
 	const handleSubmit = useCallback(event => {
 		event.preventDefault()
-		onSave(Object.keys(selectedResourcepacks).filter(id => selectedResourcepacks[id]))
+		onSave(selectedResourcepacks)
 	}, [
 		onSave,
 		selectedResourcepacks,
@@ -124,7 +129,7 @@ export function AddResourcePackModal(props) {
 	)
 }
 
-AddResourcePackModal.propTypes = {
+ManageResourcePacksModal.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	onSave: PropTypes.func.isRequired,
 }

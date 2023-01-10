@@ -18,6 +18,7 @@ import { useDOMEvent } from '../../../hooks/useDOMEvent.js'
 import { useEditor } from './context/EditorContext.jsx'
 import { useKeyState } from './context/KeyStateContext.jsx'
 import { useRafael } from '../../../hooks/useRafael.js'
+import { useStore } from '../../../store/react.js'
 import { useWindowEvent } from '../../../hooks/useWindowEvent.js'
 
 
@@ -109,11 +110,14 @@ const RENDERERS = {
 	 */
 	brush(options) {
 		const {
+			contentManager,
 			context,
 			cursorPosition,
-			dragOffset,
-			dragStart,
-			isDragging,
+			// dragOffset,
+			// dragStart,
+			// isDragging,
+			renderOffset,
+			tile: activeTileID,
 			zoom,
 		} = options
 
@@ -126,19 +130,28 @@ const RENDERERS = {
 			0,
 		)
 
-		context.globalAlpha = 0.3
+		context.globalAlpha = 0.5
 
 		const cursorPositionX = Math.floor(cursorPosition.x)
 		const cursorPositionY = Math.floor(cursorPosition.y)
 
+		const gridCellX = cursorPositionX - (cursorPositionX % TILE_SIZE.width)
+		const gridCellY = cursorPositionY - (cursorPositionY % TILE_SIZE.height)
+		const gridOffsetX = Math.floor(renderOffset.x / TILE_SIZE.width)
+		const gridOffsetY = Math.floor(renderOffset.y / TILE_SIZE.height)
+
 		const targetCell = {
-			x: cursorPositionX - (cursorPositionX % TILE_SIZE.width),
-			y: cursorPositionY - (cursorPositionY % TILE_SIZE.height),
+			x: gridCellX + gridOffsetX,
+			y: gridCellY + gridOffsetY,
 		}
 
-		context.fillStyle = 'red'
-		context.fillRect(targetCell.x, targetCell.y, TILE_SIZE.width, TILE_SIZE.height)
+		const tile = contentManager.getTile(activeTileID)
 		context.drawImage(
+			tile.image,
+			0,
+			0,
+			TILE_SIZE.width * 3,
+			TILE_SIZE.height * 3,
 			targetCell.x,
 			targetCell.y,
 			TILE_SIZE.width,
@@ -441,9 +454,13 @@ export function Editor(props) {
 	const {
 		selection,
 		setSelection,
+		tile,
 		tool,
 		zoom,
 	} = useEditor()
+
+	const contentManager = useStore(state => state.contentManager)
+
 	const canvasRef = useRef(null)
 	const parentRef = useRef(null)
 	const [canvasSize, setCanvasSize] = useState({
@@ -691,12 +708,14 @@ export function Editor(props) {
 
 		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[tool] === 'function')) {
 			RENDERERS[tool]({
+				contentManager,
 				context,
 				cursorPosition,
 				dragOffset,
 				dragStart,
 				isDragging,
 				renderOffset,
+				tile,
 				zoom,
 			})
 		}
@@ -710,6 +729,7 @@ export function Editor(props) {
 			})
 		}
 	}, [
+		contentManager,
 		cursorIsOverCanvas,
 		cursorPosition,
 		dragOffset,
@@ -721,6 +741,7 @@ export function Editor(props) {
 		selection,
 		showMapGrid,
 		showTransparencyGrid,
+		tile,
 		tool,
 		zoom,
 	])

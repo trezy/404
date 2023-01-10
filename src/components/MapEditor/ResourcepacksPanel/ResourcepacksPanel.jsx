@@ -10,7 +10,7 @@ import {
 
 
 // Local imports
-import { AddResourcePackModal } from '../../AddResourcePackModal/AddResourcePackModal.jsx'
+import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { BlockList } from '../../BlockList/BlockList.jsx'
 import { BlockListItem } from '../../BlockList/BlockListItem.jsx'
 import { Button } from '../../Button.jsx'
@@ -28,19 +28,19 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 export function ResourcepacksPanel() {
 	const [showManageResourcePacksModal, setShowManageResourcePacksModal] = useState(false)
 	const {
-		addResourcepacks,
 		resourcepacks,
+		updateResourcepacks,
 	} = useEditor()
 
 	const handleManageResourcePacksClick = useCallback(() => setShowManageResourcePacksModal(true), [setShowManageResourcePacksModal])
 
 	const handleManageResourcePacksModalClose = useCallback(() => setShowManageResourcePacksModal(false), [setShowManageResourcePacksModal])
 
-	const handleSaveResourcepacks = useCallback(resourcepackIDs => {
-		addResourcepacks(resourcepackIDs)
+	const handleSaveResourcepacks = useCallback(selectedResourcepacks => {
+		updateResourcepacks(selectedResourcepacks)
 		setShowManageResourcePacksModal(false)
 	}, [
-		addResourcepacks,
+		updateResourcepacks,
 		setShowManageResourcePacksModal,
 	])
 
@@ -81,7 +81,7 @@ export function ResourcepacksPanel() {
 			</Panel>
 
 			{showManageResourcePacksModal && (
-				<AddResourcePackModal
+				<ManageResourcePacksModal
 					onClose={handleManageResourcePacksModalClose}
 					onSave={handleSaveResourcepacks} />
 			)}

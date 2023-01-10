@@ -38,7 +38,7 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
-	addResourcepacks: () => {},
+	updateResourcepacks: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -86,22 +86,6 @@ export function EditorContextProvider(props) {
 	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
 
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
-
-	const addResourcepacks = useCallback(resourcepackIDs => {
-		resourcepackIDs.forEach(resourcepackID => contentManager.loadResourcepack(resourcepackID))
-		setResourcepacks(previousState => {
-			return {
-				...previousState,
-				...resourcepackIDs.reduce((accumulator, resourcepackID) => {
-					accumulator[resourcepackID] = { ...contentManager.getResourcepack(resourcepackID) }
-					return accumulator
-				}, {}),
-			}
-		})
-	}, [
-		contentManager,
-		setResourcepacks,
-	])
 
 	const handleResourcepackLoaded = useCallback(resourcepackID => {
 		setResourcepacks(previousState => {
@@ -173,6 +157,26 @@ export function EditorContextProvider(props) {
 
 	const setActiveTile = useCallback(tileID => setTile(tileID), [setTile])
 
+	const updateResourcepacks = useCallback(selectedResourcepacks => {
+		const updatedResourcepacks = Object
+			.entries(selectedResourcepacks)
+			.reduce((accumulator, [resourcepackID, isEnabled]) => {
+				if (isEnabled) {
+					contentManager.loadResourcepack(resourcepackID)
+					accumulator[resourcepackID] = { ...contentManager.getResourcepack(resourcepackID) }
+				} else {
+					contentManager.unloadResourcepack(resourcepackID)
+					delete accumulator[resourcepackID]
+				}
+				return accumulator
+			}, {})
+
+		setResourcepacks(updatedResourcepacks)
+	}, [
+		contentManager,
+		setResourcepacks,
+	])
+
 	const zoomIn = useCallback(() => {
 		setZoom(previousValue => {
 			if (previousValue === 0.1) {
@@ -200,7 +204,6 @@ export function EditorContextProvider(props) {
 			activateBrushTool,
 			activateHandTool,
 			activateMarqueeTool,
-			addResourcepacks,
 			closeItem,
 			defaultZoom,
 			focusedItemID,
@@ -214,6 +217,7 @@ export function EditorContextProvider(props) {
 			setSelection,
 			tile,
 			tool,
+			updateResourcepacks,
 			zoom,
 			zoomIn,
 			zoomOut,
@@ -222,7 +226,6 @@ export function EditorContextProvider(props) {
 		activateBrushTool,
 		activateHandTool,
 		activateMarqueeTool,
-		addResourcepacks,
 		closeItem,
 		defaultZoom,
 		focusedItemID,
@@ -236,6 +239,7 @@ export function EditorContextProvider(props) {
 		setSelection,
 		tile,
 		tool,
+		updateResourcepacks,
 		zoom,
 		zoomIn,
 		zoomOut,
