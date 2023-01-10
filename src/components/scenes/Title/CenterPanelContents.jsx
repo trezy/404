@@ -1,5 +1,7 @@
 // Local imports
-import { GameTitle } from '../../GameTitle.jsx'
+import styles from './CenterPanelContents.module.scss'
+
+import { GameTitle } from '../../GameTitle/GameTitle.jsx'
 
 
 
@@ -10,6 +12,8 @@ import { GameTitle } from '../../GameTitle.jsx'
  */
 export function CenterPanelContents() {
 	return (
-		<GameTitle />
+		<div className={styles['game-title-wrapper']}>
+			<GameTitle />
+		</div>
 	)
 }

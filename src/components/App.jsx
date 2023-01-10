@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 // Local imports
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
-import { GameTitle } from './GameTitle.jsx'
+import { GameTitle } from './GameTitle/GameTitle.jsx'
 import { ipcRenderer } from 'electron'
 import { LeftPanel } from './LeftPanel.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
