@@ -14,7 +14,7 @@ import { PanelContainer } from '../PanelContainer.jsx'
 import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 import { ResourcepacksPanel } from './ResourcepacksPanel/ResourcepacksPanel.jsx'
 import { TilePalettePanel } from './TilePalettePanel/TilePalettePanel.jsx'
-import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
+// import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
 
 
 
@@ -47,7 +47,7 @@ export function MapEditor() {
 		return [
 			ResourcepacksPanel,
 			TilePalettePanel,
-			TileQueuePanel,
+			// TileQueuePanel,
 		]
 	}, [])
 
