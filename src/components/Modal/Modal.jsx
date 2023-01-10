@@ -9,6 +9,8 @@ import { useCallback } from 'react'
 
 
 // Module imports
+import styles from './Modal.module.scss'
+
 import { Button } from '../Button.jsx'
 import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
@@ -16,6 +18,9 @@ import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
 
 
+/**
+ * Renders a modal.
+ */
 export function Modal(props) {
 	const {
 		children,
@@ -48,27 +53,25 @@ export function Modal(props) {
 	}
 
 	return createPortal((
-		<div className={classnames('modal', 'panel', className)}>
+		<div className={classnames('modal', 'panel', styles['modal'], className)}>
 			<header>
-				<div>
-					<h2 className={'title'}>{title}</h2>
+				<h2 className={styles['title']}>{title}</h2>
 
-					{Boolean(onClose) && (
-						<Button
-							aria-label={'Close modal'}
-							className={'close'}
-							isNegative
-							isUniformlyPadded
-							onClick={handleClose} />
-					)}
-				</div>
+				{Boolean(onClose) && (
+					<Button
+						aria-label={'Close modal'}
+						className={styles['close']}
+						isNegative
+						isUniformlyPadded
+						onClick={handleClose} />
+				)}
 			</header>
 
-			<div className={'content'}>
+			<div className={styles['content']}>
 				{children}
 
 				{isLoading && (
-					<div className={'loader'}>
+					<div className={styles['loader']}>
 						<span>{'Loading...'}</span>
 					</div>
 				)}

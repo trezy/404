@@ -15,6 +15,7 @@ import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle/GameTitle.jsx'
 import { ipcRenderer } from 'electron'
 import { LeftPanel } from './LeftPanel.jsx'
+import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer.jsx'
@@ -148,7 +149,7 @@ export function App() {
 				</AnimatePresence>
 			</WholePixelContainer>
 
-			<div id={'modal-portal'} />
+			<ModalPortal />
 		</>
 	)
 }

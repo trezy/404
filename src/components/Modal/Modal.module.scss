@@ -30,6 +30,7 @@
 
 	header {
 		align-items: center;
+		display: flex;
 		margin-bottom: calc(6px * var(--ui-scale));
 
 		button.close {
@@ -88,11 +89,6 @@
 				margin: 0 calc(2px * var(--ui-scale));
 				width: calc(5px * var(--ui-scale));
 			}
-		}
-
-		div {
-			display: flex;
-			flex-direction: row;
 		}
 	}
 }
