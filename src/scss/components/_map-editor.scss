@@ -63,33 +63,6 @@
 	}
 }
 
-.modal.new-assets {
-	.asset-previews {
-		> li {
-			grid-template-columns: 10rem 1fr;
-			position: relative;
-
-			menu,
-			.details {
-				background-color: hsla(var(--palette-pure-black-hsl), 0.5);
-				left: 0;
-				padding: calc(4px * var(--ui-scale));
-				position: absolute;
-				right: 0;
-			}
-
-			menu {
-				justify-content: flex-end;
-				top: 0;
-			}
-
-			.details {
-				bottom: 0;
-			}
-		}
-	}
-}
-
 .modal.new-tile {
 	.content {
 		align-items: start;

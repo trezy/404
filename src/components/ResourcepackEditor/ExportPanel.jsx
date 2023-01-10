@@ -10,7 +10,7 @@ import {
 
 // Local imports
 import { Button } from '../Button.jsx'
-import { Modal } from '../Modal.jsx'
+import { Modal } from '../Modal/Modal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
 import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 

@@ -9,8 +9,8 @@ import { useCallback } from 'react'
 
 
 // Module imports
-import { Button } from './Button.jsx'
-import { useWindowEvent } from '../hooks/useWindowEvent.js'
+import { Button } from '../Button.jsx'
+import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
 
 

@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import { Button } from '../Button.jsx'
 import { Input } from '../Input.jsx'
-import { Modal } from '../Modal.jsx'
+import { Modal } from '../Modal/Modal.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
 import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 

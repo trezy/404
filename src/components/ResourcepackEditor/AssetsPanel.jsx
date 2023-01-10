@@ -11,7 +11,7 @@ import {
 
 // Local imports
 import { Button } from '../Button.jsx'
-import { NewAssetModal } from './NewAssetModal.jsx'
+import { NewAssetModal } from './NewAssetModal/NewAssetModal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
 import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'

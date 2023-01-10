@@ -11,8 +11,10 @@ import { v4 as uuid } from 'uuid'
 
 
 // Local imports
-import { Button } from '../Button.jsx'
-import { Modal } from '../Modal.jsx'
+import styles from './NewAssetModal.module.scss'
+
+import { Button } from '../../Button.jsx'
+import { Modal } from '../../Modal/Modal.jsx'
 
 
 
@@ -82,7 +84,6 @@ export function NewAssetModal(props) {
 
 	return (
 		<Modal
-			className={'new-assets'}
 			isLoading={isLoading}
 			onClose={onClose}
 			title={'Create New Asset'}>
@@ -100,14 +101,18 @@ export function NewAssetModal(props) {
 
 			{Boolean(filesEntries.length) && (
 				<>
-					<ul className={'asset-previews'}>
+					<ul>
 						{filesEntries.map(([fileID, fileData]) => (
-							<li key={fileID}>
-								<img
-									alt={''}
-									src={fileData.dataURL} />
+							<li
+								key={fileID}
+								className={styles['asset']}>
+								<div className={styles['thumbnail-wrapper']}>
+									<img
+										alt={''}
+										src={fileData.dataURL} />
+								</div>
 
-								<div className={'details'}>
+								<div className={styles['details']}>
 									<div className={'field'}>
 										<label htmlFor={`${fileID}-name`}>
 											{'Name'}

@@ -1,0 +1,41 @@
+.asset {
+	background-color: hsla(var(--palette-pure-black-hsl), 0.5);
+	display: grid;
+	grid-template-areas:
+		'thumbnail details'
+		'thumbnail menu';
+	grid-template-columns: 10rem 1fr;
+	position: relative;
+
+	&:not(:last-child) {
+		margin-bottom: calc(2px * var(--ui-scale));
+	}
+
+	menu,
+	.details {
+		padding: calc(4px * var(--ui-scale));
+	}
+
+	menu {
+		grid-area: menu;
+		justify-content: flex-end;
+		top: 0;
+	}
+
+	.details {
+		bottom: 0;
+	}
+}
+
+.thumbnail-wrapper {
+	align-items: center;
+	background-color: var(--palette-dark-grey);
+	display: flex;
+	grid-area: thumbnail;
+	justify-content: center;
+	padding: calc(2px * var(--ui-scale));
+
+	img {
+		max-width: 100%;
+	}
+}

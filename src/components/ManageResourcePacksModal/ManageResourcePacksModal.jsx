@@ -15,7 +15,7 @@ import PropTypes from 'prop-types'
 import styles from './ManageResourcePacksModal.module.scss'
 
 import { Button } from '../Button.jsx'
-import { Modal } from '../Modal.jsx'
+import { Modal } from '../Modal/Modal.jsx'
 import { Resourcepack } from './ResourcePack.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
 import { useStore } from '../../store/react.js'
