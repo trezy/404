@@ -28,6 +28,7 @@ export function Panel(props) {
 		className,
 		defaultIsOpen,
 		isCollapsible,
+		isScrollable,
 		menu,
 		title,
 	} = props
@@ -61,6 +62,7 @@ export function Panel(props) {
 		const result = {
 			className: classnames('panel', className, {
 				'is-collapsible': isCollapsible,
+				'is-scrollable': isScrollable,
 			}),
 		}
 
@@ -73,6 +75,7 @@ export function Panel(props) {
 		className,
 		isCollapsible,
 		isOpen,
+		isScrollable,
 	])
 
 	const headerProps = useMemo(() => {
@@ -118,9 +121,11 @@ export function Panel(props) {
 }
 
 Panel.defaultProps = {
+	children: null,
 	className: '',
 	defaultIsOpen: true,
 	isCollapsible: false,
+	isScrollable: true,
 	menu: null,
 }
 
@@ -129,6 +134,7 @@ Panel.propTypes = {
 	className: PropTypes.node,
 	defaultIsOpen: PropTypes.bool,
 	isCollapsible: PropTypes.bool,
+	isScrollable: PropTypes.bool,
 	menu: PropTypes.node,
 	title: PropTypes.node.isRequired,
 }

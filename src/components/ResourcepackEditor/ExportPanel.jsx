@@ -81,6 +81,7 @@ export function ExportPanel() {
 			<Panel
 				className={'export'}
 				isCollapsible
+				isScrollable={false}
 				menu={Menu}
 				title={'Export'}>
 				<div className={'field'}>
