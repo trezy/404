@@ -10,10 +10,10 @@ import {
 
 
 // Local imports
-import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { BlockList } from '../../BlockList/BlockList.jsx'
 import { BlockListItem } from '../../BlockList/BlockListItem.jsx'
 import { Button } from '../../Button.jsx'
+import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { Panel } from '../../scenes/Architect/Panel.jsx'
 import { Resourcepack } from './Resourcepack.jsx'
 import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'

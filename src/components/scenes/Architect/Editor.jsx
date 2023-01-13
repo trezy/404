@@ -1,6 +1,7 @@
 // Module imports
 import {
 	useCallback,
+	useEffect,
 	useMemo,
 	useRef,
 	useState,
@@ -112,14 +113,16 @@ const RENDERERS = {
 		const {
 			contentManager,
 			context,
-			cursorPosition,
-			// dragOffset,
-			// dragStart,
-			// isDragging,
-			renderOffset,
-			tile: activeTileID,
+			isDragging,
+			targetCell,
+			targetPixel,
+			activeTile,
 			zoom,
 		} = options
+
+		if (!activeTile) {
+			return
+		}
 
 		context.setTransform(
 			zoom,
@@ -130,24 +133,11 @@ const RENDERERS = {
 			0,
 		)
 
-		context.globalAlpha = 0.5
-
-		const cursorPositionX = Math.floor(cursorPosition.x)
-		const cursorPositionY = Math.floor(cursorPosition.y)
-		const cursorCellX = Math.floor((cursorPositionX - renderOffset.x) / TILE_SIZE.width)
-		const cursorCellY = Math.floor((cursorPositionY - renderOffset.y) / TILE_SIZE.height)
-
-		const gridCellX = cursorCellX * TILE_SIZE.width
-		const gridCellY = cursorCellY * TILE_SIZE.height
-		const gridOffsetX = renderOffset.x
-		const gridOffsetY = renderOffset.y
-
-		const targetCell = {
-			x: gridCellX + gridOffsetX,
-			y: gridCellY + gridOffsetY,
+		if (!isDragging) {
+			context.globalAlpha = 0.5
 		}
 
-		const tile = contentManager.getTile(activeTileID)
+		const tile = contentManager.getTile(activeTile.tileID, activeTile.resourcepackID)
 		context.drawImage(
 			tile.image,
 			0,
@@ -163,7 +153,7 @@ const RENDERERS = {
 		context.globalAlpha = 1
 
 		context.fillStyle = 'white'
-		context.fillRect(cursorPositionX, cursorPositionY, 1, 1)
+		context.fillRect(targetPixel.x, targetPixel.y, 1, 1)
 	},
 
 	/**
@@ -238,6 +228,55 @@ const RENDERERS = {
 	},
 
 	/**
+	 * Renders the transparency grid to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	layers(options) {
+		const {
+			contentManager,
+			context,
+			layers,
+			renderOffset,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		layers.forEach(layer => {
+			Object.entries(layer).forEach(([coordinateString, tileData]) => {
+				const [cellX, cellY] = coordinateString
+					.split('|')
+					.map(Number)
+				const tile = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
+
+				context.drawImage(
+					tile.image,
+					0,
+					0,
+					TILE_SIZE.width * 3,
+					TILE_SIZE.height * 3,
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+			})
+		})
+	},
+
+	/**
 	 * Renders the marquee cursor to the canvas.
 	 *
 	 * @param {object} options All options.
@@ -251,10 +290,10 @@ const RENDERERS = {
 	marquee(options) {
 		const {
 			context,
-			cursorPosition,
 			dragOffset,
 			dragStart,
 			isDragging,
+			targetPixel,
 			zoom,
 		} = options
 
@@ -266,11 +305,6 @@ const RENDERERS = {
 			0,
 			0,
 		)
-
-		const targetPixel = {
-			x: Math.floor(cursorPosition.x),
-			y: Math.floor(cursorPosition.y),
-		}
 
 		context.fillStyle = 'white'
 		context.strokeStyle = 'white'
@@ -454,9 +488,11 @@ export function Editor(props) {
 	const { keyState } = useKeyState()
 
 	const {
+		activeTile,
+		layers,
+		paintTile,
 		selection,
 		setSelection,
-		tile,
 		tool,
 		zoom,
 	} = useEditor()
@@ -488,6 +524,13 @@ export function Editor(props) {
 	})
 	const [isDragging, setIsDragging] = useState(false)
 
+	const isPaintable = useMemo(() => {
+		return !keyState[' '] && (tool === 'brush')
+	}, [
+		keyState,
+		tool,
+	])
+
 	const isMovable = useMemo(() => {
 		return keyState[' '] || (tool === 'hand')
 	}, [
@@ -504,6 +547,22 @@ export function Editor(props) {
 		canvasOffset,
 		dragOffset,
 		isMovable,
+	])
+
+	const handleCanvasClick = useCallback(() => {
+		if (tool !== 'brush') {
+			return
+		}
+
+		paintTile({
+			cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+			cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+		})
+	}, [
+		cursorPosition,
+		paintTile,
+		renderOffset,
+		tool,
 	])
 
 	const handleCanvasDragStart = useCallback(event => {
@@ -558,6 +617,10 @@ export function Editor(props) {
 	])
 
 	const handleDoubleClick = useCallback(event => {
+		if (tool !== 'marquee') {
+			return
+		}
+
 		const x = Math.floor(((event.layerX / zoom) - renderOffset.x) / TILE_SIZE.width) * TILE_SIZE.width
 		const y = Math.floor(((event.layerY / zoom) - renderOffset.y) / TILE_SIZE.height) * TILE_SIZE.height
 
@@ -590,6 +653,7 @@ export function Editor(props) {
 	}, [
 		renderOffset,
 		setSelection,
+		tool,
 		zoom,
 	])
 
@@ -664,6 +728,24 @@ export function Editor(props) {
 
 		const context = canvasRef.current.getContext('2d')
 
+		const targetPixel = {
+			x: Math.floor(cursorPosition.x),
+			y: Math.floor(cursorPosition.y),
+		}
+
+		const cursorCellX = Math.floor((targetPixel.x - renderOffset.x) / TILE_SIZE.width)
+		const cursorCellY = Math.floor((targetPixel.y - renderOffset.y) / TILE_SIZE.height)
+
+		const gridCellX = cursorCellX * TILE_SIZE.width
+		const gridCellY = cursorCellY * TILE_SIZE.height
+		const gridOffsetX = renderOffset.x
+		const gridOffsetY = renderOffset.y
+
+		const targetCell = {
+			x: gridCellX + gridOffsetX,
+			y: gridCellY + gridOffsetY,
+		}
+
 		context.imageSmoothingEnabled = false
 		context.setTransform(
 			zoom,
@@ -708,8 +790,19 @@ export function Editor(props) {
 			})
 		}
 
+		RENDERERS.layers({
+			contentManager,
+			context,
+			image,
+			layers,
+			renderOffset,
+			targetCell,
+			zoom,
+		})
+
 		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[tool] === 'function')) {
 			RENDERERS[tool]({
+				activeTile,
 				contentManager,
 				context,
 				cursorPosition,
@@ -717,7 +810,8 @@ export function Editor(props) {
 				dragStart,
 				isDragging,
 				renderOffset,
-				tile,
+				targetCell,
+				targetPixel,
 				zoom,
 			})
 		}
@@ -731,6 +825,7 @@ export function Editor(props) {
 			})
 		}
 	}, [
+		activeTile,
 		contentManager,
 		cursorIsOverCanvas,
 		cursorPosition,
@@ -739,11 +834,11 @@ export function Editor(props) {
 		image,
 		isDragging,
 		isMovable,
+		layers,
 		renderOffset,
 		selection,
 		showMapGrid,
 		showTransparencyGrid,
-		tile,
 		tool,
 		zoom,
 	])
@@ -756,6 +851,22 @@ export function Editor(props) {
 	}, [
 		isDragging,
 		isMovable,
+	])
+
+	useEffect(() => {
+		if (isPaintable && isDragging) {
+			paintTile({
+				cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+				cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+			})
+		}
+	}, [
+		cursorPosition,
+		isDragging,
+		isPaintable,
+		paintTile,
+		renderOffset,
+		tool,
 	])
 
 	useRafael({
@@ -788,6 +899,7 @@ export function Editor(props) {
 				ref={canvasRef}
 				draggable
 				height={canvasSize.height}
+				onClick={handleCanvasClick}
 				onDragStart={handleCanvasDragStart}
 				onMouseLeave={handleMouseLeave}
 				onMouseMove={handleMouseMove}

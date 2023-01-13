@@ -1,5 +1,9 @@
 // Module imports
 import {
+	AnimatePresence,
+	motion,
+} from 'framer-motion'
+import {
 	Children,
 	createElement,
 	useCallback,
@@ -8,7 +12,6 @@ import {
 	useState,
 } from 'react'
 import classnames from 'classnames'
-import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
 
 
@@ -100,12 +103,6 @@ export function ButtonStack(props) {
 		})
 	}, [isDropUp])
 
-	const compiledItemsClassName = useMemo(() => {
-		return classnames(styles['expandable-items'], {
-			[styles['is-open']]: isOpen,
-		})
-	}, [isOpen])
-
 	const compiledChildren = useMemo(() => {
 		if (children === null) {
 			return children
@@ -126,10 +123,13 @@ export function ButtonStack(props) {
 			}
 
 			const newChild = createElement(child.type, {
-				...child.props,
 				key: child.key ?? index,
 				ref: child.ref,
-				variants: BUTTON_VARIANTS,
+				variants: {
+					...BUTTON_VARIANTS,
+					...(child.props.variants || {}),
+				},
+				...child.props,
 			})
 
 			if (isCollapsed) {
@@ -148,6 +148,20 @@ export function ButtonStack(props) {
 		children,
 		isCollapsed,
 	])
+
+	const itemsVariants = useMemo(() => {
+		return {
+			animate: {
+				opacity: 1,
+			},
+			exit: {
+				opacity: 0,
+			},
+			initial: {
+				opacity: 0,
+			},
+		}
+	}, [])
 
 	const handleChevronClick = useCallback(() => {
 		setIsOpen(previousState => !previousState)
@@ -173,6 +187,7 @@ export function ButtonStack(props) {
 		handler: updateDropUpState,
 	})
 
+
 	return (
 		<motion.menu
 			ref={menuRef}
@@ -193,14 +208,17 @@ export function ButtonStack(props) {
 							onClick={handleChevronClick} />
 					</div>
 
-					<motion.div
-						ref={itemsRef}
-						className={compiledItemsClassName}
-						animate={{
-							opacity: isOpen ? 1 : 0,
-						}}>
-						{compiledChildren.rest}
-					</motion.div>
+					<AnimatePresence mode={'wait'}>
+						{isOpen && (
+							<motion.div
+								key={'expandable-items'}
+								ref={itemsRef}
+								className={styles['expandable-items']}
+								variants={itemsVariants}>
+								{compiledChildren.rest}
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
 			)}
 

@@ -13,9 +13,17 @@ $optionsDefaults: (
 		$optionsDefaults,
 		$options,
 	);
+
+	// How thick should the border be; only used if `isBorder` is `true`.
 	$borderSize: map.get($options, 'borderSize');
+
+	// How deep the corner should be clipped.
 	$clipSize: map.get($options, 'clipSize');
+
+	// Whether to cut out the inside of the polygon.
 	$isBorder: map.get($options, 'isBorder');
+
+	// The size of a pixel.
 	$uiScale: map.get($options, 'uiScale');
 
   $points: ();

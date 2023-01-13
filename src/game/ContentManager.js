@@ -106,15 +106,11 @@ export class ContentManager extends EventEmitter {
 	 * Retrieves a tile by ID.
 	 *
 	 * @param {string} tileID The ID of the tile to be retrieved.
+	 * @param {string} resourcepackID The ID of the resourcepack to which the tile belongs.
 	 * @returns {object} The requested tile.
 	 */
-	getTile(tileID) {
-		const { resourcepacks } = this.#manifests
-		return Object
-			.values(resourcepacks)
-			.map(resourcepack => Object.entries(resourcepack.tiles ?? {}))
-			.flat()
-			.find(([id]) => tileID === id)?.[1]
+	getTile(tileID, resourcepackID) {
+		return this.#manifests.resourcepacks[resourcepackID].tiles[tileID]
 	}
 
 	/**

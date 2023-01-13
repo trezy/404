@@ -28,24 +28,23 @@ export async function handleSaveTileset(event, tilesetData) {
 	const filePath = path.join(getAppDataPath(), 'resourcepacks', `${tilesetData.name}.debugresourcepack`)
 	const id = tilesetData.id || uuid()
 
-	const result = {
-		filePath,
-		id,
-		size: 0,
+	try {
+		await createArchive(filePath, {
+			'assets.json': JSON.stringify(tilesetData.assets),
+			'tiles.json': JSON.stringify(tilesetData.tiles),
+			'meta.json': JSON.stringify({
+				id,
+				name: tilesetData.name,
+				type: 'resourcepacks',
+				version: '0.0.0-development',
+			}),
+		})
+	} catch (error) {
+		console.log(error)
+		return false
 	}
-
-	await createArchive(filePath, {
-		'assets.json': JSON.stringify(tilesetData.assets),
-		'tiles.json': JSON.stringify(tilesetData.tiles),
-		'meta.json': JSON.stringify({
-			id,
-			name: tilesetData.name,
-			type: 'resourcepacks',
-			version: '0.0.0-development',
-		}),
-	})
 
 	STATE.contentWatcher.add(filePath)
 
-	return Boolean(result)
+	return true
 }

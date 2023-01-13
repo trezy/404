@@ -21,6 +21,7 @@ import { handleGetFonts } from './helpers/handleGetFonts.js'
 import { handleInitialiseContentWatcher } from './helpers/handleInitialiseContentWatcher.js'
 import { handleInitialiseDirectories } from './helpers/handleInitialiseDirectories.js'
 import { handleLoadResourcepack } from './helpers/handleLoadResourcepack.js'
+import { handleSaveMap } from './helpers/handleSaveMap.js'
 import { handleSaveTileset } from './helpers/handleSaveTileset.js'
 
 
@@ -43,4 +44,5 @@ ipcMain.handle('getFonts', handleGetFonts)
 ipcMain.handle('initialiseContentWatcher', handleInitialiseContentWatcher)
 ipcMain.handle('initialiseDirectories', handleInitialiseDirectories)
 ipcMain.handle('loadResourcepack', handleLoadResourcepack)
+ipcMain.handle('saveMap', handleSaveMap)
 ipcMain.handle('saveTileset', handleSaveTileset)

@@ -1,6 +1,5 @@
 // Module imports
 import { motion } from 'framer-motion'
-import { useMemo } from 'react'
 
 
 
@@ -9,12 +8,9 @@ import { useMemo } from 'react'
 // Local imports
 import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
 import { MapEditorCanvas } from './MapEditorCanvas.jsx'
-import { PanelContainer } from '../PanelContainer.jsx'
 import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
-import { ResourcepacksPanel } from './ResourcepacksPanel/ResourcepacksPanel.jsx'
-import { TilePalettePanel } from './TilePalettePanel/TilePalettePanel.jsx'
-// import { TileQueuePanel } from './TileQueuePanel/TileQueuePanel.jsx'
 
 
 
@@ -43,14 +39,6 @@ const VARIANTS = {
  * Renders the map editor.
  */
 export function MapEditor() {
-	const leftPanels = useMemo(() => {
-		return [
-			ResourcepacksPanel,
-			TilePalettePanel,
-			// TileQueuePanel,
-		]
-	}, [])
-
 	return (
 		<motion.main
 			animate={'animate'}
@@ -61,7 +49,7 @@ export function MapEditor() {
 			<ResourcepackEditorContextProvider>
 				<EditorContextProvider>
 					<KeyStateContextProvider>
-						<PanelContainer panels={leftPanels} />
+						<LeftPanelContainer />
 
 						<MapEditorCanvas />
 					</KeyStateContextProvider>

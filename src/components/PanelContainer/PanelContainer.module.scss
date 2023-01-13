@@ -1,0 +1,17 @@
+.panel-container {
+	background-color: var(--deep-grey);
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--app-padding) * var(--ui-scale));
+	overflow: hidden;
+	width: 20vw;
+
+	.menu-container {
+		margin-top: auto;
+
+		menu {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+}

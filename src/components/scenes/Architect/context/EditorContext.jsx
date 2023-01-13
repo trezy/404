@@ -7,6 +7,7 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import { ipcRenderer } from 'electron'
 import PropTypes from 'prop-types'
 import { v4 as uuid } from 'uuid'
 
@@ -22,17 +23,21 @@ import { useStore } from '../../../../store/react.js'
 
 
 export const EditorContext = createContext({
+	activeTile: null,
+	currentLayer: null,
 	defaultZoom: 1,
 	focusedItemID: null,
+	layers: [{}],
 	openItems: {},
 	resourcepacks: [],
 	selection: null,
-	tile: null,
 	tool: 'marquee',
 	zoom: 1,
 
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateBrushTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateEraserTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateHandTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -45,6 +50,10 @@ export const EditorContext = createContext({
 	focusItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	openItem: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	paintTile: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	saveMap: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -62,12 +71,16 @@ export const EditorContext = createContext({
 export function EditorContextProvider(props) {
 	const { children } = props
 
+	const [activeTile, setActiveTile] = useState(null)
+	const [currentLayerIndex, setCurrentLayerIndex] = useState(0)
 	const [defaultZoom, setDefaultZoom] = useState(1)
 	const [focusedItemID, setFocusedItemID] = useState(null)
+	const [isSaving, setIsSaving] = useState(false)
+	const [layers, setLayers] = useState([{}])
+	const [name, setName] = useState('')
 	const [openItems, setOpenItems] = useState({})
 	const [resourcepacks, setResourcepacks] = useState({})
 	const [selection, setSelection] = useState(null)
-	const [tile, setTile] = useState(null)
 	const [tool, setTool] = useState('marquee')
 	const [zoom, setZoom] = useState(defaultZoom)
 
@@ -82,6 +95,7 @@ export function EditorContextProvider(props) {
 	}, [])
 
 	const activateBrushTool = useCallback(() => setTool('brush'), [setTool])
+	const activateEraserTool = useCallback(() => setTool('eraser'), [setTool])
 
 	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
 
@@ -128,6 +142,21 @@ export function EditorContextProvider(props) {
 		setOpenItems,
 	])
 
+	const compileMap = useCallback(() => {
+		return {
+			dependencies: Object.entries(resourcepacks).reduce((accumulator, [resourcepackID, resourcePackData]) => {
+				accumulator[resourcepackID] = resourcePackData.version
+				return accumulator
+			}, {}),
+			name,
+			layers,
+		}
+	}, [
+		layers,
+		name,
+		resourcepacks,
+	])
+
 	const openItem = useCallback(newItem => {
 		const newItemID = newItem.itemID || uuid()
 
@@ -155,7 +184,22 @@ export function EditorContextProvider(props) {
 		setFocusedItemID,
 	])
 
-	const setActiveTile = useCallback(tileID => setTile(tileID), [setTile])
+	const saveMap = useCallback(async() => {
+		setIsSaving(true)
+		const compiledMap = compileMap()
+		await ipcRenderer.invoke('saveMap', compiledMap)
+		setIsSaving(false)
+	}, [
+		compileMap,
+		setIsSaving,
+	])
+
+	const setActiveTileConvenience = useCallback((tileID, resourcepackID) => {
+		setActiveTile({
+			tileID,
+			resourcepackID,
+		})
+	}, [setActiveTile])
 
 	const updateResourcepacks = useCallback(selectedResourcepacks => {
 		const updatedResourcepacks = Object
@@ -199,23 +243,62 @@ export function EditorContextProvider(props) {
 		})
 	}, [setZoom])
 
+	const currentLayer = useMemo(() => {
+		return layers[currentLayerIndex]
+	}, [
+		currentLayerIndex,
+		layers,
+	])
+
+	const paintTile = useCallback(options => {
+		const {
+			cellX,
+			cellY,
+		} = options
+
+		setLayers(previousState => {
+			return previousState.map((layer, index) => {
+				if (index === currentLayerIndex) {
+					return {
+						...layer,
+						[`${cellX}|${cellY}`]: activeTile,
+					}
+				} else {
+					return layer
+				}
+			})
+		})
+	}, [
+		activeTile,
+		currentLayerIndex,
+		setLayers,
+	])
+
 	const providerState = useMemo(() => {
 		return {
 			activateBrushTool,
+			activateEraserTool,
 			activateHandTool,
 			activateMarqueeTool,
+			activeTile,
 			closeItem,
+			currentLayer,
 			defaultZoom,
 			focusedItemID,
 			focusItem,
+			isSaving,
+			layers,
+			name,
 			openItem,
 			openItems,
+			paintTile,
 			resourcepacks,
+			saveMap,
 			scale,
 			selection,
-			setActiveTile,
+			setActiveTile: setActiveTileConvenience,
+			setName,
 			setSelection,
-			tile,
 			tool,
 			updateResourcepacks,
 			zoom,
@@ -223,21 +306,29 @@ export function EditorContextProvider(props) {
 			zoomOut,
 		}
 	}, [
+		activeTile,
 		activateBrushTool,
+		activateEraserTool,
 		activateHandTool,
 		activateMarqueeTool,
 		closeItem,
+		currentLayer,
 		defaultZoom,
 		focusedItemID,
 		focusItem,
+		isSaving,
+		layers,
+		name,
 		openItem,
 		openItems,
+		paintTile,
 		resourcepacks,
+		saveMap,
 		scale,
 		selection,
-		setActiveTile,
+		setActiveTileConvenience,
+		setName,
 		setSelection,
-		tile,
 		tool,
 		updateResourcepacks,
 		zoom,

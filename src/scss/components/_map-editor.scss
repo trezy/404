@@ -49,15 +49,6 @@
 		}
 	}
 
-	.panel-container {
-		background-color: var(--deep-grey);
-		display: flex;
-		flex-direction: column;
-		gap: calc(var(--app-padding) * var(--ui-scale));
-		overflow: hidden;
-		width: 20vw;
-	}
-
 	.tabs {
 		grid-area: tabs;
 	}

@@ -141,6 +141,9 @@
 
 	> menu {
 		flex-direction: column;
-		margin-top: calc(4px * var(--ui-scale));
+
+		&:not(:first-child) {
+			margin-top: calc(4px * var(--ui-scale));
+		}
 	}
 }

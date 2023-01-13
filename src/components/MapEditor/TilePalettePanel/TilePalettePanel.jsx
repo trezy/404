@@ -29,15 +29,16 @@ export function TilePalettePanel() {
 		setActiveTile,
 	} = useEditor()
 
-	const handleTileClick = useCallback(tileID => () => {
+	const handleTileClick = useCallback((tileID, resourcepackID) => () => {
 		activateBrushTool()
-		setActiveTile(tileID)
+		setActiveTile(tileID, resourcepackID)
 	}, [
 		activateBrushTool,
 		setActiveTile,
 	])
 
 	const mappedTiles = useMemo(() => {
+		console.log(resourcepacks)
 		return Object
 			.values(resourcepacks)
 			.reduce((accumulator, resourcepack) => {
@@ -49,7 +50,7 @@ export function TilePalettePanel() {
 								<li key={tileID}>
 									<Button
 										isStyled={false}
-										onClick={handleTileClick(tileID)}>
+										onClick={handleTileClick(tileID, resourcepack.id)}>
 										<img
 											alt={''}
 											src={tileData.dataURI} />
