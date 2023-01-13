@@ -10,10 +10,11 @@ import ElectronSquirrelStartup from 'electron-squirrel-startup'
 
 
 // Local imports
-import './helpers/configStore.js'
+import { configStore } from './helpers/configStore.js'
 import { createWindow } from './helpers/createWindow.js'
 import { handleActivate } from './helpers/handleActivate.js'
 import { handleAllWindowsClosed } from './helpers/handleAllWindowsClosed.js'
+import { handleDisplayModeChanged } from './helpers/handleDisplayModeChanged.js'
 import { handleExportTileset } from './helpers/handleExportTileset.js'
 import { handleGetContentMeta } from './helpers/handleGetContentMeta.js'
 import { handleGetDisplaysInformation } from './helpers/handleGetDisplaysInformation.js'
@@ -46,3 +47,5 @@ ipcMain.handle('initialiseDirectories', handleInitialiseDirectories)
 ipcMain.handle('loadResourcepack', handleLoadResourcepack)
 ipcMain.handle('saveMap', handleSaveMap)
 ipcMain.handle('saveTileset', handleSaveTileset)
+
+configStore.onDidChange('settings.graphics.displayMode', handleDisplayModeChanged)

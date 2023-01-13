@@ -65,14 +65,6 @@ export function GraphicsSettings(props) {
 		})
 	})())
 
-	const [displayResolution, setDisplayResolution] = useState((() => {
-		const currentValue = configStore.get('settings.graphics.displayResolution')
-
-		return DISPLAY_MODE_OPTIONS.find(option => {
-			return option.value === currentValue
-		})
-	})())
-
 	const [pixelScale, setPixelScale] = useState((() => {
 		const currentValue = configStore.get('settings.graphics.pixelScale')
 
@@ -95,6 +87,15 @@ export function GraphicsSettings(props) {
 			{ value: '1920x1080' },
 		]
 	}, [])
+
+	const [displayResolution, setDisplayResolution] = useState((() => {
+		const currentValue = configStore.get('settings.graphics.displayResolution')
+
+		return displayResolutionOptions.find(option => {
+			const currentResolutionString = `${currentValue.width}x${currentValue.height}`
+			return option.value === currentResolutionString
+		})
+	})())
 
 	const getDisplaysInformation = useCallback(async() => {
 		setIsLoadingDisplaysInformation(true)
