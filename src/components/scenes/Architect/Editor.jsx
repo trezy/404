@@ -549,22 +549,6 @@ export function Editor(props) {
 		isMovable,
 	])
 
-	const handleCanvasClick = useCallback(() => {
-		if (tool !== 'brush') {
-			return
-		}
-
-		paintTile({
-			cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
-			cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
-		})
-	}, [
-		cursorPosition,
-		paintTile,
-		renderOffset,
-		tool,
-	])
-
 	const handleCanvasDragStart = useCallback(event => {
 		const { nativeEvent } = event
 
@@ -602,12 +586,19 @@ export function Editor(props) {
 				y: 0,
 			}))
 			setIsDragging(false)
+		} else if (tool === 'brush') {
+			paintTile({
+				cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+				cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+			})
 		}
 	}, [
+		cursorPosition,
 		dragOffset,
 		dragStart,
 		isDragging,
 		isMovable,
+		paintTile,
 		renderOffset,
 		setCanvasOffset,
 		setDragOffset,
@@ -899,7 +890,6 @@ export function Editor(props) {
 				ref={canvasRef}
 				draggable
 				height={canvasSize.height}
-				onClick={handleCanvasClick}
 				onDragStart={handleCanvasDragStart}
 				onMouseLeave={handleMouseLeave}
 				onMouseMove={handleMouseMove}
