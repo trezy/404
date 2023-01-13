@@ -7,7 +7,7 @@ import { useCallback } from 'react'
 
 // Local imports
 import { Button } from '../../Button.jsx'
-import { ButtonStack } from '../../ButtonStack.jsx'
+import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 // import { FPSMeter } from '../../FPSMeter.jsx'
 import { Timer } from '../../Timer.jsx'
 import { useStore } from '../../../store/react.js'
