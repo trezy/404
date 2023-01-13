@@ -114,7 +114,7 @@ export function App() {
 	return (
 		<>
 			<WholePixelContainer>
-				<AnimatePresence exitBeforeEnter>
+				<AnimatePresence mode={'wait'}>
 					{(scene === 'loadingGame') && (
 						<motion.main
 							key={'loading-game'}

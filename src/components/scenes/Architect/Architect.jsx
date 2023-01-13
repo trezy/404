@@ -44,7 +44,7 @@ export function Architect() {
 				onFocus={setActiveTab}
 				tabs={TABS} />
 
-			<AnimatePresence exitBeforeEnter>
+			<AnimatePresence mode={'wait'}>
 				{(activeTab === 'asset-creator') && (
 					<ResourcepackEditor key={'asset-creator'} />
 				)}

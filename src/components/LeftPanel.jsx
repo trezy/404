@@ -54,7 +54,7 @@ export function LeftPanel() {
 				<h2>{'Menu'}</h2>
 			</header>
 
-			<AnimatePresence exitBeforeEnter>
+			<AnimatePresence mode={'wait'}>
 				{(scene === 'loadingMap') && (
 					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
 				)}

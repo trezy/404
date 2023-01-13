@@ -61,8 +61,8 @@ export function CenterPanelContents() {
 
 	return (
 		<AnimatePresence
-			exitBeforeEnter
-			initial={false}>
+			initial={false}
+			mode={'wait'}>
 			{(settingsPanel === 'accessibility') && (
 				<AccessibilitySettings
 					key={'accessibility'}
