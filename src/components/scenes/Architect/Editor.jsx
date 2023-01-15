@@ -157,6 +157,60 @@ const RENDERERS = {
 	},
 
 	/**
+	 * Renders the eraser brush to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
+	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	eraser(options) {
+		const {
+			context,
+			targetCell,
+			targetPixel,
+			activeTile,
+			zoom,
+		} = options
+
+		if (!activeTile) {
+			return
+		}
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		context.globalAlpha = 0.3
+		context.fillStyle = 'red'
+		context.fillRect(targetCell.x, targetCell.y, TILE_SIZE.width, TILE_SIZE.height)
+
+		context.globalAlpha = 0.5
+		context.beginPath()
+		context.moveTo(targetCell.x, targetCell.y)
+		context.lineTo(targetCell.x + TILE_SIZE.width, targetCell.y + TILE_SIZE.height)
+		context.stroke()
+
+		context.beginPath()
+		context.moveTo(targetCell.x + TILE_SIZE.width, targetCell.y)
+		context.lineTo(targetCell.x, targetCell.y + TILE_SIZE.height)
+		context.stroke()
+
+		context.globalAlpha = 1
+
+		context.fillStyle = 'white'
+		context.fillRect(targetPixel.x, targetPixel.y, 1, 1)
+	},
+
+	/**
 	 * Renders the transparency grid to the canvas.
 	 *
 	 * @param {object} options All options.
@@ -489,6 +543,7 @@ export function Editor(props) {
 
 	const {
 		activeTile,
+		eraseTile,
 		layers,
 		paintTile,
 		selection,
@@ -523,6 +578,13 @@ export function Editor(props) {
 		y: 0,
 	})
 	const [isDragging, setIsDragging] = useState(false)
+
+	const isErasable = useMemo(() => {
+		return !keyState[' '] && (tool === 'eraser')
+	}, [
+		keyState,
+		tool,
+	])
 
 	const isPaintable = useMemo(() => {
 		return !keyState[' '] && (tool === 'brush')
@@ -565,7 +627,9 @@ export function Editor(props) {
 		zoom,
 	])
 
-	const handleCanvasRelease = useCallback(() => {
+	const handleCanvasRelease = useCallback(options => {
+		const { isLeaving } = options
+
 		if (isDragging) {
 			if (isMovable) {
 				setCanvasOffset(previousValue => ({
@@ -586,16 +650,24 @@ export function Editor(props) {
 				y: 0,
 			}))
 			setIsDragging(false)
-		} else if (tool === 'brush') {
-			paintTile({
-				cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
-				cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
-			})
+		} else if (!isLeaving) {
+			if (tool === 'brush') {
+				paintTile({
+					cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+					cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+				})
+			} else if (tool === 'eraser') {
+				eraseTile({
+					cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+					cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+				})
+			}
 		}
 	}, [
 		cursorPosition,
 		dragOffset,
 		dragStart,
+		eraseTile,
 		isDragging,
 		isMovable,
 		paintTile,
@@ -661,7 +733,7 @@ export function Editor(props) {
 
 	const handleMouseLeave = useCallback(() => {
 		setCursorIsOverCanvas(false)
-		handleCanvasRelease()
+		handleCanvasRelease({ isLeaving: true })
 	}, [
 		handleCanvasRelease,
 		setCursorIsOverCanvas,
@@ -845,15 +917,24 @@ export function Editor(props) {
 	])
 
 	useEffect(() => {
-		if (isPaintable && isDragging) {
-			paintTile({
-				cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
-				cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
-			})
+		if (isDragging) {
+			if (isPaintable) {
+				paintTile({
+					cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+					cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+				})
+			} else if (isErasable) {
+				eraseTile({
+					cellX: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+					cellY: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+				})
+			}
 		}
 	}, [
 		cursorPosition,
+		eraseTile,
 		isDragging,
+		isErasable,
 		isPaintable,
 		paintTile,
 		renderOffset,

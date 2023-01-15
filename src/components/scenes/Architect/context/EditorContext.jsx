@@ -43,7 +43,7 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
-	updateResourcepacks: () => {},
+	eraseTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -58,6 +58,8 @@ export const EditorContext = createContext({
 	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setSelection: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	updateResourcepacks: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -155,6 +157,30 @@ export function EditorContextProvider(props) {
 		layers,
 		name,
 		resourcepacks,
+	])
+
+	const eraseTile = useCallback(options => {
+		const {
+			cellX,
+			cellY,
+		} = options
+
+		setLayers(previousState => {
+			return previousState.map((layer, index) => {
+				if (index === currentLayerIndex) {
+					const newLayer = { ...layer }
+
+					delete newLayer[`${cellX}|${cellY}`]
+
+					return newLayer
+				} else {
+					return layer
+				}
+			})
+		})
+	}, [
+		currentLayerIndex,
+		setLayers,
 	])
 
 	const openItem = useCallback(newItem => {
@@ -284,6 +310,7 @@ export function EditorContextProvider(props) {
 			closeItem,
 			currentLayer,
 			defaultZoom,
+			eraseTile,
 			focusedItemID,
 			focusItem,
 			isSaving,
@@ -314,6 +341,7 @@ export function EditorContextProvider(props) {
 		closeItem,
 		currentLayer,
 		defaultZoom,
+		eraseTile,
 		focusedItemID,
 		focusItem,
 		isSaving,
