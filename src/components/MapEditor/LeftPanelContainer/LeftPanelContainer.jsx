@@ -12,10 +12,11 @@ import {
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
+import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
-import { ResourcepacksPanel } from '../ResourcepacksPanel/ResourcepacksPanel.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
 // import { TileQueuePanel } from '../TileQueuePanel/TileQueuePanel.jsx'
+import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
 
 
@@ -25,15 +26,29 @@ import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
  * Renders the left side of the map editor.
  */
 export function LeftPanelContainer() {
+	const { updateResourcepacks } = useEditor()
+
 	const leftPanels = useMemo(() => {
 		return [
-			ResourcepacksPanel,
 			TilePalettePanel,
 			// TileQueuePanel,
 		]
 	}, [])
 
 	const [showExportMapModal, setShowExportMapModal] = useState(false)
+	const [showManageResourcePacksModal, setShowManageResourcePacksModal] = useState(false)
+
+	const handleManageResourcePacksClick = useCallback(() => setShowManageResourcePacksModal(true), [setShowManageResourcePacksModal])
+
+	const handleManageResourcePacksModalClose = useCallback(() => setShowManageResourcePacksModal(false), [setShowManageResourcePacksModal])
+
+	const handleSaveResourcepacks = useCallback(selectedResourcepacks => {
+		updateResourcepacks(selectedResourcepacks)
+		setShowManageResourcePacksModal(false)
+	}, [
+		updateResourcepacks,
+		setShowManageResourcePacksModal,
+	])
 
 	const handleExportMapClick = useCallback(() => setShowExportMapModal(true), [setShowExportMapModal])
 
@@ -42,7 +57,9 @@ export function LeftPanelContainer() {
 	const Menu = useMemo(() => {
 		return (
 			<>
-				<Button isFullWidth>
+				<Button
+					isFullWidth
+					onClick={handleManageResourcePacksClick}>
 					{'Manage Resourcepacks'}
 				</Button>
 
@@ -63,6 +80,12 @@ export function LeftPanelContainer() {
 
 			{showExportMapModal && (
 				<ExportModal onClose={handleExportMapModalClose} />
+			)}
+
+			{showManageResourcePacksModal && (
+				<ManageResourcePacksModal
+					onClose={handleManageResourcePacksModalClose}
+					onSave={handleSaveResourcepacks} />
 			)}
 		</>
 	)
