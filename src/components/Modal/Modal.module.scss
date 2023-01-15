@@ -30,7 +30,14 @@
 	header {
 		align-items: center;
 		display: flex;
+		gap: calc(4px * var(--ui-scale));
 		margin-bottom: calc(6px * var(--ui-scale));
+
+		h2 {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
 
 		button.close {
 			margin-left: auto;

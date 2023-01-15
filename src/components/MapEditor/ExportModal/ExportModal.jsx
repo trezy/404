@@ -11,10 +11,8 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import styles from './ExportModal.module.scss'
-
 import { Button } from '../../Button.jsx'
-import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
+import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
 import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
@@ -92,7 +90,7 @@ export function ExportModal(props) {
 							{'Cancel'}
 						</Button>
 
-						<ButtonStack isCollapsed>
+						<DropdownButton isCollapsed>
 							<Button
 								isAffirmative
 								isDisabled={!isValid}
@@ -107,7 +105,7 @@ export function ExportModal(props) {
 							<Button>
 								{'Export'}
 							</Button>
-						</ButtonStack>
+						</DropdownButton>
 					</div>
 				</menu>
 			</footer>
