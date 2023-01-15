@@ -142,7 +142,7 @@
 	> menu {
 		flex-direction: column;
 
-		&:not(:first-child) {
+		&:not(:first-child):not(.panel-bottom) {
 			margin-top: calc(4px * var(--ui-scale));
 		}
 	}
