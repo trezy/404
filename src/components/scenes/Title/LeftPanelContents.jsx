@@ -1,8 +1,5 @@
 // Module imports
-import {
-	useCallback,
-	useMemo,
-} from 'react'
+import { useCallback } from 'react'
 
 
 
@@ -12,6 +9,7 @@ import {
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { useStore } from '../../../store/react.js'
+import { useUIStore } from '../../../store/ui.js'
 
 
 
@@ -23,38 +21,33 @@ import { useStore } from '../../../store/react.js'
 export function LeftPanelContents() {
   const [
 		goToArchitect,
-		goToSaveSelect,
 		goToSettings,
-		goToMapSelect,
-		mostRecentSaveID,
-		saveManager,
 	] = useStore(state => [
     state.goToArchitect,
-		state.goToSaveSelect,
     state.goToSettings,
-    state.goToMapSelect,
-    state.mostRecentSaveID,
-    state.saveManager,
   ])
 
-	const hasSaves = useMemo(() => {
-		return Boolean(saveManager.getAllSaves().length)
-	}, [saveManager])
+	const [
+		isCampaignMenuVisible,
+		isCustomGameMenuVisible,
+		showCampaignMenu,
+		showCustomGameMenu,
+	] = useUIStore(state => {
+		return [
+			state.titleState.isCampaignMenuVisible,
+			state.titleState.isCustomGameMenuVisible,
+			state.titleState.showCampaignMenu,
+			state.titleState.showCustomGameMenu,
+		]
+	})
 
-	const handleContinueClick = useCallback(() => {
-		goToMapSelect(mostRecentSaveID)
-	}, [
-		goToMapSelect,
-		mostRecentSaveID,
-	])
+	const handleCampaignClick = useCallback(() => {
+		showCampaignMenu()
+	}, [showCampaignMenu])
 
-	const handleLoadGameClick = useCallback(() => {
-		goToSaveSelect()
-	}, [goToSaveSelect])
-
-	const handleNewGameClick = useCallback(() => {
-		goToMapSelect()
-	}, [goToMapSelect])
+	const handleCustomGameClick = useCallback(() => {
+		showCustomGameMenu()
+	}, [showCustomGameMenu])
 
 	const handleSettingsClick = useCallback(() => {
 		goToSettings()
@@ -62,30 +55,24 @@ export function LeftPanelContents() {
 
 	return (
 		<ButtonStack className={'panel-bottom'}>
-			{Boolean(mostRecentSaveID) && (
-				<Button
-					isAffirmative
-					onClick={handleContinueClick}>
-					{'Continue'}
-				</Button>
-			)}
-
-			<Button onClick={handleNewGameClick}>
-				{'New Game'}
+			<Button
+				isAffirmative={isCampaignMenuVisible}
+				onClick={handleCampaignClick}>
+				{'Campaign'}
 			</Button>
 
-			{hasSaves && (
-				<Button onClick={handleLoadGameClick}>
-					{'Load Game'}
-				</Button>
-			)}
-
-			<Button onClick={handleSettingsClick}>
-				{'Settings'}
+			<Button
+				isAffirmative={isCustomGameMenuVisible}
+				onClick={handleCustomGameClick}>
+				{'Custom Game'}
 			</Button>
 
 			<Button onClick={goToArchitect}>
 				{'Architect'}
+			</Button>
+
+			<Button onClick={handleSettingsClick}>
+				{'Settings'}
 			</Button>
 		</ButtonStack>
 	)

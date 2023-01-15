@@ -1,5 +1,6 @@
 // Module imports
 import create from 'zustand/vanilla'
+import { subscribeWithSelector } from 'zustand/middleware'
 
 
 
@@ -22,12 +23,14 @@ const FRAME_BUFFER = []
 
 
 
-export const store = create((set, get) => ({
+export const store = create(subscribeWithSelector((set, get) => ({
 	contentManager: new ContentManager,
 	controlsManager: null,
 	frame: 0,
 	fps: 0,
 	gameManager: new GameManager,
+	isCampaignMenuVisible: false,
+	isCustomGameMenuVisible: false,
 	isRunning: false,
 	mapID: null,
 	mapManager: null,
@@ -224,7 +227,7 @@ export const store = create((set, get) => ({
 			timeDelta: now - state.time,
 		}))
 	},
-}))
+})))
 
 store.setState(state => {
 	return {
@@ -232,3 +235,12 @@ store.setState(state => {
 		controlsManager: state.gameManager.controlsManager,
 	}
 })
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+const showIshihara = () => {
+	store.setState({
+		scene: 'ishiharaTest',
+	})
+}
+
+window.showIshihara = showIshihara

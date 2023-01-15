@@ -1,6 +1,8 @@
 .game-title-wrapper {
 	align-items: center;
 	display: flex;
+	flex-direction: column;
+	gap: calc(10px * var(--ui-scale));
 	height: 100%;
 	justify-content: center;
 }
