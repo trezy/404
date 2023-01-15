@@ -594,7 +594,7 @@ export function Editor(props) {
 	])
 
 	const isMovable = useMemo(() => {
-		return keyState[' '] || (tool === 'hand')
+		return keyState[' '] || (tool === 'move')
 	}, [
 		keyState,
 		tool,

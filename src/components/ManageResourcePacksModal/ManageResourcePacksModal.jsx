@@ -60,6 +60,23 @@ export function ManageResourcePacksModal(props) {
 		})
 	}, [setSelectedResourcepacks])
 
+	const isCancelable = useMemo(() => {
+		return Boolean(Object.keys(resourcepacks).length)
+	}, [resourcepacks])
+
+	const isSavable = useMemo(() => {
+		return Boolean(Object.values(selectedResourcepacks).filter(Boolean).length)
+	}, [selectedResourcepacks])
+
+	const handleClose = useCallback((...args) => {
+		if (isCancelable) {
+			onClose(...args)
+		}
+	}, [
+		isCancelable,
+		onClose,
+	])
+
 	const totalResourcepacksSize = useMemo(() => {
 		const selectedResourcepackIDs = Object
 			.entries(selectedResourcepacks)
@@ -85,7 +102,7 @@ export function ManageResourcePacksModal(props) {
 	return (
 		<Modal
 			className={styles['add-resource-pack-modal']}
-			onClose={onClose}
+			onClose={isCancelable ? handleClose : null}
 			title={'Manage Resource Packs'}>
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>
@@ -111,13 +128,15 @@ export function ManageResourcePacksModal(props) {
 
 						<div className={'menu-right'}>
 							<Button
+								isDisabled={!isCancelable}
 								isNegative
-								onClick={onClose}>
+								onClick={handleClose}>
 								{'Cancel'}
 							</Button>
 
 							<Button
 								isAffirmative
+								isDisabled={!isSavable}
 								isSubmit>
 								{'Save Changes'}
 							</Button>

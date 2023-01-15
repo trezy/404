@@ -1,6 +1,7 @@
 // Module imports
 import {
 	useCallback,
+	useEffect,
 	useMemo,
 	useState,
 } from 'react'
@@ -26,7 +27,10 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
  * Renders the left side of the map editor.
  */
 export function LeftPanelContainer() {
-	const { updateResourcepacks } = useEditor()
+	const {
+		resourcepacks,
+		updateResourcepacks,
+	} = useEditor()
 
 	const leftPanels = useMemo(() => {
 		return [
@@ -70,7 +74,19 @@ export function LeftPanelContainer() {
 				</Button>
 			</>
 		)
-	}, [])
+	}, [
+		handleExportMapClick,
+		handleManageResourcePacksClick,
+	])
+
+	useEffect(() => {
+		if (!Object.keys(resourcepacks).length) {
+			setShowManageResourcePacksModal(true)
+		}
+	}, [
+		resourcepacks,
+		setShowManageResourcePacksModal,
+	])
 
 	return (
 		<>

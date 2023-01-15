@@ -1,6 +1,4 @@
 // Local imports
-import styles from './EditorControls.module.scss'
-
 import { Button } from '../../Button.jsx'
 import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
@@ -15,8 +13,8 @@ export function EditorControls() {
 	const {
 		activateBrushTool,
 		activateEraserTool,
-		activateHandTool,
 		activateMarqueeTool,
+		activateMoveTool,
 		defaultZoom,
 		tool,
 		zoom,
@@ -33,11 +31,11 @@ export function EditorControls() {
 
 				<div className={'button-group'}>
 					<Button
-						isAffirmative={tool === 'hand'}
+						isAffirmative={tool === 'move'}
 						isUniformlyPadded
-						onClick={activateHandTool}>
+						onClick={activateMoveTool}>
 						<img
-							alt={'Hand Tool'}
+							alt={'Move Tool'}
 							src={'/static/assets/tools/move.png'} />
 					</Button>
 

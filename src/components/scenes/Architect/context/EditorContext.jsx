@@ -39,9 +39,9 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateEraserTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
-	activateHandTool: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateMoveTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	eraseTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
@@ -99,9 +99,9 @@ export function EditorContextProvider(props) {
 	const activateBrushTool = useCallback(() => setTool('brush'), [setTool])
 	const activateEraserTool = useCallback(() => setTool('eraser'), [setTool])
 
-	const activateHandTool = useCallback(() => setTool('hand'), [setTool])
-
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
+
+	const activateMoveTool = useCallback(() => setTool('move'), [setTool])
 
 	const handleResourcepackLoaded = useCallback(resourcepackID => {
 		setResourcepacks(previousState => {
@@ -304,7 +304,7 @@ export function EditorContextProvider(props) {
 		return {
 			activateBrushTool,
 			activateEraserTool,
-			activateHandTool,
+			activateMoveTool,
 			activateMarqueeTool,
 			activeTile,
 			closeItem,
@@ -336,7 +336,7 @@ export function EditorContextProvider(props) {
 		activeTile,
 		activateBrushTool,
 		activateEraserTool,
-		activateHandTool,
+		activateMoveTool,
 		activateMarqueeTool,
 		closeItem,
 		currentLayer,
