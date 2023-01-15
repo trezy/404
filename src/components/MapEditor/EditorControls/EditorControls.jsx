@@ -38,7 +38,7 @@ export function EditorControls() {
 						onClick={activateHandTool}>
 						<img
 							alt={'Hand Tool'}
-							src={'/static/assets/cursors/hand.png'} />
+							src={'/static/assets/tools/move.png'} />
 					</Button>
 
 					<Button
@@ -47,7 +47,7 @@ export function EditorControls() {
 						onClick={activateEraserTool}>
 						<img
 							alt={'Eraser Tool'}
-							src={'/static/assets/cursors/eraser.png'} />
+							src={'/static/assets/tools/eraser.png'} />
 					</Button>
 
 					<Button
@@ -56,7 +56,7 @@ export function EditorControls() {
 						onClick={activateMarqueeTool}>
 						<img
 							alt={'Marquee Tool'}
-							src={'/static/assets/cursors/marquee.png'} />
+							src={'/static/assets/tools/marquee.png'} />
 					</Button>
 
 					<Button
@@ -65,7 +65,7 @@ export function EditorControls() {
 						onClick={activateBrushTool}>
 						<img
 							alt={'Brush Tool'}
-							src={'/static/assets/cursors/brush.png'} />
+							src={'/static/assets/tools/brush.png'} />
 					</Button>
 				</div>
 			</div>
