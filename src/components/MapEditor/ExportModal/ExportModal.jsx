@@ -28,7 +28,7 @@ export function ExportModal(props) {
 	} = props
 
 	const {
-		layers,
+		hasTiles,
 		name,
 		saveMap,
 		setName,
@@ -41,23 +41,19 @@ export function ExportModal(props) {
 			return false
 		}
 
-		const hasTiles = layers.some(layer => {
-			return Boolean(Object.keys(layer).length)
-		})
-
 		if (!hasTiles) {
 			return false
 		}
 
 		return true
 	}, [
-		layers,
+		hasTiles,
 		name,
 	])
 
 	const handleNameChange = useCallback(event => setName(event.target.value), [setName])
 
-	const handleSave = useCallback(async event => {
+	const handleSave = useCallback(async() => {
 		setIsLoading(true)
 
 		await saveMap()

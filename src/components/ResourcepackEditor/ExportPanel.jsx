@@ -24,10 +24,10 @@ import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackE
 export function ExportPanel() {
 	const {
 		exportTileset,
+		hasTiles,
 		isExporting,
 		isSaving,
 		saveTileset,
-		tiles,
 		tilesetName,
 		updateTilesetName,
 	} = useResourcepackEditor()
@@ -39,10 +39,6 @@ export function ExportPanel() {
 	const handlePublishClick = useCallback(() => {}, [])
 
 	const handleTilesetNameChange = useCallback(event => updateTilesetName(event.target.value), [updateTilesetName])
-
-	const hasTiles = useMemo(() => {
-		return Boolean(Object.keys(tiles).length)
-	}, [tiles])
 
 	const Menu = useMemo(() => (
 		<>

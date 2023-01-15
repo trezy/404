@@ -27,6 +27,7 @@ export const EditorContext = createContext({
 	currentLayer: null,
 	defaultZoom: 1,
 	focusedItemID: null,
+	hasTiles: false,
 	layers: [{}],
 	openItems: {},
 	resourcepacks: [],
@@ -300,6 +301,12 @@ export function EditorContextProvider(props) {
 		setLayers,
 	])
 
+	const hasTiles = useMemo(() => {
+		return layers.some(layer => {
+			return Boolean(Object.keys(layer).length)
+		})
+	}, [layers])
+
 	const providerState = useMemo(() => {
 		return {
 			activateBrushTool,
@@ -313,6 +320,7 @@ export function EditorContextProvider(props) {
 			eraseTile,
 			focusedItemID,
 			focusItem,
+			hasTiles,
 			isSaving,
 			layers,
 			name,
@@ -344,6 +352,7 @@ export function EditorContextProvider(props) {
 		eraseTile,
 		focusedItemID,
 		focusItem,
+		hasTiles,
 		isSaving,
 		layers,
 		name,

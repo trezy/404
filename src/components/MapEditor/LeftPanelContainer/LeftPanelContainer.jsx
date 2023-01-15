@@ -28,6 +28,7 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
  */
 export function LeftPanelContainer() {
 	const {
+		hasTiles,
 		resourcepacks,
 		updateResourcepacks,
 	} = useEditor()
@@ -68,6 +69,7 @@ export function LeftPanelContainer() {
 				</Button>
 
 				<Button
+					isDisabled={!hasTiles}
 					isFullWidth
 					onClick={handleExportMapClick}>
 					{'Export Map'}
@@ -77,6 +79,7 @@ export function LeftPanelContainer() {
 	}, [
 		handleExportMapClick,
 		handleManageResourcePacksClick,
+		hasTiles,
 	])
 
 	useEffect(() => {
