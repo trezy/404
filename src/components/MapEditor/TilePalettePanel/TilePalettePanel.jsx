@@ -3,6 +3,7 @@ import {
 	useCallback,
 	useMemo,
 } from 'react'
+import classnames from 'classnames'
 
 
 
@@ -25,6 +26,7 @@ import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 export function TilePalettePanel() {
 	const {
 		activateBrushTool,
+		activeTile,
 		resourcepacks,
 		setActiveTile,
 	} = useEditor()
@@ -38,7 +40,6 @@ export function TilePalettePanel() {
 	])
 
 	const mappedTiles = useMemo(() => {
-		console.log(resourcepacks)
 		return Object
 			.values(resourcepacks)
 			.reduce((accumulator, resourcepack) => {
@@ -46,8 +47,14 @@ export function TilePalettePanel() {
 					Object
 						.entries(resourcepack.tiles)
 						.forEach(([tileID, tileData]) => {
+							const tileClassName = classnames(styles['tile'], {
+								[styles['is-active']]: (tileID === activeTile?.tileID) && (resourcepack.id === activeTile?.resourcepackID),
+							})
+
 							accumulator.push((
-								<li key={tileID}>
+								<li
+									key={tileID}
+									className={tileClassName}>
 									<Button
 										isStyled={false}
 										onClick={handleTileClick(tileID, resourcepack.id)}>
@@ -63,6 +70,7 @@ export function TilePalettePanel() {
 				return accumulator
 			}, [])
 	}, [
+		activeTile,
 		handleTileClick,
 		resourcepacks,
 	])
