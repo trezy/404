@@ -12,8 +12,10 @@ import { useEffect } from 'react'
 // Local imports
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
+import { DaltonLensSVG } from './DaltonLensSVG.jsx'
 import { GameTitle } from './GameTitle/GameTitle.jsx'
 import { ipcRenderer } from 'electron'
+import { IshiharaTest } from './IshiharaTest.jsx'
 import { LeftPanel } from './LeftPanel.jsx'
 import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
@@ -113,8 +115,14 @@ export function App() {
 
 	return (
 		<>
+			<DaltonLensSVG />
+
 			<WholePixelContainer>
 				<AnimatePresence mode={'wait'}>
+					{(scene === 'ishiharaTest') && (
+						<IshiharaTest />
+					)}
+
 					{(scene === 'loadingGame') && (
 						<motion.main
 							key={'loading-game'}
@@ -132,7 +140,7 @@ export function App() {
 						<Architect key={'architect'} />
 					)}
 
-					{(!['loadingGame', 'architect'].includes(scene)) && (
+					{(!['ishiharaTest', 'loadingGame', 'architect'].includes(scene)) && (
 						<motion.main
 							key={'main'}
 							animate={'animate'}

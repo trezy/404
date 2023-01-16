@@ -1,0 +1,12 @@
+.ishihara-test {
+	display: flex;
+	flex-wrap: wrap;
+	height: 100vh;
+	overflow: auto;
+	width: 100vw;
+
+	img {
+		image-rendering: optimizeQuality;
+		max-width: 100%;
+	}
+}
