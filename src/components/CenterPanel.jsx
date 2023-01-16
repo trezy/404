@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion'
 import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
+import { CenterPanelContents as CustomGameSceneCenterPanelContents } from './scenes/CustomGame/CenterPanelContents.jsx'
 import { CenterPanelContents as LoadingMapSceneCenterPanelContents } from './scenes/LoadingMap/CenterPanelContents.jsx'
 import { CenterPanelContents as MapSelectSceneCenterPanelContents } from './scenes/MapSelect/CenterPanelContents.jsx'
 import { CenterPanelContents as PlaySceneCenterPanelContents } from './scenes/Play/CenterPanelContents.jsx'
@@ -55,6 +56,16 @@ export function CenterPanel() {
 
 	return (
 		<AnimatePresence mode={'wait'}>
+			{(scene === 'customGame') && (
+				<Panel
+					key={'CustomGameSceneCenterPanelContents'}
+					columnSpan={3}
+					isCentered
+					variants={PANEL_VARIANTS}>
+					<CustomGameSceneCenterPanelContents />
+				</Panel>
+			)}
+
 			{(scene === 'loadingMap') && (
 				<Panel
 					key={'LoadingMapSceneCenterPanelContents'}

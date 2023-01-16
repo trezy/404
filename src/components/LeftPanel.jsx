@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion'
 import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
+import { LeftPanelContents as CustomGameSceneLeftPanelContents } from './scenes/CustomGame/LeftPanelContents.jsx'
 import { LeftPanelContents as LoadingMapSceneLeftPanelContents } from './scenes/LoadingMap/LeftPanelContents.jsx'
 import { LeftPanelContents as MapSelectSceneLeftPanelContents } from './scenes/MapSelect/LeftPanelContents.jsx'
 import { LeftPanelContents as PlaySceneLeftPanelContents } from './scenes/Play/LeftPanelContents.jsx'
@@ -55,6 +56,10 @@ export function LeftPanel() {
 			</header>
 
 			<AnimatePresence mode={'wait'}>
+				{(scene === 'customGame') && (
+					<CustomGameSceneLeftPanelContents key={'CustomGameSceneLeftPanelContents'} />
+				)}
+
 				{(scene === 'loadingMap') && (
 					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
 				)}

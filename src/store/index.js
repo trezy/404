@@ -76,6 +76,16 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	},
 
 	/**
+	 * Switch to the custom game scene.
+	 */
+	goToCustomGame() {
+		// @ts-ignore
+		const { goToScene } = get()
+
+		goToScene('customGame')
+	},
+
+	/**
 	 * Switch to the map loading scene.
 	 *
 	 * @param {string} mapID The ID of the map to be loaded.
