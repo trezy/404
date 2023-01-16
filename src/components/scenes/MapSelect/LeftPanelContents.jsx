@@ -13,10 +13,10 @@ import { useStore } from '../../../store/react.js'
 export function LeftPanelContents() {
 	const [
 		goToSettings,
-		goToTitle,
+		goToMainMenu,
 	] = useStore(state => [
 		state.goToSettings,
-		state.goToTitle,
+		state.goToMainMenu,
 	])
 
 	return (
@@ -29,7 +29,7 @@ export function LeftPanelContents() {
 				{'Settings'}
 			</Button>
 
-			<Button onClick={goToTitle}>
+			<Button onClick={goToMainMenu}>
 				{'Main Menu'}
 			</Button>
 		</ButtonStack>

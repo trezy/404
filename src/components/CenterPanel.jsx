@@ -6,6 +6,15 @@ import { AnimatePresence } from 'framer-motion'
 
 
 // Local imports
+import {
+	CUSTOM_GAME,
+	LOADING_MAP,
+	MAIN_MENU,
+	MAP_SELECT,
+	PLAY,
+	SAVE_SELECT,
+	SETTINGS,
+} from '../constants/SceneNames.js'
 import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
@@ -56,7 +65,7 @@ export function CenterPanel() {
 
 	return (
 		<AnimatePresence mode={'wait'}>
-			{(scene === 'customGame') && (
+			{(scene === CUSTOM_GAME) && (
 				<Panel
 					key={'CustomGameSceneCenterPanelContents'}
 					columnSpan={3}
@@ -66,7 +75,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'loadingMap') && (
+			{(scene === LOADING_MAP) && (
 				<Panel
 					key={'LoadingMapSceneCenterPanelContents'}
 					columnSpan={3}
@@ -76,7 +85,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'mapSelect') && (
+			{(scene === MAP_SELECT) && (
 				<Panel
 					key={'MapSelectSceneCenterPanelContents'}
 					columnSpan={3}
@@ -85,7 +94,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'play') && (
+			{(scene === PLAY) && (
 				<Panel
 					key={'PlaySceneCenterPanelContents'}
 					columnSpan={3}
@@ -94,7 +103,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'saveSelect') && (
+			{(scene === SAVE_SELECT) && (
 				<Panel
 					key={'SaveSelectSceneCenterPanelContents'}
 					columnSpan={3}
@@ -103,7 +112,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'settings') && (
+			{(scene === SETTINGS) && (
 				<Panel
 					key={'SettingsSceneCenterPanelContents'}
 					columnSpan={3}
@@ -112,7 +121,7 @@ export function CenterPanel() {
 				</Panel>
 			)}
 
-			{(scene === 'title') && (
+			{(scene === MAIN_MENU) && (
 				<Panel
 					key={'TitleSceneCenterPanelContents'}
 					columnSpan={3}

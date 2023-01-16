@@ -6,6 +6,15 @@ import { AnimatePresence } from 'framer-motion'
 
 
 // Local imports
+import {
+	CUSTOM_GAME,
+	LOADING_MAP,
+	MAIN_MENU,
+	MAP_SELECT,
+	PLAY,
+	SAVE_SELECT,
+	SETTINGS,
+} from '../constants/SceneNames.js'
 import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
@@ -56,31 +65,31 @@ export function LeftPanel() {
 			</header>
 
 			<AnimatePresence mode={'wait'}>
-				{(scene === 'customGame') && (
+				{(scene === CUSTOM_GAME) && (
 					<CustomGameSceneLeftPanelContents key={'CustomGameSceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'loadingMap') && (
+				{(scene === LOADING_MAP) && (
 					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'mapSelect') && (
+				{(scene === MAP_SELECT) && (
 					<MapSelectSceneLeftPanelContents key={'MapSelectSceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'play') && (
+				{(scene === PLAY) && (
 					<PlaySceneLeftPanelContents key={'PlaySceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'saveSelect') && (
+				{(scene === SAVE_SELECT) && (
 					<SaveSelectSceneLeftPanelContents key={'SaveSelectSceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'settings') && (
+				{(scene === SETTINGS) && (
 					<SettingsSceneLeftPanelContents key={'SettingsSceneLeftPanelContents'} />
 				)}
 
-				{(scene === 'title') && (
+				{(scene === MAIN_MENU) && (
 					<TitleSceneLeftPanelContents key={'TitleSceneLeftPanelContents'} />
 				)}
 			</AnimatePresence>

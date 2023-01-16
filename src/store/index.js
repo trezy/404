@@ -7,6 +7,18 @@ import { subscribeWithSelector } from 'zustand/middleware'
 
 
 // Local imports
+import {
+	ARCHITECT,
+	CUSTOM_GAME,
+	LOADING_GAME,
+	LOADING_MAP,
+	MAIN_MENU,
+	MAP_EDITOR,
+	MAP_SELECT,
+	PLAY,
+	SAVE_SELECT,
+	SETTINGS,
+} from '../constants/SceneNames.js'
 import { ContentManager } from '../game/ContentManager.js'
 import { GameManager } from '../game/GameManager.js'
 import { SaveManager } from '../game/SaveManager.js'
@@ -48,7 +60,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	time: 0,
 	saveID: null,
 	saveManager: new SaveManager,
-	scene: 'loadingGame',
+	scene: LOADING_GAME,
 	settingsPanel: DEFAULT_SETTINGS_SCENE,
 
 	/**
@@ -72,7 +84,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('architect')
+		goToScene(ARCHITECT)
 	},
 
 	/**
@@ -82,7 +94,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('customGame')
+		goToScene(CUSTOM_GAME)
 	},
 
 	/**
@@ -94,7 +106,20 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('loadingMap', { mapID })
+		goToScene(LOADING_MAP, { mapID })
+	},
+
+	/**
+	 * Switch to the main title scene.
+	 */
+	goToMainMenu() {
+		// @ts-ignore
+		const { goToScene } = get()
+
+		goToScene(MAIN_MENU, {
+			mapID: null,
+			saveID: null,
+		})
 	},
 
 	/**
@@ -104,7 +129,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('mapEditor')
+		goToScene(MAP_EDITOR)
 	},
 
 	/**
@@ -114,11 +139,8 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	 */
 	goToMapSelect(saveID) {
 		const {
-			// @ts-ignore
 			goToScene,
-			// @ts-ignore
 			saveID: currentSaveID,
-			// @ts-ignore
 			saveManager,
 		} = get()
 
@@ -128,7 +150,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 
 		localStorage.setItem('debug-game:most-recent-save-id', saveID || currentSaveID)
 
-		goToScene('mapSelect', {
+		goToScene(MAP_SELECT, {
 			mapID: null,
 			mostRecentSaveID: saveID || currentSaveID,
 			saveID: saveID || currentSaveID,
@@ -142,7 +164,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('saveSelect', {
+		goToScene(SAVE_SELECT, {
 			mapID: null,
 			saveID: null,
 		})
@@ -170,7 +192,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		// @ts-ignore
 		const { goToScene } = get()
 
-		goToScene('settings', {
+		goToScene(SETTINGS, {
 			settingsPanel: DEFAULT_SETTINGS_SCENE,
 		})
 	},
@@ -182,19 +204,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	 */
 	goToSettingsPanel(panelName) {
 		set({ settingsPanel: panelName })
-	},
-
-	/**
-	 * Switch to the main title scene.
-	 */
-	goToTitle() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene('title', {
-			mapID: null,
-			saveID: null,
-		})
 	},
 
 	/**
@@ -212,7 +221,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 
 		await gameManager.loadMap(mapID)
 
-		goToScene('play', { mapManager: gameManager.mapManager })
+		goToScene(PLAY, { mapManager: gameManager.mapManager })
 	},
 
 	/**

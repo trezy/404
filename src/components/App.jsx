@@ -10,6 +10,10 @@ import { useEffect } from 'react'
 
 
 // Local imports
+import {
+	ARCHITECT,
+	LOADING_GAME,
+} from '../constants/SceneNames.js'
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
 import { GameTitle } from './GameTitle/GameTitle.jsx'
@@ -66,18 +70,18 @@ const MINIMUM_DURATION = 2000
 export function App() {
 	const [
 		contentManager,
-		goToTitle,
+		goToMainMenu,
 		scene,
 	] = useStore(state => [
 		state.contentManager,
-		state.goToTitle,
+		state.goToMainMenu,
 		state.scene,
 	])
 
 	useConfigWatcher()
 
 	useEffect(() => {
-		if (scene === 'loadingGame') {
+		if (scene === LOADING_GAME) {
 			const startedAt = performance.now()
 
 			let timeoutID = null
@@ -93,7 +97,7 @@ export function App() {
 					return new Promise(resolve => {
 						if (loadingDuration < MINIMUM_DURATION) {
 							timeoutID = setTimeout(() => {
-								goToTitle()
+								goToMainMenu()
 								resolve()
 							}, MINIMUM_DURATION - loadingDuration)
 						}
@@ -108,14 +112,14 @@ export function App() {
 	}, [
 		contentManager,
 		scene,
-		goToTitle,
+		goToMainMenu,
 	])
 
 	return (
 		<>
 			<WholePixelContainer>
 				<AnimatePresence mode={'wait'}>
-					{(scene === 'loadingGame') && (
+					{(scene === LOADING_GAME) && (
 						<motion.main
 							key={'loading-game'}
 							animate={'animate'}
@@ -128,11 +132,11 @@ export function App() {
 						</motion.main>
 					)}
 
-					{(scene === 'architect') && (
+					{(scene === ARCHITECT) && (
 						<Architect key={'architect'} />
 					)}
 
-					{(!['loadingGame', 'architect'].includes(scene)) && (
+					{(![LOADING_GAME, ARCHITECT].includes(scene)) && (
 						<motion.main
 							key={'main'}
 							animate={'animate'}
