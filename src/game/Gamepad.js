@@ -207,7 +207,7 @@ export class Gamepad extends EventEmitter {
 			const spritesheet = new Image
 			spritesheet.height = template.height
 			spritesheet.width = template.width
-			spritesheet.src = `/gamepads/${template.type}/spritesheet.png`
+			spritesheet.src = `/static/gamepads/${template.type}/spritesheet.png`
 
 			await spritesheet.decode()
 
