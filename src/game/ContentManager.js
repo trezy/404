@@ -201,6 +201,13 @@ export class ContentManager extends EventEmitter {
 	\****************************************************************************/
 
 	/**
+	 * @returns {object} A hash of all available maps.
+	 */
+	get maps() {
+		return this.#manifests.maps
+	}
+
+	/**
 	 * @returns {object} A hash of all available resourcepacks.
 	 */
 	get resourcepacks() {

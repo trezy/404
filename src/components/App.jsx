@@ -3,7 +3,10 @@ import {
 	AnimatePresence,
 	motion,
 } from 'framer-motion'
-import { useEffect } from 'react'
+import {
+	useCallback,
+	useEffect,
+} from 'react'
 
 
 
@@ -16,6 +19,7 @@ import {
 } from '../constants/SceneNames.js'
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { CenterPanel } from './CenterPanel.jsx'
+import { executePromiseWithMinimumDuration } from '../helpers/executePromiseWithMinimumDuration.js'
 import { GameTitle } from './GameTitle/GameTitle.jsx'
 import { ipcRenderer } from 'electron'
 import { LeftPanel } from './LeftPanel.jsx'
@@ -80,39 +84,28 @@ export function App() {
 
 	useConfigWatcher()
 
+	const initialiseFilesystem = useCallback(() => {
+		return ipcRenderer
+			.invoke('initialiseDirectories')
+			.then(() => {
+				return contentManager.loadMeta()
+			})
+	}, [contentManager])
+
 	useEffect(() => {
 		if (scene === LOADING_GAME) {
-			const startedAt = performance.now()
-
-			let timeoutID = null
-
-			ipcRenderer
-				.invoke('initialiseDirectories')
+			executePromiseWithMinimumDuration(initialiseFilesystem, MINIMUM_DURATION)
 				.then(() => {
-					return contentManager.loadMeta()
-				})
-				.then(() => {
-					const loadingDuration = performance.now() - startedAt
-
-					return new Promise(resolve => {
-						if (loadingDuration < MINIMUM_DURATION) {
-							timeoutID = setTimeout(() => {
-								goToMainMenu()
-								resolve()
-							}, MINIMUM_DURATION - loadingDuration)
-						}
-					})
+					return goToMainMenu()
 				})
 				.catch(error => {
 					throw error
 				})
-
-			return () => clearTimeout(timeoutID)
 		}
 	}, [
-		contentManager,
-		scene,
 		goToMainMenu,
+		initialiseFilesystem,
+		scene,
 	])
 
 	return (

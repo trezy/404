@@ -1,0 +1,52 @@
+@import '../../../scss/functions/generateCornerCutPath';
+
+.map-card {
+	background-color: var(--palette-dark-grey);
+	clip-path: generateCornerCutPath((
+		'borderSize': 2,
+		'clipSize': 6,
+		'uiScale': var(--ui-scale),
+	));
+	column-gap: calc(10px * var(--ui-scale));
+	display: grid;
+	grid-template-areas:
+		'thumbnail name stats'
+		'thumbnail description stats';
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto 1fr;
+	padding: calc(10px * var(--ui-scale));
+
+	&:not(:last-child) {
+		margin-bottom: calc(10px * var(--ui-scale));
+	}
+
+	p {
+		line-height: calc(1em + (2px * var(--ui-scale)));
+	}
+}
+
+.description {
+	grid-area: description;
+}
+
+.name {
+	font-size: 2em;
+	grid-area: name;
+	margin-bottom: calc(6px * var(--ui-scale));
+}
+
+.stats {
+	grid-area: stats;
+}
+
+.thumbnail {
+	border-color: var(--palette-grey);
+	border-style: solid;
+	border-width: calc(2px * var(--ui-scale));
+	grid-area: thumbnail;
+
+	img {
+		aspect-ratio: 16 / 9;
+		height: calc(50px * var(--ui-scale));
+	}
+}

@@ -4,6 +4,9 @@
 	grid-template-columns: repeat(4, 1fr);
 
 	.panel {
+		max-height: 100%;
+		overflow: hidden;
+
 		@for $index from 1 through 4 {
 			&.span-#{$index} {
 				grid-column: span #{$index};
