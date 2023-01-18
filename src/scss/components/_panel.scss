@@ -15,7 +15,6 @@
 		position: absolute;
 		transition-duration: 0.2s;
 		transition-property: background-color;
-		z-index: 0;
 	}
 
 	&:before {
@@ -26,6 +25,7 @@
 			'isBorder': false,
 			'uiScale': var(--ui-scale),
 		));
+		z-index: 0;
 	}
 
 	&:after {
@@ -36,6 +36,7 @@
 			'isBorder': true,
 			'uiScale': var(--ui-scale),
 		));
+		z-index: 3;
 	}
 
 	&[data-open]:not([data-open="false"]) {

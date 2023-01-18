@@ -1,0 +1,20 @@
+.loader {
+	align-items: center;
+	background-color: hsla(var(--palette-black-hsl), 0.5);
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	position: absolute;
+	z-index: 2;
+
+	&:before {
+		content: 'Loading...';
+		display: block;
+		height: min-content;
+		left: 50%;
+		position: absolute;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: min-content;
+	}
+}

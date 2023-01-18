@@ -11,6 +11,9 @@ import { useMemo } from 'react'
 // Local imports
 import styles from './Panel.module.scss'
 
+import { PanelContextProvider } from './Context/PanelContextProvider.jsx'
+import { PanelLoader } from './PanelLoader.jsx'
+
 
 
 
@@ -42,7 +45,7 @@ export function Panel(props) {
 	} = props
 
 	const compiledClassName = useMemo(() => {
-		return classnames('panel', `span-${columnSpan}`, className, {
+		return classnames('panel', styles['panel'], `span-${columnSpan}`, className, {
 			[styles['is-centered']]: isCentered,
 			[styles['is-primary']]: isPrimary,
 		})
@@ -54,15 +57,19 @@ export function Panel(props) {
 	])
 
 	return (
-		<motion.div
-			animate={'animate'}
-			className={compiledClassName}
-			exit={'exit'}
-			id={id}
-			initial={'initial'}
-			variants={variants}>
-			{children}
-		</motion.div>
+		<PanelContextProvider>
+			<motion.div
+				animate={'animate'}
+				className={compiledClassName}
+				exit={'exit'}
+				id={id}
+				initial={'initial'}
+				variants={variants}>
+				{children}
+
+				<PanelLoader />
+			</motion.div>
+		</PanelContextProvider>
 	)
 }
 

@@ -2,7 +2,6 @@
 import {
 	useEffect,
 	useMemo,
-	useState,
 } from 'react'
 
 
@@ -14,7 +13,7 @@ import styles from './CenterPanelContents.module.scss'
 
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { MapCard } from './MapCard.jsx'
-import { Modal } from '../../Modal/Modal.jsx'
+import { usePanelContext } from '../../Panel/Context/usePanelContext.js'
 import { useStore } from '../../../store/react.js'
 
 
@@ -27,7 +26,10 @@ import { useStore } from '../../../store/react.js'
 export function CenterPanelContents() {
 	const contentManager = useStore(state => state.contentManager)
 
-	const [isLoadingMaps, setIsLoadingMaps] = useState(true)
+	const {
+		isLoading: isPanelLoading,
+		setIsLoading: setIsPanelLoading,
+	} = usePanelContext()
 
 	const mappedMaps = useMemo(() => {
 		return Object
@@ -42,18 +44,18 @@ export function CenterPanelContents() {
 	}, [contentManager])
 
 	useEffect(() => {
-		setIsLoadingMaps(true)
+		setIsPanelLoading(true)
 
 		executePromiseWithMinimumDuration(contentManager.loadMeta(), 2000)
 			.then(() => {
-				return setIsLoadingMaps(false)
+				return setIsPanelLoading(false)
 			})
 			.catch(() => {
 				console.log('Error loading maps!')
 			})
 	}, [
 		contentManager,
-		setIsLoadingMaps,
+		setIsPanelLoading,
 	])
 
 	return (
@@ -64,19 +66,13 @@ export function CenterPanelContents() {
 
 			<div className={'panel-content'}>
 				<div className={styles['map-list']}>
-					{!isLoadingMaps && (
+					{!isPanelLoading && (
 						<ul>
 							{mappedMaps}
 						</ul>
 					)}
 				</div>
 			</div>
-
-			{isLoadingMaps && (
-				<Modal
-					isLoading
-					title={'Loading maps...'} />
-			)}
 		</>
 	)
 }
