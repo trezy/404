@@ -35,6 +35,7 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: [
+		'better-docs/component',
 		'editorconfig',
 		'jsdoc',
 		'react',
@@ -230,6 +231,9 @@ module.exports = {
 		'security/detect-object-injection': ['off'],
 	},
 	settings: {
+		jsdoc: {
+			mode: 'typescript',
+		},
 		react: {
 			version: 'detect',
 		},
