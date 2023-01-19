@@ -87,10 +87,26 @@ export class ContentManager extends EventEmitter {
 	\****************************************************************************/
 
 	/**
+	 * Returns the data for a map.
+	 *
+	 * @param {string} mapID The ID of the map to be retrieved.
+	 * @returns {object} The map's data.
+	 */
+	getMap(mapID) {
+		const { maps } = this.#manifests
+
+		if (!maps[mapID]) {
+			throw new Error(`Map with ID ${mapID} doesn't exist.`)
+		}
+
+		return maps[mapID]
+	}
+
+	/**
 	 * Returns the data for a resourcepack.
 	 *
 	 * @param {string} resourcepackID The ID of the resourcepack to be retrieved.
-	 * @returns {object} The resourcepack's data/
+	 * @returns {object} The resourcepack's data.
 	 */
 	getResourcepack(resourcepackID) {
 		const { resourcepacks } = this.#manifests
@@ -128,7 +144,31 @@ export class ContentManager extends EventEmitter {
 	 *
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
-	loadMap(mapID) {}
+	async loadMap(mapID) {
+		const { maps } = this.#manifests
+
+		if (!maps[mapID]) {
+			throw new Error(`Map with ID ${mapID} doesn't exist.`)
+		}
+
+		const map = maps[mapID]
+
+		this.emit('map:loading', mapID)
+
+		map.isLoading = true
+
+		for await (const dependencyID of Object.keys(map.dependencies)) {
+			await this.loadResourcepack(dependencyID)
+		}
+
+		const mapData = await ipcRenderer.invoke('loadMap', mapID)
+
+		Object.assign(map, mapData)
+
+		this.emit('map:loaded', mapID)
+
+		return map
+	}
 
 	/**
 	 * Loads metadata for all currently available content.
@@ -149,9 +189,15 @@ export class ContentManager extends EventEmitter {
 			throw new Error(`Resourcepack with ID ${resourcepackID} doesn't exist.`)
 		}
 
+		const resourcepack = resourcepacks[resourcepackID]
+
+		if (resourcepack.isLoaded) {
+			return
+		}
+
 		this.emit('resourcepack:loading', resourcepackID)
 
-		resourcepacks[resourcepackID].isLoading = true
+		resourcepack.isLoading = true
 
 		const tiles = await ipcRenderer.invoke('loadResourcepack', resourcepackID)
 
@@ -161,13 +207,13 @@ export class ContentManager extends EventEmitter {
 			await tile.image.decode()
 		}
 
-		resourcepacks[resourcepackID].isLoaded = false
-		resourcepacks[resourcepackID].isLoading = false
-		resourcepacks[resourcepackID].tiles = tiles
+		resourcepack.isLoaded = false
+		resourcepack.isLoading = false
+		resourcepack.tiles = tiles
 
 		this.emit('resourcepack:loaded', resourcepackID)
 
-		return resourcepacks[resourcepackID]
+		return resourcepack
 	}
 
 	/**

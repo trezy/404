@@ -6,19 +6,14 @@ import PF from 'pathfinding'
 
 
 // Local imports
-import {
-	LAYERS,
-	Renderer,
-} from './Renderer.js'
-import { Tile } from './Tile.js'
+import { ContentManager } from './ContentManager.js'
+import { LAYERS } from './Renderer.js'
+import { TILE_SIZE } from './Tile.js'
 
 
 
 
 
-/**
- * Represents a game map.
- */
 export class MapManager {
 	/****************************************************************************\
 	 * Private instance properties
@@ -26,13 +21,9 @@ export class MapManager {
 
 	#gameManager = null
 
-	#mapData = null
-
-	#mapID = null
+	#map = null
 
 	#pathfindingGrid = null
-
-	#tiles = []
 
 
 
@@ -47,17 +38,41 @@ export class MapManager {
 	 *
 	 * @param {object} options All options.
 	 * @param {import('./GameManager.js').GameManager} options.gameManager The `GameManager` this map belongs to.
-	 * @param {string} options.mapID The ID of this map.
+	 * @param {string} options.map The map.
 	 */
-	// constructor(mapData, tileset) {
 	constructor(options) {
 		const {
 			gameManager,
-			mapID,
+			map,
 		} = options
 
 		this.#gameManager = gameManager
-		this.#mapID = mapID
+		this.#map = map
+		map.layerGrids = []
+
+		this.#pathfindingGrid = new PF.Grid(this.width, this.height)
+
+		map.tiles.forEach(layerData => {
+			const layerGrid = this.generateGrid()
+
+			Object
+				.entries(layerData)
+				.forEach(([coordinateString, tileData]) => {
+					const [x, y] = coordinateString.split('|').map(Number)
+					layerGrid[y][x] = this
+						.contentManager
+						.getTile(tileData.tileID, tileData.resourcepackID)
+				})
+
+			map.layerGrids.push(layerGrid)
+		})
+
+		Object
+			.entries(map.pfgrid)
+			.forEach(([coordinateString, cellData]) => {
+				const [x, y] = coordinateString.split('|').map(Number)
+				this.#pathfindingGrid.setWalkableAt(x, y, cellData.isTraversable)
+			})
 	}
 
 
@@ -65,61 +80,44 @@ export class MapManager {
 
 
 	/****************************************************************************\
-	 * Public instance methods
+	 * Pbulic instance methods
 	\****************************************************************************/
 
-	/**
-	 * Load the data for this map.
-	 */
-	async load() {
-		const { default: mapData } = await import(`./maps/${this.#mapID}.js`)
-
-		this.#mapData = mapData
-
-		this.#pathfindingGrid = new PF.Grid(mapData.width, mapData.height)
-
-		const tileCount = mapData.width * mapData.height
-		let tileIndex = 0
-
-		while (tileIndex < tileCount) {
-			const tileConfig = {
-				layers: [],
-				mapManager: this,
-				position: {
-					x: tileIndex % mapData.width,
-					y: Math.floor((tileIndex - (tileIndex % mapData.width)) / mapData.height),
-				},
-			}
-
-			this.#mapData.tiles.forEach(layer => {
-				let tileData = layer[tileIndex]
-
-				if (tileData === null) {
-					tileData = { type: 'empty' }
-				}
-
-				tileConfig.layers.push(tileData)
+	generateGrid() {
+		return Array(this.height)
+			.fill(null)
+			.map(() => {
+				return Array(this.width).fill(null)
 			})
-
-			const tile = new Tile(tileConfig)
-
-			this.#tiles.push(tile)
-			this.#pathfindingGrid.setWalkableAt(tile.position.x, tile.position.y, tile.isTraversable)
-
-			tileIndex += 1
-		}
 	}
 
-	/**
-	 * Renders the map to a canvas.
-	 *
-	 * @param {Renderer} renderer The renderer to be used for drawing the map.
-	 */
 	render(renderer) {
 		renderer.layer = LAYERS.foreground
 
-		this.#tiles.forEach(tile => {
-			tile.render(renderer, this.#gameManager.tileset)
+		this.layerGrids.forEach(layerGrid => {
+			layerGrid.forEach((row, y) => {
+				row.forEach((tileData, x) => {
+					if (tileData === null) {
+						return
+					}
+
+					renderer.drawImage({
+						image: tileData.image,
+						source: {
+							height: tileData.image.height,
+							width: tileData.image.width,
+							x: 0,
+							y: 0,
+						},
+						destination: {
+							height: TILE_SIZE.height,
+							width: TILE_SIZE.width,
+							x: x * TILE_SIZE.width,
+							y: y * TILE_SIZE.height,
+						},
+					})
+				})
+			})
 		})
 	}
 
@@ -132,17 +130,38 @@ export class MapManager {
 	\****************************************************************************/
 
 	/**
+	 * @returns {ContentManager} The game's `ContentManager`.
+	 */
+	get contentManager() {
+		return this.#gameManager.contentManager
+	}
+
+	/**
 	 * @returns {number} The map's height.
 	 */
 	get height() {
-		return this.#mapData.height
+		return this.#map.dimensions.height
+	}
+
+	/**
+	 * @returns {Array} An array of layer grids.
+	 */
+	get layerGrids() {
+		return this.#map.layerGrids
+	}
+
+	/**
+	 * @returns {Array} An array of map layers.
+	 */
+	get layers() {
+		return this.#map.tiles
 	}
 
 	/**
 	 * @returns {string} The map's name.
 	 */
 	get name() {
-		return this.#mapData.name
+		return this.#map.name
 	}
 
 	/**
@@ -156,20 +175,13 @@ export class MapManager {
 	 * @returns {object} The starting coordinates.
 	 */
 	get startingPosition() {
-		return this.#mapData.startingPosition
-	}
-
-	/**
-	 * @returns {Array} An array of tile configs.
-	 */
-	get tiles() {
-		return this.#tiles
+		return this.#map.startingPosition
 	}
 
 	/**
 	 * @returns {number} The map's width.
 	 */
 	get width() {
-		return this.#mapData.width
+		return this.#map.dimensions.width
 	}
 }

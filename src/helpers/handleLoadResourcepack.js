@@ -13,7 +13,7 @@ import { STATE } from './state.js'
  *
  * @param {object} event The event object.
  * @param {string} resourcepackID The ID of the resourcepack to load.
- * @returns {boolean} TODO
+ * @returns {object} The resourcepack's tile data.
  */
 export async function handleLoadResourcepack(event, resourcepackID) {
 	const resourcepackMeta = Object

@@ -127,15 +127,15 @@ export class Entity {
 			diagonalMovement: PF.DiagonalMovement.Never,
 		})
 
-		this.#path = finder.findPath(
-			this.#position.x,
-			this.#position.y,
-			12,
-			6,
-			grid,
-		)
+		// this.#path = finder.findPath(
+		// 	this.#position.x,
+		// 	this.#position.y,
+		// 	12,
+		// 	6,
+		// 	grid,
+		// )
 
-		this.#destination = this.#path.shift()
+		// this.#destination = this.#path.shift()
 	}
 
 	/**

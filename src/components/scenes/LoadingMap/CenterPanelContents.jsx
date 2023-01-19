@@ -1,5 +1,8 @@
 // Module imports
-import { useEffect } from 'react'
+import {
+	useEffect,
+	useMemo,
+} from 'react'
 
 
 
@@ -17,21 +20,27 @@ import { useStore } from '../../../store/react.js'
  * Renders the contents of the center panel for the Loading Map scene.
  */
 export function CenterPanelContents() {
-	const [
+	const {
+		contentManager,
 		loadMap,
 		mapID,
 		mapManager,
-	] = useStore(state => [
-		state.loadMap,
-		state.mapID,
-		state.mapManager,
-	])
+	} = useStore(state => {
+		return {
+			contentManager: state.contentManager,
+			loadMap: state.loadMap,
+			mapID: state.mapID,
+			mapManager: state.mapManager,
+		}
+	})
+
+	const map = useMemo(() => {
+		return contentManager.getMap(mapID)
+	}, [contentManager])
 
 	useEffect(() => {
 		loadMap()
-	}, [
-		loadMap,
-	])
+	}, [loadMap])
 
 	return (
 		<div>
@@ -41,7 +50,7 @@ export function CenterPanelContents() {
 
 			<dl>
 				<dt>{'Map Name:'}</dt>
-				<dd>{mapID}</dd>
+				<dd>{map.name}</dd>
 
 				{Boolean(mapManager) && (
 					<>

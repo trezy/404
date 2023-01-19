@@ -9,10 +9,11 @@ import {
 
 
 // Local imports
+import { ContentManager } from './ContentManager.js'
 import { ControlsManager } from './ControlsManager.js'
 import { EntitiesManager } from './EntitiesManager.js'
 import { Entity } from './Entity.js'
-import { MapManager } from '../game/MapManager.js'
+import { MapManager } from './MapManager.js'
 import { Renderer } from './Renderer.js'
 import { store } from '../store/index.js'
 
@@ -27,6 +28,8 @@ export class GameManager {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
+
+	#contentManager = null
 
 	#controlsManager = null
 
@@ -67,11 +70,6 @@ export class GameManager {
 			this.#mapManager.render(this.#renderer)
 			this.#entitiesManager.render(this.#renderer)
 
-
-			// if (currentTile < mapManager.tiles.length) {
-			// 	render.drawPlacement()
-			// }
-
 			this.#renderer.update()
 		}
 	}
@@ -80,6 +78,7 @@ export class GameManager {
 	 * Start the game manager.
 	 */
 	start = () => {
+		unschedule('game loop')
 		schedule(this.gameLoop, { id: 'game loop' })
 
 		this.#renderer.initialise()
@@ -129,6 +128,7 @@ export class GameManager {
 	 * Creates a new `GameManager`
 	 */
 	constructor() {
+		this.#contentManager = new ContentManager
 		this.#controlsManager = new ControlsManager
 		this.#entitiesManager = new EntitiesManager({ gameManager: this })
 		this.#renderer = new Renderer
@@ -148,14 +148,14 @@ export class GameManager {
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
 	async loadMap(mapID) {
-		await this.preloadTileset()
+		const map = await this.contentManager.loadMap(mapID)
 
 		this.#mapManager = new MapManager({
 			gameManager: this,
-			mapID,
+			map,
 		})
 
-		await this.#mapManager.load()
+		await this.preloadTileset()
 
 		store.setState({ mapManager: this.#mapManager })
 	}
@@ -180,6 +180,20 @@ export class GameManager {
 	/****************************************************************************\
 	 * Public instance getters/setters
 	\****************************************************************************/
+
+	/**
+	 * @returns {ContentManager} The `GameManager`'s `ContentManager`.
+	 */
+	get contentManager() {
+		return this.#contentManager
+	}
+
+	/**
+	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.
+	 */
+	get controlsManager() {
+		return this.#controlsManager
+	}
 
 	/**
 	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.

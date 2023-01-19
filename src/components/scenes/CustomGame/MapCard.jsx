@@ -1,7 +1,7 @@
 // Module imports
 import numeral from 'numeral'
 import PropTypes from 'prop-types'
-import { Button } from '../../Button.jsx'
+import { useCallback } from 'react'
 
 
 
@@ -10,6 +10,7 @@ import { Button } from '../../Button.jsx'
 // Local imports
 import styles from './MapCard.module.scss'
 
+import { Button } from '../../Button.jsx'
 import { ButtonGroup } from '../../ButtonGroup/ButtonGroup.jsx'
 
 
@@ -22,7 +23,17 @@ import { ButtonGroup } from '../../ButtonGroup/ButtonGroup.jsx'
  * @component
  */
 export function MapCard(props) {
-	const { map } = props
+	const {
+		map,
+		onPlay,
+	} = props
+
+	const handleMapPlayClick = useCallback(() => {
+		onPlay(map.id)
+	}, [
+		map,
+		onPlay,
+	])
 
 	return (
 		<li
@@ -64,7 +75,9 @@ export function MapCard(props) {
 				className={styles['controls']}
 				type={'toolbar'}>
 				<ButtonGroup>
-					<Button isAffirmative>
+					<Button
+						isAffirmative
+						onClick={handleMapPlayClick}>
 						{'Play'}
 					</Button>
 				</ButtonGroup>

@@ -19,7 +19,6 @@ import {
 	SAVE_SELECT,
 	SETTINGS,
 } from '../constants/SceneNames.js'
-import { ContentManager } from '../game/ContentManager.js'
 import { GameManager } from '../game/GameManager.js'
 import { SaveManager } from '../game/SaveManager.js'
 
@@ -36,7 +35,7 @@ const FRAME_BUFFER = []
 
 
 export const store = create(subscribeWithSelector((set, get) => ({
-	contentManager: new ContentManager,
+	contentManager: null,
 	controlsManager: null,
 	frame: 0,
 	fps: 0,
@@ -211,12 +210,9 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	 */
 	async loadMap() {
 		const {
-			// @ts-ignore
 			gameManager,
-			// @ts-ignore
-			mapID,
-			// @ts-ignore
 			goToScene,
+			mapID,
 		} = get()
 
 		await gameManager.loadMap(mapID)
@@ -250,7 +246,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 
 store.setState(state => {
 	return {
-		// @ts-ignore
+		contentManager: state.gameManager.contentManager,
 		controlsManager: state.gameManager.controlsManager,
 	}
 })

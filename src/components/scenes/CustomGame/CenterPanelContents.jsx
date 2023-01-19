@@ -1,5 +1,6 @@
 // Module imports
 import {
+	useCallback,
 	useEffect,
 	useMemo,
 } from 'react'
@@ -24,12 +25,24 @@ import { useStore } from '../../../store/react.js'
  * Renders the contents of the center panel for the Custom Game scene.
  */
 export function CenterPanelContents() {
-	const contentManager = useStore(state => state.contentManager)
+	const {
+		contentManager,
+		goToLoadingMap,
+	} = useStore(state => {
+		return {
+			contentManager: state.contentManager,
+			goToLoadingMap: state.goToLoadingMap,
+		}
+	})
 
 	const {
 		isLoading: isPanelLoading,
 		setIsLoading: setIsPanelLoading,
 	} = usePanelContext()
+
+	const handleMapPlay = useCallback(mapID => {
+		goToLoadingMap(mapID)
+	}, [goToLoadingMap])
 
 	const mappedMaps = useMemo(() => {
 		return Object
@@ -38,10 +51,14 @@ export function CenterPanelContents() {
 				return (
 					<MapCard
 						key={mapData.id}
-						map={mapData} />
+						map={mapData}
+						onPlay={handleMapPlay} />
 				)
 			})
-	}, [contentManager])
+	}, [
+		contentManager,
+		handleMapPlay,
+	])
 
 	useEffect(() => {
 		setIsPanelLoading(true)
