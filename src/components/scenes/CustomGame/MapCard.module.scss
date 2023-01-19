@@ -1,5 +1,15 @@
 @import '../../../scss/functions/generateCornerCutPath';
 
+.map-card-wrapper {
+	align-items: flex-end;
+	display: flex;
+	flex-direction: column;
+
+	&:not(:last-child) {
+		margin-bottom: calc(10px * var(--ui-scale));
+	}
+}
+
 .map-card {
 	background-color: var(--palette-black);
 	clip-path: generateCornerCutPath((
@@ -12,10 +22,6 @@
 	grid-template-columns: auto 1fr;
 	grid-template-rows: auto 1fr;
 	position: relative;
-
-	&:not(:last-child) {
-		margin-bottom: calc(10px * var(--ui-scale));
-	}
 
 	&:before {
 		background-color: var(--palette-dark-grey);
@@ -34,6 +40,10 @@
 	p {
 		line-height: calc(1em + (2px * var(--ui-scale)));
 	}
+}
+
+.controls {
+	margin-right: calc(6px * var(--ui-scale));
 }
 
 .details {

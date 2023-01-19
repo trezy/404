@@ -1,3 +1,5 @@
+@import '../../scss/functions/generateCornerCutPath';
+
 .button-group {
 	align-items: stretch;
 	clip-path: generateCornerCutPath((
@@ -9,12 +11,5 @@
 
 	> * {
 		clip-path: none;
-
-		&:not(.button) {
-			align-items: center;
-			background-color: var(--palette-dark-grey);
-			display: flex;
-			padding: 0 calc(3px * var(--ui-scale));
-		}
 	}
 }
