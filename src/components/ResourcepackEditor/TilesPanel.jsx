@@ -132,7 +132,7 @@ export function TilesPanel() {
 
 					{(hasAssets && !hasTiles && !selection) && (
 						<li className={'empty-message'}>
-							{'Selection part of the image to create a tile.'}
+							{'Select part of the image to create a tile.'}
 						</li>
 					)}
 
