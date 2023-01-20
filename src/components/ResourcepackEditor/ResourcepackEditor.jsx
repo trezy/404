@@ -1,35 +1,8 @@
-// Module imports
-import { motion } from 'framer-motion'
-
-
-
-
-
 // Local imports
-import { EditorContextProvider } from '../Editor/Context/EditorContextProvider.jsx'
-import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { EditorWrapper } from '../EditorWrapper/EditorWrapper.jsx'
 import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
 import { ResourcepackEditorCanvas } from './ResourcepackEditorCanvas.jsx'
 import { ResourcepackEditorContextProvider } from './Context/ResourcepackEditorContextProvider.jsx'
-
-
-
-
-
-// Constants
-const VARIANTS = {
-	animate: {
-		opacity: 1,
-	},
-
-	exit: {
-		opacity: 0,
-	},
-
-	initial: {
-		opacity: 0,
-	},
-}
 
 
 
@@ -40,21 +13,12 @@ const VARIANTS = {
  */
 export function ResourcepackEditor() {
 	return (
-		<motion.main
-			animate={'animate'}
-			className={'map-editor'}
-			exit={'exit'}
-			initial={'initial'}
-			variants={VARIANTS}>
-			<EditorContextProvider>
-				<KeyStateContextProvider>
-					<ResourcepackEditorContextProvider>
-						<LeftPanelContainer />
+		<EditorWrapper>
+			<ResourcepackEditorContextProvider>
+				<LeftPanelContainer />
 
-						<ResourcepackEditorCanvas />
-					</ResourcepackEditorContextProvider>
-				</KeyStateContextProvider>
-			</EditorContextProvider>
-		</motion.main>
+				<ResourcepackEditorCanvas />
+			</ResourcepackEditorContextProvider>
+		</EditorWrapper>
 	)
 }

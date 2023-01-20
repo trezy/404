@@ -1,0 +1,7 @@
+.editor-wrapper {
+	display: grid;
+	flex-shrink: 1;
+	gap: calc(var(--app-padding) * var(--ui-scale));
+	grid-template-columns: auto 1fr;
+	overflow: hidden;
+}
