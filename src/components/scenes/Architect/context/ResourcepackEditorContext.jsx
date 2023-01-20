@@ -149,12 +149,17 @@ export function ResourcepackEditorContextProvider(props) {
 		}))
 	}, [setTiles])
 
+	const hasTiles = useMemo(() => {
+		return Boolean(Object.keys(tiles).length)
+	}, [tiles])
+
 	const providerState = useMemo(() => {
 		return {
 			addAssets,
 			assets,
 			compileTileset,
 			exportTileset,
+			hasTiles,
 			isExporting,
 			isSaving,
 			removeAsset,
@@ -170,6 +175,7 @@ export function ResourcepackEditorContextProvider(props) {
 		assets,
 		compileTileset,
 		exportTileset,
+		hasTiles,
 		isExporting,
 		isSaving,
 		removeAsset,
