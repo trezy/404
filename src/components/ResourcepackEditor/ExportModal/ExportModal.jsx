@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
-import { useResourcepackEditorContext } from '../../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from '../ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 

@@ -12,7 +12,7 @@ import {
 import { Button } from '../Button.jsx'
 import { Modal } from '../Modal/Modal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
-import { useResourcepackEditorContext } from '../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 

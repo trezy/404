@@ -18,7 +18,7 @@ import { Button } from '../Button.jsx'
 import { Input } from '../Input.jsx'
 import { Modal } from '../Modal/Modal.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from '../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 

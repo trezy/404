@@ -6,8 +6,8 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import { Tabs } from '../../Tabs.jsx'
-import { useEditor } from './context/EditorContext.jsx'
+import { Tabs } from '../Tabs.jsx'
+import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
 
 
 

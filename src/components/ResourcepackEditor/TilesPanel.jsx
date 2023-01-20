@@ -14,7 +14,7 @@ import { Button } from '../Button.jsx'
 import { EditTileModal } from './EditTileModal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from '../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 

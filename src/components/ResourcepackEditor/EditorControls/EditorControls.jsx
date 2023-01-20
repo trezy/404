@@ -1,6 +1,6 @@
 // Local imports
 import { Button } from '../../Button.jsx'
-import { useEditor } from './context/EditorContext.jsx'
+import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
 
 
 
