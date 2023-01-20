@@ -6,11 +6,11 @@ import { motion } from 'framer-motion'
 
 
 // Local imports
-import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
+import { EditorContextProvider } from '../Editor/Context/EditorContextProvider.jsx'
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
 import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
 import { ResourcepackEditorCanvas } from './ResourcepackEditorCanvas.jsx'
-import { ResourcepackEditorContextProvider } from './ResourcepackEditorContext/ResourcepackEditorContextProvider.jsx'
+import { ResourcepackEditorContextProvider } from './Context/ResourcepackEditorContextProvider.jsx'
 
 
 
@@ -46,15 +46,15 @@ export function ResourcepackEditor() {
 			exit={'exit'}
 			initial={'initial'}
 			variants={VARIANTS}>
-			<ResourcepackEditorContextProvider>
-				<EditorContextProvider>
-					<KeyStateContextProvider>
+			<EditorContextProvider>
+				<KeyStateContextProvider>
+					<ResourcepackEditorContextProvider>
 						<LeftPanelContainer />
 
 						<ResourcepackEditorCanvas />
-					</KeyStateContextProvider>
-				</EditorContextProvider>
-			</ResourcepackEditorContextProvider>
+					</ResourcepackEditorContextProvider>
+				</KeyStateContextProvider>
+			</EditorContextProvider>
 		</motion.main>
 	)
 }

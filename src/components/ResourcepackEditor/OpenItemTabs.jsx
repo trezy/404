@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 // Local imports
 import { Tabs } from '../Tabs.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
+import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 
 
 
@@ -22,7 +22,7 @@ export function OpenItemTabs() {
 		openItems,
 		focusItem,
 		focusedItemID,
-	} = useEditor()
+	} = useEditorContext()
 
 	const tabs = useMemo(() => {
 		return Object.entries(openItems).map(([id, { item }]) => {

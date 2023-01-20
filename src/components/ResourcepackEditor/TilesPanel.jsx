@@ -13,8 +13,8 @@ import {
 import { Button } from '../Button.jsx'
 import { EditTileModal } from './EditTileModal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useEditorContext } from '../Editor/Context/useEditorContext.js'
+import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
 
 
@@ -31,7 +31,7 @@ export function TilesPanel() {
 		tiles,
 	} = useResourcepackEditorContext()
 
-	const { selection } = useEditor()
+	const { selection } = useEditorContext()
 
 	const [tileIDToEdit, setTileIDToEdit] = useState(null)
 	const [showEditTileModal, setShowEditTileModal] = useState(false)

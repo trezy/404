@@ -1,5 +1,5 @@
 // Local imports
-import { Editor } from '../scenes/Architect/Editor.jsx'
+import { Editor } from '../Editor/Editor.jsx'
 import { EditorControls } from './EditorControls/EditorControls.jsx'
 
 

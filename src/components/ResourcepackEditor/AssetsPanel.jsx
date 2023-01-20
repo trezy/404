@@ -13,8 +13,8 @@ import {
 import { Button } from '../Button.jsx'
 import { NewAssetModal } from './NewAssetModal/NewAssetModal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useEditorContext } from '../Editor/Context/useEditorContext.js'
+import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
 
 
@@ -32,7 +32,7 @@ export function AssetsPanel() {
 	const {
 		closeItem,
 		openItem,
-	} = useEditor()
+	} = useEditorContext()
 	const [showNewAssetModal, setShowNewAssetModal] = useState(false)
 
 	const handleAddToProject = useCallback(files => {

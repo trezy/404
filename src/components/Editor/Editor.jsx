@@ -14,13 +14,13 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { TILE_SIZE } from '../../../game/Tile.js'
-import { useDOMEvent } from '../../../hooks/useDOMEvent.js'
-import { useEditor } from './context/EditorContext.jsx'
-import { useKeyState } from './context/KeyStateContext.jsx'
-import { useRafael } from '../../../hooks/useRafael.js'
-import { useStore } from '../../../store/react.js'
-import { useWindowEvent } from '../../../hooks/useWindowEvent.js'
+import { TILE_SIZE } from '../../game/Tile.js'
+import { useDOMEvent } from '../../hooks/useDOMEvent.js'
+import { useEditorContext } from './Context/useEditorContext.js'
+import { useKeyState } from '../scenes/Architect/context/KeyStateContext.jsx'
+import { useRafael } from '../../hooks/useRafael.js'
+import { useStore } from '../../store/react.js'
+import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
 
 
@@ -550,7 +550,7 @@ export function Editor(props) {
 		setSelection,
 		tool,
 		zoom,
-	} = useEditor()
+	} = useEditorContext()
 
 	const contentManager = useStore(state => state.contentManager)
 

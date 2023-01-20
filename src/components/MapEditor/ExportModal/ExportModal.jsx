@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
-import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
+import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 
@@ -27,15 +27,15 @@ export function ExportModal(props) {
 
 	const {
 		hasTiles,
-		name,
+		mapName,
 		saveMap,
-		setName,
-	} = useEditor()
+		setMapName,
+	} = useMapEditorContext()
 
 	const [isLoading, setIsLoading] = useState(false)
 
 	const isValid = useMemo(() => {
-		if (!name) {
+		if (!mapName) {
 			return false
 		}
 
@@ -46,10 +46,10 @@ export function ExportModal(props) {
 		return true
 	}, [
 		hasTiles,
-		name,
+		mapName,
 	])
 
-	const handleNameChange = useCallback(event => setName(event.target.value), [setName])
+	const handleNameChange = useCallback(event => setMapName(event.target.value), [setMapName])
 
 	const handleSave = useCallback(async() => {
 		setIsLoading(true)
@@ -76,7 +76,7 @@ export function ExportModal(props) {
 							name={'name'}
 							onChange={handleNameChange}
 							type={'text'}
-							value={name} />
+							value={mapName} />
 					</div>
 				</div>
 			</form>

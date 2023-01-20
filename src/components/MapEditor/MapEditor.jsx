@@ -6,9 +6,10 @@ import { motion } from 'framer-motion'
 
 
 // Local imports
-import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
+import { EditorContextProvider } from '../Editor/Context/EditorContextProvider.jsx'
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
 import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
+import { MapEditorContextProvider } from './Context/MapEditorContextProvider.jsx'
 import { MapEditorCanvas } from './MapEditorCanvas.jsx'
 
 
@@ -47,9 +48,11 @@ export function MapEditor() {
 			variants={VARIANTS}>
 			<EditorContextProvider>
 				<KeyStateContextProvider>
-					<LeftPanelContainer />
+					<MapEditorContextProvider>
+						<LeftPanelContainer />
 
-					<MapEditorCanvas />
+						<MapEditorCanvas />
+					</MapEditorContextProvider>
 				</KeyStateContextProvider>
 			</EditorContextProvider>
 		</motion.main>

@@ -17,8 +17,8 @@ import PropTypes from 'prop-types'
 import { Button } from '../Button.jsx'
 import { Input } from '../Input.jsx'
 import { Modal } from '../Modal/Modal.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useEditorContext } from '../Editor/Context/useEditorContext.js'
+import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
 
 
@@ -42,7 +42,7 @@ export function EditTileModal(props) {
 		openItems,
 		scale,
 		selection,
-	} = useEditor()
+	} = useEditorContext()
 
 	const [tileName, setTileName] = useState(tileID ? tiles[tileID].name : '')
 

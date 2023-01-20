@@ -17,7 +17,7 @@ import styles from './ManageResourcePacksModal.module.scss'
 import { Button } from '../Button.jsx'
 import { Modal } from '../Modal/Modal.jsx'
 import { Resourcepack } from './ResourcePack.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
+import { useMapEditorContext } from '../MapEditor/Context/useMapEditorContext.js'
 import { useStore } from '../../store/react.js'
 
 
@@ -35,7 +35,7 @@ export function ManageResourcePacksModal(props) {
 		onSave,
 	} = props
 
-	const { resourcepacks } = useEditor()
+	const { resourcepacks } = useMapEditorContext()
 
 	const { contentManager } = useStore(state => {
 		return {

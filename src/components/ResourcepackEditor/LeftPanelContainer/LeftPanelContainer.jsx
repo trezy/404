@@ -15,7 +15,7 @@ import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilesPanel } from '../TilesPanel.jsx'
-import { useResourcepackEditorContext } from '../ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
 
 
 

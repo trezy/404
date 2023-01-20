@@ -14,7 +14,8 @@ import styles from './TilePalettePanel.module.scss'
 
 import { Button } from '../../Button.jsx'
 import { Panel } from '../../scenes/Architect/Panel.jsx'
-import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
+import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
+import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 
@@ -27,9 +28,9 @@ export function TilePalettePanel() {
 	const {
 		activateBrushTool,
 		activeTile,
-		resourcepacks,
 		setActiveTile,
-	} = useEditor()
+	} = useEditorContext()
+	const { resourcepacks } = useMapEditorContext()
 
 	const handleTileClick = useCallback((tileID, resourcepackID) => () => {
 		activateBrushTool()

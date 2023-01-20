@@ -1,16 +1,16 @@
 // Local imports
-import { Editor } from '../scenes/Architect/Editor.jsx'
+import { Editor } from '../Editor/Editor.jsx'
 import { EditorControls } from './EditorControls/EditorControls.jsx'
 import { OpenItemTabs } from './OpenItemTabs.jsx'
-import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
+import { useEditorContext } from '../Editor/Context/useEditorContext.js'
+import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
 
 
 
 
 export function ResourcepackEditorCanvas() {
-	const { focusedItemID } = useEditor()
+	const { focusedItemID } = useEditorContext()
 	const { assets } = useResourcepackEditorContext()
 
 	const asset = assets[focusedItemID]

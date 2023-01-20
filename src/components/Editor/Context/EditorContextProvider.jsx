@@ -1,13 +1,10 @@
 // Module imports
 import {
-	createContext,
 	useCallback,
-	useContext,
 	useEffect,
 	useMemo,
 	useState,
 } from 'react'
-import { ipcRenderer } from 'electron'
 import PropTypes from 'prop-types'
 import { v4 as uuid } from 'uuid'
 
@@ -16,56 +13,8 @@ import { v4 as uuid } from 'uuid'
 
 
 // Local imports
-import { useStore } from '../../../../store/react.js'
-
-
-
-
-
-export const EditorContext = createContext({
-	activeTile: null,
-	currentLayer: null,
-	defaultZoom: 1,
-	focusedItemID: null,
-	hasTiles: false,
-	layers: [{}],
-	openItems: {},
-	resourcepacks: [],
-	selection: null,
-	tool: 'marquee',
-	zoom: 1,
-
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	activateBrushTool: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	activateEraserTool: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	activateMarqueeTool: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	activateMoveTool: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	eraseTile: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	closeItem: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	focusItem: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	openItem: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	paintTile: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	saveMap: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	setActiveTile: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	setSelection: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	updateResourcepacks: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	zoomIn: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	zoomOut: () => {},
-})
+import { EditorContext } from './EditorContext.js'
+import { initialState } from './initialState.js'
 
 
 
@@ -74,20 +23,15 @@ export const EditorContext = createContext({
 export function EditorContextProvider(props) {
 	const { children } = props
 
-	const [activeTile, setActiveTile] = useState(null)
-	const [currentLayerIndex, setCurrentLayerIndex] = useState(0)
-	const [defaultZoom, setDefaultZoom] = useState(1)
-	const [focusedItemID, setFocusedItemID] = useState(null)
-	const [isSaving, setIsSaving] = useState(false)
-	const [layers, setLayers] = useState([{}])
-	const [name, setName] = useState('')
-	const [openItems, setOpenItems] = useState({})
-	const [resourcepacks, setResourcepacks] = useState({})
-	const [selection, setSelection] = useState(null)
-	const [tool, setTool] = useState('marquee')
-	const [zoom, setZoom] = useState(defaultZoom)
-
-	const contentManager = useStore(state => state.contentManager)
+	const [activeTile, setActiveTile] = useState(initialState.activeTile)
+	const [currentLayerIndex, setCurrentLayerIndex] = useState(initialState.currentLayerIndex)
+	const [defaultZoom, setDefaultZoom] = useState(initialState.defaultZoom)
+	const [focusedItemID, setFocusedItemID] = useState(initialState.focusedItemID)
+	const [layers, setLayers] = useState(initialState.layers)
+	const [openItems, setOpenItems] = useState(initialState.openItems)
+	const [selection, setSelection] = useState(initialState.selection)
+	const [tool, setTool] = useState(initialState.tool)
+	const [zoom, setZoom] = useState(initialState.zoom)
 
 	const scale = useMemo(() => {
 		const rootElement = document.querySelector(':root')
@@ -103,15 +47,6 @@ export function EditorContextProvider(props) {
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
 
 	const activateMoveTool = useCallback(() => setTool('move'), [setTool])
-
-	const handleResourcepackLoaded = useCallback(resourcepackID => {
-		setResourcepacks(previousState => {
-			return {
-				...previousState,
-				[resourcepackID]: { ...contentManager.getResourcepack(resourcepackID) },
-			}
-		})
-	}, [contentManager])
 
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
@@ -143,21 +78,6 @@ export function EditorContextProvider(props) {
 		focusedItemID,
 		openItems,
 		setOpenItems,
-	])
-
-	const compileMap = useCallback(() => {
-		return {
-			dependencies: Object.entries(resourcepacks).reduce((accumulator, [resourcepackID, resourcePackData]) => {
-				accumulator[resourcepackID] = resourcePackData.version
-				return accumulator
-			}, {}),
-			name,
-			layers,
-		}
-	}, [
-		layers,
-		name,
-		resourcepacks,
 	])
 
 	const eraseTile = useCallback(options => {
@@ -211,42 +131,12 @@ export function EditorContextProvider(props) {
 		setFocusedItemID,
 	])
 
-	const saveMap = useCallback(async() => {
-		setIsSaving(true)
-		const compiledMap = compileMap()
-		await ipcRenderer.invoke('saveMap', compiledMap)
-		setIsSaving(false)
-	}, [
-		compileMap,
-		setIsSaving,
-	])
-
 	const setActiveTileConvenience = useCallback((tileID, resourcepackID) => {
 		setActiveTile({
 			tileID,
 			resourcepackID,
 		})
 	}, [setActiveTile])
-
-	const updateResourcepacks = useCallback(selectedResourcepacks => {
-		const updatedResourcepacks = Object
-			.entries(selectedResourcepacks)
-			.reduce((accumulator, [resourcepackID, isEnabled]) => {
-				if (isEnabled) {
-					contentManager.loadResourcepack(resourcepackID)
-					accumulator[resourcepackID] = { ...contentManager.getResourcepack(resourcepackID) }
-				} else {
-					contentManager.unloadResourcepack(resourcepackID)
-					delete accumulator[resourcepackID]
-				}
-				return accumulator
-			}, {})
-
-		setResourcepacks(updatedResourcepacks)
-	}, [
-		contentManager,
-		setResourcepacks,
-	])
 
 	const zoomIn = useCallback(() => {
 		setZoom(previousValue => {
@@ -301,12 +191,6 @@ export function EditorContextProvider(props) {
 		setLayers,
 	])
 
-	const hasTiles = useMemo(() => {
-		return layers.some(layer => {
-			return Boolean(Object.keys(layer).length)
-		})
-	}, [layers])
-
 	const providerState = useMemo(() => {
 		return {
 			activateBrushTool,
@@ -320,22 +204,15 @@ export function EditorContextProvider(props) {
 			eraseTile,
 			focusedItemID,
 			focusItem,
-			hasTiles,
-			isSaving,
 			layers,
-			name,
 			openItem,
 			openItems,
 			paintTile,
-			resourcepacks,
-			saveMap,
 			scale,
 			selection,
 			setActiveTile: setActiveTileConvenience,
-			setName,
 			setSelection,
 			tool,
-			updateResourcepacks,
 			zoom,
 			zoomIn,
 			zoomOut,
@@ -352,22 +229,15 @@ export function EditorContextProvider(props) {
 		eraseTile,
 		focusedItemID,
 		focusItem,
-		hasTiles,
-		isSaving,
 		layers,
-		name,
 		openItem,
 		openItems,
 		paintTile,
-		resourcepacks,
-		saveMap,
 		scale,
 		selection,
 		setActiveTileConvenience,
-		setName,
 		setSelection,
 		tool,
-		updateResourcepacks,
 		zoom,
 		zoomIn,
 		zoomOut,
@@ -382,17 +252,6 @@ export function EditorContextProvider(props) {
 		setZoom,
 	])
 
-	useEffect(() => {
-		contentManager.on('resourcepack:loaded', handleResourcepackLoaded)
-
-		return () => {
-			contentManager.off('resourcepack:loaded', handleResourcepackLoaded)
-		}
-	}, [
-		contentManager,
-		handleResourcepackLoaded,
-	])
-
 	return (
 		<EditorContext.Provider value={providerState}>
 			{children}
@@ -403,10 +262,3 @@ export function EditorContextProvider(props) {
 EditorContextProvider.propTypes = {
 	children: PropTypes.node.isRequired,
 }
-
-
-
-
-
-// eslint-disable-next-line jsdoc/require-jsdoc
-export const useEditor = () => useContext(EditorContext)

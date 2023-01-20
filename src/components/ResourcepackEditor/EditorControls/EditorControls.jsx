@@ -1,6 +1,6 @@
 // Local imports
 import { Button } from '../../Button.jsx'
-import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
+import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
 
 
 
@@ -14,7 +14,7 @@ export function EditorControls() {
 		zoom,
 		zoomIn,
 		zoomOut,
-	} = useEditor()
+	} = useEditorContext()
 
 	return (
 		<menu

@@ -15,7 +15,7 @@ import { ExportModal } from '../ExportModal/ExportModal.jsx'
 import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
-import { useEditor } from '../../scenes/Architect/context/EditorContext.jsx'
+import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 
@@ -28,7 +28,7 @@ export function LeftPanelContainer() {
 	const {
 		hasTiles,
 		updateResourcepacks,
-	} = useEditor()
+	} = useMapEditorContext()
 
 	const leftPanels = useMemo(() => {
 		return [
