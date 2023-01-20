@@ -1,0 +1,8 @@
+.editor-container {
+	display: grid;
+	grid-template-areas:
+		'tabs'
+		'editor'
+		'editor-controls';
+	grid-template-rows: auto 1fr auto;
+}

@@ -1,0 +1,20 @@
+.editor {
+	cursor: none;
+	display: flex;
+	grid-area: editor;
+	position: relative;
+	overflow: hidden;
+
+	canvas {
+		position: absolute;
+		transform-origin: 0 0;
+	}
+
+	&.is-movable {
+		cursor: grab;
+	}
+
+	&.is-moving {
+		cursor: grabbing;
+	}
+}

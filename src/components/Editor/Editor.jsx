@@ -14,6 +14,8 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
+import styles from './Editor.module.scss'
+
 import { TILE_SIZE } from '../../game/Tile.js'
 import { useDOMEvent } from '../../hooks/useDOMEvent.js'
 import { useEditorContext } from './Context/useEditorContext.js'
@@ -907,9 +909,9 @@ export function Editor(props) {
 	])
 
 	const compiledClassName = useMemo(() => {
-		return classnames('editor', {
-			'is-movable': isMovable && !isDragging,
-			'is-moving': isMovable && isDragging,
+		return classnames(styles['editor'], {
+			[styles['is-movable']]: isMovable && !isDragging,
+			[styles['is-moving']]: isMovable && isDragging,
 		})
 	}, [
 		isDragging,
