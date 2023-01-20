@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
-import { useResourcepackEditor } from '../../scenes/Architect/context/ResourcepackEditorContext.jsx'
+import { useResourcepackEditorContext } from '../../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 
@@ -33,7 +33,7 @@ export function ExportModal(props) {
 		saveTileset,
 		tilesetName,
 		updateTilesetName,
-	} = useResourcepackEditor()
+	} = useResourcepackEditorContext()
 
 	const [isLoading, setIsLoading] = useState(false)
 

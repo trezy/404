@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 
 // Local imports
 import { Editor } from './Editor.jsx'
-import { useResourcepackEditor } from './context/ResourcepackEditorContext.jsx'
+import { useResourcepackEditorContext } from './ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 
@@ -15,7 +15,7 @@ import { useResourcepackEditor } from './context/ResourcepackEditorContext.jsx'
 
 export function AssetEditor(props) {
 	const { assetID } = props
-	const { assets } = useResourcepackEditor()
+	const { assets } = useResourcepackEditorContext()
 
 	const asset = assets[assetID]
 

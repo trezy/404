@@ -10,7 +10,6 @@ import { EditorContextProvider } from '../scenes/Architect/context/EditorContext
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
 import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
 import { MapEditorCanvas } from './MapEditorCanvas.jsx'
-import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
 
 
 
@@ -46,15 +45,13 @@ export function MapEditor() {
 			exit={'exit'}
 			initial={'initial'}
 			variants={VARIANTS}>
-			<ResourcepackEditorContextProvider>
-				<EditorContextProvider>
-					<KeyStateContextProvider>
-						<LeftPanelContainer />
+			<EditorContextProvider>
+				<KeyStateContextProvider>
+					<LeftPanelContainer />
 
-						<MapEditorCanvas />
-					</KeyStateContextProvider>
-				</EditorContextProvider>
-			</ResourcepackEditorContextProvider>
+					<MapEditorCanvas />
+				</KeyStateContextProvider>
+			</EditorContextProvider>
 		</motion.main>
 	)
 }

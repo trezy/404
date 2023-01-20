@@ -18,7 +18,7 @@ import { Button } from '../Button.jsx'
 import { Input } from '../Input.jsx'
 import { Modal } from '../Modal/Modal.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
+import { useResourcepackEditorContext } from '../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 
@@ -36,7 +36,7 @@ export function EditTileModal(props) {
 		tileID,
 	} = props
 
-	const { tiles } = useResourcepackEditor()
+	const { tiles } = useResourcepackEditorContext()
 	const {
 		focusedItemID,
 		openItems,

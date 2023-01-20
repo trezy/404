@@ -10,7 +10,7 @@ import { EditorContainer } from '../scenes/Architect/EditorContainer.jsx'
 import { EditorContextProvider } from '../scenes/Architect/context/EditorContext.jsx'
 import { KeyStateContextProvider } from '../scenes/Architect/context/KeyStateContext.jsx'
 import { LeftPanelContainer } from './LeftPanelContainer/LeftPanelContainer.jsx'
-import { ResourcepackEditorContextProvider } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
+import { ResourcepackEditorContextProvider } from '../scenes/Architect/ResourcepackEditorContext/ResourcepackEditorContextProvider.jsx'
 
 
 

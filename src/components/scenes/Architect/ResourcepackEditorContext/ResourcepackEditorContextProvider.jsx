@@ -1,8 +1,6 @@
 // Module imports
 import {
-	createContext,
 	useCallback,
-	useContext,
 	useMemo,
 	useState,
 } from 'react'
@@ -14,30 +12,9 @@ import { v4 as uuid } from 'uuid'
 
 
 
-export const ResourcepackEditorContext = createContext({
-	assets: {},
-	isExporting: false,
-	isSaving: false,
-	tiles: {},
-	tilesetName: '',
-
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	addAssets: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	compileTileset: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	exportTileset: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	removeAsset: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	removeTile: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	saveTileset: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	updateTilesetName: () => {},
-	// eslint-disable-next-line jsdoc/require-jsdoc
-	updateTile: () => {},
-})
+// Local imports
+import { initialState } from './initialState.js'
+import { ResourcepackEditorContext } from './ResourcepackEditorContext.js'
 
 
 
@@ -46,11 +23,11 @@ export const ResourcepackEditorContext = createContext({
 export function ResourcepackEditorContextProvider(props) {
 	const { children } = props
 
-	const [assets, setAssets] = useState({})
-	const [isExporting, setIsExporting] = useState(false)
-	const [isSaving, setIsSaving] = useState(false)
-	const [tiles, setTiles] = useState({})
-	const [tilesetName, setTilesetName] = useState('')
+	const [assets, setAssets] = useState(initialState.assets)
+	const [isExporting, setIsExporting] = useState(initialState.isExporting)
+	const [isSaving, setIsSaving] = useState(initialState.isSaving)
+	const [tiles, setTiles] = useState(initialState.tiles)
+	const [tilesetName, setTilesetName] = useState(initialState.tilesetName)
 
 	const addAssets = useCallback(newAssets => {
 		setAssets(oldAssets => ({
@@ -198,10 +175,3 @@ export function ResourcepackEditorContextProvider(props) {
 ResourcepackEditorContextProvider.propTypes = {
 	children: PropTypes.node.isRequired,
 }
-
-
-
-
-
-// eslint-disable-next-line jsdoc/require-jsdoc
-export const useResourcepackEditor = () => useContext(ResourcepackEditorContext)

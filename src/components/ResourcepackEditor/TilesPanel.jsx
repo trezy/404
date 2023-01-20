@@ -14,7 +14,7 @@ import { Button } from '../Button.jsx'
 import { EditTileModal } from './EditTileModal.jsx'
 import { Panel } from '../scenes/Architect/Panel.jsx'
 import { useEditor } from '../scenes/Architect/context/EditorContext.jsx'
-import { useResourcepackEditor } from '../scenes/Architect/context/ResourcepackEditorContext.jsx'
+import { useResourcepackEditorContext } from '../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 
@@ -29,7 +29,7 @@ export function TilesPanel() {
 		assets,
 		removeTile,
 		tiles,
-	} = useResourcepackEditor()
+	} = useResourcepackEditorContext()
 
 	const { selection } = useEditor()
 

@@ -15,7 +15,7 @@ import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilesPanel } from '../TilesPanel.jsx'
-import { useResourcepackEditor } from '../../scenes/Architect/context/ResourcepackEditorContext.jsx'
+import { useResourcepackEditorContext } from '../../scenes/Architect/ResourcepackEditorContext/useResourcepackEditorContext.js'
 
 
 
@@ -29,7 +29,7 @@ export function LeftPanelContainer() {
 		hasTiles,
 		isExporting,
 		isSaving,
-	} = useResourcepackEditor()
+	} = useResourcepackEditorContext()
 
 	const leftPanels = useMemo(() => {
 		return [
