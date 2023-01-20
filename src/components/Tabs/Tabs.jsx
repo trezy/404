@@ -10,11 +10,19 @@ import PropTypes from 'prop-types'
 
 
 
+// Local imports
+import styles from './Tabs.module.scss'
+
+
+
+
+
 /**
  * Renders a list of tabs (not their content).
  *
  * @param {object} props All props.
  * @param {string} props.activeTabID The ID of the tab that is currently active.
+ * @param {string} props.className Additional classes to be applied to the component.
  * @param {Function} props.onClose A function to be triggered when the tab's close button is clicked.
  * @param {Function} props.onFocus A function to be triggered when the tab is clicked.
  * @param {boolean} props.showClose Whether or not close buttons should be visible.
@@ -23,6 +31,7 @@ import PropTypes from 'prop-types'
 export function Tabs(props) {
 	const {
 		activeTabID,
+		className,
 		onClose,
 		onFocus,
 		showClose,
@@ -51,11 +60,11 @@ export function Tabs(props) {
 			return (
 				<li
 					key={id}
-					className={classnames('tab', {
+					className={classnames(styles['tab'], {
 						active: activeTabID === id,
 					})}>
 					<button
-						className={'focus-item'}
+						className={styles['focus-item']}
 						onClick={handleFocusClick(tab)}
 						type={'button'}
 						value={id}>
@@ -64,7 +73,7 @@ export function Tabs(props) {
 
 					{showClose && (
 						<button
-							className={'close-item'}
+							className={styles['close-item']}
 							onClick={handleCloseClick(tab)}
 							type={'button'}
 							value={id}>
@@ -81,8 +90,12 @@ export function Tabs(props) {
 		tabs,
 	])
 
+	const compiledClassName = useMemo(() => {
+		return classnames(styles['tabs'], className)
+	}, [className])
+
 	return (
-		<div className={'tabs'}>
+		<div className={compiledClassName}>
 			<ol>{mappedTabs}</ol>
 		</div>
 	)
@@ -90,6 +103,7 @@ export function Tabs(props) {
 
 Tabs.defaultProps = {
 	activeTabID: null,
+	className: '',
 	onClose: null,
 	onFocus: null,
 	showClose: false,
@@ -97,6 +111,7 @@ Tabs.defaultProps = {
 
 Tabs.propTypes = {
 	activeTabID: PropTypes.any,
+	className: PropTypes.string,
 	onClose: PropTypes.func,
 	onFocus: PropTypes.func,
 	showClose: PropTypes.bool,
