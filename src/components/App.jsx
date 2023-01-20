@@ -1,12 +1,9 @@
 // Module imports
 import {
-	AnimatePresence,
-	motion,
-} from 'framer-motion'
-import {
 	useCallback,
 	useEffect,
 } from 'react'
+import { AnimatePresence } from 'framer-motion'
 
 
 
@@ -18,11 +15,10 @@ import {
 	LOADING_GAME,
 } from '../constants/SceneNames.js'
 import { Architect } from './scenes/Architect/Architect.jsx'
-import { CenterPanel } from './CenterPanel.jsx'
 import { executePromiseWithMinimumDuration } from '../helpers/executePromiseWithMinimumDuration.js'
-import { GameTitle } from './GameTitle/GameTitle.jsx'
 import { ipcRenderer } from 'electron'
-import { LeftPanel } from './LeftPanel.jsx'
+import { LoadingGameScene } from './scenes/LoadingGameScene/LoadingGameScene.jsx'
+import { MainScene } from './scenes/MainScene/MainScene.jsx'
 import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
@@ -33,35 +29,6 @@ import { WholePixelContainer } from './WholePixelContainer.jsx'
 
 
 // Constants
-const LOADING_SCENE_VARIANTS = {
-	animate: {
-		opacity: 1,
-	},
-
-	exit: {
-		opacity: 0,
-	},
-
-	initial: {
-		opacity: 0,
-	},
-}
-const MAIN_SCENE_VARIANTS = {
-	animate: {
-		opacity: 1,
-		transition: {
-			duration: 0,
-		},
-	},
-
-	exit: {
-		opacity: 0,
-	},
-
-	initial: {
-		opacity: 0,
-	},
-}
 const MINIMUM_DURATION = 2000
 
 
@@ -113,16 +80,7 @@ export function App() {
 			<WholePixelContainer>
 				<AnimatePresence mode={'wait'}>
 					{(scene === LOADING_GAME) && (
-						<motion.main
-							key={'loading-game'}
-							animate={'animate'}
-							className={'scene loading-game'}
-							exit={'exit'}
-							initial={'initial'}
-							variants={LOADING_SCENE_VARIANTS}>
-							<GameTitle />
-							<p>{'loading...'}</p>
-						</motion.main>
+						<LoadingGameScene />
 					)}
 
 					{(scene === ARCHITECT) && (
@@ -130,18 +88,7 @@ export function App() {
 					)}
 
 					{(![LOADING_GAME, ARCHITECT].includes(scene)) && (
-						<motion.main
-							key={'main'}
-							animate={'animate'}
-							className={'scene'}
-							exit={'exit'}
-							initial={'initial'}
-							variants={MAIN_SCENE_VARIANTS}>
-							<div className={'layout panels'}>
-								<LeftPanel />
-								<CenterPanel />
-							</div>
-						</motion.main>
+						<MainScene />
 					)}
 				</AnimatePresence>
 			</WholePixelContainer>

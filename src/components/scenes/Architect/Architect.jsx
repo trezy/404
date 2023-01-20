@@ -7,9 +7,12 @@ import { useState } from 'react'
 
 
 // Local imports
+import styles from './Architect.module.scss'
+
 import { MapEditor } from '../../MapEditor/MapEditor.jsx'
 import { ResourcepackEditor } from '../../ResourcepackEditor/ResourcepackEditor.jsx'
-import { Tabs } from '../../Tabs.jsx'
+import { Scene } from '../../Scene/Scene.jsx'
+import { Tabs } from '../../Tabs/Tabs.jsx'
 
 
 
@@ -18,8 +21,8 @@ import { Tabs } from '../../Tabs.jsx'
 // Constants
 const TABS = [
 	{
-		id: 'asset-creator',
-		label: 'Asset Creator',
+		id: 'resourcepack-editor',
+		label: 'Resourcepack Editor',
 	},
 	{
 		id: 'map-editor',
@@ -38,21 +41,22 @@ export function Architect() {
 	const [activeTab, setActiveTab] = useState('map-editor')
 
 	return (
-		<div className={'architect scene'}>
+		<Scene className={styles['architect']}>
 			<Tabs
 				activeTabID={activeTab}
+				className={styles['tabs']}
 				onFocus={setActiveTab}
 				tabs={TABS} />
 
 			<AnimatePresence mode={'wait'}>
-				{(activeTab === 'asset-creator') && (
-					<ResourcepackEditor key={'asset-creator'} />
+				{(activeTab === 'resourcepack-editor') && (
+					<ResourcepackEditor key={'resourcepack-editor'} />
 				)}
 
 				{(activeTab === 'map-editor') && (
 					<MapEditor key={'map-editor'} />
 				)}
 			</AnimatePresence>
-		</div>
+		</Scene>
 	)
 }
