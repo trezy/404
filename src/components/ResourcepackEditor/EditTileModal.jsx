@@ -76,8 +76,8 @@ export function EditTileModal(props) {
 		}
 
 		return {
-			height: height * scale,
-			width: width * scale,
+			height,
+			width,
 		}
 	}, [
 		scale,
@@ -98,8 +98,8 @@ export function EditTileModal(props) {
 			const canvasElement = canvasRef.current
 
 			tileObject.dataURI = canvasElement.toDataURL()
-			tileObject.height = selection.height / scale
-			tileObject.width = selection.width / scale
+			tileObject.height = selection.height
+			tileObject.width = selection.width
 		}
 
 		onAddToProject(tileObject)
@@ -141,12 +141,12 @@ export function EditTileModal(props) {
 				focusedItem.image,
 				selection.x,
 				selection.y,
-				selection.width,
-				selection.height,
+				selection.width * scale,
+				selection.height * scale,
 				0,
 				0,
-				selection.width,
-				selection.height,
+				selection.width * scale,
+				selection.height * scale,
 			)
 		}
 	}, [
@@ -166,16 +166,16 @@ export function EditTileModal(props) {
 				{Boolean(tile) && (
 					<img
 						alt={tile.name}
-						height={tileSize.height}
+						height={tileSize.height * scale}
 						src={tile.dataURI}
-						width={tileSize.width} />
+						width={tileSize.width * scale} />
 				)}
 
 				{!tile && (
 					<canvas
 						ref={canvasRef}
-						height={tileSize.height}
-						width={tileSize.width} />
+						height={tileSize.height * scale}
+						width={tileSize.width * scale} />
 				)}
 			</figure>
 
@@ -200,7 +200,7 @@ export function EditTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${tileSize.width / scale}px`} />
+							value={`${tileSize.width}px`} />
 					</div>
 
 					<div className={'field'}>
@@ -211,7 +211,7 @@ export function EditTileModal(props) {
 						<Input
 							readOnly
 							type={'text'}
-							value={`${tileSize.height / scale}px`} />
+							value={`${tileSize.height}px`} />
 					</div>
 				</div>
 

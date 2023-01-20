@@ -19,7 +19,7 @@ export const ResourcepackEditorContext = createContext({
 	isExporting: false,
 	isSaving: false,
 	tiles: {},
-	tilesetName: 'Untitled',
+	tilesetName: '',
 
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	addAssets: () => {},
@@ -50,7 +50,7 @@ export function ResourcepackEditorContextProvider(props) {
 	const [isExporting, setIsExporting] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
 	const [tiles, setTiles] = useState({})
-	const [tilesetName, setTilesetName] = useState('Untitled')
+	const [tilesetName, setTilesetName] = useState('')
 
 	const addAssets = useCallback(newAssets => {
 		setAssets(oldAssets => ({
