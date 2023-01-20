@@ -6,7 +6,9 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import { Tabs } from '../Tabs.jsx'
+import styles from './OpenItemTabs.module.scss'
+
+import { Tabs } from '../Tabs/Tabs.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 
 
@@ -36,6 +38,7 @@ export function OpenItemTabs() {
 	return (
 		<Tabs
 			activeTabID={focusedItemID}
+			className={styles['tabs']}
 			onClose={closeItem}
 			onFocus={focusItem}
 			showClose

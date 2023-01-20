@@ -42,7 +42,7 @@ export function ResourcepackEditor() {
 	return (
 		<motion.main
 			animate={'animate'}
-			className={'asset-pack-creator map-editor'}
+			className={'map-editor'}
 			exit={'exit'}
 			initial={'initial'}
 			variants={VARIANTS}>

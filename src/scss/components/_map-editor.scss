@@ -4,54 +4,6 @@
 	gap: calc(var(--app-padding) * var(--ui-scale));
 	grid-template-columns: auto 1fr;
 	overflow: hidden;
-
-	.editor {
-		cursor: none;
-		display: flex;
-		grid-area: editor;
-		position: relative;
-		overflow: hidden;
-
-		canvas {
-			position: absolute;
-			transform-origin: 0 0;
-		}
-
-		&.is-movable {
-			cursor: grab;
-		}
-
-		&.is-moving {
-			cursor: grabbing;
-		}
-	}
-
-	.editor-container {
-		display: grid;
-		grid-template-areas:
-			'tabs'
-			'editor'
-			'editor-controls';
-		grid-template-rows: auto 1fr auto;
-	}
-
-	.editor-controls {
-		display: flex;
-		flex-wrap: wrap;
-		gap: calc(10px * var(--ui-scale));
-		grid-area: editor-controls;
-		padding-top: calc(var(--app-padding) * var(--ui-scale));
-
-		.control {
-			align-items: center;
-			display: flex;
-			gap: calc(3px * var(--ui-scale));
-		}
-	}
-
-	.tabs {
-		grid-area: tabs;
-	}
 }
 
 .modal.new-tile {
