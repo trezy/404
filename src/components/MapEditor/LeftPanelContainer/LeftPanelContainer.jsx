@@ -1,7 +1,6 @@
 // Module imports
 import {
 	useCallback,
-	useEffect,
 	useMemo,
 	useState,
 } from 'react'
@@ -80,15 +79,6 @@ export function LeftPanelContainer() {
 		handleExportMapClick,
 		handleManageResourcePacksClick,
 		hasTiles,
-	])
-
-	useEffect(() => {
-		if (!Object.keys(resourcepacks).length) {
-			setShowManageResourcePacksModal(true)
-		}
-	}, [
-		resourcepacks,
-		setShowManageResourcePacksModal,
 	])
 
 	return (

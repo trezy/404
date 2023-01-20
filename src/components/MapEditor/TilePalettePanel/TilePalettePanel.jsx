@@ -39,6 +39,10 @@ export function TilePalettePanel() {
 		setActiveTile,
 	])
 
+	const hasResourcePacks = useMemo(() => {
+		return Boolean(Object.keys(resourcepacks).length)
+	}, [resourcepacks])
+
 	const mappedTiles = useMemo(() => {
 		return Object
 			.values(resourcepacks)
@@ -80,11 +84,15 @@ export function TilePalettePanel() {
 			className={styles['tile-palette-panel']}
 			isCollapsible
 			title={'Tiles'}>
-			{Boolean(Object.keys(resourcepacks).length) && (
-				<ol className={styles['tile-grid']}>
-					{mappedTiles}
-				</ol>
-			)}
+			<ol className={styles['tile-grid']}>
+				{!hasResourcePacks && (
+					<li className={styles['empty-message']}>
+						{'Add a resourcepack.'}
+					</li>
+				)}
+
+				{hasResourcePacks && mappedTiles}
+			</ol>
 		</Panel>
 	)
 }
