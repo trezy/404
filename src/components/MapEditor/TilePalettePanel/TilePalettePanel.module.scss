@@ -1,10 +1,12 @@
 .tile-palette-panel {}
 
 .tile-grid {
+	align-items: stretch;
 	display: flex;
 	flex-wrap: wrap;
 	gap: calc(10px * var(--ui-scale));
 	padding: calc(1px * var(--ui-scale));
+	width: 100%;
 }
 
 .tile {
@@ -24,11 +26,12 @@
 	}
 }
 
-.empty-message	{
+.empty-message{
 	align-items: center;
 	background-color: var(--palette-pure-black);
 	color: var(--palette-dark-grey);
 	display: flex;
+	flex-grow: 1;
 	justify-content: center;
 	padding: calc(6px * var(--ui-scale));
 	text-align: center;
