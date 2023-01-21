@@ -149,14 +149,14 @@ export function ControlsSettings(props) {
 		<motion.div
 			animate={'animate'}
 			exit={'exit'}
-			id={'controls-settings'}
+			className={styles['wrapper']}
 			initial={'initial'}
 			variants={variants}>
 			<DecoratedHeader className={styles['decorated-header']}>
 				{'Controls'}
 			</DecoratedHeader>
 
-			<div className={'mappings-wrapper'}>
+			<div className={styles['mappings-wrapper']}>
 				<Combobox
 					emptyMessage={'No gamepads connected'}
 					isDisabled={controlsManager.gamepadCount === 0}
@@ -164,7 +164,7 @@ export function ControlsSettings(props) {
 					options={gamepads}
 					value={selectedGamepad} />
 
-				<dl className={'mappings'}>
+				<dl className={styles['mappings']}>
 					<dt>{'Move Tile Up'}</dt>
 					<dd>{'D-Pad Up'}</dd>
 
@@ -179,7 +179,7 @@ export function ControlsSettings(props) {
 				</dl>
 			</div>
 
-			<div className={'mappings-visualiser'}>
+			<div className={styles['mappings-visualiser']}>
 				{!selectedGamepad && (
 					'Select a gamepad'
 				)}
