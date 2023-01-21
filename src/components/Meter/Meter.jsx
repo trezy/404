@@ -7,6 +7,13 @@ import { useMemo } from 'react'
 
 
 
+// Local imports
+import styles from './Meter.module.scss'
+
+
+
+
+
 /**
  * A meter component for displaying a value within a range.
  *
@@ -31,8 +38,8 @@ export function Meter(props) {
 	} = props
 
 	const compiledClassName = useMemo(() => {
-		return classnames('meter', className, {
-			'is-full-width': isFullWidth,
+		return classnames(styles['meter'], className, {
+			[styles['is-full-width']]: isFullWidth,
 		})
 	}, [
 		className,
@@ -61,7 +68,7 @@ export function Meter(props) {
 			segments.push((
 				<div
 					key={index}
-					className={'meter-segment'} />
+					className={styles['meter-segment']} />
 			))
 
 			index += 1
@@ -82,13 +89,13 @@ export function Meter(props) {
 			role={'meter'}>
 			<div
 				aria-hidden
-				className={'meter-fill'}
+				className={styles['meter-fill']}
 				style={fillStyles} />
 
 			{showSegments && (
 				<div
 					aria-hidden
-					className={'meter-segments'}>
+					className={styles['meter-segments']}>
 					{meterSegments}
 				</div>
 			)}

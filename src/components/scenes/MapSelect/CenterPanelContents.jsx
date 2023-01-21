@@ -12,7 +12,7 @@ import {
 import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
-import { Meter } from '../../Meter.jsx'
+import { Meter } from '../../Meter/Meter.jsx'
 import { useStore } from '../../../store/react.js'
 
 

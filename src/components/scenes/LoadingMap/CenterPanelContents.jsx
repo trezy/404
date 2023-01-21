@@ -10,7 +10,7 @@ import {
 
 // Local imports
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
-import { Meter } from '../../Meter.jsx'
+import { Meter } from '../../Meter/Meter.jsx'
 import { useStore } from '../../../store/react.js'
 
 
