@@ -11,6 +11,7 @@ import {
 // Local imports
 import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString.js'
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { Meter } from '../../Meter.jsx'
 import { useStore } from '../../../store/react.js'
 
@@ -93,9 +94,7 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<header className={'decorated-header'}>
-				<h2>{'Map Select'}</h2>
-			</header>
+			<DecoratedHeader>{'Map Select'}</DecoratedHeader>
 
 			<table>
 				<tbody>

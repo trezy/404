@@ -14,9 +14,12 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
+import styles from './GraphicsSettings.module.scss'
+
 import { Button } from '../../Button.jsx'
 import { Combobox } from '../../Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 
 
 
@@ -152,9 +155,9 @@ export function GraphicsSettings(props) {
 			id={'graphics-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'decorated-header'}>
-				<h2>{'Graphics'}</h2>
-			</header>
+			<DecoratedHeader className={styles['decorated-header']}>
+				{'Graphics'}
+			</DecoratedHeader>
 
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>

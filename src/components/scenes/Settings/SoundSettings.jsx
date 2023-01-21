@@ -6,6 +6,13 @@ import PropTypes from 'prop-types'
 
 
 
+// Local imports
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+
+
+
+
+
 /**
  * Manage the game controls.
  *
@@ -24,9 +31,7 @@ export function SoundSettings(props) {
 			exit={'exit'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'decorated-header'}>
-				<h2>{'Sound'}</h2>
-			</header>
+			<DecoratedHeader>{'Sound'}</DecoratedHeader>
 
 			<div />
 		</motion.div>

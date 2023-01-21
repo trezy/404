@@ -9,6 +9,7 @@ import {
 
 
 // Local imports
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { Meter } from '../../Meter.jsx'
 import { useStore } from '../../../store/react.js'
 
@@ -44,9 +45,7 @@ export function CenterPanelContents() {
 
 	return (
 		<div>
-			<header className={'decorated-header'}>
-				<h2>{'Loading Map'}</h2>
-			</header>
+			<DecoratedHeader>{'Loading Map'}</DecoratedHeader>
 
 			<dl>
 				<dt>{'Map Name:'}</dt>

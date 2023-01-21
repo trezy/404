@@ -12,7 +12,10 @@ import PropTypes from 'prop-types'
 
 
 // Module imports
+import styles from './ControlsSettings.module.scss'
+
 import { Combobox } from '../../Combobox.jsx'
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { GamepadTemplate } from './GamepadTemplate.jsx'
 import { useRafael } from '../../../hooks/useRafael.js'
 import { useStore } from '../../../store/react.js'
@@ -149,9 +152,9 @@ export function ControlsSettings(props) {
 			id={'controls-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'decorated-header'}>
-				<h2>{'Controls'}</h2>
-			</header>
+			<DecoratedHeader className={styles['decorated-header']}>
+				{'Controls'}
+			</DecoratedHeader>
 
 			<div className={'mappings-wrapper'}>
 				<Combobox

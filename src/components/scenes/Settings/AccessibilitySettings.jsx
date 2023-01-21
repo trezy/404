@@ -13,9 +13,12 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
+import styles from './AccessibilitySettings.module.scss'
+
 import { Button } from '../../Button.jsx'
 import { Combobox } from '../../Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { Switch } from '../../Switch.jsx'
 
 
@@ -202,9 +205,9 @@ export function AccessibilitySettings(props) {
 			id={'accessibility-settings'}
 			initial={'initial'}
 			variants={variants}>
-			<header className={'decorated-header'}>
-				<h2>{'Accessibility'}</h2>
-			</header>
+			<DecoratedHeader className={styles['decorated-header']}>
+				{'Accessibility'}
+			</DecoratedHeader>
 
 			<form onSubmit={handleSubmit}>
 				<div className={'form-contents'}>

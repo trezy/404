@@ -11,6 +11,7 @@ import {
 // Local imports
 import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString'
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { useStore } from '../../../store/react'
 
 
@@ -69,9 +70,7 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<header className={'decorated-header'}>
-				<h2>{'Load Save'}</h2>
-			</header>
+			<DecoratedHeader>{'Load Save'}</DecoratedHeader>
 
 			<table>
 				<tbody>{mappedMaps}</tbody>

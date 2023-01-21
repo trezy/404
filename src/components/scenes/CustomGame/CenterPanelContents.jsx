@@ -12,6 +12,7 @@ import {
 // Local imports
 import styles from './CenterPanelContents.module.scss'
 
+import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { MapCard } from './MapCard.jsx'
 import { usePanelContext } from '../../Panel/Context/usePanelContext.js'
@@ -77,9 +78,7 @@ export function CenterPanelContents() {
 
 	return (
 		<>
-			<header className={'decorated-header'}>
-				<h2>{'Map Select'}</h2>
-			</header>
+			<DecoratedHeader>{'Map Select'}</DecoratedHeader>
 
 			<div className={'panel-content'}>
 				<div className={styles['map-list']}>

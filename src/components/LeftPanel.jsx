@@ -15,6 +15,7 @@ import {
 	SAVE_SELECT,
 	SETTINGS,
 } from '../constants/SceneNames.js'
+import { DecoratedHeader } from './DecoratedHeader/DecoratedHeader.jsx'
 import { Panel } from './Panel/Panel.jsx'
 import { useStore } from '../store/react.js'
 
@@ -60,9 +61,7 @@ export function LeftPanel() {
 
 	return (
 		<Panel variants={PANEL_VARIANTS}>
-			<header className={'decorated-header'}>
-				<h2>{'Menu'}</h2>
-			</header>
+			<DecoratedHeader>{'Menu'}</DecoratedHeader>
 
 			<AnimatePresence mode={'wait'}>
 				{(scene === CUSTOM_GAME) && (

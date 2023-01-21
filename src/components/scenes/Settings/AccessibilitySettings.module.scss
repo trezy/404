@@ -1,0 +1,31 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.decorated-header {
+	margin-bottom: calc(6px * var(--ui-scale));
+}
+
+.font-list {
+	.font-list-label .font-sample {
+		display: none;
+	}
+
+	[role=option] button {
+		display: flex;
+
+		.font-sample {
+			margin-left: auto;
+		}
+	}
+}
+
+.form {
+	flex-grow: 1;
+}
+
+.menu {
+	margin-top: auto;
+}
