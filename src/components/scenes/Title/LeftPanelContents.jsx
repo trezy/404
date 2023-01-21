@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
+import { PanelMenu } from '../../Panel/PanelMenu.jsx'
 import { useStore } from '../../../store/react.js'
 
 
@@ -37,18 +38,20 @@ export function LeftPanelContents() {
 	}, [goToSettings])
 
 	return (
-		<ButtonStack className={'panel-bottom'}>
-			<Button onClick={handleCustomGameClick}>
-				{'Custom Game'}
-			</Button>
+		<PanelMenu>
+			<ButtonStack>
+				<Button onClick={handleCustomGameClick}>
+					{'Custom Game'}
+				</Button>
 
-			<Button onClick={goToArchitect}>
-				{'Architect'}
-			</Button>
+				<Button onClick={goToArchitect}>
+					{'Architect'}
+				</Button>
 
-			<Button onClick={handleSettingsClick}>
-				{'Settings'}
-			</Button>
-		</ButtonStack>
+				<Button onClick={handleSettingsClick}>
+					{'Settings'}
+				</Button>
+			</ButtonStack>
+		</PanelMenu>
 	)
 }

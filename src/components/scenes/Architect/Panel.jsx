@@ -15,7 +15,7 @@ import PropTypes from 'prop-types'
  * Renders an editor panel.
  *
  * @param {object} props All props.
- * @param {impotr('react').ReactNode} [props.children] Node to be rendered inside of the component.
+ * @param {import('react').ReactNode} [props.children] Node to be rendered inside of the component.
  * @param {string} [props.className] A string of classes to be set on the button.
  * @param {boolean} [props.defaultIsOpen=true] Whether or not the panel is open by default.
  * @param {boolean} [props.isCollapsible=false] Whether or not the panel is collapsible.

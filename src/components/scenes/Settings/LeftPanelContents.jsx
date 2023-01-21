@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
+import { PanelMenu } from '../../Panel/PanelMenu.jsx'
 import { useStore } from '../../../store/react.js'
 
 
@@ -34,34 +35,36 @@ export function LeftPanelContents() {
 	const showSoundPanel = useCallback(() => goToSettingsPanel('sound'), [goToSettingsPanel])
 
 	return (
-		<ButtonStack className={'panel-bottom'}>
-			<Button
-				isAffirmative={settingsPanel === 'accessibility'}
-				onClick={showAccessibilityPanel}>
-				{'Accessibility'}
-			</Button>
+		<PanelMenu>
+			<ButtonStack>
+				<Button
+					isAffirmative={settingsPanel === 'accessibility'}
+					onClick={showAccessibilityPanel}>
+					{'Accessibility'}
+				</Button>
 
-			<Button
-				isAffirmative={settingsPanel === 'controls'}
-				onClick={showControlsPanel}>
-				{'Controls'}
-			</Button>
+				<Button
+					isAffirmative={settingsPanel === 'controls'}
+					onClick={showControlsPanel}>
+					{'Controls'}
+				</Button>
 
-			<Button
-				isAffirmative={settingsPanel === 'graphics'}
-				onClick={showGraphicsPanel}>
-				{'Graphics'}
-			</Button>
+				<Button
+					isAffirmative={settingsPanel === 'graphics'}
+					onClick={showGraphicsPanel}>
+					{'Graphics'}
+				</Button>
 
-			<Button
-				isAffirmative={settingsPanel === 'sound'}
-				onClick={showSoundPanel}>
-				{'Sound'}
-			</Button>
+				<Button
+					isAffirmative={settingsPanel === 'sound'}
+					onClick={showSoundPanel}>
+					{'Sound'}
+				</Button>
 
-			<Button onClick={goBack}>
-				{'Back'}
-			</Button>
-		</ButtonStack>
+				<Button onClick={goBack}>
+					{'Back'}
+				</Button>
+			</ButtonStack>
+		</PanelMenu>
 	)
 }

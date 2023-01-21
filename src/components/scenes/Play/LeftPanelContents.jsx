@@ -9,6 +9,7 @@ import { useCallback } from 'react'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 // import { FPSMeter } from '../../FPSMeter.jsx'
+import { PanelMenu } from '../../Panel/PanelMenu.jsx'
 import { Timer } from '../../Timer/Timer.jsx'
 import { useStore } from '../../../store/react.js'
 
@@ -48,11 +49,13 @@ export function LeftPanelContents() {
 				<FPSMeter />
 			</div> */}
 
-			<ButtonStack className={'panel-bottom'}>
-				<Button onClick={handleQuitClick}>
-					{'Quit'}
-				</Button>
-			</ButtonStack>
+			<PanelMenu>
+				<ButtonStack>
+					<Button onClick={handleQuitClick}>
+						{'Quit'}
+					</Button>
+				</ButtonStack>
+			</PanelMenu>
 		</>
 	)
 }

@@ -12,6 +12,7 @@ import { useCallback } from 'react'
 import styles from './Modal.module.scss'
 
 import { Button } from '../Button.jsx'
+import { Panel } from '../Panel/Panel.jsx'
 import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
 
@@ -53,7 +54,7 @@ export function Modal(props) {
 	}
 
 	return createPortal((
-		<div className={classnames('modal', 'panel', styles['modal'], className)}>
+		<Panel className={classnames(styles['modal'], className)}>
 			<header>
 				<h2 className={styles['title']}>{title}</h2>
 
@@ -76,7 +77,7 @@ export function Modal(props) {
 					</div>
 				)}
 			</div>
-		</div>
+		</Panel>
 	), document.querySelector('#modal-portal'))
 }
 

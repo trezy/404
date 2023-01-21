@@ -82,7 +82,6 @@ export function TilePalettePanel() {
 
 	return (
 		<Panel
-			className={styles['tile-palette-panel']}
 			isCollapsible
 			title={'Tiles'}>
 			<ol className={styles['tile-grid']}>

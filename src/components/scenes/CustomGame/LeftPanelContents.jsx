@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
+import { PanelMenu } from '../../Panel/PanelMenu.jsx'
 import { useStore } from '../../../store/react.js'
 
 
@@ -41,18 +42,20 @@ export function LeftPanelContents() {
 	}, [goToSettings])
 
 	return (
-		<ButtonStack className={'panel-bottom'}>
-			<Button onClick={handleMainMenuClick}>
-				{'Main Menu'}
-			</Button>
+		<PanelMenu>
+			<ButtonStack>
+				<Button onClick={handleMainMenuClick}>
+					{'Main Menu'}
+				</Button>
 
-			<Button onClick={handleSettingsClick}>
-				{'Settings'}
-			</Button>
+				<Button onClick={handleSettingsClick}>
+					{'Settings'}
+				</Button>
 
-			<Button onClick={handleBackClick}>
-				{'Back'}
-			</Button>
-		</ButtonStack>
+				<Button onClick={handleBackClick}>
+					{'Back'}
+				</Button>
+			</ButtonStack>
+		</PanelMenu>
 	)
 }
