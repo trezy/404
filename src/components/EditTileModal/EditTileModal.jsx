@@ -18,7 +18,7 @@ import { Button } from '../Button.jsx'
 import { Input } from '../Input.jsx'
 import { Modal } from '../Modal/Modal.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
-import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
+import { useResourcepackEditorContext } from '../ResourcepackEditor/Context/useResourcepackEditorContext.js'
 
 
 
@@ -159,7 +159,6 @@ export function EditTileModal(props) {
 
 	return (
 		<Modal
-			className={'new-tile'}
 			onClose={onClose}
 			title={tile ? 'Edit Tile' : 'Create New Tile'}>
 			<figure>
