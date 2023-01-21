@@ -11,7 +11,9 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { useRequestAnimationFrame } from '../hooks/useRequestAnimationFrame.js'
+import styles from './Timer.module.scss'
+
+import { useRequestAnimationFrame } from '../../hooks/useRequestAnimationFrame.js'
 
 
 
@@ -39,11 +41,11 @@ export function Timer(props) {
 	const [startTimestamp] = useState(performance.now())
 
 	const compiledClassName = useMemo(() => {
-		return classnames('timer', className, {
-			'is-bordered': isBordered,
-			'is-centered': isCentered,
-			'is-large': isLarge,
-			'is-monospace': isMonospace,
+		return classnames(styles['timer'], className, {
+			[styles['is-bordered']]: isBordered,
+			[styles['is-centered']]: isCentered,
+			[styles['is-large']]: isLarge,
+			[styles['is-monospace']]: isMonospace,
 		})
 	}, [
 		isBordered,
@@ -95,7 +97,7 @@ export function Timer(props) {
 
 	return (
 		<time className={compiledClassName}>
-			<span className={'time-wrapper'}>
+			<span className={styles['time-wrapper']}>
 				{renderedTime}
 			</span>
 		</time>
