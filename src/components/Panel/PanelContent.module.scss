@@ -5,4 +5,8 @@
 	margin-top: calc(4px * var(--ui-scale));
 	max-height: 100%;
 	overflow: auto;
+
+	&:not(:last-child) {
+		margin-bottom: calc(4px * var(--ui-scale));
+	}
 }
