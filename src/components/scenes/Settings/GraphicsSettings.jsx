@@ -151,15 +151,17 @@ export function GraphicsSettings(props) {
 	return (
 		<motion.div
 			animate={'animate'}
+			className={styles['wrapper']}
 			exit={'exit'}
-			id={'graphics-settings'}
 			initial={'initial'}
 			variants={variants}>
 			<DecoratedHeader className={styles['decorated-header']}>
 				{'Graphics'}
 			</DecoratedHeader>
 
-			<form onSubmit={handleSubmit}>
+			<form
+				className={styles['form']}
+				onSubmit={handleSubmit}>
 				<div className={'form-contents'}>
 					<div className={'field'}>
 						<label>{'Display Mode'}</label>
@@ -178,7 +180,9 @@ export function GraphicsSettings(props) {
 					</div>
 				</div>
 
-				<menu type={'toolbar'}>
+				<menu
+					className={styles['menu']}
+					type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button onClick={handleReset}>
 							{'Reset'}
