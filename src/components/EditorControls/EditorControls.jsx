@@ -19,7 +19,9 @@ export function EditorControls(props) {
 	const mappedControls = useMemo(() => {
 		return controls.map(control => {
 			return (
-				<div className={styles['control']}>
+				<div
+					key={control.title}
+					className={styles['control']}>
 					<label>{control.title}</label>
 
 					{control.children}
