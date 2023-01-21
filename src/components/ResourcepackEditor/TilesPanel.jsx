@@ -11,7 +11,7 @@ import {
 
 // Local imports
 import { Button } from '../Button.jsx'
-import { EditTileModal } from '../EditTileModal/EditTileModal.jsx'
+import { EditTileModal } from './EditTileModal/EditTileModal.jsx'
 import { CollapsiblePanel } from '../CollapsiblePanel/CollapsiblePanel.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'

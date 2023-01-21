@@ -14,11 +14,12 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { Button } from '../Button.jsx'
-import { Input } from '../Input.jsx'
-import { Modal } from '../Modal/Modal.jsx'
-import { useEditorContext } from '../Editor/Context/useEditorContext.js'
-import { useResourcepackEditorContext } from '../ResourcepackEditor/Context/useResourcepackEditorContext.js'
+import { Button } from '../../Button.jsx'
+import { Input } from '../../Input.jsx'
+import { Modal } from '../../Modal/Modal.jsx'
+import { Switch } from '../../Switch/Switch.jsx'
+import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
+import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
 
 
 
@@ -44,6 +45,8 @@ export function EditTileModal(props) {
 		selection,
 	} = useEditorContext()
 
+	const [tileIsBlocking, setTileIsBlocking] = useState(tileID ? tiles[tileID].isBlocking : false)
+	const [tileIsTraversable, setTileIsTraversable] = useState(tileID ? tiles[tileID].isTraversable : true)
 	const [tileName, setTileName] = useState(tileID ? tiles[tileID].name : '')
 
 	const canvasRef = useRef(null)
@@ -90,6 +93,8 @@ export function EditTileModal(props) {
 
 		const tileObject = {
 			...(tile || {}),
+			isBlocking: tileIsBlocking,
+			isTraversable: tileIsTraversable,
 			name: tileName,
 			tileID,
 		}
@@ -111,7 +116,24 @@ export function EditTileModal(props) {
 		selection,
 		tile,
 		tileID,
+		tileIsTraversable,
 		tileName,
+	])
+
+	const handleTileIsBlockingChange = useCallback(isOn => {
+		setTileIsBlocking(isOn)
+		setTileIsTraversable(false)
+	}, [
+		setTileIsBlocking,
+		setTileIsTraversable,
+	])
+
+	const handleTileIsTraversableChange = useCallback(isOn => {
+		setTileIsTraversable(isOn)
+		setTileIsBlocking(false)
+	}, [
+		setTileIsBlocking,
+		setTileIsTraversable,
 	])
 
 	const handleTileNameChange = useCallback(event => {
@@ -211,6 +233,28 @@ export function EditTileModal(props) {
 							readOnly
 							type={'text'}
 							value={`${tileSize.height}px`} />
+					</div>
+
+					<div className={'field'}>
+						<label htmlFor={'is-traversable'}>
+							{'Traversable'}
+						</label>
+
+						<Switch
+							id={'is-traversable'}
+							isOn={tileIsTraversable}
+							onChange={handleTileIsTraversableChange} />
+					</div>
+
+					<div className={'field'}>
+						<label htmlFor={'is-blocking'}>
+							{'Blocking'}
+						</label>
+
+						<Switch
+							id={'is-blocking'}
+							isOn={tileIsBlocking}
+							onChange={handleTileIsBlockingChange} />
 					</div>
 				</div>
 
