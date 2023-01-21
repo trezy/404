@@ -61,7 +61,7 @@ export function Tabs(props) {
 				<li
 					key={id}
 					className={classnames(styles['tab'], {
-						active: activeTabID === id,
+						[styles['active']]: activeTabID === id,
 					})}>
 					<button
 						className={styles['focus-item']}
