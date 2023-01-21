@@ -19,7 +19,7 @@ import { Button } from '../../Button.jsx'
 import { Combobox } from '../../Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
-import { Switch } from '../../Switch.jsx'
+import { Switch } from '../../Switch/Switch.jsx'
 
 
 

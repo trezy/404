@@ -5,8 +5,16 @@ import {
 	useMemo,
 	useState,
 } from 'react'
+import classnames from 'classnames'
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import styles from './Switch.module.scss'
 
 
 
@@ -31,17 +39,6 @@ export function Switch(props) {
 
 	const [state, setState] = useState(Boolean(defaultOn))
 
-	const compiledIsOn = useMemo(() => {
-		if (typeof isOn === 'boolean') {
-			return isOn
-		}
-
-		return state
-	}, [
-		isOn,
-		state,
-	])
-
 	const handleChange = useCallback(event => {
 		const isChecked = event.target.checked
 
@@ -54,6 +51,23 @@ export function Switch(props) {
 		onChange,
 		setState,
 	])
+
+	const compiledIsOn = useMemo(() => {
+		if (typeof isOn === 'boolean') {
+			return isOn
+		}
+
+		return state
+	}, [
+		isOn,
+		state,
+	])
+
+	const compiledClassName = useMemo(() => {
+		return classnames(styles['switch'], {
+			[styles['is-on']]: compiledIsOn,
+		})
+	}, [compiledIsOn])
 
 	useEffect(() => {
 		const defaultOnNotABoolean = typeof defaultOn !== 'boolean'
@@ -71,15 +85,15 @@ export function Switch(props) {
 
 	return (
 		<label
-			className={'switch'}
-			data-is-on={isOn}
+			className={compiledClassName}
 			htmlFor={id}>
 			<motion.span
-				className={'thumb'}
+				className={styles['thumb']}
 				layout />
 
 			<input
 				checked={compiledIsOn}
+				className={styles['control']}
 				id={id}
 				onChange={handleChange}
 				type={'checkbox'} />
