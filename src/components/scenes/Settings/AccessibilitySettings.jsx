@@ -52,7 +52,7 @@ const GAME_FONT_OPTIONS = {
 				<span>{'Awkward'}</span>
 
 				<span
-					className={'sample'}
+					className={styles['font-sample']}
 					/* eslint-disable-next-line react-perf/jsx-no-new-object-as-prop */
 					style={{ fontFamily: 'Awkward' }}>
 					{'Awkward'}
@@ -69,7 +69,7 @@ const GAME_FONT_OPTIONS = {
 				<span>{'Thaleah'}</span>
 
 				<span
-					className={'sample'}
+					className={styles['font-sample']}
 					/* eslint-disable-next-line react-perf/jsx-no-new-object-as-prop */
 					style={{ fontFamily: 'Thaleah' }}>
 					{'Thaleah'}
@@ -130,7 +130,7 @@ export function AccessibilitySettings(props) {
 						<span>{fontName}</span>
 
 						<span
-							className={'sample'}
+							className={styles['font-sample']}
 							/* eslint-disable-next-line react-perf/jsx-no-new-object-as-prop */
 							style={{ fontFamily: fontName }}>
 							{fontName}
@@ -201,15 +201,17 @@ export function AccessibilitySettings(props) {
 	return (
 		<motion.div
 			animate={'animate'}
+			className={styles['wrapper']}
 			exit={'exit'}
-			id={'accessibility-settings'}
 			initial={'initial'}
 			variants={variants}>
 			<DecoratedHeader className={styles['decorated-header']}>
 				{'Accessibility'}
 			</DecoratedHeader>
 
-			<form onSubmit={handleSubmit}>
+			<form
+				className={styles['form']}
+				onSubmit={handleSubmit}>
 				<div className={'form-contents'}>
 					<div className={'field'}>
 						<label>{'Colorblind Type'}</label>
@@ -234,7 +236,8 @@ export function AccessibilitySettings(props) {
 								<div className={'field'}>
 									<label>{'Heading Font'}</label>
 									<Combobox
-										className={'font-list'}
+										className={styles['font-list']}
+										labelClassName={styles['font-list-label']}
 										onChange={setHeadingFontFace}
 										options={fontOptions}
 										value={headingFontFace} />
@@ -245,7 +248,8 @@ export function AccessibilitySettings(props) {
 								<div className={'field'}>
 									<label>{'Text Font'}</label>
 									<Combobox
-										className={'font-list'}
+										className={styles['font-list']}
+										labelClassName={styles['font-list-label']}
 										onChange={setTextFontFace}
 										options={fontOptions}
 										value={textFontFace} />
@@ -257,7 +261,9 @@ export function AccessibilitySettings(props) {
 					{/* <AccessibilityFormContents /> */}
 				</div>
 
-				<menu type={'toolbar'}>
+				<menu
+					className={styles['menu']}
+					type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button
 							isAffirmative

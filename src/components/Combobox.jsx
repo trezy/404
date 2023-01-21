@@ -79,6 +79,7 @@ export function Combobox(props) {
 		emptyMessage,
 		id,
 		isDisabled,
+		labelClassName,
 		onChange,
 		options,
 		value,
@@ -89,15 +90,6 @@ export function Combobox(props) {
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedOption, setSelectedOption] = useState(options[0])
 	const comboboxID = useId()
-
-	const compiledClassName = useMemo(() => {
-		return classnames('combobox', className, {
-			'is-open': isOpen,
-		})
-	}, [
-		className,
-		isOpen,
-	])
 
 	const getOptionKey = useCallback(option => {
 		return `${comboboxID}-options-${option.value}`
@@ -156,6 +148,49 @@ export function Combobox(props) {
 		selectOption,
 	])
 
+	const handleLabelInteraction = useCallback(event => {
+		const {
+			key,
+			type,
+		} = event
+
+		if (isDisabled) {
+			return
+		}
+
+		if (type === 'click') {
+			if (isOpen) {
+				hideOptions()
+			} else if (!isOpen) {
+				showOptions()
+			}
+		} else if (type === 'keyup') {
+			if (isOpen && CLOSE_KEYS.includes(key)) {
+				hideOptions()
+			} else if (!isOpen && OPEN_KEYS.includes(key)) {
+				showOptions()
+			}
+		}
+	}, [
+		isDisabled,
+		hideOptions,
+		isOpen,
+		showOptions,
+	])
+
+	const compiledClassName = useMemo(() => {
+		return classnames('combobox', className, {
+			'is-open': isOpen,
+		})
+	}, [
+		className,
+		isOpen,
+	])
+
+	const compiledLabelClassName = useMemo(() => {
+		return classnames(labelClassName, 'combobox-label')
+	}, [labelClassName])
+
 	const mappedOptions = useMemo(() => {
 		const optionGroups = options.reduce((accumulator, option) => {
 			if (option.group && !accumulator[option.group]) {
@@ -213,36 +248,6 @@ export function Combobox(props) {
 		selectedOption,
 	])
 
-	const handleLabelInteraction = useCallback(event => {
-		const {
-			key,
-			type,
-		} = event
-
-		if (isDisabled) {
-			return
-		}
-
-		if (type === 'click') {
-			if (isOpen) {
-				hideOptions()
-			} else if (!isOpen) {
-				showOptions()
-			}
-		} else if (type === 'keyup') {
-			if (isOpen && CLOSE_KEYS.includes(key)) {
-				hideOptions()
-			} else if (!isOpen && OPEN_KEYS.includes(key)) {
-				showOptions()
-			}
-		}
-	}, [
-		isDisabled,
-		hideOptions,
-		isOpen,
-		showOptions,
-	])
-
 	useEffect(() => {
 		if (isDisabled) {
 			setIsOpen(false)
@@ -278,7 +283,7 @@ export function Combobox(props) {
 			className={compiledClassName}>
 			<label
 				aria-activedescendant={selectedOption ? getOptionKey(selectedOption) : null}
-				className={'combobox-label'}
+				className={compiledLabelClassName}
 				id={`${comboboxID}-label`}
 				// eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
 				tabIndex={0}>
