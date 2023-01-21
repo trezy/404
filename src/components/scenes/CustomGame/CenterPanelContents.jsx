@@ -15,6 +15,7 @@ import styles from './CenterPanelContents.module.scss'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { MapCard } from './MapCard.jsx'
+import { PanelContent } from '../../Panel/PanelContent.jsx'
 import { usePanelContext } from '../../Panel/Context/usePanelContext.js'
 import { useStore } from '../../../store/react.js'
 
@@ -80,7 +81,7 @@ export function CenterPanelContents() {
 		<>
 			<DecoratedHeader>{'Map Select'}</DecoratedHeader>
 
-			<div className={'panel-content'}>
+			<PanelContent>
 				<div className={styles['map-list']}>
 					{!isPanelLoading && (
 						<ul>
@@ -88,7 +89,7 @@ export function CenterPanelContents() {
 						</ul>
 					)}
 				</div>
-			</div>
+			</PanelContent>
 		</>
 	)
 }

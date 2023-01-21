@@ -13,7 +13,7 @@ import classnames from 'classnames'
 import styles from './TilePalettePanel.module.scss'
 
 import { Button } from '../../Button.jsx'
-import { Panel } from '../../scenes/Architect/Panel.jsx'
+import { CollapsiblePanel } from '../../CollapsiblePanel/CollapsiblePanel.jsx'
 import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
 import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
@@ -81,9 +81,7 @@ export function TilePalettePanel() {
 	])
 
 	return (
-		<Panel
-			isCollapsible
-			title={'Tiles'}>
+		<CollapsiblePanel title={'Tiles'}>
 			<ol className={styles['tile-grid']}>
 				{!hasResourcePacks && (
 					<li className={styles['empty-message']}>
@@ -93,6 +91,6 @@ export function TilePalettePanel() {
 
 				{hasResourcePacks && mappedTiles}
 			</ol>
-		</Panel>
+		</CollapsiblePanel>
 	)
 }

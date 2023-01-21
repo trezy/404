@@ -8,37 +8,35 @@ import { useMemo } from 'react'
 
 
 // Local imports
-import styles from './DecoratedHeader.module.scss'
+import styles from './PanelContent.module.scss'
 
 
 
 
 
-export function DecoratedHeader(props) {
+export function PanelContent(props) {
 	const {
 		children,
 		className,
 	} = props
 
 	const compiledClassName = useMemo(() => {
-		return classnames(styles['decorated-header'], className)
+		return classnames(styles['panel-content'], className)
 	}, [className])
 
 	return (
-		<header
+		<div
 			{...props}
 			className={compiledClassName}>
-			<h2>{children}</h2>
-		</header>
+			{children}
+		</div>
 	)
 }
 
-DecoratedHeader.defaultProps = {
+PanelContent.defaultProps = {
 	children: null,
-	className: '',
 }
 
-DecoratedHeader.propTypes = {
+PanelContent.propTypes = {
 	children: PropTypes.node,
-	className: PropTypes.string,
 }

@@ -1,5 +1,5 @@
 // Local imports
-import { Panel } from '../../scenes/Architect/Panel.jsx'
+import { CollapsiblePanel } from '../../CollapsiblePanel/CollapsiblePanel.jsx'
 
 
 
@@ -7,11 +7,10 @@ import { Panel } from '../../scenes/Architect/Panel.jsx'
 
 export function TileQueuePanel() {
 	return (
-		<Panel
+		<CollapsiblePanel
 			className={'queue-panel'}
-			isCollapsible
 			title={'Queue'}>
 			<ol className={'block-list'} />
-		</Panel>
+		</CollapsiblePanel>
 	)
 }

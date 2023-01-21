@@ -12,7 +12,7 @@ import {
 // Local imports
 import { Button } from '../Button.jsx'
 import { EditTileModal } from '../EditTileModal/EditTileModal.jsx'
-import { Panel } from '../scenes/Architect/Panel.jsx'
+import { CollapsiblePanel } from '../CollapsiblePanel/CollapsiblePanel.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
@@ -118,9 +118,8 @@ export function TilesPanel() {
 
 	return (
 		<>
-			<Panel
+			<CollapsiblePanel
 				className={'tiles-panel'}
-				isCollapsible
 				menu={Menu}
 				title={'Tiles'}>
 				<ol className={'block-list'}>
@@ -144,7 +143,7 @@ export function TilesPanel() {
 
 					{hasTiles && mappedTiles}
 				</ol>
-			</Panel>
+			</CollapsiblePanel>
 
 			{showEditTileModal && (
 				<EditTileModal

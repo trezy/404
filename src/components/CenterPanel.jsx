@@ -69,7 +69,6 @@ export function CenterPanel() {
 				<Panel
 					key={'CustomGameSceneCenterPanelContents'}
 					columnSpan={3}
-					isCentered
 					variants={PANEL_VARIANTS}>
 					<CustomGameSceneCenterPanelContents />
 				</Panel>
@@ -79,7 +78,6 @@ export function CenterPanel() {
 				<Panel
 					key={'LoadingMapSceneCenterPanelContents'}
 					columnSpan={3}
-					isCentered
 					variants={PANEL_VARIANTS}>
 					<LoadingMapSceneCenterPanelContents />
 				</Panel>

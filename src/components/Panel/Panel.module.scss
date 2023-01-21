@@ -6,7 +6,8 @@
 
 	display: flex;
 	flex-direction: column;
-	overflow: visible;
+	flex-shrink: 0;
+	overflow: auto;
 	padding: calc((var(--panel-border-size) + var(--panel-padding)) * var(--ui-scale) * 1px);
 	position: relative;
 
@@ -55,69 +56,8 @@
 		justify-content: center;
 	}
 
-	&.is-collapsible {
-		overflow: hidden;
-
-		> header {
-			align-items: center;
-
-			&:after {
-				background-color: var(--palette-white);
-				clip-path: polygon(
-					/* top left */
-					0 0,
-					calc(1px * var(--ui-scale)) 0,
-					calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-					calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
-					calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
-
-					/* top right */
-					calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
-					calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-					calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
-					calc(100% - (1px * var(--ui-scale))) 0,
-					100% 0,
-
-					/* bottom right */
-					100% calc(100% - (2px * var(--ui-scale))),
-					calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
-					calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-					calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
-					calc(100% - (2px * var(--ui-scale))) 100%,
-
-					/* bottom left */
-					calc(2px * var(--ui-scale)) 100%,
-					calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-					calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
-					calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
-					0 calc(100% - (2px * var(--ui-scale))),
-				);
-				content: '';
-				display: block;
-				margin-left: auto;
-				height: calc(3px * var(--ui-scale));
-				transform: rotate(0deg);
-				width: calc(5px * var(--ui-scale));
-			}
-		}
-	}
-
 	&.is-primary {
 		--panel-border-color: var(--palette-white);
-	}
-
-	&.is-scrollable {
-		> .panel-content {
-			flex-shrink: 1;
-
-			> .panel-scroller {
-				overflow: auto;
-			}
-		}
-	}
-
-	&:not(.is-scrollable) {
-		flex-shrink: 0 !important;
 	}
 
 	> * {
@@ -128,19 +68,6 @@
 	> header {
 		cursor: pointer;
 		display: flex;
-	}
-
-	// > .panel-bottom {
-	// 	margin-top: auto;
-	// }
-
-	> .panel-content {
-		display: flex;
-		flex-direction: column;
-		flex-grow: 0;
-		margin-top: calc(4px * var(--ui-scale));
-		max-height: 100%;
-		overflow: auto;
 	}
 
 	> menu {

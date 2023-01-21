@@ -12,7 +12,7 @@ import {
 // Local imports
 import { Button } from '../Button.jsx'
 import { NewAssetModal } from './NewAssetModal/NewAssetModal.jsx'
-import { Panel } from '../scenes/Architect/Panel.jsx'
+import { CollapsiblePanel } from '../CollapsiblePanel/CollapsiblePanel.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 import { useResourcepackEditorContext } from './Context/useResourcepackEditorContext.js'
 
@@ -85,9 +85,8 @@ export function AssetsPanel() {
 
 	return (
 		<>
-			<Panel
+			<CollapsiblePanel
 				className={'assets'}
-				isCollapsible
 				menu={Menu}
 				title={'Assets'}>
 				<ol className={'block-list'}>
@@ -123,7 +122,7 @@ export function AssetsPanel() {
 						</li>
 					))}
 				</ol>
-			</Panel>
+			</CollapsiblePanel>
 
 			{showNewAssetModal && (
 				<NewAssetModal
