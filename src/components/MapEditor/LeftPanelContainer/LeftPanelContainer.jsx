@@ -12,7 +12,7 @@ import {
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
-import { ManageResourcePacksModal } from '../../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
+import { ManageResourcePacksModal } from '../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
 import { useMapEditorContext } from '../Context/useMapEditorContext.js'

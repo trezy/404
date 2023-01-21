@@ -10,7 +10,7 @@ import { useCallback } from 'react'
 // Local imports
 import styles from './Resourcepack.module.scss'
 
-import { Checkbox } from '../Checkbox/Checkbox.jsx'
+import { Checkbox } from '../../Checkbox/Checkbox.jsx'
 
 
 

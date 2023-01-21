@@ -14,11 +14,11 @@ import PropTypes from 'prop-types'
 // Local imports
 import styles from './ManageResourcePacksModal.module.scss'
 
-import { Button } from '../Button.jsx'
-import { Modal } from '../Modal/Modal.jsx'
+import { Button } from '../../Button.jsx'
+import { Modal } from '../../Modal/Modal.jsx'
 import { Resourcepack } from './ResourcePack.jsx'
-import { useMapEditorContext } from '../MapEditor/Context/useMapEditorContext.js'
-import { useStore } from '../../store/react.js'
+import { useMapEditorContext } from '../Context/useMapEditorContext.js'
+import { useStore } from '../../../store/react.js'
 
 
 
