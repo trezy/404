@@ -104,9 +104,24 @@ export function EditorContextProvider(props) {
 				}
 			})
 		})
+
+		setPfgridStacks(previousState => {
+			const coordinateString = `${cellX}|${cellY}`
+
+			if (previousState[coordinateString]) {
+				delete previousState[coordinateString]?.[currentLayerIndex]
+
+				if (!Object.keys(previousState[coordinateString]).length) {
+					delete previousState[coordinateString]
+				}
+			}
+
+			return { ...previousState }
+		})
 	}, [
 		currentLayerIndex,
 		setLayers,
+		setPfgridStacks,
 	])
 
 	const openItem = useCallback(newItem => {
