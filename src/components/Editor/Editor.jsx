@@ -160,6 +160,67 @@ const RENDERERS = {
 	},
 
 	/**
+	 * Renders destinations to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	destination(options) {
+		const {
+			context,
+			destinations,
+			isDestinationsVisible,
+			renderOffset,
+			tool,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		const destinationKeys = Object.keys(destinations)
+
+		if (((tool === 'destination') || isDestinationsVisible) && destinationKeys.length) {
+			destinationKeys.forEach(coordinateString => {
+				const [cellX, cellY] = coordinateString
+					.split('|')
+					.map(Number)
+
+				context.globalAlpha = 0.5
+				context.strokeStyle = 'black'
+				context.lineWidth = 4
+
+				context.strokeRect(
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+
+				context.globalAlpha = 1
+				context.strokeStyle = '#346524'
+				context.lineWidth = 2
+
+				context.strokeRect(
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+			})
+		}
+	},
+
+	/**
 	 * Renders the destination cursor to the canvas.
 	 *
 	 * @param {object} options All options.
@@ -170,7 +231,7 @@ const RENDERERS = {
 	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
 	 * @param {number} options.zoom The current zoom level.
 	 */
-	destination(options) {
+	destinationCursor(options) {
 		const {
 			context,
 			targetCell,
@@ -279,13 +340,8 @@ const RENDERERS = {
 		const {
 			contentManager,
 			context,
-			destinations,
-			isDestinationsVisible,
-			isStartingPositionVisible,
 			layers,
 			renderOffset,
-			startingPosition,
-			tool,
 			zoom,
 		} = options
 
@@ -318,62 +374,6 @@ const RENDERERS = {
 				)
 			})
 		})
-
-		const destinationKeys = Object.keys(destinations)
-
-		if (((tool === 'destination') || isDestinationsVisible) && destinationKeys.length) {
-			destinationKeys.forEach(coordinateString => {
-				const [cellX, cellY] = coordinateString
-					.split('|')
-					.map(Number)
-
-				context.globalAlpha = 0.5
-				context.strokeStyle = 'black'
-				context.lineWidth = 4
-
-				context.strokeRect(
-					(cellX * TILE_SIZE.width) + renderOffset.x,
-					(cellY * TILE_SIZE.height) + renderOffset.y,
-					TILE_SIZE.width,
-					TILE_SIZE.height,
-				)
-
-				context.globalAlpha = 1
-				context.strokeStyle = '#346524'
-				context.lineWidth = 2
-
-				context.strokeRect(
-					(cellX * TILE_SIZE.width) + renderOffset.x,
-					(cellY * TILE_SIZE.height) + renderOffset.y,
-					TILE_SIZE.width,
-					TILE_SIZE.height,
-				)
-			})
-		}
-
-		if (((tool === 'startingPosition') || isStartingPositionVisible) && startingPosition) {
-			context.globalAlpha = 0.5
-			context.strokeStyle = 'black'
-			context.lineWidth = 4
-
-			context.strokeRect(
-				(startingPosition.x * TILE_SIZE.width) + renderOffset.x,
-				(startingPosition.y * TILE_SIZE.height) + renderOffset.y,
-				TILE_SIZE.width,
-				TILE_SIZE.height,
-			)
-
-			context.globalAlpha = 1
-			context.strokeStyle = '#597dce'
-			context.lineWidth = 2
-
-			context.strokeRect(
-				(startingPosition.x * TILE_SIZE.width) + renderOffset.x,
-				(startingPosition.y * TILE_SIZE.height) + renderOffset.y,
-				TILE_SIZE.width,
-				TILE_SIZE.height,
-			)
-		}
 	},
 
 	/**
@@ -629,6 +629,59 @@ const RENDERERS = {
 		context.globalCompositeOperation = 'source-over'
 		context.lineDashOffset = 0
 		context.setLineDash([])
+	},
+
+	/**
+	 * Renders the starting position to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	startingPosition(options) {
+		const {
+			context,
+			isStartingPositionVisible,
+			renderOffset,
+			startingPosition,
+			tool,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		if (((tool === 'startingPosition') || isStartingPositionVisible) && startingPosition) {
+			context.globalAlpha = 0.5
+			context.strokeStyle = 'black'
+			context.lineWidth = 4
+
+			context.strokeRect(
+				(startingPosition.x * TILE_SIZE.width) + renderOffset.x,
+				(startingPosition.y * TILE_SIZE.height) + renderOffset.y,
+				TILE_SIZE.width,
+				TILE_SIZE.height,
+			)
+
+			context.globalAlpha = 1
+			context.strokeStyle = '#597dce'
+			context.lineWidth = 2
+
+			context.strokeRect(
+				(startingPosition.x * TILE_SIZE.width) + renderOffset.x,
+				(startingPosition.y * TILE_SIZE.height) + renderOffset.y,
+				TILE_SIZE.width,
+				TILE_SIZE.height,
+			)
+		}
 	},
 
 	/**
@@ -1097,15 +1150,8 @@ export function Editor(props) {
 		RENDERERS.layers({
 			contentManager,
 			context,
-			destinations,
-			image,
-			isDestinationsVisible,
-			isStartingPositionVisible,
 			layers,
 			renderOffset,
-			startingPosition,
-			targetCell,
-			tool,
 			zoom,
 		})
 
@@ -1119,10 +1165,28 @@ export function Editor(props) {
 			})
 		}
 
+		RENDERERS.destination({
+			context,
+			destinations,
+			isDestinationsVisible,
+			renderOffset,
+			tool,
+			zoom,
+		})
+
+		RENDERERS.startingPosition({
+			context,
+			isStartingPositionVisible,
+			renderOffset,
+			startingPosition,
+			tool,
+			zoom,
+		})
+
 		let renderer = tool
 
-		if (tool === 'startingPosition') {
-			renderer = 'startingPositionCursor'
+		if (['destination', 'startingPosition'].includes(tool)) {
+			renderer = `${tool}Cursor`
 		}
 
 		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[renderer] === 'function')) {
