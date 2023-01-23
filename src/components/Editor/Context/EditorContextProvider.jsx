@@ -307,7 +307,7 @@ export function EditorContextProvider(props) {
 	const toggleDestination = useCallback(destination => {
 		const coordinateString = `${destination.x}|${destination.y}`
 
-		if ((destination.x === startingPosition.x) || (destination.y === startingPosition)) {
+		if ((destination.x === startingPosition.x) && (destination.y === startingPosition)) {
 			addNotification({
 				message: 'Destination and starting position cannot occupy the same tile.',
 				type: 'error',
