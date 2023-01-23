@@ -42,8 +42,8 @@ export function MapEditorContextProvider(props) {
 				accumulator[resourcepackID] = resourcePackData.version
 				return accumulator
 			}, {}),
-			mapName,
 			layers,
+			name: mapName,
 			pfgrid,
 			startingPosition,
 		}
