@@ -35,6 +35,7 @@ export function EditorContextProvider(props) {
 	const [pfgridStacks, setPfgridStacks] = useState(initialState.pfgridStacks)
 	const [openItems, setOpenItems] = useState(initialState.openItems)
 	const [selection, setSelection] = useState(initialState.selection)
+	const [startingPosition, setStartingPosition] = useState(initialState.startingPosition)
 	const [tool, setTool] = useState(initialState.tool)
 	const [zoom, setZoom] = useState(initialState.zoom)
 
@@ -47,11 +48,14 @@ export function EditorContextProvider(props) {
 	}, [])
 
 	const activateBrushTool = useCallback(() => setTool('brush'), [setTool])
+
 	const activateEraserTool = useCallback(() => setTool('eraser'), [setTool])
 
 	const activateMarqueeTool = useCallback(() => setTool('marquee'), [setTool])
 
 	const activateMoveTool = useCallback(() => setTool('move'), [setTool])
+
+	const activateStartingPositionTool = useCallback(() => setTool('startingPosition'), [setTool])
 
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
@@ -261,6 +265,7 @@ export function EditorContextProvider(props) {
 			activateEraserTool,
 			activateMoveTool,
 			activateMarqueeTool,
+			activateStartingPositionTool,
 			activeTile,
 			closeItem,
 			currentLayer,
@@ -279,6 +284,8 @@ export function EditorContextProvider(props) {
 			setActiveTile: setActiveTileConvenience,
 			setIsPathfindingGridVisible,
 			setSelection,
+			setStartingPosition,
+			startingPosition,
 			tool,
 			zoom,
 			zoomIn,
@@ -290,6 +297,7 @@ export function EditorContextProvider(props) {
 		activateEraserTool,
 		activateMoveTool,
 		activateMarqueeTool,
+		activateStartingPositionTool,
 		closeItem,
 		currentLayer,
 		defaultZoom,
@@ -307,6 +315,8 @@ export function EditorContextProvider(props) {
 		setActiveTileConvenience,
 		setIsPathfindingGridVisible,
 		setSelection,
+		setStartingPosition,
+		startingPosition,
 		tool,
 		zoom,
 		zoomIn,

@@ -24,6 +24,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMoveTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateStartingPositionTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	eraseTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
@@ -39,6 +41,8 @@ export const EditorContext = createContext({
 	setIsPathfindingGridVisible: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setSelection: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	setStartingPosition: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc

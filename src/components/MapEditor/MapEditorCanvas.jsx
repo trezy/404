@@ -30,6 +30,7 @@ export function MapEditorCanvas() {
 		activateEraserTool,
 		// activateMarqueeTool,
 		activateMoveTool,
+		activateStartingPositionTool,
 		defaultZoom,
 		isPathfindingGridVisible,
 		setIsPathfindingGridVisible,
@@ -82,6 +83,15 @@ export function MapEditorCanvas() {
 						<img
 							alt={'Brush Tool'}
 							src={'/static/assets/tools/brush.png'} />
+					</Button>
+
+					<Button
+						isAffirmative={tool === 'startingPosition'}
+						isUniformlyPadded
+						onClick={activateStartingPositionTool}>
+						<img
+							alt={'Starting Position Tool'}
+							src={'/static/assets/tools/flag.png'} />
 					</Button>
 				</ButtonGroup>
 			),

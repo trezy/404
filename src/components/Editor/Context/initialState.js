@@ -10,6 +10,7 @@ export const initialState = {
 	openItems: {},
 	pfgridStacks: {},
 	selection: null,
+	startingPosition: null,
 	tool: 'marquee',
 	zoom: 1,
 }
