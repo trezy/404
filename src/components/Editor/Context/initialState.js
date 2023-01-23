@@ -2,6 +2,7 @@ export const initialState = {
 	activeTile: null,
 	currentLayerIndex: 0,
 	defaultZoom: 1,
+	notifications: [],
 	focusedItemID: null,
 	isPathfindingGridVisible: false,
 	isStartingPositionVisible: true,

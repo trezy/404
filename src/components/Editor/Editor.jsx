@@ -16,6 +16,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import styles from './Editor.module.scss'
 
+import { Notifications } from './Notifications.jsx'
 import { TILE_SIZE } from '../../game/Tile.js'
 import { useDOMEvent } from '../../hooks/useDOMEvent.js'
 import { useEditorContext } from './Context/useEditorContext.js'
@@ -1158,6 +1159,8 @@ export function Editor(props) {
 				onMouseMove={handleMouseMove}
 				onMouseUp={handleCanvasRelease}
 				width={canvasSize.width} />
+
+			<Notifications />
 		</div>
 	)
 }

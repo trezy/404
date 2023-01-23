@@ -29,6 +29,7 @@ export function EditorContextProvider(props) {
 	const [activeTile, setActiveTile] = useState(initialState.activeTile)
 	const [currentLayerIndex, setCurrentLayerIndex] = useState(initialState.currentLayerIndex)
 	const [defaultZoom, setDefaultZoom] = useState(initialState.defaultZoom)
+	const [notifications, setNotifications] = useState(initialState.notifications)
 	const [focusedItemID, setFocusedItemID] = useState(initialState.focusedItemID)
 	const [isPathfindingGridVisible, setIsPathfindingGridVisible] = useState(initialState.isPathfindingGridVisible)
 	const [isStartingPositionVisible, setIsStartingPositionVisible] = useState(initialState.isStartingPositionVisible)
@@ -47,6 +48,24 @@ export function EditorContextProvider(props) {
 
 		return rootScale
 	}, [])
+
+	const addNotification = useCallback(notification => {
+		const notificationID = uuid()
+
+		setNotifications(previousState => {
+			return [
+				...previousState,
+				{
+					id: notificationID,
+					...notification,
+				},
+			]
+		})
+
+		setTimeout(() => {
+			setNotifications(previousState => previousState.filter(item => item.id !== notificationID))
+		}, notification.duration ?? 5000)
+	}, [setNotifications])
 
 	const activateBrushTool = useCallback(() => setTool('brush'), [setTool])
 
@@ -123,10 +142,17 @@ export function EditorContextProvider(props) {
 
 			return { ...previousState }
 		})
+
+		if (startingPosition) {
+			setStartingPosition(null)
+			addNotification({ message: 'Starting position tile erased; starting position has been removed.' })
+		}
 	}, [
+		addNotification,
 		currentLayerIndex,
 		setLayers,
 		setPfgridStacks,
+		startingPosition,
 	])
 
 	const openItem = useCallback(newItem => {
@@ -263,10 +289,16 @@ export function EditorContextProvider(props) {
 	const setStartingPositionWrapper = useCallback(newStartingPosition => {
 		if (pfgrid[`${newStartingPosition.x}|${newStartingPosition.y}`]?.isTraversable) {
 			setStartingPosition(newStartingPosition)
+		} else {
+			addNotification({
+				message: 'Starting position can only be placed on a traversable tile.',
+				type: 'error',
+			})
 		}
 	}, [
-		setStartingPosition,
+		addNotification,
 		pfgrid,
+		setStartingPosition,
 	])
 
 	const providerState = useMemo(() => {
@@ -277,10 +309,12 @@ export function EditorContextProvider(props) {
 			activateMarqueeTool,
 			activateStartingPositionTool,
 			activeTile,
+			addNotification,
 			closeItem,
 			currentLayer,
 			defaultZoom,
 			eraseTile,
+			notifications,
 			focusedItemID,
 			focusItem,
 			isPathfindingGridVisible,
@@ -310,10 +344,12 @@ export function EditorContextProvider(props) {
 		activateMoveTool,
 		activateMarqueeTool,
 		activateStartingPositionTool,
+		addNotification,
 		closeItem,
 		currentLayer,
 		defaultZoom,
 		eraseTile,
+		notifications,
 		focusedItemID,
 		focusItem,
 		isPathfindingGridVisible,

@@ -26,6 +26,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateStartingPositionTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	addNotification: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	eraseTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	closeItem: () => {},
