@@ -28,7 +28,11 @@ export function MapEditorContextProvider(props) {
 	const [isSaving, setIsSaving] = useState(initialState.isSaving)
 	const [mapName, setMapName] = useState(initialState.mapName)
 	const [resourcepacks, setResourcepacks] = useState(initialState.resourcepacks)
-	const { layers } = useEditorContext()
+	const {
+		layers,
+		pfgrid,
+		startingPosition,
+	} = useEditorContext()
 
 	const contentManager = useStore(state => state.contentManager)
 
@@ -40,10 +44,13 @@ export function MapEditorContextProvider(props) {
 			}, {}),
 			mapName,
 			layers,
+			pfgrid,
+			startingPosition,
 		}
 	}, [
 		layers,
 		mapName,
+		pfgrid,
 		resourcepacks,
 	])
 

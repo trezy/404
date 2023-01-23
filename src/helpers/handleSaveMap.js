@@ -25,8 +25,6 @@ import { STATE } from './state.js'
  * @returns {boolean} Whether the file was saved successfully.
  */
 export async function handleSaveMap(event, mapData) {
-	console.log(mapData)
-
 	const filePath = path.join(getAppDataPath(), 'maps', `${mapData.name}.debugmap`)
 	const id = mapData.id || uuid()
 
@@ -98,8 +96,6 @@ export async function handleSaveMap(event, mapData) {
 		parsedLayers: [],
 	})
 
-	console.log(parsedLayers)
-
 	try {
 		await createArchive(filePath, {
 			'map.json': JSON.stringify({
@@ -107,7 +103,8 @@ export async function handleSaveMap(event, mapData) {
 					height: dimensions.height,
 					width: dimensions.width,
 				},
-				pfgrid: [],
+				startingPosition: mapData.startingPosition,
+				pfgrid: mapData.pfgrid,
 				tiles: parsedLayers,
 			}),
 			'meta.json': JSON.stringify({
