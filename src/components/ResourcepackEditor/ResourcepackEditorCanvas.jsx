@@ -37,57 +37,55 @@ export function ResourcepackEditorCanvas() {
 		focusedItemID,
 	])
 
-	const controls = useMemo(() => {
-		return [
-			{
-				title: 'Tools',
-				children: (
-					<ButtonGroup>
-						<Button
-							isAffirmative={tool === 'move'}
-							isUniformlyPadded
-							onClick={activateMoveTool}>
-							<img
-								alt={'Move Tool'}
-								src={'/static/assets/tools/move.png'} />
-						</Button>
+	const controls = [
+		{
+			title: 'Tools',
+			children: (
+				<ButtonGroup>
+					<Button
+						isAffirmative={tool === 'move'}
+						isUniformlyPadded
+						onClick={activateMoveTool}>
+						<img
+							alt={'Move Tool'}
+							src={'/static/assets/tools/move.png'} />
+					</Button>
 
-						<Button
-							isAffirmative={tool === 'marquee'}
-							isUniformlyPadded
-							onClick={activateMarqueeTool}>
-							<img
-								alt={'Selection Tool'}
-								src={'/static/assets/tools/marquee.png'} />
-						</Button>
-					</ButtonGroup>
-				),
-			},
+					<Button
+						isAffirmative={tool === 'marquee'}
+						isUniformlyPadded
+						onClick={activateMarqueeTool}>
+						<img
+							alt={'Selection Tool'}
+							src={'/static/assets/tools/marquee.png'} />
+					</Button>
+				</ButtonGroup>
+			),
+		},
 
-			{
-				title: 'Zoom',
-				children: (
-					<ButtonGroup>
-						<Button
-							isUniformlyPadded
-							onClick={zoomOut}>
-							{'-'}
-						</Button>
+		{
+			title: 'Zoom',
+			children: (
+				<ButtonGroup>
+					<Button
+						isUniformlyPadded
+						onClick={zoomOut}>
+						{'-'}
+					</Button>
 
-						<div>
-							{`${(zoom - defaultZoom + 1) * 100}%`}
-						</div>
+					<div>
+						{`${(zoom - defaultZoom + 1) * 100}%`}
+					</div>
 
-						<Button
-							isUniformlyPadded
-							onClick={zoomIn}>
-							{'+'}
-						</Button>
-					</ButtonGroup>
-				),
-			},
-		]
-	}, [])
+					<Button
+						isUniformlyPadded
+						onClick={zoomIn}>
+						{'+'}
+					</Button>
+				</ButtonGroup>
+			),
+		},
+	]
 
 	return (
 		<EditorContainer>

@@ -1,7 +1,7 @@
 // Module imports
 import {
 	useCallback,
-	useMemo,
+	useEffect,
 } from 'react'
 
 
@@ -28,7 +28,7 @@ export function MapEditorCanvas() {
 	const {
 		activateBrushTool,
 		activateEraserTool,
-		activateMarqueeTool,
+		// activateMarqueeTool,
 		activateMoveTool,
 		defaultZoom,
 		isPathfindingGridVisible,
@@ -43,87 +43,86 @@ export function MapEditorCanvas() {
 		setIsPathfindingGridVisible(isOn)
 	}, [setIsPathfindingGridVisible])
 
-	const controls = useMemo(() => {
-		return [
-			{
-				title: 'Tools',
-				children: (
-					<ButtonGroup>
-						<Button
-							isAffirmative={tool === 'move'}
-							isUniformlyPadded
-							onClick={activateMoveTool}>
-							<img
-								alt={'Move Tool'}
-								src={'/static/assets/tools/move.png'} />
-						</Button>
+	const controls = [
+		{
+			title: 'Tools',
+			children: (
+				<ButtonGroup>
+					<Button
+						isAffirmative={tool === 'move'}
+						isUniformlyPadded
+						onClick={activateMoveTool}>
+						<img
+							alt={'Move Tool'}
+							src={'/static/assets/tools/move.png'} />
+					</Button>
 
-						<Button
-							isAffirmative={tool === 'eraser'}
-							isUniformlyPadded
-							onClick={activateEraserTool}>
-							<img
-								alt={'Eraser Tool'}
-								src={'/static/assets/tools/eraser.png'} />
-						</Button>
+					<Button
+						isAffirmative={tool === 'eraser'}
+						isUniformlyPadded
+						onClick={activateEraserTool}>
+						<img
+							alt={'Eraser Tool'}
+							src={'/static/assets/tools/eraser.png'} />
+					</Button>
 
-						<Button
-							isAffirmative={tool === 'marquee'}
-							isUniformlyPadded
-							onClick={activateMarqueeTool}>
-							<img
-								alt={'Marquee Tool'}
-								src={'/static/assets/tools/marquee.png'} />
-						</Button>
+					{/* <Button
+						isAffirmative={tool === 'marquee'}
+						isUniformlyPadded
+						onClick={activateMarqueeTool}>
+						<img
+							alt={'Marquee Tool'}
+							src={'/static/assets/tools/marquee.png'} />
+					</Button> */}
 
-						<Button
-							isAffirmative={tool === 'brush'}
-							isUniformlyPadded
-							onClick={activateBrushTool}>
-							<img
-								alt={'Brush Tool'}
-								src={'/static/assets/tools/brush.png'} />
-						</Button>
-					</ButtonGroup>
-				),
-			},
+					<Button
+						isAffirmative={tool === 'brush'}
+						isUniformlyPadded
+						onClick={activateBrushTool}>
+						<img
+							alt={'Brush Tool'}
+							src={'/static/assets/tools/brush.png'} />
+					</Button>
+				</ButtonGroup>
+			),
+		},
 
-			{
-				title: 'Zoom',
-				children: (
-					<ButtonGroup>
-						<Button
-							isUniformlyPadded
-							onClick={zoomOut}>
-							{'-'}
-						</Button>
+		{
+			title: 'Zoom',
+			children: (
+				<ButtonGroup>
+					<Button
+						isUniformlyPadded
+						onClick={zoomOut}>
+						{'-'}
+					</Button>
 
-						<div>
-							{`${(zoom - defaultZoom + 1) * 100}%`}
-						</div>
+					<div>
+						{`${(zoom - defaultZoom + 1) * 100}%`}
+					</div>
 
-						<Button
-							isUniformlyPadded
-							onClick={zoomIn}>
-							{'+'}
-						</Button>
-					</ButtonGroup>
-				),
-			},
+					<Button
+						isUniformlyPadded
+						onClick={zoomIn}>
+						{'+'}
+					</Button>
+				</ButtonGroup>
+			),
+		},
 
-			{
-				title: 'Show Pathfinding Grid',
-				children: (
-					<Switch
-						isOn={isPathfindingGridVisible}
-						onChange={handleShowPathfindingGridChange} />
-				),
-			},
-		]
-	}, [
-		handleShowPathfindingGridChange,
-		isPathfindingGridVisible,
-	])
+		{
+			title: 'Show Pathfinding Grid',
+			children: (
+				<Switch
+					isOn={isPathfindingGridVisible}
+					onChange={handleShowPathfindingGridChange} />
+			),
+		},
+	]
+
+	useEffect(() => {
+		activateMoveTool()
+	}, [activateMoveTool])
 
 	return (
 		<EditorContainer>
