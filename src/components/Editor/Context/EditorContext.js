@@ -36,6 +36,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	setIsPathfindingGridVisible: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	setSelection: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},

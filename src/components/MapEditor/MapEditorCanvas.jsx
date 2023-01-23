@@ -1,5 +1,8 @@
 // Module imports
-import { useMemo } from 'react'
+import {
+	useCallback,
+	useMemo,
+} from 'react'
 
 
 
@@ -11,6 +14,7 @@ import { ButtonGroup } from '../ButtonGroup/ButtonGroup.jsx'
 import { Editor } from '../Editor/Editor.jsx'
 import { EditorContainer } from '../EditorContainer/EditorContainer.jsx'
 import { EditorControls } from '../EditorControls/EditorControls.jsx'
+import { Switch } from '../Switch/Switch.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 
 
@@ -27,11 +31,17 @@ export function MapEditorCanvas() {
 		activateMarqueeTool,
 		activateMoveTool,
 		defaultZoom,
+		isPathfindingGridVisible,
+		setIsPathfindingGridVisible,
 		tool,
 		zoom,
 		zoomIn,
 		zoomOut,
 	} = useEditorContext()
+
+	const handleShowPathfindingGridChange = useCallback(isOn => {
+		setIsPathfindingGridVisible(isOn)
+	}, [setIsPathfindingGridVisible])
 
 	const controls = useMemo(() => {
 		return [
@@ -100,8 +110,20 @@ export function MapEditorCanvas() {
 					</ButtonGroup>
 				),
 			},
+
+			{
+				title: 'Show Pathfinding Grid',
+				children: (
+					<Switch
+						isOn={isPathfindingGridVisible}
+						onChange={handleShowPathfindingGridChange} />
+				),
+			},
 		]
-	}, [])
+	}, [
+		handleShowPathfindingGridChange,
+		isPathfindingGridVisible,
+	])
 
 	return (
 		<EditorContainer>

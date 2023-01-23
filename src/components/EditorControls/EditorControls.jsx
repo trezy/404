@@ -1,6 +1,5 @@
 // Module imports
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
 
 
 
@@ -13,28 +12,26 @@ import styles from './EditorControls.module.scss'
 
 
 
+function mapControls(control) {
+	return (
+		<div
+			key={control.title}
+			className={styles['control']}>
+			<label>{control.title}</label>
+
+			{control.children}
+		</div>
+	)
+}
+
 export function EditorControls(props) {
 	const { controls } = props
-
-	const mappedControls = useMemo(() => {
-		return controls.map(control => {
-			return (
-				<div
-					key={control.title}
-					className={styles['control']}>
-					<label>{control.title}</label>
-
-					{control.children}
-				</div>
-			)
-		})
-	}, [])
 
 	return (
 		<menu
 			className={styles['editor-controls']}
 			type={'toolbar'}>
-			{mappedControls}
+			{controls.map(mapControls)}
 		</menu>
 	)
 }

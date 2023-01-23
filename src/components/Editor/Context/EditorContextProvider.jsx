@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid'
 // Local imports
 import { EditorContext } from './EditorContext.js'
 import { initialState } from './initialState.js'
+import { useStore } from '../../../store/react.js'
 
 
 
@@ -29,6 +30,7 @@ export function EditorContextProvider(props) {
 	const [currentLayerIndex, setCurrentLayerIndex] = useState(initialState.currentLayerIndex)
 	const [defaultZoom, setDefaultZoom] = useState(initialState.defaultZoom)
 	const [focusedItemID, setFocusedItemID] = useState(initialState.focusedItemID)
+	const [isPathfindingGridVisible, setIsPathfindingGridVisible] = useState(initialState.isPathfindingGridVisible)
 	const [layers, setLayers] = useState(initialState.layers)
 	const [pfgridStacks, setPfgridStacks] = useState(initialState.pfgridStacks)
 	const [openItems, setOpenItems] = useState(initialState.openItems)
@@ -251,6 +253,7 @@ export function EditorContextProvider(props) {
 			eraseTile,
 			focusedItemID,
 			focusItem,
+			isPathfindingGridVisible,
 			layers,
 			openItem,
 			openItems,
@@ -259,6 +262,7 @@ export function EditorContextProvider(props) {
 			scale,
 			selection,
 			setActiveTile: setActiveTileConvenience,
+			setIsPathfindingGridVisible,
 			setSelection,
 			tool,
 			zoom,
@@ -277,6 +281,7 @@ export function EditorContextProvider(props) {
 		eraseTile,
 		focusedItemID,
 		focusItem,
+		isPathfindingGridVisible,
 		layers,
 		openItem,
 		openItems,
@@ -285,6 +290,7 @@ export function EditorContextProvider(props) {
 		scale,
 		selection,
 		setActiveTileConvenience,
+		setIsPathfindingGridVisible,
 		setSelection,
 		tool,
 		zoom,

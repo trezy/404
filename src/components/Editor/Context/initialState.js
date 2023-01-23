@@ -3,6 +3,7 @@ export const initialState = {
 	currentLayerIndex: 0,
 	defaultZoom: 1,
 	focusedItemID: null,
+	isPathfindingGridVisible: false,
 	isSaving: false,
 	layers: [{}],
 	name: '',
