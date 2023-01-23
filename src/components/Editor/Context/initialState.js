@@ -7,6 +7,7 @@ export const initialState = {
 	layers: [{}],
 	name: '',
 	openItems: {},
+	pfgridStacks: {},
 	selection: null,
 	tool: 'marquee',
 	zoom: 1,

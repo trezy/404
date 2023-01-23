@@ -23,11 +23,14 @@ import { initialState } from './initialState.js'
 export function EditorContextProvider(props) {
 	const { children } = props
 
+	const contentManager = useStore(state => state.contentManager)
+
 	const [activeTile, setActiveTile] = useState(initialState.activeTile)
 	const [currentLayerIndex, setCurrentLayerIndex] = useState(initialState.currentLayerIndex)
 	const [defaultZoom, setDefaultZoom] = useState(initialState.defaultZoom)
 	const [focusedItemID, setFocusedItemID] = useState(initialState.focusedItemID)
 	const [layers, setLayers] = useState(initialState.layers)
+	const [pfgridStacks, setPfgridStacks] = useState(initialState.pfgridStacks)
 	const [openItems, setOpenItems] = useState(initialState.openItems)
 	const [selection, setSelection] = useState(initialState.selection)
 	const [tool, setTool] = useState(initialState.tool)
@@ -173,23 +176,67 @@ export function EditorContextProvider(props) {
 			cellY,
 		} = options
 
+		const coordinateString = `${cellX}|${cellY}`
+		const tileData = contentManager.getTile(activeTile.tileID, activeTile.resourcepackID)
+
 		setLayers(previousState => {
 			return previousState.map((layer, index) => {
 				if (index === currentLayerIndex) {
 					return {
 						...layer,
-						[`${cellX}|${cellY}`]: activeTile,
+						[coordinateString]: activeTile,
 					}
 				} else {
 					return layer
 				}
 			})
 		})
+
+		setPfgridStacks(previousState => {
+			if (!previousState[coordinateString]) {
+				previousState[coordinateString] = {}
+			}
+
+			previousState[coordinateString][currentLayerIndex] = {
+				isBlocking: tileData.isBlocking,
+				isTraversable: tileData.isTraversable,
+			}
+
+			return { ...previousState }
+		})
 	}, [
 		activeTile,
+		contentManager,
 		currentLayerIndex,
 		setLayers,
+		setPfgridStacks,
 	])
+
+	const pfgrid = useMemo(() => {
+		return Object
+			.entries(pfgridStacks)
+			.reduce((accumulator, [coordinateString, layers]) => {
+				const tileState = {
+					isBlocking: false,
+					isTraversable: false,
+				}
+
+				Object
+					.values(layers)
+					.forEach(tileData => {
+						if (tileData.isBlocking) {
+							tileState.isBlocking = true
+							tileState.isTraversable = false
+						} else if (!tileState.isBlocking && tileData.isTraversable) {
+							tileState.isTraversable = true
+						}
+					})
+
+				accumulator[coordinateString] = tileState
+
+				return accumulator
+			}, {})
+	}, [pfgridStacks])
 
 	const providerState = useMemo(() => {
 		return {
@@ -208,6 +255,7 @@ export function EditorContextProvider(props) {
 			openItem,
 			openItems,
 			paintTile,
+			pfgrid,
 			scale,
 			selection,
 			setActiveTile: setActiveTileConvenience,
@@ -233,6 +281,7 @@ export function EditorContextProvider(props) {
 		openItem,
 		openItems,
 		paintTile,
+		pfgrid,
 		scale,
 		selection,
 		setActiveTileConvenience,
