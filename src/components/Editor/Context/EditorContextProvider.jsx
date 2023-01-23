@@ -31,6 +31,7 @@ export function EditorContextProvider(props) {
 	const [defaultZoom, setDefaultZoom] = useState(initialState.defaultZoom)
 	const [focusedItemID, setFocusedItemID] = useState(initialState.focusedItemID)
 	const [isPathfindingGridVisible, setIsPathfindingGridVisible] = useState(initialState.isPathfindingGridVisible)
+	const [isStartingPositionVisible, setIsStartingPositionVisible] = useState(initialState.isStartingPositionVisible)
 	const [layers, setLayers] = useState(initialState.layers)
 	const [pfgridStacks, setPfgridStacks] = useState(initialState.pfgridStacks)
 	const [openItems, setOpenItems] = useState(initialState.openItems)
@@ -274,6 +275,7 @@ export function EditorContextProvider(props) {
 			focusedItemID,
 			focusItem,
 			isPathfindingGridVisible,
+			isStartingPositionVisible,
 			layers,
 			openItem,
 			openItems,
@@ -283,6 +285,7 @@ export function EditorContextProvider(props) {
 			selection,
 			setActiveTile: setActiveTileConvenience,
 			setIsPathfindingGridVisible,
+			setIsStartingPositionVisible,
 			setSelection,
 			setStartingPosition,
 			startingPosition,
@@ -305,6 +308,7 @@ export function EditorContextProvider(props) {
 		focusedItemID,
 		focusItem,
 		isPathfindingGridVisible,
+		isStartingPositionVisible,
 		layers,
 		openItem,
 		openItems,
@@ -314,6 +318,7 @@ export function EditorContextProvider(props) {
 		selection,
 		setActiveTileConvenience,
 		setIsPathfindingGridVisible,
+		setIsStartingPositionVisible,
 		setSelection,
 		setStartingPosition,
 		startingPosition,

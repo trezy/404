@@ -40,6 +40,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setIsPathfindingGridVisible: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	setIsStartingPositionVisible: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	setSelection: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setStartingPosition: () => {},

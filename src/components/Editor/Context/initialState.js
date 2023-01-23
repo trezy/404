@@ -4,6 +4,7 @@ export const initialState = {
 	defaultZoom: 1,
 	focusedItemID: null,
 	isPathfindingGridVisible: false,
+	isStartingPositionVisible: true,
 	isSaving: false,
 	layers: [{}],
 	name: '',

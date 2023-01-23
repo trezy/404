@@ -227,9 +227,11 @@ const RENDERERS = {
 			contentManager,
 			context,
 			flagImage,
+			isStartingPositionVisible,
 			layers,
 			renderOffset,
 			startingPosition,
+			tool,
 			zoom,
 		} = options
 
@@ -263,7 +265,7 @@ const RENDERERS = {
 			})
 		})
 
-		if (startingPosition) {
+		if (((tool === 'startingPosition') || isStartingPositionVisible) && startingPosition) {
 			if (!flagImage) {
 				return
 			}
@@ -682,6 +684,7 @@ export function Editor(props) {
 		activeTile,
 		eraseTile,
 		isPathfindingGridVisible,
+		isStartingPositionVisible,
 		layers,
 		paintTile,
 		pfgrid,
@@ -1016,10 +1019,12 @@ export function Editor(props) {
 			context,
 			flagImage: flagImageRef.current,
 			image,
+			isStartingPositionVisible,
 			layers,
 			renderOffset,
 			startingPosition,
 			targetCell,
+			tool,
 			zoom,
 		})
 

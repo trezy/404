@@ -33,16 +33,18 @@ export function MapEditorCanvas() {
 		activateStartingPositionTool,
 		defaultZoom,
 		isPathfindingGridVisible,
+		isStartingPositionVisible,
 		setIsPathfindingGridVisible,
+		setIsStartingPositionVisible,
 		tool,
 		zoom,
 		zoomIn,
 		zoomOut,
 	} = useEditorContext()
 
-	const handleShowPathfindingGridChange = useCallback(isOn => {
-		setIsPathfindingGridVisible(isOn)
-	}, [setIsPathfindingGridVisible])
+	const handleShowPathfindingGridChange = useCallback(setIsPathfindingGridVisible, [setIsPathfindingGridVisible])
+
+	const handleShowStartingPositionChange = useCallback(setIsStartingPositionVisible, [setIsStartingPositionVisible])
 
 	const controls = [
 		{
@@ -126,6 +128,15 @@ export function MapEditorCanvas() {
 				<Switch
 					isOn={isPathfindingGridVisible}
 					onChange={handleShowPathfindingGridChange} />
+			),
+		},
+
+		{
+			title: 'Show Starting Position',
+			children: (
+				<Switch
+					isOn={(tool === 'startingPosition') || isStartingPositionVisible}
+					onChange={handleShowStartingPositionChange} />
 			),
 		},
 	]
