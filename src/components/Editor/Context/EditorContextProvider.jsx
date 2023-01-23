@@ -156,7 +156,7 @@ export function EditorContextProvider(props) {
 		setFocusedItemID,
 	])
 
-	const setActiveTileConvenience = useCallback((tileID, resourcepackID) => {
+	const setActiveTileWrapper = useCallback((tileID, resourcepackID) => {
 		setActiveTile({
 			tileID,
 			resourcepackID,
@@ -260,6 +260,15 @@ export function EditorContextProvider(props) {
 			}, {})
 	}, [pfgridStacks])
 
+	const setStartingPositionWrapper = useCallback(newStartingPosition => {
+		if (pfgrid[`${newStartingPosition.x}|${newStartingPosition.y}`]?.isTraversable) {
+			setStartingPosition(newStartingPosition)
+		}
+	}, [
+		setStartingPosition,
+		pfgrid,
+	])
+
 	const providerState = useMemo(() => {
 		return {
 			activateBrushTool,
@@ -283,11 +292,11 @@ export function EditorContextProvider(props) {
 			pfgrid,
 			scale,
 			selection,
-			setActiveTile: setActiveTileConvenience,
+			setActiveTile: setActiveTileWrapper,
 			setIsPathfindingGridVisible,
 			setIsStartingPositionVisible,
 			setSelection,
-			setStartingPosition,
+			setStartingPosition: setStartingPositionWrapper,
 			startingPosition,
 			tool,
 			zoom,
@@ -316,7 +325,7 @@ export function EditorContextProvider(props) {
 		pfgrid,
 		scale,
 		selection,
-		setActiveTileConvenience,
+		setActiveTileWrapper,
 		setIsPathfindingGridVisible,
 		setIsStartingPositionVisible,
 		setSelection,
