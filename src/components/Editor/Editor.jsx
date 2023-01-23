@@ -284,55 +284,6 @@ const RENDERERS = {
 	},
 
 	/**
-	 * Renders the transparency grid to the canvas.
-	 *
-	 * @param {object} options All options.
-	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
-	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
-	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
-	 * @param {number} options.zoom The current zoom level.
-	 */
-	layers(options) {
-		const {
-			contentManager,
-			context,
-			layers,
-			renderOffset,
-			zoom,
-		} = options
-
-		context.setTransform(
-			zoom,
-			0,
-			0,
-			zoom,
-			0,
-			0,
-		)
-
-		layers.forEach(layer => {
-			Object.entries(layer).forEach(([coordinateString, tileData]) => {
-				const [cellX, cellY] = coordinateString
-					.split('|')
-					.map(Number)
-				const tile = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
-
-				context.drawImage(
-					tile.image,
-					0,
-					0,
-					TILE_SIZE.width * 3,
-					TILE_SIZE.height * 3,
-					(cellX * TILE_SIZE.width) + renderOffset.x,
-					(cellY * TILE_SIZE.height) + renderOffset.y,
-					TILE_SIZE.width,
-					TILE_SIZE.height,
-				)
-			})
-		})
-	},
-
-	/**
 	 * Renders the marquee cursor to the canvas.
 	 *
 	 * @param {object} options All options.
@@ -414,6 +365,107 @@ const RENDERERS = {
 		}
 
 		context.globalCompositeOperation = 'source-over'
+	},
+
+	/**
+	 * Renders the transparency grid to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {HTMLCanvasElement} options.canvasElement The DOM element of the canvas.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	layers(options) {
+		const {
+			contentManager,
+			context,
+			layers,
+			renderOffset,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		layers.forEach(layer => {
+			Object.entries(layer).forEach(([coordinateString, tileData]) => {
+				const [cellX, cellY] = coordinateString
+					.split('|')
+					.map(Number)
+				const tile = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
+
+				context.drawImage(
+					tile.image,
+					0,
+					0,
+					TILE_SIZE.width * 3,
+					TILE_SIZE.height * 3,
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+			})
+		})
+	},
+
+	/**
+	 * Renders the pathfinding grid to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {object} options.pfgrid A grid indicating which cells are traversable.
+	 * @param {import('../../types/Vector2.js').Vector2} options.renderOffset The current render offset.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	pathfindingGrid(options) {
+		const {
+			context,
+			pfgrid,
+			renderOffset,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		context.globalAlpha = 0.5
+
+		Object
+			.entries(pfgrid)
+			.forEach(([coordinateString, tileState]) => {
+				const [cellX, cellY] = coordinateString
+					.split('|')
+					.map(Number)
+
+				if (tileState.isBlocking) {
+					context.fillStyle = 'red'
+				} else if (tileState.isTraversable) {
+					context.fillStyle = 'purple'
+				}
+
+				context.fillRect(
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+			})
+
+		context.globalAlpha = 1
 	},
 
 	/**
@@ -546,8 +598,10 @@ export function Editor(props) {
 	const {
 		activeTile,
 		eraseTile,
+		isPathfindingGridVisible,
 		layers,
 		paintTile,
+		pfgrid,
 		selection,
 		setSelection,
 		tool,
@@ -865,6 +919,16 @@ export function Editor(props) {
 			zoom,
 		})
 
+		if (isPathfindingGridVisible) {
+			RENDERERS.pathfindingGrid({
+				canvasElement,
+				context,
+				pfgrid,
+				renderOffset,
+				zoom,
+			})
+		}
+
 		if (cursorIsOverCanvas && !isMovable && (typeof RENDERERS[tool] === 'function')) {
 			RENDERERS[tool]({
 				activeTile,
@@ -900,6 +964,7 @@ export function Editor(props) {
 		isDragging,
 		isMovable,
 		layers,
+		pfgrid,
 		renderOffset,
 		selection,
 		showMapGrid,
