@@ -27,6 +27,7 @@ import { useEditorContext } from '../Editor/Context/useEditorContext.js'
 export function MapEditorCanvas() {
 	const {
 		activateBrushTool,
+		activateDestinationTool,
 		activateEraserTool,
 		// activateMarqueeTool,
 		activateMoveTool,
@@ -86,13 +87,29 @@ export function MapEditorCanvas() {
 							alt={'Brush Tool'}
 							src={'/static/assets/tools/brush.png'} />
 					</Button>
+				</ButtonGroup>
+			),
+		},
 
+		{
+			title: 'Points',
+			children: (
+				<ButtonGroup>
 					<Button
 						isAffirmative={tool === 'startingPosition'}
 						isUniformlyPadded
 						onClick={activateStartingPositionTool}>
 						<img
 							alt={'Starting Position Tool'}
+							src={'/static/assets/tools/star.png'} />
+					</Button>
+
+					<Button
+						isAffirmative={tool === 'destination'}
+						isUniformlyPadded
+						onClick={activateDestinationTool}>
+						<img
+							alt={'Destination Tool'}
 							src={'/static/assets/tools/flag.png'} />
 					</Button>
 				</ButtonGroup>
@@ -123,7 +140,7 @@ export function MapEditorCanvas() {
 		},
 
 		{
-			title: 'Show Pathfinding Grid',
+			title: 'Pathfinding Grid',
 			children: (
 				<Switch
 					isOn={isPathfindingGridVisible}
@@ -132,7 +149,7 @@ export function MapEditorCanvas() {
 		},
 
 		{
-			title: 'Show Starting Position',
+			title: 'Starting Position',
 			children: (
 				<Switch
 					isOn={(tool === 'startingPosition') || isStartingPositionVisible}

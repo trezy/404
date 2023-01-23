@@ -18,6 +18,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateBrushTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	activateDestinationTool: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateEraserTool: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	activateMarqueeTool: () => {},
@@ -38,6 +40,8 @@ export const EditorContext = createContext({
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	paintTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
+	removeDestination: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	setActiveTile: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setIsPathfindingGridVisible: () => {},
@@ -47,6 +51,8 @@ export const EditorContext = createContext({
 	setSelection: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	setStartingPosition: () => {},
+	// eslint-disable-next-line jsdoc/require-jsdoc
+	toggleDestination: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc
 	zoomIn: () => {},
 	// eslint-disable-next-line jsdoc/require-jsdoc

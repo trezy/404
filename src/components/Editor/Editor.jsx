@@ -160,6 +160,58 @@ const RENDERERS = {
 	},
 
 	/**
+	 * Renders the destination cursor to the canvas.
+	 *
+	 * @param {object} options All options.
+	 * @param {CanvasRenderingContext2D} options.context The context to which to draw.
+	 * @param {import('../../types/Vector2.js').Vector2} options.cursorPosition The current Vector2 of the cursor.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragOffset The distance the cursor has been dragged from its start position.
+	 * @param {import('../../types/Vector2.js').Vector2} options.dragStart The position at which the cursor started dragging.
+	 * @param {boolean} options.isDragging Whether or not the cursor is being dragged.
+	 * @param {number} options.zoom The current zoom level.
+	 */
+	destination(options) {
+		const {
+			context,
+			targetCell,
+			targetPixel,
+			zoom,
+		} = options
+
+		context.setTransform(
+			zoom,
+			0,
+			0,
+			zoom,
+			0,
+			0,
+		)
+
+		context.globalAlpha = 0.5
+		context.fillStyle = '#346524'
+		context.lineWidth = '2'
+		context.strokeStyle = 'black'
+
+		context.strokeRect(
+			targetCell.x,
+			targetCell.y,
+			TILE_SIZE.width,
+			TILE_SIZE.height,
+		)
+		context.fillRect(
+			targetCell.x - 1,
+			targetCell.y - 1,
+			TILE_SIZE.width + 2,
+			TILE_SIZE.height + 2,
+		)
+
+		context.globalAlpha = 1
+
+		context.fillStyle = 'white'
+		context.fillRect(targetPixel.x, targetPixel.y, 1, 1)
+	},
+
+	/**
 	 * Renders the eraser brush to the canvas.
 	 *
 	 * @param {object} options All options.
@@ -227,7 +279,8 @@ const RENDERERS = {
 		const {
 			contentManager,
 			context,
-			flagImage,
+			destinations,
+			isDestinationsVisible,
 			isStartingPositionVisible,
 			layers,
 			renderOffset,
@@ -266,11 +319,39 @@ const RENDERERS = {
 			})
 		})
 
-		if (((tool === 'startingPosition') || isStartingPositionVisible) && startingPosition) {
-			if (!flagImage) {
-				return
-			}
+		const destinationKeys = Object.keys(destinations)
 
+		if (((tool === 'destination') || isDestinationsVisible) && destinationKeys.length) {
+			destinationKeys.forEach(coordinateString => {
+				const [cellX, cellY] = coordinateString
+					.split('|')
+					.map(Number)
+
+				context.globalAlpha = 0.5
+				context.strokeStyle = 'black'
+				context.lineWidth = 4
+
+				context.strokeRect(
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+
+				context.globalAlpha = 1
+				context.strokeStyle = '#346524'
+				context.lineWidth = 2
+
+				context.strokeRect(
+					(cellX * TILE_SIZE.width) + renderOffset.x,
+					(cellY * TILE_SIZE.height) + renderOffset.y,
+					TILE_SIZE.width,
+					TILE_SIZE.height,
+				)
+			})
+		}
+
+		if (((tool === 'startingPosition') || isStartingPositionVisible) && startingPosition) {
 			context.globalAlpha = 0.5
 			context.strokeStyle = 'black'
 			context.lineWidth = 4
@@ -683,7 +764,9 @@ export function Editor(props) {
 
 	const {
 		activeTile,
+		destinations,
 		eraseTile,
+		isDestinationsVisible,
 		isPathfindingGridVisible,
 		isStartingPositionVisible,
 		layers,
@@ -693,6 +776,7 @@ export function Editor(props) {
 		setSelection,
 		setStartingPosition,
 		startingPosition,
+		toggleDestination,
 		tool,
 		zoom,
 	} = useEditorContext()
@@ -700,17 +784,7 @@ export function Editor(props) {
 	const contentManager = useStore(state => state.contentManager)
 
 	const canvasRef = useRef(null)
-	const flagImageRef = useRef(null)
 	const parentRef = useRef(null)
-
-	if (!flagImageRef.current) {
-		const flagImageElement = new Image
-
-		flagImageElement.src = '/static/assets/tools/flag.png'
-		flagImageElement.decode()
-
-		flagImageRef.current = flagImageElement
-	}
 
 	const [canvasSize, setCanvasSize] = useState({
 		height: 0,
@@ -819,6 +893,11 @@ export function Editor(props) {
 				})
 			} else if (tool === 'startingPosition') {
 				setStartingPosition({
+					x: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
+					y: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
+				})
+			} else if (tool === 'destination') {
+				toggleDestination({
 					x: Math.floor((Math.floor(cursorPosition.x) - renderOffset.x) / TILE_SIZE.width),
 					y: Math.floor((Math.floor(cursorPosition.y) - renderOffset.y) / TILE_SIZE.height),
 				})
@@ -1018,8 +1097,9 @@ export function Editor(props) {
 		RENDERERS.layers({
 			contentManager,
 			context,
-			flagImage: flagImageRef.current,
+			destinations,
 			image,
+			isDestinationsVisible,
 			isStartingPositionVisible,
 			layers,
 			renderOffset,
