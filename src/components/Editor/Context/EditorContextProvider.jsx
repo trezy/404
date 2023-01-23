@@ -143,7 +143,7 @@ export function EditorContextProvider(props) {
 			return { ...previousState }
 		})
 
-		if (startingPosition) {
+		if ((cellX === startingPosition?.x) && (cellY === startingPosition?.y)) {
 			setStartingPosition(null)
 			addNotification({ message: 'Starting position tile erased; starting position has been removed.' })
 		}
