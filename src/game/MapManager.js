@@ -56,23 +56,38 @@ export class MapManager {
 			const layerGrid = this.generateGrid()
 
 			Object
-				.entries(layerData)
-				.forEach(([coordinateString, tileData]) => {
-					const [x, y] = coordinateString.split('|').map(Number)
-					layerGrid[y][x] = this
-						.contentManager
-						.getTile(tileData.tileID, tileData.resourcepackID)
-				})
+			.entries(layerData)
+			.forEach(([coordinateString, tileData]) => {
+				const [x, y] = coordinateString.split('|').map(Number)
+
+				layerGrid[y][x] = this
+					.contentManager
+					.getTile(tileData.tileID, tileData.resourcepackID)
+			})
 
 			map.layerGrids.push(layerGrid)
 		})
 
-		Object
-			.entries(map.pfgrid)
-			.forEach(([coordinateString, cellData]) => {
-				const [x, y] = coordinateString.split('|').map(Number)
-				this.#pathfindingGrid.setWalkableAt(x, y, cellData.isTraversable)
-			})
+		let y = 0
+
+		while (y < this.height) {
+			let x = 0
+
+			while (x < this.width) {
+				const coordinateString = `${x}|${y}`
+				const cell = map.pfgrid[coordinateString]
+
+				if (cell) {
+					this.#pathfindingGrid.setWalkableAt(x, y, cell.isTraversable)
+				} else {
+					this.#pathfindingGrid.setWalkableAt(x, y, false)
+				}
+
+				x += 1
+			}
+
+			y += 1
+		}
 	}
 
 
@@ -80,7 +95,7 @@ export class MapManager {
 
 
 	/****************************************************************************\
-	 * Pbulic instance methods
+	 * Public instance methods
 	\****************************************************************************/
 
 	generateGrid() {
@@ -134,6 +149,13 @@ export class MapManager {
 	 */
 	get contentManager() {
 		return this.#gameManager.contentManager
+	}
+
+	/**
+	 * @returns {Array} An array of possible destinations.
+	 */
+	get destinations() {
+		return this.#map.destinations
 	}
 
 	/**
