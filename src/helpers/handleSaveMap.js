@@ -29,82 +29,134 @@ export async function handleSaveMap(event, mapData) {
 	const id = mapData.id || uuid()
 
 	const {
-		dimensions,
-		parsedLayers,
+		adjustmentX,
+		adjustmentY,
+		height,
+		width,
 	} = mapData.layers.reduce((accumulator, layer) => {
 		// Loop over all tiles and use their coordinates to determine the minimum and maximum coordinates on the grid.
-		Object.keys(layer).forEach(coordinateString => {
+		const {
+			maxX,
+			maxY,
+			minX,
+			minY,
+		} = Object.keys(layer).reduce((accumulator, coordinateString) => {
 			const [x, y] = coordinateString
 				.split('|')
 				.map(Number)
 
-			if (accumulator.dimensions.maxX === null) {
-				accumulator.dimensions.maxX = x
+			if (accumulator.maxX === null) {
+				accumulator.maxX = x
 			} else {
-				accumulator.dimensions.maxX = Math.max(accumulator.dimensions.maxX, x)
+				accumulator.maxX = Math.max(accumulator.maxX, x)
 			}
 
-			if (accumulator.dimensions.maxY === null) {
-				accumulator.dimensions.maxY = y
+			if (accumulator.maxY === null) {
+				accumulator.maxY = y
 			} else {
-				accumulator.dimensions.maxY = Math.max(accumulator.dimensions.maxY, y)
+				accumulator.maxY = Math.max(accumulator.maxY, y)
 			}
 
-			if (accumulator.dimensions.minX === null) {
-				accumulator.dimensions.minX = x
+			if (accumulator.minX === null) {
+				accumulator.minX = x
 			} else {
-				accumulator.dimensions.minX = Math.min(accumulator.dimensions.minX, x)
+				accumulator.minX = Math.min(accumulator.minX, x)
 			}
 
-			if (accumulator.dimensions.minY === null) {
-				accumulator.dimensions.minY = y
+			if (accumulator.minY === null) {
+				accumulator.minY = y
 			} else {
-				accumulator.dimensions.minY = Math.min(accumulator.dimensions.minY, y)
+				accumulator.minY = Math.min(accumulator.minY, y)
 			}
-		})
 
-		// The number of cells (as well as direction) the map must be adjusted to have the top left corner at x0, y0.
-		const adjustmentX = accumulator.dimensions.minX
-		const adjustmentY = accumulator.dimensions.minY
-
-		// Calculate the total height and width of the map.
-		accumulator.dimensions.height = (accumulator.dimensions.maxY - accumulator.dimensions.minY) + 1
-		accumulator.dimensions.width = (accumulator.dimensions.maxX - accumulator.dimensions.minX) + 1
-
-		// Loop over the layers again to adjust their coordinates, placing the top left of the map at x0, y0.
-		const parsedLayer = Object.entries(layer).reduce((layerAccumulator, [coordinateString, layerData]) => {
-			const [x, y] = coordinateString
-				.split('|')
-				.map(Number)
-
-			layerAccumulator[`${x - adjustmentX}|${y - adjustmentY}`] = layerData
-			return layerAccumulator
-		}, {})
-
-		accumulator.parsedLayers.push(parsedLayer)
-
-		return accumulator
-	}, {
-		dimensions: {
-			height: null,
+			return accumulator
+		}, {
 			maxX: null,
 			maxY: null,
 			minX: null,
 			minY: null,
-			width: null,
-		},
-		parsedLayers: [],
+		})
+
+		const layerHeight = (maxY - minY) + 1
+		const layerWidth = (maxX - minX) + 1
+
+		if (layerHeight > accumulator.height) {
+			accumulator.height = layerHeight
+		}
+
+		if (layerWidth > accumulator.width) {
+			accumulator.width = layerWidth
+		}
+
+		if (accumulator.adjustmentX === null) {
+			accumulator.adjustmentX = minX
+		} else if (minX < accumulator.adjustmentX) {
+			accumulator.adjustmentX = minX
+		}
+
+		if (accumulator.adjustmentY === null) {
+			accumulator.adjustmentY = minY
+		} else if (minY < accumulator.adjustmentY) {
+			accumulator.adjustmentY = minY
+		}
+
+		return accumulator
+	}, {
+		adjustmentX: null,
+		adjustmentY: null,
+		height: 0,
+		width: 0,
 	})
+
+	const parsedDestinations = Object.keys(mapData.destinations).map(coordinateString => {
+		const [x, y] = coordinateString
+			.split('|')
+			.map(Number)
+
+		return {
+			x: x - adjustmentX,
+			y: y - adjustmentY,
+		}
+	})
+
+	// Loop over the layers again to adjust each tile's coordinates, placing the top left of the map at x0, y0.
+	const parsedLayers = mapData.layers.map(layer => {
+		return Object.entries(layer).reduce((accumulator, [coordinateString, cellData]) => {
+			const [x, y] = coordinateString
+				.split('|')
+				.map(Number)
+
+			accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
+
+			return accumulator
+		}, {})
+	})
+
+	const parsedPfgrid = Object.entries(mapData.pfgrid).reduce((accumulator, [coordinateString, cellData]) => {
+		const [x, y] = coordinateString
+			.split('|')
+			.map(Number)
+
+		accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
+
+		return accumulator
+	}, {})
+
+	const parsedStartingPosition = {
+		x: mapData.startingPosition.x - adjustmentX,
+		y: mapData.startingPosition.y - adjustmentY,
+	}
 
 	try {
 		await createArchive(filePath, {
 			'map.json': JSON.stringify({
+				destinations: parsedDestinations,
 				dimensions: {
-					height: dimensions.height,
-					width: dimensions.width,
+					height: height + 1,
+					width: width + 1,
 				},
-				startingPosition: mapData.startingPosition,
-				pfgrid: mapData.pfgrid,
+				startingPosition: parsedStartingPosition,
+				pfgrid: parsedPfgrid,
 				tiles: parsedLayers,
 			}),
 			'meta.json': JSON.stringify({

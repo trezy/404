@@ -29,6 +29,7 @@ export function MapEditorContextProvider(props) {
 	const [mapName, setMapName] = useState(initialState.mapName)
 	const [resourcepacks, setResourcepacks] = useState(initialState.resourcepacks)
 	const {
+		destinations,
 		layers,
 		pfgrid,
 		startingPosition,
@@ -42,6 +43,7 @@ export function MapEditorContextProvider(props) {
 				accumulator[resourcepackID] = resourcePackData.version
 				return accumulator
 			}, {}),
+			destinations,
 			layers,
 			name: mapName,
 			pfgrid,
