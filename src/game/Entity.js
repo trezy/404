@@ -122,20 +122,38 @@ export class Entity {
 	 * Starts the entity's pathfinding queue.
 	 */
 	go() {
-		const grid = this.#mapManager.pathfindingGrid.clone()
 		const finder = new PF.AStarFinder({
 			diagonalMovement: PF.DiagonalMovement.Never,
 		})
 
-		// this.#path = finder.findPath(
-		// 	this.#position.x,
-		// 	this.#position.y,
-		// 	12,
-		// 	6,
-		// 	grid,
-		// )
+		const possiblePaths = this
+			.#mapManager
+			.destinations
+			.map(destination => {
+				return finder.findPath(
+					this.#position.x,
+					this.#position.y,
+					destination.x,
+					destination.y,
+					this.#mapManager.pathfindingGrid.clone(),
+				)
+			})
+			.filter(path => path.length)
+			.sort((pathA, pathB) => {
+				if (pathA.length > pathB.length) {
+					return 1
+				}
 
-		// this.#destination = this.#path.shift()
+				if (pathA.length < pathB.length) {
+					return -1
+				}
+
+				return 0
+			})
+
+		this.#path = possiblePaths[0]
+
+		this.#destination = this.#path.shift()
 	}
 
 	/**
