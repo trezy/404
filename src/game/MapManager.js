@@ -7,6 +7,7 @@ import PF from 'pathfinding'
 
 // Local imports
 import { ContentManager } from './ContentManager.js'
+import { store } from '../store/index.js'
 import { LAYERS } from './Renderer.js'
 import { TILE_SIZE } from './Tile.js'
 
@@ -20,6 +21,8 @@ export class MapManager {
 	\****************************************************************************/
 
 	#gameManager = null
+
+	#needsRecenter = true
 
 	#map = null
 
@@ -107,6 +110,19 @@ export class MapManager {
 	}
 
 	render(renderer) {
+		if ((renderer.width === 0) || (renderer.height === 0)) {
+			return
+		}
+
+		if (this.#needsRecenter) {
+			store.getState().setOffset(
+				((renderer.width * renderer.resolution) - this.pixelWidth * renderer.pixelSize) / 2,
+				((renderer.height * renderer.resolution) - this.pixelHeight * renderer.pixelSize) / 2,
+			)
+
+			this.#needsRecenter = false
+		}
+
 		renderer.layer = LAYERS.foreground
 
 		this.layerGrids.forEach(layerGrid => {
@@ -191,6 +207,20 @@ export class MapManager {
 	 */
 	get pathfindingGrid() {
 		return this.#pathfindingGrid
+	}
+
+	/**
+	 * @returns {number} The map's height in pixels.
+	 */
+	get pixelHeight() {
+		return this.#map.dimensions.height * TILE_SIZE.height
+	}
+
+	/**
+	 * @returns {number} The map's width in pixels.
+	 */
+	get pixelWidth() {
+		return this.#map.dimensions.width * TILE_SIZE.width
 	}
 
 	/**

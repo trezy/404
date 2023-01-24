@@ -267,7 +267,8 @@ export class Renderer {
 	 * Restore the transform of the main canvas with respect to the current pixel size. Useful after using `renderer.setTranslate()`.
 	 */
 	resetTransform() {
-		this.queue[this.layer].push(['setTransform', this.pixelSize, 0, 0, this.pixelSize, 0, 0])
+		const { globalOffset } = store.getState()
+		this.queue[this.layer].push(['setTransform', this.pixelSize, 0, 0, this.pixelSize, globalOffset.x, globalOffset.y])
 	}
 
 	/**
@@ -342,6 +343,11 @@ export class Renderer {
 
 		const renderQueue = this.queue.flat()
 		const context = this.shadow
+
+		const { globalOffset } = store.getState()
+
+		// Reset the transform
+		context.setTransform(this.pixelSize, 0, 0, this.pixelSize, globalOffset.x, globalOffset.y)
 
 		// Disable anti-aliasing
 		context.imageSmoothingEnabled = false
