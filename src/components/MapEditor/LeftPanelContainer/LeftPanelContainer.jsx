@@ -16,6 +16,7 @@ import { ManageResourcePacksModal } from '../ManageResourcePacksModal/ManageReso
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
 import { useMapEditorContext } from '../Context/useMapEditorContext.js'
+import { useStore } from '../../../store/react.js'
 
 
 
@@ -29,6 +30,8 @@ export function LeftPanelContainer() {
 		hasTiles,
 		updateResourcepacks,
 	} = useMapEditorContext()
+
+	const goToMainMenu = useStore(state => state.goToMainMenu)
 
 	const leftPanels = useMemo(() => {
 		return [
@@ -55,6 +58,8 @@ export function LeftPanelContainer() {
 
 	const handleExportMapModalClose = useCallback(() => setShowExportMapModal(false), [setShowExportMapModal])
 
+	const handleMainMenuClick = useCallback(() => goToMainMenu(), [goToMainMenu])
+
 	const Menu = useMemo(() => {
 		return (
 			<>
@@ -69,6 +74,12 @@ export function LeftPanelContainer() {
 					isFullWidth
 					onClick={handleExportMapClick}>
 					{'Export Map'}
+				</Button>
+
+				<Button
+					isFullWidth
+					onClick={handleMainMenuClick}>
+					{'Main Menu'}
 				</Button>
 			</>
 		)
