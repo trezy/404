@@ -27,6 +27,7 @@ export function Modal(props) {
 		children,
 		className,
 		isLoading,
+		loaderText,
 		onClose,
 		title,
 	} = props
@@ -70,13 +71,13 @@ export function Modal(props) {
 
 			<div className={styles['content']}>
 				{children}
-
-				{isLoading && (
-					<div className={styles['loader']}>
-						<span>{'Loading...'}</span>
-					</div>
-				)}
 			</div>
+
+			{isLoading && (
+				<div className={styles['loader']}>
+					<span>{loaderText}</span>
+				</div>
+			)}
 		</Panel>
 	), document.querySelector('#modal-portal'))
 }
@@ -85,6 +86,7 @@ Modal.defaultProps = {
 	children: null,
 	className: '',
 	isLoading: false,
+	loaderText: 'Loading...',
 	onClose: null,
 }
 
@@ -92,6 +94,7 @@ Modal.propTypes = {
 	children: PropTypes.node,
 	className: PropTypes.string,
 	isLoading: PropTypes.bool,
+	loaderText: PropTypes.string,
 	onClose: PropTypes.func,
 	title: PropTypes.string.isRequired,
 }
