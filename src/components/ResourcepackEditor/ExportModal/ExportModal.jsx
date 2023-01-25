@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
+import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { Modal } from '../../Modal/Modal.jsx'
 import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
 
@@ -21,9 +22,7 @@ import { useResourcepackEditorContext } from '../Context/useResourcepackEditorCo
 
 
 export function ExportModal(props) {
-	const {
-		onClose,
-	} = props
+	const { onClose } = props
 
 	const {
 		exportTileset,
@@ -36,6 +35,7 @@ export function ExportModal(props) {
 	} = useResourcepackEditorContext()
 
 	const [isLoading, setIsLoading] = useState(false)
+	const [loaderText, setLoaderText] = useState('Saving...')
 
 	const isValid = useMemo(() => {
 		if (!tilesetName) {
@@ -55,30 +55,41 @@ export function ExportModal(props) {
 	const handleNameChange = useCallback(event => updateTilesetName(event.target.value), [updateTilesetName])
 
 	const handleExportClick = useCallback(async() => {
+		setLoaderText('Exporting...')
 		setIsLoading(true)
 
-		await exportTileset()
-
-		setIsLoading(false)
+		executePromiseWithMinimumDuration(exportTileset(), 2000)
+			.then(() => {
+				setLoaderText('Exported!')
+				setTimeout(() => setIsLoading(false), 2000)
+			})
 	}, [
 		exportTileset,
 		setIsLoading,
+		setLoaderText,
 	])
 
 	const handleSaveClick = useCallback(async() => {
 		setIsLoading(true)
 
-		await saveTileset()
+		setLoaderText('Saving...')
+		setIsLoading(true)
 
-		setIsLoading(false)
+		executePromiseWithMinimumDuration(saveTileset(), 2000)
+			.then(() => {
+				setLoaderText('Saved!')
+				setTimeout(() => setIsLoading(false), 2000)
+			})
 	}, [
 		saveTileset,
 		setIsLoading,
+		setLoaderText,
 	])
 
 	return (
 		<Modal
 			isLoading={isLoading}
+			loaderText={loaderText}
 			onClose={onClose}
 			title={'Export Resourcepack'}>
 
