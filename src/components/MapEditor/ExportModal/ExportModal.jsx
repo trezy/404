@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
+import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { Modal } from '../../Modal/Modal.jsx'
 import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
@@ -21,9 +22,7 @@ import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 export function ExportModal(props) {
-	const {
-		onClose,
-	} = props
+	const { onClose } = props
 
 	const {
 		hasTiles,
@@ -33,6 +32,7 @@ export function ExportModal(props) {
 	} = useMapEditorContext()
 
 	const [isLoading, setIsLoading] = useState(false)
+	const [loaderText, setLoaderText] = useState('Saving...')
 
 	const isValid = useMemo(() => {
 		if (!mapName) {
@@ -53,18 +53,23 @@ export function ExportModal(props) {
 
 	const handleSave = useCallback(async() => {
 		setIsLoading(true)
+		setLoaderText('Saving...')
 
-		await saveMap()
-
-		setIsLoading(false)
+		executePromiseWithMinimumDuration(saveMap(), 2000)
+			.then(() => {
+				setLoaderText('Saved!')
+				setTimeout(() => setIsLoading(false), 2000)
+			})
 	}, [
 		saveMap,
 		setIsLoading,
+		setLoaderText,
 	])
 
 	return (
 		<Modal
 			isLoading={isLoading}
+			loaderText={loaderText}
 			onClose={onClose}
 			title={'Export Map'}>
 
