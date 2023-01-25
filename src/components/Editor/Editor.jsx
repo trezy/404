@@ -921,10 +921,10 @@ export function Editor(props) {
 				}))
 			} else if (tool === 'marquee') {
 				setSelection({
-					height: dragOffset.y + 1,
-					width: dragOffset.x + 1,
-					x: dragStart.x - renderOffset.x,
-					y: dragStart.y - renderOffset.y,
+					height: Math.abs(dragOffset.y) + 1,
+					width: Math.abs(dragOffset.x) + 1,
+					x: dragStart.x - renderOffset.x + ((dragOffset.x < 0 ? dragOffset.x : 0)),
+					y: dragStart.y - renderOffset.y + ((dragOffset.y < 0 ? dragOffset.y : 0))
 				})
 			}
 
