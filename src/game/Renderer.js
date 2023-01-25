@@ -71,6 +71,7 @@ export class Renderer {
 	drawGrid(mapWidth, mapHeight) {
 		this.layer = LAYERS.background
 
+		const { globalOffset } = store.getState()
 		const computedStyles = getComputedStyle(this.target.canvas)
 		const gridColor = computedStyles.getPropertyValue('--palette-purple')
 
@@ -83,10 +84,14 @@ export class Renderer {
 			mapWidth,
 		)
 
+		this.setTranslate(
+			-Math.ceil(globalOffset.x / TILE_SIZE.width) * TILE_SIZE.width,
+			-Math.ceil(globalOffset.y / TILE_SIZE.height) * TILE_SIZE.height,
+		)
+		this.setAlpha(0.1)
+
 		let column = 0
 		let row = 0
-
-		this.setAlpha(0.1)
 
 		while (row <= renderHeight) {
 			const y = (TILE_SIZE.height * row) + 0.5
@@ -120,6 +125,7 @@ export class Renderer {
 			column += 1
 		}
 
+		this.resetTransform()
 		this.setAlpha(1)
 	}
 
@@ -346,14 +352,19 @@ export class Renderer {
 
 		const { globalOffset } = store.getState()
 
-		// Reset the transform
-		context.setTransform(this.pixelSize, 0, 0, this.pixelSize, globalOffset.x, globalOffset.y)
+		// Clear the canvas
+		context.clearRect(
+			-globalOffset.x,
+			-globalOffset.y,
+			this.width + globalOffset.x,
+			this.height + globalOffset.y,
+		)
 
 		// Disable anti-aliasing
 		context.imageSmoothingEnabled = false
 
-		// Clear the canvas
-		context.clearRect(0, 0, 0xffff, 0xffff)
+		// Reset the transform
+		context.setTransform(this.pixelSize, 0, 0, this.pixelSize, globalOffset.x, globalOffset.y)
 
 		for (const task of renderQueue) {
 			const [call] = task
