@@ -11,6 +11,7 @@ import {
 
 // Local imports
 import { Button } from '../Button.jsx'
+import { ButtonGroup } from '../ButtonGroup/ButtonGroup.jsx'
 import { NewAssetModal } from './NewAssetModal/NewAssetModal.jsx'
 import { CollapsiblePanel } from '../CollapsiblePanel/CollapsiblePanel.jsx'
 import { useEditorContext } from '../Editor/Context/useEditorContext.js'
@@ -105,19 +106,25 @@ export function AssetsPanel() {
 							<div className={'details'}>{asset.name}</div>
 
 							<menu type={'toolbar'}>
-								<Button
-									data-assetid={assetID}
-									isSmall
-									onClick={handleEditAssetClick(assetID)}>
-									{'Edit'}
-								</Button>
+								<ButtonGroup>
+									<Button
+										data-assetid={assetID}
+										isUniformlyPadded
+										onClick={handleEditAssetClick(assetID)}>
+										<img
+											alt={'Edit asset'}
+											src={'/static/assets/tools/pencil.png'} />
+									</Button>
 
-								<Button
-									isNegative
-									isSmall
-									onClick={handleRemoveAssetClick(assetID)}>
-									{'Remove'}
-								</Button>
+									<Button
+										isNegative
+										isUniformlyPadded
+										onClick={handleRemoveAssetClick(assetID)}>
+										<img
+											alt={'Remove asset'}
+											src={'/static/assets/tools/trash.png'} />
+									</Button>
+								</ButtonGroup>
 							</menu>
 						</li>
 					))}
