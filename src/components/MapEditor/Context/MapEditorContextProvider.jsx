@@ -95,6 +95,10 @@ export function MapEditorContextProvider(props) {
 		setResourcepacks,
 	])
 
+	const hasDestinations = useMemo(() => Boolean(Object.keys(destinations).length), [destinations])
+
+	const hasStartingPosition = useMemo(() => Boolean(startingPosition), [startingPosition])
+
 	const hasTiles = useMemo(() => {
 		return layers.some(layer => {
 			return Boolean(Object.keys(layer).length)
@@ -103,6 +107,8 @@ export function MapEditorContextProvider(props) {
 
 	const providerState = useMemo(() => {
 		return {
+			hasDestinations,
+			hasStartingPosition,
 			hasTiles,
 			isSaving,
 			mapName,
@@ -112,6 +118,8 @@ export function MapEditorContextProvider(props) {
 			updateResourcepacks,
 		}
 	}, [
+		hasDestinations,
+		hasStartingPosition,
 		hasTiles,
 		isSaving,
 		mapName,

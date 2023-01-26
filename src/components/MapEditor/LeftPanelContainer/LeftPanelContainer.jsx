@@ -27,6 +27,8 @@ import { useStore } from '../../../store/react.js'
  */
 export function LeftPanelContainer() {
 	const {
+		hasDestinations,
+		hasStartingPosition,
 		hasTiles,
 		updateResourcepacks,
 	} = useMapEditorContext()
@@ -70,7 +72,7 @@ export function LeftPanelContainer() {
 				</Button>
 
 				<Button
-					isDisabled={!hasTiles}
+					isDisabled={!hasTiles || !hasDestinations || !hasStartingPosition}
 					isFullWidth
 					onClick={handleExportMapClick}>
 					{'Export Map'}
@@ -86,6 +88,8 @@ export function LeftPanelContainer() {
 	}, [
 		handleExportMapClick,
 		handleManageResourcePacksClick,
+		hasDestinations,
+		hasStartingPosition,
 		hasTiles,
 	])
 
