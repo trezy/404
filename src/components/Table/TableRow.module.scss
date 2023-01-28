@@ -1,0 +1,15 @@
+.row {
+	background-color: transparent;
+	display: grid;
+	margin-bottom: calc(1px * var(--ui-scale));
+	padding-bottom: calc(1px * var(--ui-scale));
+	padding-left: calc(3px * var(--ui-scale));
+	padding-right: calc(3px * var(--ui-scale));
+	padding-top: calc(1px * var(--ui-scale));
+	transition-duration: 0.1s;
+	transition-property: background-color;
+
+	&.is-selected {
+		background-color: var(--palette-dark-grey);
+	}
+}

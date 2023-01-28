@@ -9,10 +9,11 @@ import {
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
-import { Meter } from '../../Meter/Meter.jsx'
+import { MapActions } from './MapActions.jsx'
+import { MapRating } from './MapRating.jsx'
+import { Table } from '../../Table/Table.jsx'
 import { useStore } from '../../../store/react.js'
 
 
@@ -63,44 +64,49 @@ const MAPS = [
 export function CenterPanelContents() {
 	const [goToLoadingMap] = useStore(state => [state.goToLoadingMap])
 
-	const loadMap = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
+	const handleLoad = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
 
-	const mappedMaps = useMemo(() => {
+	const tableColumns = useMemo(() => {
+		return [
+			{
+				key: 'name',
+				label: 'Name',
+			},
+			{
+				key: 'bestTime',
+				label: 'Best Time',
+			},
+			{
+				component: MapRating,
+				key: 'rating',
+				label: 'Rating',
+			},
+			{
+				component: MapActions,
+				key: 'actions',
+				onLoad: handleLoad,
+			},
+		]
+	}, [handleLoad])
+
+	const tableData = useMemo(() => {
 		return MAPS.map((map, index) => {
-			return (
-				<tr key={index}>
-					<th>{map.name}</th>
-
-					<td>{convertMillisecondsToStopwatchString(map.bestTime)}</td>
-
-					<td>
-						<Meter
-							maximum={5}
-							minimum={0}
-							value={map.rating} />
-					</td>
-
-					<td>
-						<Button
-							isSmall
-							onClick={loadMap(map.id)}>
-							{'Load'}
-						</Button>
-					</td>
-				</tr>
-			)
+			return {
+				bestTime: convertMillisecondsToStopwatchString(map.bestTime),
+				id: map.id,
+				name: map.name,
+				rating: map.rating,
+			}
 		})
-	}, [loadMap])
+	}, [])
 
 	return (
 		<>
 			<DecoratedHeader>{'Map Select'}</DecoratedHeader>
 
-			<table>
-				<tbody>
-					{mappedMaps}
-				</tbody>
-			</table>
+			<Table
+				columns={tableColumns}
+				data={tableData} />
 		</>
 	)
 }

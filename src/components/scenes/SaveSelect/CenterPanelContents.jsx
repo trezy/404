@@ -9,9 +9,10 @@ import {
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+import { SaveActions } from './SaveActions.jsx'
+import { Table } from '../../Table/Table.jsx'
 import { useStore } from '../../../store/react'
 
 
@@ -34,7 +35,31 @@ export function CenterPanelContents() {
 		goToMapSelect(saveID)
 	}, [goToMapSelect])
 
-	const mappedMaps = useMemo(() => {
+	const handleLoad = useCallback(saveID => goToMapSelect(saveID), [goToMapSelect])
+
+	const tableColumns = useMemo(() => {
+		return [
+			{
+				key: 'name',
+				label: 'Name',
+			},
+			{
+				key: 'timePlayed',
+				label: 'Time Played',
+			},
+			{
+				key: 'updatedAt',
+				label: 'Last Save',
+			},
+			{
+				component: SaveActions,
+				key: 'actions',
+				onLoad: handleLoad,
+			},
+		]
+	}, [handleLoad])
+
+	const tableData = useMemo(() => {
 		const allSaves = saveManager.getAllSaves()
 
 		return allSaves.map((save, index) => {
@@ -43,38 +68,23 @@ export function CenterPanelContents() {
 				year: 'numeric', month: 'numeric', day: 'numeric',
 				hour: 'numeric', minute: 'numeric', second: 'numeric',
 			})
-			const formattedDateTime = dateTimeFormatter.format(timestamp)
 
-			const timePlayedString = convertMillisecondsToStopwatchString(save.getTimePlayed())
-
-			return (
-				<tr key={index}>
-					<th>{save.name}</th>
-					<td>{timePlayedString}</td>
-					<td>{' | '}</td>
-					<td>{formattedDateTime}</td>
-					<td>
-						<Button
-							isSmall
-							onClick={handleLoadClick(save.id)}>
-							{'Load'}
-						</Button>
-					</td>
-				</tr>
-			)
+			return {
+				id: save.id,
+				name: save.name,
+				timePlayed: convertMillisecondsToStopwatchString(save.getTimePlayed()),
+				updatedAt: dateTimeFormatter.format(timestamp),
+			}
 		})
-	}, [
-		handleLoadClick,
-		saveManager,
-	])
+	}, [saveManager])
 
 	return (
 		<>
 			<DecoratedHeader>{'Load Save'}</DecoratedHeader>
 
-			<table>
-				<tbody>{mappedMaps}</tbody>
-			</table>
+			<Table
+				columns={tableColumns}
+				data={tableData} />
 		</>
 	)
 }
