@@ -13,13 +13,13 @@ export function executePromiseWithMinimumDuration(promise, minimumDuration) {
 		}
 
 		// eslint-disable-next-line promise/catch-or-return
-		promise.then(() => {
+		promise.then(result => {
 			const remainingDuration = minimumDuration - (performance.now() - startedAt)
 
 			// eslint-disable-next-line promise/always-return
 			if (remainingDuration) {
 				setTimeout(() => {
-					resolve()
+					resolve(result)
 				}, remainingDuration)
 			} else {
 				resolve()
