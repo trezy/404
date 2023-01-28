@@ -341,6 +341,42 @@ export function EditorContextProvider(props) {
 		startingPosition,
 	])
 
+	const replaceState = useCallback(newState => {
+		if (newState.layers) {
+			setLayers(newState.layers)
+
+			setPfgridStacks(newState.layers.reduce((accumulator, layer, layerIndex) => {
+				Object.entries(layer).forEach(([coordinateString, tileIDs]) => {
+					const tileData = contentManager.getTile(tileIDs.tileID, tileIDs.resourcepackID)
+
+					if (!accumulator[coordinateString]) {
+						accumulator[coordinateString] = {}
+					}
+
+					accumulator[coordinateString][layerIndex] = {
+						isBlocking: tileData.isBlocking,
+						isTraversable: tileData.isTraversable,
+					}
+				})
+
+				return accumulator
+			}, {}))
+		}
+
+		if (newState.destinations) {
+			setDestinations(newState.destinations)
+		}
+
+		if (newState.startingPosition) {
+			setStartingPosition(newState.startingPosition)
+		}
+	}, [
+		setDestinations,
+		setLayers,
+		setPfgridStacks,
+		setStartingPosition,
+	])
+
 	const setStartingPositionWrapper = useCallback(newStartingPosition => {
 		const coordinateString = `${newStartingPosition.x}|${newStartingPosition.y}`
 
@@ -391,6 +427,7 @@ export function EditorContextProvider(props) {
 			openItems,
 			paintTile,
 			pfgrid,
+			replaceState,
 			scale,
 			selection,
 			setActiveTile: setActiveTileWrapper,
@@ -431,6 +468,7 @@ export function EditorContextProvider(props) {
 		openItems,
 		paintTile,
 		pfgrid,
+		replaceState,
 		scale,
 		selection,
 		setActiveTileWrapper,

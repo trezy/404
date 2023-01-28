@@ -12,6 +12,7 @@ import {
 // Local imports
 import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
+import { LoadMapModal } from '../LoadMapModal/LoadMapModal.jsx'
 import { ManageResourcePacksModal } from '../ManageResourcePacksModal/ManageResourcePacksModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
@@ -42,6 +43,7 @@ export function LeftPanelContainer() {
 	}, [])
 
 	const [showExportMapModal, setShowExportMapModal] = useState(false)
+	const [showLoadMapModal, setShowLoadMapModal] = useState(false)
 	const [showManageResourcePacksModal, setShowManageResourcePacksModal] = useState(false)
 
 	const handleManageResourcePacksClick = useCallback(() => setShowManageResourcePacksModal(true), [setShowManageResourcePacksModal])
@@ -59,6 +61,10 @@ export function LeftPanelContainer() {
 	const handleExportMapClick = useCallback(() => setShowExportMapModal(true), [setShowExportMapModal])
 
 	const handleExportMapModalClose = useCallback(() => setShowExportMapModal(false), [setShowExportMapModal])
+
+	const handleLoadMapClick = useCallback(() => setShowLoadMapModal(true), [setShowLoadMapModal])
+
+	const handleLoadMapModalClose = useCallback(() => setShowLoadMapModal(false), [setShowLoadMapModal])
 
 	const handleMainMenuClick = useCallback(() => goToMainMenu(), [goToMainMenu])
 
@@ -80,6 +86,12 @@ export function LeftPanelContainer() {
 
 				<Button
 					isFullWidth
+					onClick={handleLoadMapClick}>
+					{'Load Map'}
+				</Button>
+
+				<Button
+					isFullWidth
 					onClick={handleMainMenuClick}>
 					{'Main Menu'}
 				</Button>
@@ -87,6 +99,7 @@ export function LeftPanelContainer() {
 		)
 	}, [
 		handleExportMapClick,
+		handleLoadMapClick,
 		handleManageResourcePacksClick,
 		hasDestinations,
 		hasStartingPosition,
@@ -101,6 +114,10 @@ export function LeftPanelContainer() {
 
 			{showExportMapModal && (
 				<ExportModal onClose={handleExportMapModalClose} />
+			)}
+
+			{showLoadMapModal && (
+				<LoadMapModal onClose={handleLoadMapModalClose} />
 			)}
 
 			{showManageResourcePacksModal && (

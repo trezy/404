@@ -32,6 +32,7 @@ export function MapEditorContextProvider(props) {
 		destinations,
 		layers,
 		pfgrid,
+		replaceState,
 		startingPosition,
 	} = useEditorContext()
 
@@ -105,12 +106,29 @@ export function MapEditorContextProvider(props) {
 		})
 	}, [layers])
 
+	const loadMap = useCallback(async mapID => {
+		const map = await contentManager.loadMap(mapID)
+
+		replaceState({
+			destinations: map.destinations.reduce((accumulator, destination) => {
+				accumulator[`${destination.x}|${destination.y}`] = true
+				return accumulator
+			}, {}),
+			layers: map.tiles,
+			startingPosition: map.startingPosition,
+		})
+	}, [
+		contentManager,
+		replaceState,
+	])
+
 	const providerState = useMemo(() => {
 		return {
 			hasDestinations,
 			hasStartingPosition,
 			hasTiles,
 			isSaving,
+			loadMap,
 			mapName,
 			resourcepacks,
 			saveMap,
@@ -122,6 +140,7 @@ export function MapEditorContextProvider(props) {
 		hasStartingPosition,
 		hasTiles,
 		isSaving,
+		loadMap,
 		mapName,
 		resourcepacks,
 		saveMap,
