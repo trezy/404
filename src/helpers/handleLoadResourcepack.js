@@ -13,14 +13,27 @@ import { STATE } from './state.js'
  *
  * @param {object} event The event object.
  * @param {string} resourcepackID The ID of the resourcepack to load.
+ * @param {boolean} includeAssets Whether to includes assets when loading this resourcepack.
  * @returns {object} The resourcepack's tile data.
  */
-export async function handleLoadResourcepack(event, resourcepackID) {
+export async function handleLoadResourcepack(event, resourcepackID, includeAssets) {
 	const resourcepackMeta = Object
 		.values(STATE.metaCache)
 		.find(cacheItem => cacheItem.id === resourcepackID)
 
-	const tileDataString = await extractFileFromArchive(resourcepackMeta.path, 'tiles.json')
+	const promises = [extractFileFromArchive(resourcepackMeta.path, 'tiles.json')]
 
-	return JSON.parse(tileDataString)
+	if (includeAssets) {
+		promises.push(extractFileFromArchive(resourcepackMeta.path, 'assets.json'))
+	}
+
+	const [
+		tileDataString,
+		assetDataString,
+	] = await Promise.all(promises)
+
+	return {
+		assets: JSON.parse(assetDataString),
+		tiles: JSON.parse(tileDataString),
+	}
 }

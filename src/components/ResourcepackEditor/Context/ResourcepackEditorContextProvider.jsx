@@ -15,6 +15,8 @@ import { v4 as uuid } from 'uuid'
 // Local imports
 import { initialState } from './initialState.js'
 import { ResourcepackEditorContext } from './ResourcepackEditorContext.js'
+import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
+import { useStore } from '../../../store/react.js'
 
 
 
@@ -28,6 +30,13 @@ export function ResourcepackEditorContextProvider(props) {
 	const [isSaving, setIsSaving] = useState(initialState.isSaving)
 	const [tiles, setTiles] = useState(initialState.tiles)
 	const [tilesetName, setTilesetName] = useState(initialState.tilesetName)
+
+	const contentManager = useStore(state => state.contentManager)
+
+ 	const {
+		closeAllItems,
+		openItem,
+	} = useEditorContext()
 
 	const addAssets = useCallback(newAssets => {
 		setAssets(oldAssets => ({
@@ -67,6 +76,31 @@ export function ResourcepackEditorContextProvider(props) {
 	}, [
 		compileTileset,
 		setIsExporting,
+	])
+
+	const loadResourcepack = useCallback(async resourcepackID => {
+		const resourcepack = await contentManager.loadResourcepack(resourcepackID, true)
+
+		setAssets({ ...resourcepack.assets })
+		setTiles({ ...resourcepack.tiles })
+		setTilesetName(resourcepack.name)
+
+		closeAllItems()
+
+		Object.entries(resourcepack.assets).forEach(([assetID, assetData]) => {
+			openItem({
+				item: assetData,
+				itemID: assetID,
+				type: 'asset',
+			})
+		})
+	}, [
+		closeAllItems,
+		contentManager,
+		openItem,
+		setAssets,
+		setTiles,
+		setTilesetName,
 	])
 
 	const saveTileset = useCallback(async() => {
@@ -139,6 +173,7 @@ export function ResourcepackEditorContextProvider(props) {
 			hasTiles,
 			isExporting,
 			isSaving,
+			loadResourcepack,
 			removeAsset,
 			removeTile,
 			saveTileset,
@@ -155,6 +190,7 @@ export function ResourcepackEditorContextProvider(props) {
 		hasTiles,
 		isExporting,
 		isSaving,
+		loadResourcepack,
 		removeAsset,
 		removeTile,
 		saveTileset,

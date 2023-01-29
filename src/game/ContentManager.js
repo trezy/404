@@ -181,8 +181,9 @@ export class ContentManager extends EventEmitter {
 	 * Loads data for a resourcepack.
 	 *
 	 * @param {string} resourcepackID The ID of the resourcepack to be loaded.
+	 * @param {boolean} [includeAssets=false] Whether to includes assets when loading this resourcepack.
 	 */
-	async loadResourcepack(resourcepackID) {
+	async loadResourcepack(resourcepackID, includeAssets = false) {
 		const { resourcepacks } = this.#manifests
 
 		if (!resourcepacks[resourcepackID]) {
@@ -199,7 +200,10 @@ export class ContentManager extends EventEmitter {
 
 		resourcepack.isLoading = true
 
-		const tiles = await ipcRenderer.invoke('loadResourcepack', resourcepackID)
+		const {
+			assets,
+			tiles,
+		} = await ipcRenderer.invoke('loadResourcepack', resourcepackID, includeAssets)
 
 		for await (const tile of Object.values(tiles)) {
 			tile.image = new Image
@@ -207,9 +211,20 @@ export class ContentManager extends EventEmitter {
 			await tile.image.decode()
 		}
 
+		resourcepack.tiles = tiles
+
+		if (assets) {
+			for await (const asset of Object.values(assets)) {
+				asset.image = new Image
+				asset.image.src = asset.dataURL
+				await asset.image.decode()
+			}
+
+			resourcepack.assets = assets
+		}
+
 		resourcepack.isLoaded = false
 		resourcepack.isLoading = false
-		resourcepack.tiles = tiles
 
 		this.emit('resourcepack:loaded', resourcepackID)
 

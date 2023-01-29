@@ -13,6 +13,7 @@ import {
 import { AssetsPanel } from '../AssetsPanel.jsx'
 import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
+import { LoadResourcepackModal } from '../LoadResourcepackModal/LoadResourcepackModal.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilesPanel } from '../TilesPanel.jsx'
 import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
@@ -42,10 +43,13 @@ export function LeftPanelContainer() {
 	}, [])
 
 	const [showExportResourcepackModal, setShowExportResourcepackModal] = useState(false)
+	const [showLoadResourcepackModal, setShowLoadResourcepackModal] = useState(false)
 
 	const handleExportResourcepackClick = useCallback(() => setShowExportResourcepackModal(true), [setShowExportResourcepackModal])
-
 	const handleExportResourcepackModalClose = useCallback(() => setShowExportResourcepackModal(false), [setShowExportResourcepackModal])
+
+	const handleLoadResourcepackClick = useCallback(() => setShowLoadResourcepackModal(true), [setShowLoadResourcepackModal])
+	const handleLoadResourcepackModalClose = useCallback(() => setShowLoadResourcepackModal(false), [setShowLoadResourcepackModal])
 
 	const handleMainMenuClick = useCallback(() => goToMainMenu(), [goToMainMenu])
 
@@ -57,6 +61,12 @@ export function LeftPanelContainer() {
 					isFullWidth
 					onClick={handleExportResourcepackClick}>
 					{'Export Resourcepack'}
+				</Button>
+
+				<Button
+					isFullWidth
+					onClick={handleLoadResourcepackClick}>
+					{'Load Resourcepack'}
 				</Button>
 
 				<Button
@@ -80,6 +90,10 @@ export function LeftPanelContainer() {
 
 			{showExportResourcepackModal && (
 				<ExportModal onClose={handleExportResourcepackModalClose} />
+			)}
+
+			{showLoadResourcepackModal && (
+				<LoadResourcepackModal onClose={handleLoadResourcepackModalClose} />
 			)}
 		</>
 	)

@@ -81,6 +81,16 @@ export function EditorContextProvider(props) {
 
 	const activateStartingPositionTool = useCallback(() => setTool('startingPosition'), [setTool])
 
+	const closeAllItems = useCallback(() => {
+		setFocusedItemID(null)
+		setOpenItems({})
+		setZoom(1)
+	}, [
+		setFocusedItemID,
+		setOpenItems,
+		setZoom,
+	])
+
 	const closeItem = useCallback(itemID => {
 		if (focusedItemID === itemID) {
 			const itemIDs = Object.keys(openItems)
@@ -411,6 +421,7 @@ export function EditorContextProvider(props) {
 			activeTile,
 			toggleDestination,
 			addNotification,
+			closeAllItems,
 			closeItem,
 			currentLayer,
 			defaultZoom,
@@ -452,6 +463,7 @@ export function EditorContextProvider(props) {
 		activeTile,
 		toggleDestination,
 		addNotification,
+		closeAllItems,
 		closeItem,
 		currentLayer,
 		defaultZoom,
