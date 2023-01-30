@@ -115,11 +115,15 @@ export function MapEditorContextProvider(props) {
 				return accumulator
 			}, {}),
 			layers: map.tiles,
+			mapName: map.name,
 			startingPosition: map.startingPosition,
 		})
+
+		setMapName(map.name)
 	}, [
 		contentManager,
 		replaceState,
+		setMapName,
 	])
 
 	const providerState = useMemo(() => {
