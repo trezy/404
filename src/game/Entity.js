@@ -35,6 +35,10 @@ export class Entity {
 	 * Private instance properties
 	\****************************************************************************/
 
+	#finder = new PF.AStarFinder({
+		diagonalMovement: PF.DiagonalMovement.Never,
+	})
+
 	#frame = 0
 
 	#destination = null
@@ -118,19 +122,63 @@ export class Entity {
 	 * Public instance methods
 	\****************************************************************************/
 
-	/**
-	 * Starts the entity's pathfinding queue.
-	 */
-	go() {
-		const finder = new PF.AStarFinder({
-			diagonalMovement: PF.DiagonalMovement.Never,
-		})
+	#getRandomNearbyTile() {
+		const paths = [
+			this.#finder.findPath(
+				this.#position.x,
+				this.#position.y,
+				Math.min(this.#position.x + 1, this.#mapManager.width),
+				this.#position.y,
+				this.#mapManager.pathfindingGrid.clone(),
+			),
+			this.#finder.findPath(
+				this.#position.x,
+				this.#position.y,
+				Math.max(this.#position.x - 1, 0),
+				this.#position.y,
+				this.#mapManager.pathfindingGrid.clone(),
+			),
+			this.#finder.findPath(
+				this.#position.x,
+				this.#position.y,
+				this.#position.x,
+				Math.min(this.#position.y + 1, this.#mapManager.height),
+				this.#mapManager.pathfindingGrid.clone(),
+			),
+			this.#finder.findPath(
+				this.#position.x,
+				this.#position.y,
+				this.#position.x,
+				Math.max(this.#position.y - 1, 0),
+				this.#mapManager.pathfindingGrid.clone(),
+			),
+		]
 
+		const viablePaths = paths.filter(path => path.length)
+
+		const selectedPathIndex = Math.floor(Math.random() * viablePaths.length)
+		const selectedPath = viablePaths[selectedPathIndex]
+
+		return selectedPath
+	}
+
+
+
+
+
+	/****************************************************************************\
+	 * Public instance methods
+	\****************************************************************************/
+
+	/**
+	 * Determines the next step in the current best path to an exit.
+	 */
+	findNextDestination() {
 		const possiblePaths = this
 			.#mapManager
 			.destinations
 			.map(destination => {
-				return finder.findPath(
+				return this.#finder.findPath(
 					this.#position.x,
 					this.#position.y,
 					destination.x,
@@ -153,7 +201,11 @@ export class Entity {
 
 		this.#path = possiblePaths[0]
 
-		this.#destination = this.#path.shift()
+		if (!this.#path?.length) {
+			this.#path = this.#getRandomNearbyTile()
+		}
+
+		this.#destination = this.#path?.shift()
 	}
 
 	/**
@@ -255,6 +307,8 @@ export class Entity {
 				this.#destination = null
 				this.#path = null
 			}
+		} else {
+			this.findNextDestination()
 		}
 	}
 

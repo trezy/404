@@ -89,7 +89,6 @@ export class GameManager {
 			position: { ...this.#mapManager.startingPosition },
 		})
 		this.#entitiesManager.add(this.#robot)
-		this.#robot.go()
 
 		store.setState({ isRunning: true })
 
