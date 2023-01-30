@@ -33,7 +33,7 @@ export async function handleLoadResourcepack(event, resourcepackID, includeAsset
 	] = await Promise.all(promises)
 
 	return {
-		assets: JSON.parse(assetDataString),
+		assets: includeAssets ? JSON.parse(assetDataString) : null,
 		tiles: JSON.parse(tileDataString),
 	}
 }
