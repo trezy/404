@@ -123,10 +123,6 @@ const RENDERERS = {
 			zoom,
 		} = options
 
-		if (!activeTile) {
-			return
-		}
-
 		context.setTransform(
 			zoom,
 			0,
@@ -136,24 +132,26 @@ const RENDERERS = {
 			0,
 		)
 
-		if (!isDragging) {
-			context.globalAlpha = 0.5
+		if (activeTile) {
+			if (!isDragging) {
+				context.globalAlpha = 0.5
+			}
+
+			const tile = contentManager.getTile(activeTile.tileID, activeTile.resourcepackID)
+			context.drawImage(
+				tile.image,
+				0,
+				0,
+				TILE_SIZE.width * 3,
+				TILE_SIZE.height * 3,
+				targetCell.x,
+				targetCell.y,
+				TILE_SIZE.width,
+				TILE_SIZE.height,
+			)
+
+			context.globalAlpha = 1
 		}
-
-		const tile = contentManager.getTile(activeTile.tileID, activeTile.resourcepackID)
-		context.drawImage(
-			tile.image,
-			0,
-			0,
-			TILE_SIZE.width * 3,
-			TILE_SIZE.height * 3,
-			targetCell.x,
-			targetCell.y,
-			TILE_SIZE.width,
-			TILE_SIZE.height,
-		)
-
-		context.globalAlpha = 1
 
 		context.fillStyle = 'white'
 		context.fillRect(targetPixel.x, targetPixel.y, 1, 1)
