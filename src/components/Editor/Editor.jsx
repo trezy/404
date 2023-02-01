@@ -288,13 +288,8 @@ const RENDERERS = {
 			context,
 			targetCell,
 			targetPixel,
-			activeTile,
 			zoom,
 		} = options
-
-		if (!activeTile) {
-			return
-		}
 
 		context.setTransform(
 			zoom,
