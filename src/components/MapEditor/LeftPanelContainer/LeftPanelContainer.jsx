@@ -22,6 +22,7 @@ import {
 import { Button } from '../../Button.jsx'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
+import { TileQueuePanel } from '../TileQueuePanel/TileQueuePanel.jsx'
 import { useStore as useZustandStore } from '../../../store/react.js'
 
 
@@ -42,6 +43,7 @@ export function LeftPanelContainer(props) {
 	const leftPanels = useMemo(() => {
 		return [
 			TilePalettePanel,
+			TileQueuePanel,
 		]
 	}, [])
 

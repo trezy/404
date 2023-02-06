@@ -15,6 +15,7 @@ import styles from './TilePalettePanel.module.scss'
 
 import {
 	activateBrushTool,
+	getMap,
 	store,
 } from '../store.js'
 import { Button } from '../../Button.jsx'
@@ -28,17 +29,13 @@ import { CollapsiblePanel } from '../../CollapsiblePanel/CollapsiblePanel.jsx'
  * Handles selecting which tile to paint with.
  */
 export function TilePalettePanel() {
+	const proxyStore = useStore(store)
 	const {
-		activeTabID,
 		activeTileBrush,
 		contentManager,
-		maps,
-	} = useStore(store)
+	} = proxyStore
 
-	const map = useMemo(() => maps[activeTabID], [
-		activeTabID,
-		maps,
-	])
+	const map = getMap(proxyStore)
 
 	const resourcepacks = useMemo(() => {
 		if (!map) {

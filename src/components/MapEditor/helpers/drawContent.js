@@ -1,5 +1,8 @@
 // Local imports
-import { store } from '../store.js'
+import {
+	getTarget,
+	store,
+} from '../store.js'
 import { TILE_SIZE } from '../../../game/Tile.js'
 
 
@@ -8,23 +11,21 @@ import { TILE_SIZE } from '../../../game/Tile.js'
 
 export function drawContent(canvasElement) {
 	const {
-		activeTabID,
 		contentManager,
 		isDestinationsVisible,
 		isStartingPositionVisible,
-		maps,
 		tool,
 	} = store.state
 
 	const context = canvasElement.getContext('2d')
 
-	const map = maps[activeTabID]
+	const target = getTarget(store.state)
 
-	if (!map) {
+	if (!target) {
 		return
 	}
 
-	map.layers.forEach(layer => {
+	target.layers.forEach(layer => {
 		Object.entries(layer).forEach(([coordinateString, tileData]) => {
 			const [cellX, cellY] = coordinateString
 				.split('|')
@@ -45,8 +46,8 @@ export function drawContent(canvasElement) {
 		})
 	})
 
-	if (map.destinations && (isDestinationsVisible || (tool === 'destination'))) {
-		map.destinations.forEach(destination => {
+	if (target.destinations && (isDestinationsVisible || (tool === 'destination'))) {
+		target.destinations.forEach(destination => {
 			context.globalAlpha = 0.5
 			context.strokeStyle = 'black'
 			context.lineWidth = 4
@@ -71,14 +72,14 @@ export function drawContent(canvasElement) {
 		})
 	}
 
-	if (map.startingPosition && (isStartingPositionVisible || (tool === 'starting position'))) {
+	if (target.startingPosition && (isStartingPositionVisible || (tool === 'starting position'))) {
 		context.globalAlpha = 0.5
 		context.strokeStyle = 'black'
 		context.lineWidth = 4
 
 		context.strokeRect(
-			map.startingPosition.x * TILE_SIZE.width,
-			map.startingPosition.y * TILE_SIZE.height,
+			target.startingPosition.x * TILE_SIZE.width,
+			target.startingPosition.y * TILE_SIZE.height,
 			TILE_SIZE.width,
 			TILE_SIZE.height,
 		)
@@ -88,8 +89,8 @@ export function drawContent(canvasElement) {
 		context.lineWidth = 2
 
 		context.strokeRect(
-			map.startingPosition.x * TILE_SIZE.width,
-			map.startingPosition.y * TILE_SIZE.height,
+			target.startingPosition.x * TILE_SIZE.width,
+			target.startingPosition.y * TILE_SIZE.height,
 			TILE_SIZE.width,
 			TILE_SIZE.height,
 		)

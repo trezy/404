@@ -99,20 +99,42 @@ export const closeMap = mapID => {
 	})
 }
 
-export const createMap = (mapData = {}) => {
+export const createMapLike = (mapData = {}) => {
 	return {
-		dependencies: mapData.dependencies || {},
-		destinations: mapData.destinations || [],
 		dimensions: mapData.dimensions || {
 			height: 0,
 			width: 0,
 		},
 		id: mapData.id || uuid(),
 		layers: mapData.tiles || [],
-		name: mapData.name || '',
 		pfgrid: mapData.pfgrid || {},
-		startingPosition: mapData.startingPosition || null,
 	}
+}
+
+export const createMap = (mapData = {}) => {
+	const map = createMapLike(mapData)
+
+	map.dependencies = mapData.dependencies || {}
+	map.destinations = mapData.destinations || []
+	map.name = mapData.name || ''
+	map.queue = []
+	map.startingPosition = mapData.startingPosition || null
+
+	return map
+}
+
+export const createTileset = (tilesetData = {}) => {
+	const tileset = createMapLike(tilesetData)
+	const map = getMap(store.state)
+
+	updateMap({
+		queue: [
+			...map.queue,
+			tileset,
+		],
+	})
+
+	return tileset.id
 }
 
 export const openMap = async mapID => {
@@ -144,15 +166,44 @@ export const openMap = async mapID => {
 	}))
 }
 
+export const openTileset = tilesetID => {
+	store.set(state => {
+		const [mapID] = state.activeTabID.split(':')
+		const map = state.maps[mapID]
+		const tilesetIndex = map.queue.findIndex(tileset => {
+			return tileset.id === tilesetID
+		})
+
+		const tabID = `${mapID}:${tilesetID}`
+		return {
+			activeTabID: tabID,
+			openItems: [
+				...state.openItems,
+				{
+					id: tabID,
+					label: `Queue Item ${tilesetIndex + 1}`,
+				},
+			],
+		}
+	})
+}
+
+export const removeTileset = tilesetID => {
+	const map = getMap(store.state)
+
+	updateMap({
+		queue: map.queue.filter(tileset => {
+			return tileset.id !== tilesetID
+		}),
+	})
+
+	closeItem(`${map.id}:${tilesetID}`)
+}
+
 export const saveMap = async () => {
 	store.set(() => ({ isSavingMap: true }))
 
-	const {
-		activeTabID,
-		maps,
-	} = store.state
-
-	const map = maps[activeTabID]
+	const map = getMap(store.state)
 
 	await executePromiseWithMinimumDuration(ipcRenderer.invoke('saveMap', map), 2000)
 
@@ -161,27 +212,57 @@ export const saveMap = async () => {
 
 export const updateMap = patch => {
 	store.set(state => {
-		const mapID = state.activeTabID
+		const map = getMap(state)
 
 		const updatedMap = {
-			...state.maps[mapID],
+			...state.maps[map.id],
 			...patch,
 		}
 
 		if (patch.layers) {
-			updatedMap.pfgrid = generateTilemapForMap(updatedMap)
+			updatedMap.pfgrid = generatePFGridForMap(updatedMap)
 		}
 
 		return {
 			maps: {
 				...state.maps,
-				[mapID]: updatedMap,
+				[map.id]: updatedMap,
 			},
 		}
 	})
 }
 
-export const generateTilemapForMap = map => {
+export const updateTileset = patch => {
+	store.set(state => {
+		const map = getMap(state)
+		const tileset = getTileset(state)
+
+		const updatedTileset = {
+			...tileset,
+			...patch,
+		}
+
+		updatedTileset.pfgrid = generatePFGridForMap(updatedTileset)
+
+		return {
+			maps: {
+				...state.maps,
+				[map.id]: {
+					...map,
+					queue: map.queue.map(item => {
+						if (item.id === updatedTileset.id) {
+							return updatedTileset
+						}
+
+						return item
+					}),
+				},
+			},
+		}
+	})
+}
+
+export const generatePFGridForMap = map => {
 	const { contentManager } = store.state
 
 	const newPFGrid = {}
@@ -322,33 +403,37 @@ export const eraseTile = () => {
 
 	const coordinateString = `${cellX}|${cellY}`
 
-	const map = maps[activeTabID]
+	const target = getTarget(store.state)
 
-	const newLayer = { ...map.layers[0] }
+	const newLayer = { ...target.layers[0] }
 	delete newLayer[coordinateString]
 
-	const mapPatch = {
+	const patch = {
 		layers: [newLayer],
 	}
 
-	if ((map.startingPosition?.x === cellX) && (map.startingPosition?.y === cellY)) {
-		mapPatch.startingPosition = null
+	if ((target.startingPosition?.x === cellX) && (target.startingPosition?.y === cellY)) {
+		patch.startingPosition = null
 		addNotification({ message: 'Removed starting position because its tile was erased.' })
 	}
 
-	const cellIsOccupiedByDestination = map.destinations.some(destination => {
+	const cellIsOccupiedByDestination = target.destinations?.some(destination => {
 		return (destination.x === cellX) && (destination.y === cellY)
 	})
 
 	if (cellIsOccupiedByDestination) {
-		mapPatch.destinations = map.destinations.filter(destination => {
+		patch.destinations = target.destinations.filter(destination => {
 			return (destination.x !== cellX) || (destination.y !== cellY)
 		})
 
 		addNotification({ message: 'Removed destination because its tiles was erased.' })
 	}
 
-	updateMap(mapPatch)
+	if (activeTabID.includes(':')) {
+		updateTileset(patch)
+	} else {
+		updateMap(patch)
+	}
 }
 
 export const paintTile = () => {
@@ -357,7 +442,6 @@ export const paintTile = () => {
 		activeTileBrush,
 		cursorX,
 		cursorY,
-		maps,
 		renderOffset,
 		resolution,
 		uiScale,
@@ -371,16 +455,22 @@ export const paintTile = () => {
 
 	const coordinateString = `${cellX}|${cellY}`
 
-	const map = maps[activeTabID]
+	const target = getTarget(store.state)
 
-	updateMap({
+	const patch = {
 		layers: [
 			{
-				...map.layers[0],
+				...target.layers[0],
 				[coordinateString]: { ...activeTileBrush },
 			},
 		],
-	})
+	}
+
+	if (activeTabID.includes(':')) {
+		updateTileset(patch)
+	} else {
+		updateMap(patch)
+	}
 }
 
 export const setStartingPosition = () => {
@@ -633,6 +723,41 @@ export const removeNotification = notificationID => {
 /******************************************************************************\
  * Getters
 \******************************************************************************/
+
+export const getMap = ({ activeTabID, maps }) => {
+	if (!activeTabID) {
+		return null
+	}
+
+	const [mapID] = activeTabID.split(':')
+	return maps[mapID]
+}
+
+export const getTarget = state => {
+	const { activeTabID } = state
+
+	if (!activeTabID) {
+		return null
+	}
+
+	if (activeTabID.includes(':')) {
+		return getTileset(state)
+	}
+
+	return getMap(state)
+}
+
+export const getTileset = ({ activeTabID, maps }) => {
+	if (!activeTabID) {
+		return null
+	}
+
+	const [mapID, tilesetID] = activeTabID.split(':')
+
+	const map = maps[mapID]
+
+	return map.queue.find(item => item.id === tilesetID)
+}
 
 export const hasDestinations = ({ activeTabID, maps }) => {
 	const map = maps[activeTabID]

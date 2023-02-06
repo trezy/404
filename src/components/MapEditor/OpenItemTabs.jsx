@@ -35,7 +35,7 @@ export function OpenItemTabs() {
 			activeTabID={activeTabID}
 			onClose={handleCloseTab}
 			onFocus={handleFocusTab}
-			showClose={true}
+			showClose
 			tabs={openItems} />
 	)
 }
