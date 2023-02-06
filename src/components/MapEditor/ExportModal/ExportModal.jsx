@@ -4,52 +4,58 @@ import {
 	useMemo,
 	useState,
 } from 'react'
-import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
 
 
 // Local imports
+import {
+	hasTiles,
+	hideExportMapModal,
+	saveMap,
+	store,
+	updateMap,
+} from '../store.js'
 import { Button } from '../../Button.jsx'
 import { DropdownButton } from '../../DropdownButton/DropdownButton.jsx'
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { Modal } from '../../Modal/Modal.jsx'
-import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 
 
 
-export function ExportModal(props) {
-	const { onClose } = props
-
+export function ExportModal() {
 	const {
-		hasTiles,
-		mapName,
-		saveMap,
-		setMapName,
-	} = useMapEditorContext()
+		activeTabID,
+		maps,
+	} = useStore(store)
+
+	const map = useMemo(() => maps[activeTabID], [
+		activeTabID,
+		maps,
+	])
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [loaderText, setLoaderText] = useState('Saving...')
 
 	const isValid = useMemo(() => {
-		if (!mapName) {
-			return false
-		}
-
-		if (!hasTiles) {
+		if (!map.name) {
 			return false
 		}
 
 		return true
-	}, [
-		hasTiles,
-		mapName,
-	])
+	}, [map])
 
-	const handleNameChange = useCallback(event => setMapName(event.target.value), [setMapName])
+	const handleClose = useCallback(() => hideExportMapModal(), [])
+
+	const handleNameChange = useCallback(event => {
+		updateMap({
+			name: event.target.value,
+		})
+	}, [])
 
 	const handleSave = useCallback(async() => {
 		setIsLoading(true)
@@ -58,7 +64,10 @@ export function ExportModal(props) {
 		executePromiseWithMinimumDuration(saveMap(), 2000)
 			.then(() => {
 				setLoaderText('Saved!')
-				setTimeout(() => setIsLoading(false), 2000)
+				setTimeout(() => {
+					setIsLoading(false)
+					hideExportMapModal()
+				}, 2000)
 			})
 	}, [
 		saveMap,
@@ -70,9 +79,8 @@ export function ExportModal(props) {
 		<Modal
 			isLoading={isLoading}
 			loaderText={loaderText}
-			onClose={onClose}
+			onClose={handleClose}
 			title={'Export Map'}>
-
 			<form onSubmit={handleSave}>
 				<div className={'form-contents'}>
 					<div className={'field'}>
@@ -81,7 +89,7 @@ export function ExportModal(props) {
 							name={'name'}
 							onChange={handleNameChange}
 							type={'text'}
-							value={mapName} />
+							value={map.name} />
 					</div>
 				</div>
 			</form>
@@ -91,7 +99,7 @@ export function ExportModal(props) {
 					<div className={'menu-right'}>
 						<Button
 							isNegative
-							onClick={onClose}>
+							onClick={handleClose}>
 							{'Cancel'}
 						</Button>
 
@@ -116,8 +124,4 @@ export function ExportModal(props) {
 			</footer>
 		</Modal>
 	)
-}
-
-ExportModal.propTypes = {
-	onClose: PropTypes.func.isRequired,
 }

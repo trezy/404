@@ -1,0 +1,29 @@
+.divider {
+	display: flex;
+	gap: calc(4px * var(--ui-scale));
+	margin-bottom: calc(10px * var(--ui-scale));
+	margin-top: calc(10px * var(--ui-scale));
+
+	&:after,
+	&:before {
+		align-self: center;
+		background-color: var(--palette-dark-grey);
+		content: '';
+		display: block;
+		height: calc(1px * var(--ui-scale));
+		flex-grow: 1;
+	}
+}
+
+.start-prompt {
+	display: flex;
+	flex-direction: column;
+}
+
+.wrapper {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	grid-area: editor;
+	justify-content: center;
+}

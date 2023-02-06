@@ -4423,6 +4423,7 @@ __metadata:
     resolve-url-loader: ^5.0.0
     sass: ^1.50.1
     sass-loader: ^12.6.0
+    statery: ^0.6.3
     style-loader: ^3.3.1
     systeminformation: ^5.11.14
     url-loader: ^4.1.1
@@ -10642,6 +10643,15 @@ __metadata:
   version: 1.2.1
   resolution: "stackframe@npm:1.2.1"
   checksum: 1a3f281014bb1d2178b7c2ab26d657fb0f83c21d7d34ab33d858fd0b652a035254619fce8601278a2cf22ddb3382af21c4ea29b429806da75f3077fbd5e5bf17
+  languageName: node
+  linkType: hard
+
+"statery@npm:^0.6.3":
+  version: 0.6.3
+  resolution: "statery@npm:0.6.3"
+  peerDependencies:
+    react: ">=18.0"
+  checksum: 0711fe890079e44552c5ce26ca3f07a5d8b5365bb626949924fe102ed2ed83a7c186808c7697f0850d1e404db037c7607f831bcd4e827bca8dbacb5c3f9b7cbc
   languageName: node
   linkType: hard
 

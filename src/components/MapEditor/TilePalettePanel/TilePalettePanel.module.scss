@@ -17,6 +17,42 @@
 
 	&.is-active button {
 		cursor: default;
+		display: flex;
+		position: relative;
+
+		&:after {
+			border-color: var(--palette-white);
+			border-style: solid;
+			border-width: calc(1px * var(--ui-scale));
+			clip-path: polygon(
+				calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				0 calc(2px * var(--ui-scale)),
+				0 0,
+				calc(2px * var(--ui-scale)) 0,
+				calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+
+				calc(100% - (2px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) 0,
+				100% 0,
+				100% calc(2px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+
+				calc(100% - (1px * var(--ui-scale))) calc(100% - (2px * var(--ui-scale))),
+				100% calc(100% - (2px * var(--ui-scale))),
+				100% 100%,
+				calc(100% - (2px * var(--ui-scale))) 100%,
+				calc(100% - (2px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+
+				calc(2px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+				calc(2px * var(--ui-scale)) 100%,
+				0 100%,
+				0 calc(100% - (2px * var(--ui-scale))),
+				calc(1px * var(--ui-scale)) calc(100% - (2px * var(--ui-scale))),
+			);
+			content: '';
+			inset: calc(-1px * var(--ui-scale));
+			position: absolute;
+		}
 	}
 
 	&:not(.is-active):hover {

@@ -1,0 +1,41 @@
+.canvas {
+	cursor: none;
+}
+
+.canvas-wrapper {
+	display: flex;
+	grid-area: editor;
+	overflow: hidden;
+	position: relative;
+
+	&.is-loading:after {
+		align-items: center;
+		background-color: hsla(var(--palette-black-hsl), 0.5);
+		content: 'Loading...';
+		display: flex;
+		inset: 0;
+		justify-content: center;
+		position: absolute;
+	}
+}
+
+.left-panel {
+	grid-area: left-panel;
+}
+
+.map-editor {
+	column-gap: calc(10px * var(--ui-scale));
+	display: grid;
+	flex-grow: 1;
+	flex-shrink: 1;
+	grid-template-areas:
+		'left-panel tabs'
+		'left-panel editor'
+		'left-panel editor-controls';
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto 1fr auto;
+	margin-top: calc(6px * var(--ui-scale));
+	max-height: 100%;
+	overflow: hidden;
+	position: relative;
+}

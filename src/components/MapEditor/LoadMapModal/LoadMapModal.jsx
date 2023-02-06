@@ -3,47 +3,41 @@ import {
 	useCallback,
 	useState,
 } from 'react'
-import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
 
 
 // Local imports
+import {
+	openMap,
+	store,
+} from '../store.js'
 import { Button } from '../../Button.jsx'
-import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
+import { hideLoadMapModal } from '../store.js'
 import { MapActions } from './MapActions.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
 import { Table } from '../../Table/Table.jsx'
-import { useMapEditorContext } from '../Context/useMapEditorContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
 
 
-export function LoadMapModal(props) {
-	const { onClose } = props
-	const [isLoading, setIsLoading] = useState(false)
-	const [loaderText, setLoaderText] = useState('')
+export function LoadMapModal() {
+	const { contentManager } = useStore(store)
+
 	const [selectedMapID, setSelectedMapID] = useState(null)
 
-	const { loadMap } = useMapEditorContext()
-
-	const contentManager = useStore(state => state.contentManager)
+	const handleClose = useCallback(() => hideLoadMapModal(), [hideLoadMapModal])
 
 	const handleLoadClick = useCallback(async() => {
-		setLoaderText('Loading...')
-		setIsLoading(true)
-		executePromiseWithMinimumDuration(loadMap(selectedMapID), 2000)
-			.then(() => {
-				setLoaderText('Loaded!')
-				setTimeout(() => onClose(), 2000)
-			})
+		openMap(selectedMapID)
+		hideLoadMapModal()
 	}, [
-		contentManager,
+		hideLoadMapModal,
+		openMap,
 		selectedMapID,
-		setIsLoading,
 	])
 
 	const handleSelectMap = useCallback(mapID => {
@@ -56,9 +50,7 @@ export function LoadMapModal(props) {
 
 	return (
 		<Modal
-			isLoading={isLoading}
-			loaderText={loaderText}
-			onClose={onClose}
+			onClose={handleClose}
 			title={'Load Map'}>
 			<Table
 				columns={[
@@ -84,7 +76,7 @@ export function LoadMapModal(props) {
 					<div className={'menu-right'}>
 						<Button
 							isNegative
-							onClick={onClose}>
+							onClick={handleClose}>
 							{'Cancel'}
 						</Button>
 
@@ -99,8 +91,4 @@ export function LoadMapModal(props) {
 			</footer>
 		</Modal>
 	)
-}
-
-LoadMapModal.propTypes = {
-	onClose: PropTypes.func.isRequired,
 }

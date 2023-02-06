@@ -5,7 +5,7 @@ import {
 	useState,
 } from 'react'
 import numeral from 'numeral'
-import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
@@ -14,11 +14,15 @@ import PropTypes from 'prop-types'
 // Local imports
 import styles from './ManageResourcePacksModal.module.scss'
 
+import {
+	hideManageResourcePacksModal,
+	store,
+	updateMap,
+} from '../store.js'
 import { Button } from '../../Button.jsx'
+import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { Modal } from '../../Modal/Modal.jsx'
 import { Resourcepack } from './ResourcePack.jsx'
-import { useMapEditorContext } from '../Context/useMapEditorContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -30,18 +34,28 @@ import { useStore } from '../../../store/react.js'
  * @param {*} props
  */
 export function ManageResourcePacksModal(props) {
+	const [isLoading, setIsLoading] = useState(false)
 	const {
-		onClose,
-		onSave,
-	} = props
+		activeTabID,
+		contentManager,
+		maps,
+	} = useStore(store)
 
-	const { resourcepacks } = useMapEditorContext()
+	const map = useMemo(() => maps[activeTabID], [
+		activeTabID,
+		maps,
+	])
 
-	const { contentManager } = useStore(state => {
-		return {
-			contentManager: state.contentManager,
-		}
-	})
+	const handleClose = useCallback(() => hideManageResourcePacksModal(), [hideManageResourcePacksModal])
+
+	const resourcepacks = useMemo(() => {
+		return Object
+			.keys(map.dependencies)
+			.reduce((accumulator, resourcepackID) => {
+				accumulator[resourcepackID] = { ...contentManager.getResourcepack(resourcepackID) }
+				return accumulator
+			}, {})
+	}, [map])
 
 	const [selectedResourcepacks, setSelectedResourcepacks] = useState(
 		Object.keys(contentManager.resourcepacks).reduce((accumulator, resourcepackID) => {
@@ -64,8 +78,6 @@ export function ManageResourcePacksModal(props) {
 		return Boolean(Object.values(selectedResourcepacks).filter(Boolean).length)
 	}, [selectedResourcepacks])
 
-	const handleClose = useCallback(onClose, [onClose])
-
 	const totalResourcepacksSize = useMemo(() => {
 		const selectedResourcepackIDs = Object
 			.entries(selectedResourcepacks)
@@ -80,17 +92,44 @@ export function ManageResourcePacksModal(props) {
 		selectedResourcepacks,
 	])
 
-	const handleSubmit = useCallback(event => {
-		event.preventDefault()
-		onSave(selectedResourcepacks)
+	const updateResourcepacks = useCallback(async () => {
+		const resourcePackIDs = Object
+			.keys(selectedResourcepacks)
+			.filter(resourcepackID => selectedResourcepacks[resourcepackID])
+
+		for await (const resourcePackID of resourcePackIDs) {
+			await contentManager.loadResourcepack(resourcePackID)
+		}
+
+		updateMap({
+			dependencies: resourcePackIDs.reduce((accumulator, resourcepackID) => {
+				accumulator[resourcepackID] = contentManager.getResourcepack(resourcepackID).version
+				return accumulator
+			}, {}),
+		})
+
+		hideManageResourcePacksModal()
 	}, [
-		onSave,
+		contentManager,
+		map,
 		selectedResourcepacks,
 	])
+
+	const handleSubmit = useCallback(event => {
+		event.preventDefault()
+
+		setIsLoading(true)
+
+		executePromiseWithMinimumDuration(updateResourcepacks(), 2000)
+			.then(() => {
+				setIsLoading(false)
+			})
+	}, [updateResourcepacks])
 
 	return (
 		<Modal
 			className={styles['add-resource-pack-modal']}
+			isLoading={isLoading}
 			onClose={handleClose}
 			title={'Manage Resource Packs'}>
 			<form onSubmit={handleSubmit}>
@@ -134,9 +173,4 @@ export function ManageResourcePacksModal(props) {
 			</form>
 		</Modal>
 	)
-}
-
-ManageResourcePacksModal.propTypes = {
-	onClose: PropTypes.func.isRequired,
-	onSave: PropTypes.func.isRequired,
 }

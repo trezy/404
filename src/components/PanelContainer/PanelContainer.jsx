@@ -1,5 +1,7 @@
 // Module imports
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { useMemo } from 'react'
 
 
 
@@ -18,12 +20,17 @@ import styles from './PanelContainer.module.scss'
  */
 export function PanelContainer(props) {
 	const {
+		className,
 		menu,
 		panels,
 	} = props
 
+	const compiledClassName = useMemo(() => {
+		return classnames(styles['panel-container'], className)
+	}, [className])
+
 	return (
-		<div className={styles['panel-container']}>
+		<div className={compiledClassName}>
 			{panels.map((PanelItem, index) => (
 				<PanelItem key={index} />
 			))}
@@ -40,10 +47,12 @@ export function PanelContainer(props) {
 }
 
 PanelContainer.defaultProps = {
+	className: '',
 	menu: null,
 }
 
 PanelContainer.propTypes = {
+	className: PropTypes.string,
 	menu: PropTypes.node,
 	panels: PropTypes.array.isRequired,
 }

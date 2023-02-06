@@ -108,14 +108,10 @@ export async function handleSaveMap(event, mapData) {
 		width: 0,
 	})
 
-	const parsedDestinations = Object.keys(mapData.destinations).map(coordinateString => {
-		const [x, y] = coordinateString
-			.split('|')
-			.map(Number)
-
+	const parsedDestinations = mapData.destinations.map(destination => {
 		return {
-			x: x - adjustmentX,
-			y: y - adjustmentY,
+			x: destination.x - adjustmentX,
+			y: destination.y - adjustmentY,
 		}
 	})
 

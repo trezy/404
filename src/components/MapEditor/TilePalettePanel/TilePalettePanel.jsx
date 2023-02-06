@@ -4,6 +4,7 @@ import {
 	useMemo,
 } from 'react'
 import classnames from 'classnames'
+import { useStore } from 'statery'
 
 
 
@@ -12,10 +13,12 @@ import classnames from 'classnames'
 // Local imports
 import styles from './TilePalettePanel.module.scss'
 
+import {
+	activateBrushTool,
+	store,
+} from '../store.js'
 import { Button } from '../../Button.jsx'
 import { CollapsiblePanel } from '../../CollapsiblePanel/CollapsiblePanel.jsx'
-import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
-import { useMapEditorContext } from '../Context/useMapEditorContext.js'
 
 
 
@@ -26,18 +29,34 @@ import { useMapEditorContext } from '../Context/useMapEditorContext.js'
  */
 export function TilePalettePanel() {
 	const {
-		activateBrushTool,
-		activeTile,
-		setActiveTile,
-	} = useEditorContext()
-	const { resourcepacks } = useMapEditorContext()
+		activeTabID,
+		activeTileBrush,
+		contentManager,
+		maps,
+	} = useStore(store)
+
+	const map = useMemo(() => maps[activeTabID], [
+		activeTabID,
+		maps,
+	])
+
+	const resourcepacks = useMemo(() => {
+		if (!map) {
+			return {}
+		}
+
+		return Object
+			.keys(map.dependencies)
+			.reduce((accumulator, resourcepackID) => {
+				accumulator[resourcepackID] = contentManager.getResourcepack(resourcepackID)
+				return accumulator
+			}, {})
+	}, [map])
 
 	const handleTileClick = useCallback((tileID, resourcepackID) => () => {
-		activateBrushTool()
-		setActiveTile(tileID, resourcepackID)
+		activateBrushTool(tileID, resourcepackID)
 	}, [
 		activateBrushTool,
-		setActiveTile,
 	])
 
 	const hasResourcePacks = useMemo(() => {
@@ -53,7 +72,7 @@ export function TilePalettePanel() {
 						.entries(resourcepack.tiles)
 						.forEach(([tileID, tileData]) => {
 							const tileClassName = classnames(styles['tile'], {
-								[styles['is-active']]: (tileID === activeTile?.tileID) && (resourcepack.id === activeTile?.resourcepackID),
+								[styles['is-active']]: (tileID === activeTileBrush?.tileID) && (resourcepack.id === activeTileBrush?.resourcepackID),
 							})
 
 							accumulator.push((
@@ -75,7 +94,7 @@ export function TilePalettePanel() {
 				return accumulator
 			}, [])
 	}, [
-		activeTile,
+		activeTileBrush,
 		handleTileClick,
 		resourcepacks,
 	])
