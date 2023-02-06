@@ -66,7 +66,7 @@ export const store = makeStore({
 export const closeItem = itemID => {
 	store.set(state => {
 		const patch = {
-			openItems: state.openItems.filter(item => (item.id === itemID)),
+			openItems: state.openItems.filter(item => (item.id !== itemID)),
 		}
 
 		if (state.activeTabID === itemID) {
@@ -220,7 +220,13 @@ export const generateTilemapForMap = map => {
  * Tabs
 \******************************************************************************/
 
-export const focusTabID = tabID => {
+export const closeTab = tabID => {
+	store.set(() => ({
+		activeTabID: tabID,
+	}))
+}
+
+export const focusTab = tabID => {
 	store.set(() => ({
 		activeTabID: tabID,
 	}))

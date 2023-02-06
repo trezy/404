@@ -7,7 +7,8 @@ import { useStore } from 'statery'
 
 // Local imports
 import {
-	focusTabID,
+	closeMap,
+	focusTab,
 	store,
 } from './store.js'
 import { Tabs } from '../Tabs/Tabs.jsx'
@@ -25,12 +26,16 @@ export function OpenItemTabs() {
 		openItems,
 	} = useStore(store)
 
-	const handleFocusTab = useCallback(tabID => focusTabID(tabID), [focusTabID])
+	const handleCloseTab = useCallback(tabID => closeMap(tabID), [])
+
+	const handleFocusTab = useCallback(tabID => focusTab(tabID), [])
 
 	return (
 		<Tabs
 			activeTabID={activeTabID}
+			onClose={handleCloseTab}
 			onFocus={handleFocusTab}
+			showClose={true}
 			tabs={openItems} />
 	)
 }
