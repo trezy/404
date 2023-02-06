@@ -12,6 +12,7 @@ import { useStore } from 'statery'
 
 // Local imports
 import {
+	getMap,
 	hasTiles,
 	hideExportMapModal,
 	saveMap,
@@ -28,15 +29,8 @@ import { Modal } from '../../Modal/Modal.jsx'
 
 
 export function ExportModal() {
-	const {
-		activeTabID,
-		maps,
-	} = useStore(store)
-
-	const map = useMemo(() => maps[activeTabID], [
-		activeTabID,
-		maps,
-	])
+	const proxyStore = useStore(store)
+	const map = getMap(proxyStore)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [loaderText, setLoaderText] = useState('Saving...')

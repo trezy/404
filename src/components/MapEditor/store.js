@@ -759,22 +759,22 @@ export const getTileset = ({ activeTabID, maps }) => {
 	return map.queue.find(item => item.id === tilesetID)
 }
 
-export const hasDestinations = ({ activeTabID, maps }) => {
-	const map = maps[activeTabID]
+export const hasDestinations = state => {
+	const map = getMap(state)
 
 	return Boolean(map?.destinations.length)
 }
 
-export const hasTiles = ({ activeTabID, maps }) => {
-	const map = maps[activeTabID]
+export const hasTiles = state => {
+	const map = getMap(state)
 
 	return map?.layers.some(layer => {
 		return Object.keys(layer).length
 	})
 }
 
-export const hasStartingPosition = ({ activeTabID, maps }) => {
-	const map = maps[activeTabID]
+export const hasStartingPosition = state => {
+	const map = getMap(state)
 
 	return Boolean(map?.startingPosition)
 }
