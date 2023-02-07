@@ -17,24 +17,14 @@ import { STATE } from './state.js'
 
 
 
-/**
- * Displays a save dialog, allowing the user to save a tileset to their filesystem.
- *
- * @param {object} event The event object.
- * @param {object} mapData A hash of the new map.
- * @returns {boolean} Whether the file was saved successfully.
- */
-export async function handleSaveMap(event, mapData) {
-	const filePath = path.join(getAppDataPath(), 'maps', `${mapData.name}.debugmap`)
-	const id = mapData.id || uuid()
-
+function translateMap(mapData) {
+	// Loop over all tiles on all layers and use their coordinates to determine the minimum and maximum coordinates on the grid.
 	const {
 		adjustmentX,
 		adjustmentY,
 		height,
 		width,
 	} = mapData.layers.reduce((accumulator, layer) => {
-		// Loop over all tiles and use their coordinates to determine the minimum and maximum coordinates on the grid.
 		const {
 			maxX,
 			maxY,
@@ -108,16 +98,12 @@ export async function handleSaveMap(event, mapData) {
 		width: 0,
 	})
 
-	const parsedDestinations = mapData.destinations.map(destination => {
-		return {
-			x: destination.x - adjustmentX,
-			y: destination.y - adjustmentY,
-		}
-	})
-
-	// Loop over the layers again to adjust each tile's coordinates, placing the top left of the map at x0, y0.
-	const parsedLayers = mapData.layers.map(layer => {
-		return Object.entries(layer).reduce((accumulator, [coordinateString, cellData]) => {
+	const newMap = {
+		dimensions: {
+			height: height + 1,
+			width: width + 1,
+		},
+		pfgrid: Object.entries(mapData.pfgrid).reduce((accumulator, [coordinateString, cellData]) => {
 			const [x, y] = coordinateString
 				.split('|')
 				.map(Number)
@@ -125,36 +111,57 @@ export async function handleSaveMap(event, mapData) {
 			accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
 
 			return accumulator
-		}, {})
-	})
+		}, {}),
+		tiles: mapData.layers.map(layer => {
+			return Object.entries(layer).reduce((accumulator, [coordinateString, cellData]) => {
+				const [x, y] = coordinateString
+					.split('|')
+					.map(Number)
 
-	const parsedPfgrid = Object.entries(mapData.pfgrid).reduce((accumulator, [coordinateString, cellData]) => {
-		const [x, y] = coordinateString
-			.split('|')
-			.map(Number)
+				accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
 
-		accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
-
-		return accumulator
-	}, {})
-
-	const parsedStartingPosition = {
-		x: mapData.startingPosition.x - adjustmentX,
-		y: mapData.startingPosition.y - adjustmentY,
+				return accumulator
+			}, {})
+		}),
 	}
+
+	if (mapData.destinations) {
+		newMap.destinations = mapData.destinations.map(destination => {
+			return {
+				x: destination.x - adjustmentX,
+				y: destination.y - adjustmentY,
+			}
+		})
+	}
+
+	if (mapData.startingPosition) {
+		newMap.startingPosition = {
+			x: mapData.startingPosition.x - adjustmentX,
+			y: mapData.startingPosition.y - adjustmentY,
+		}
+	}
+
+	if (mapData.queue) {
+		newMap.queue = mapData.queue.map(tileset => translateMap(tileset))
+	}
+
+	return newMap
+}
+
+/**
+ * Displays a save dialog, allowing the user to save a tileset to their filesystem.
+ *
+ * @param {object} event The event object.
+ * @param {object} mapData A hash of the new map.
+ * @returns {boolean} Whether the file was saved successfully.
+ */
+export async function handleSaveMap(event, mapData) {
+	const filePath = path.join(getAppDataPath(), 'maps', `${mapData.name}.debugmap`)
+	const id = mapData.id || uuid()
 
 	try {
 		await createArchive(filePath, {
-			'map.json': JSON.stringify({
-				destinations: parsedDestinations,
-				dimensions: {
-					height: height + 1,
-					width: width + 1,
-				},
-				startingPosition: parsedStartingPosition,
-				pfgrid: parsedPfgrid,
-				tiles: parsedLayers,
-			}),
+			'map.json': JSON.stringify(translateMap(mapData)),
 			'meta.json': JSON.stringify({
 				dependencies: mapData.dependencies,
 				id,
