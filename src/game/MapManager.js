@@ -21,6 +21,8 @@ export class MapManager {
 	 * Private instance properties
 	\****************************************************************************/
 
+	#tileset = null
+
 	#gameManager = null
 
 	#needsRecenter = true
@@ -48,7 +50,10 @@ export class MapManager {
 		const {
 			gameManager,
 			map,
+			shouldCenter = true,
 		} = options
+
+		this.#needsRecenter = shouldCenter
 
 		this.#gameManager = gameManager
 		this.#map = map
@@ -60,14 +65,14 @@ export class MapManager {
 			const layerGrid = this.generateGrid()
 
 			Object
-			.entries(layerData)
-			.forEach(([coordinateString, tileData]) => {
-				const [x, y] = coordinateString.split('|').map(Number)
+				.entries(layerData)
+				.forEach(([coordinateString, tileData]) => {
+					const [x, y] = coordinateString.split('|').map(Number)
 
-				layerGrid[y][x] = this
-					.contentManager
-					.getTile(tileData.tileID, tileData.resourcepackID)
-			})
+					layerGrid[y][x] = this
+						.contentManager
+						.getTile(tileData.tileID, tileData.resourcepackID)
+				})
 
 			map.layerGrids.push(layerGrid)
 		})
@@ -91,6 +96,14 @@ export class MapManager {
 			}
 
 			y += 1
+		}
+
+		if (map.queue) {
+			this.#tileset = new MapManager({
+				gameManager,
+				map: map.queue[0],
+				shouldCenter: false,
+			})
 		}
 	}
 
@@ -124,6 +137,18 @@ export class MapManager {
 			this.#needsRecenter = false
 		}
 
+		const { cursorOffset } = store.state
+
+		const offset = {
+			x: 0,
+			y: 0,
+		}
+
+		if (!this.#tileset) {
+			offset.x += cursorOffset.x
+			offset.y += cursorOffset.y
+		}
+
 		renderer.layer = LAYERS.foreground
 
 		this.layerGrids.forEach(layerGrid => {
@@ -142,15 +167,23 @@ export class MapManager {
 							y: 0,
 						},
 						destination: {
+							cell: {
+								x: x + offset.x,
+								y: y + offset.y,
+							},
 							height: TILE_SIZE.height,
 							width: TILE_SIZE.width,
-							x: x * TILE_SIZE.width,
-							y: y * TILE_SIZE.height,
 						},
 					})
 				})
 			})
 		})
+
+		if (this.#tileset) {
+			renderer.setAlpha(0.6)
+			this.#tileset.render(renderer)
+			renderer.setAlpha(1)
+		}
 	}
 
 
@@ -229,6 +262,13 @@ export class MapManager {
 	 */
 	get startingPosition() {
 		return this.#map.startingPosition
+	}
+
+	/**
+	 * @returns {object} The current tileset.
+	 */
+	get tileset() {
+		return this.#tileset
 	}
 
 	/**

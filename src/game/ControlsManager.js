@@ -1,5 +1,7 @@
 // Local imports
+import { ACTIONS } from '../controls/ACTIONS.js'
 import { Gamepad } from './Gamepad.js'
+import { Keyboard } from './Keyboard.js'
 
 
 
@@ -13,12 +15,16 @@ export class ControlsManager {
 	 * Private instance properties
 	\****************************************************************************/
 
+ 	#actionCaches = new Map
+
 	#gamepads = {
 		0: null,
 		1: null,
 		2: null,
 		3: null,
 	}
+
+	#keyboard = new Keyboard
 
 
 
@@ -90,6 +96,15 @@ export class ControlsManager {
 	}
 
 	/**
+	 * Returns the keyboard.
+	 *
+	 * @returns {Keyboard} The keyboard.
+	 */
+	getKeyboard() {
+		return this.#keyboard
+	}
+
+	/**
 	 * Attach all event listeners.
 	 */
 	initialiseEventListeners() {
@@ -101,6 +116,8 @@ export class ControlsManager {
 	 * Updates the state of all controllers.
 	 */
 	update() {
+		const now = performance.now()
+
 		Object
 			.values(this.#gamepads)
 			.forEach(gamepad => {
@@ -110,6 +127,33 @@ export class ControlsManager {
 
 				gamepad.update()
 			})
+
+		ACTIONS.forEach(action => {
+			const {
+				bindings,
+				handler,
+				repeatFrequency,
+			} = action
+
+			if (bindings.keyboard) {
+				const keyState = this.#keyboard.getKey(bindings.keyboard)
+
+				if (keyState.isActive) {
+					let actionCache = this.#actionCaches.get(keyState)
+
+					if (!actionCache) {
+						actionCache = { triggeredAt: now }
+						this.#actionCaches.set(keyState, actionCache)
+						handler()
+					} else if ((now - actionCache.triggeredAt) >= repeatFrequency) {
+						actionCache.triggeredAt = now
+						handler()
+					}
+				} else {
+					this.#actionCaches.delete(keyState)
+				}
+			}
+		})
 	}
 
 
