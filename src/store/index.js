@@ -40,10 +40,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	frame: 0,
 	fps: 0,
 	gameManager: new GameManager,
-	globalOffset: {
-		x: 0,
-		y: 0,
-	},
 	isCampaignMenuVisible: false,
 	isCustomGameMenuVisible: false,
 	isRunning: false,
@@ -245,20 +241,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 			// @ts-ignore
 			timeDelta: now - state.time,
 		}))
-	},
-
-	/**
-	 * Sets the renderer offset to a specific value.
-	 */
-	setOffset(x, y) {
-		set(() => {
-			return {
-				globalOffset: {
-					x,
-					y,
-				},
-			}
-		})
 	},
 })))
 

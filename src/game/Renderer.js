@@ -1,5 +1,6 @@
 // Local imports
-import { store } from '../store/index.js'
+import { store as zustandStore } from '../store/index.js'
+import { store } from '../newStore/store.js'
 import { TILE_SIZE } from './Tile.js'
 
 
@@ -71,7 +72,8 @@ export class Renderer {
 	drawGrid(mapWidth, mapHeight) {
 		this.layer = LAYERS.background
 
-		const { globalOffset } = store.getState()
+		const { globalOffset } = store.state
+
 		const computedStyles = getComputedStyle(this.target.canvas)
 		const gridColor = computedStyles.getPropertyValue('--palette-purple')
 
@@ -147,35 +149,26 @@ export class Renderer {
 	 * @param {Array} [config.options] Additional options to be passed when drawing the image.
 	 */
 	drawImage(config) {
-		const {
-			image,
-			source: {
-				height: sourceHeight,
-				width: sourceWidth,
-				x: sourceX,
-				y: sourceY,
-			},
-			destination: {
-				height: destinationHeight,
-				width: destinationWidth,
-				x: destinationX,
-				y: destinationY,
-			},
-			options = [],
-		} = config
+		let destinationX = config.destination.x
+		let destinationY = config.destination.y
+
+		if (config.destination.cell) {
+			destinationX = config.destination.cell.x * TILE_SIZE.width
+			destinationY = config.destination.cell.y * TILE_SIZE.height
+		}
 
 		this.queue[this.layer].push([
 			'drawImage',
-			image,
-			sourceX,
-			sourceY,
-			sourceWidth,
-			sourceHeight,
+			config.image,
+			config.source.x,
+			config.source.y,
+			config.source.width,
+			config.source.height,
 			destinationX,
 			destinationY,
-			destinationWidth,
-			destinationHeight,
-			...options,
+			config.destination.width,
+			config.destination.height,
+			...(config.options || []),
 		])
 	}
 
@@ -191,20 +184,17 @@ export class Renderer {
 	 * @param {number} config.destination.y The y position at of the end of the line.
 	 */
 	drawLine(config) {
-		const {
-			source: {
-				x: sourceX,
-				y: sourceY,
-			},
-			destination: {
-				x: destinationX,
-				y: destinationY,
-			},
-		} = config
-
 		this.queue[this.layer].push(['beginPath'])
-		this.queue[this.layer].push(['moveTo', sourceX, sourceY])
-		this.queue[this.layer].push(['lineTo', destinationX, destinationY])
+		this.queue[this.layer].push([
+			'moveTo',
+			config.source.x,
+			config.source.y,
+		])
+		this.queue[this.layer].push([
+			'lineTo',
+			config.destination.x,
+			config.destination.y,
+		])
 		this.queue[this.layer].push(['stroke'])
 	}
 
@@ -229,7 +219,14 @@ export class Renderer {
 			y,
 		} = config
 
-		this.queue[this.layer].push([`${mode}Rect`, x, y, width, height, ...options])
+		this.queue[this.layer].push([
+			`${mode}Rect`,
+			x,
+			y,
+			width,
+			height,
+			...options,
+		])
 	}
 
 	/**
@@ -249,7 +246,7 @@ export class Renderer {
 	 * Start the resize observer. The resize observer will watch the main canvas's parent element, resizing the renderer when necessary.
 	 */
 	initialiseResizeObserver() {
-		this.resizeObserver = new ResizeObserver((/*entries*/) => {
+		this.resizeObserver = new ResizeObserver(() => {
 			this.needsResize = true
 		})
 
@@ -273,15 +270,23 @@ export class Renderer {
 	 * Restore the transform of the main canvas with respect to the current pixel size. Useful after using `renderer.setTranslate()`.
 	 */
 	resetTransform() {
-		const { globalOffset } = store.getState()
-		this.queue[this.layer].push(['setTransform', this.pixelSize, 0, 0, this.pixelSize, globalOffset.x, globalOffset.y])
+		const { globalOffset } = store.state
+		this.queue[this.layer].push([
+			'setTransform',
+			this.pixelSize,
+			0,
+			0,
+			this.pixelSize,
+			globalOffset.x,
+			globalOffset.y,
+		])
 	}
 
 	/**
 	 * Resize and update the scale of the main canvas.
 	 */
 	resize() {
-		const { isRunning } = store.getState()
+		const { isRunning } = zustandStore.getState()
 
 		if (this.needsResize && isRunning) {
 			const height = this.target.canvas.parentNode.offsetHeight
@@ -318,7 +323,10 @@ export class Renderer {
 	 * @param {number} alpha Alpha value; must be a decimal between 0 and 1.
 	 */
 	setAlpha(alpha) {
-		this.queue[this.layer].push(['alpha', alpha])
+		this.queue[this.layer].push([
+			'alpha',
+			alpha,
+		])
 	}
 
 	/**
@@ -328,7 +336,11 @@ export class Renderer {
 	 * @param {string} [fill = 'black'] Fill color to be set.
 	 */
 	setColor(stroke = 'black', fill = 'black') {
-		this.queue[this.layer].push(['color', stroke, fill])
+		this.queue[this.layer].push([
+			'color',
+			stroke,
+			fill,
+		])
 	}
 
 	/**
@@ -338,7 +350,11 @@ export class Renderer {
 	 * @param {number} y The number of pixels to shift the canvas vertically.
 	 */
 	setTranslate(x, y) {
-		this.queue[this.layer].push(['translate', x, y])
+		this.queue[this.layer].push([
+			'translate',
+			x,
+			y,
+		])
 	}
 
 	/**
@@ -350,7 +366,7 @@ export class Renderer {
 		const renderQueue = this.queue.flat()
 		const context = this.shadow
 
-		const { globalOffset } = store.getState()
+		const { globalOffset } = store.state
 
 		// Clear the canvas
 		context.clearRect(

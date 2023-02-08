@@ -7,9 +7,10 @@ import PF from 'pathfinding'
 
 // Local imports
 import { ContentManager } from './ContentManager.js'
-import { store } from '../store/index.js'
 import { LAYERS } from './Renderer.js'
+import { setGlobalOffset } from '../newStore/helpers/setGlobalOffset.js'
 import { TILE_SIZE } from './Tile.js'
+import { store } from '../newStore/store.js'
 
 
 
@@ -115,9 +116,9 @@ export class MapManager {
 		}
 
 		if (this.#needsRecenter) {
-			store.getState().setOffset(
-				((renderer.width * renderer.resolution) - this.pixelWidth * renderer.pixelSize) / 2,
-				((renderer.height * renderer.resolution) - this.pixelHeight * renderer.pixelSize) / 2,
+			setGlobalOffset(
+				((renderer.width * renderer.resolution) - (this.pixelWidth * renderer.pixelSize)) / 2,
+				((renderer.height * renderer.resolution) - (this.pixelHeight * renderer.pixelSize)) / 2,
 			)
 
 			this.#needsRecenter = false
