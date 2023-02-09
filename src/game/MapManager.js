@@ -227,13 +227,15 @@ export class MapManager {
 			layerIndex += 1
 		}
 
-		this.#tileset.#pathfindingGrid.nodes.forEach((row, y) => {
-			row.forEach((node, x) => {
-				const targetX = x + cursorOffset.x
-				const targetY = y + cursorOffset.y
+		Object.keys(occupiedCoordinates).forEach(coordinateString => {
+			const [x, y] = coordinateString.split('|').map(Number)
 
-				this.#pathfindingGrid.setWalkableAt(targetX, targetY, node.walkable)
-			})
+			const targetX = x + cursorOffset.x
+			const targetY = y + cursorOffset.y
+
+			const node = this.#tileset.#pathfindingGrid.nodes[y][x]
+
+			this.#pathfindingGrid.setWalkableAt(targetX, targetY, node.walkable)
 		})
 
 		this.#nextTileset()
