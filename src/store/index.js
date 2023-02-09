@@ -37,12 +37,9 @@ const FRAME_BUFFER = []
 export const store = create(subscribeWithSelector((set, get) => ({
 	contentManager: null,
 	controlsManager: null,
-	frame: 0,
-	fps: 0,
 	gameManager: new GameManager,
 	isCampaignMenuVisible: false,
 	isCustomGameMenuVisible: false,
-	isRunning: false,
 	mapID: null,
 	mapManager: null,
 	mostRecentSaveID: (() => {
@@ -55,8 +52,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		return null
 	})(),
 	previousScene: null,
-	timeDelta: 0,
-	time: 0,
 	saveID: null,
 	saveManager: new SaveManager,
 	scene: LOADING_GAME,
@@ -218,29 +213,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 		await gameManager.loadMap(mapID)
 
 		goToScene(PLAY, { mapManager: gameManager.mapManager })
-	},
-
-	/**
-	 * Updates the frame buffer and current FPS.
-	 */
-	nextFrame() {
-		const now = performance.now()
-
-		FRAME_BUFFER.push(now)
-
-		const oneSecondAgo = now - 1000
-		while (FRAME_BUFFER[0] < oneSecondAgo) {
-			FRAME_BUFFER.shift()
-		}
-
-		set(state => ({
-			fps: FRAME_BUFFER.length,
-			// @ts-ignore
-			frame: state.frame + 1,
-			time: now,
-			// @ts-ignore
-			timeDelta: now - state.time,
-		}))
 	},
 })))
 

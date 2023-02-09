@@ -288,7 +288,7 @@ export class Renderer {
 	 * Resize and update the scale of the main canvas.
 	 */
 	resize() {
-		const { isRunning } = zustandStore.getState()
+		const { isRunning } = store.state
 
 		if (this.needsResize && isRunning) {
 			const height = this.target.canvas.parentNode.offsetHeight

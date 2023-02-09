@@ -9,12 +9,15 @@ import {
 
 
 // Local imports
+import { advanceFrame } from '../newStore/helpers/advanceFrame.js'
 import { ContentManager } from './ContentManager.js'
 import { ControlsManager } from './ControlsManager.js'
 import { EntitiesManager } from './EntitiesManager.js'
 import { Entity } from './Entity.js'
 import { MapManager } from './MapManager.js'
 import { Renderer } from './Renderer.js'
+import { resetState } from '../newStore/helpers/resetState.js'
+import { setIsRunning } from '../newStore/helpers/setIsRunning.js'
 import { store } from '../newStore/store.js'
 import { store as zustandStore } from '../store/index.js'
 
@@ -56,13 +59,10 @@ export class GameManager {
 	 * The main game loop. Calls all major per-frame update functions in the correct order.
 	 */
 	gameLoop = () => {
-		const {
-			isRunning,
-			nextFrame,
-		} = zustandStore.getState()
+		const { isRunning } = store.state
 
 		if (isRunning) {
-			nextFrame()
+			advanceFrame()
 
 			this.#controlsManager.update()
 			this.#robot.update()
@@ -80,6 +80,7 @@ export class GameManager {
 	 */
 	start = () => {
 		unschedule('game loop')
+		resetState()
 		schedule(this.gameLoop, { id: 'game loop' })
 
 		this.#renderer.initialise()
@@ -91,7 +92,7 @@ export class GameManager {
 		})
 		this.#entitiesManager.add(this.#robot)
 
-		zustandStore.setState({ isRunning: true })
+		setIsRunning(true)
 
 		// window.addEventListener('dblclick', this.handleDoubleClick)
 	}
@@ -100,7 +101,7 @@ export class GameManager {
 	 * Stop the game manager.
 	 */
 	stop = () => {
-		zustandStore.setState({ isRunning: false })
+		setIsRunning(false)
 
 		this.#renderer.disconnectResizeObserver()
 		this.#entitiesManager.reset()

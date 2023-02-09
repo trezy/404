@@ -7,13 +7,14 @@ import {
 	useEffect,
 	useRef,
 } from 'react'
+import { useStore } from 'statery'
 
 
 
 
 
 // Local imports
-import { useStore } from '../store/react.js'
+import { store } from '../newStore/store.js'
 
 
 
@@ -23,7 +24,8 @@ import { useStore } from '../store/react.js'
  * Renders the current FPS of the game renderer.
  */
 export function FPSMeter() {
-	const fps = useStore(state => state.fps)
+	const { fps } = useStore(store)
+
 	const fpsMotionValue = useMotionValue(0)
 	const fpsRef = useRef(null)
 

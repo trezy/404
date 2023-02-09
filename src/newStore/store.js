@@ -5,14 +5,11 @@ import { makeStore } from 'statery'
 
 
 
-export const store = makeStore({
-	cursorOffset: {
-		x: 0,
-		y: 0,
-	},
-	globalOffset: {
-		x: 0,
-		y: 0,
-	},
-	mapManager: null,
-})
+// Local imports
+import { initialState } from './initialState.js'
+
+
+
+
+
+export const store = makeStore(initialState)
