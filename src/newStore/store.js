@@ -14,4 +14,5 @@ export const store = makeStore({
 		x: 0,
 		y: 0,
 	},
+	mapManager: null,
 })

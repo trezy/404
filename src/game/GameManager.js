@@ -15,7 +15,8 @@ import { EntitiesManager } from './EntitiesManager.js'
 import { Entity } from './Entity.js'
 import { MapManager } from './MapManager.js'
 import { Renderer } from './Renderer.js'
-import { store } from '../store/index.js'
+import { store } from '../newStore/store.js'
+import { store as zustandStore } from '../store/index.js'
 
 
 
@@ -58,7 +59,7 @@ export class GameManager {
 		const {
 			isRunning,
 			nextFrame,
-		} = store.getState()
+		} = zustandStore.getState()
 
 		if (isRunning) {
 			nextFrame()
@@ -90,7 +91,7 @@ export class GameManager {
 		})
 		this.#entitiesManager.add(this.#robot)
 
-		store.setState({ isRunning: true })
+		zustandStore.setState({ isRunning: true })
 
 		// window.addEventListener('dblclick', this.handleDoubleClick)
 	}
@@ -99,7 +100,7 @@ export class GameManager {
 	 * Stop the game manager.
 	 */
 	stop = () => {
-		store.setState({ isRunning: false })
+		zustandStore.setState({ isRunning: false })
 
 		this.#renderer.disconnectResizeObserver()
 		this.#entitiesManager.reset()
@@ -156,7 +157,8 @@ export class GameManager {
 
 		await this.preloadTileset()
 
-		store.setState({ mapManager: this.#mapManager })
+		zustandStore.setState({ mapManager: this.#mapManager })
+		store.set(() => ({ mapManager: this.#mapManager }))
 	}
 
 	/**

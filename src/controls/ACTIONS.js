@@ -1,5 +1,6 @@
 // Local imports
 import { moveCursor } from '../newStore/helpers/moveCursor.js'
+import { placeTileset } from '../newStore/helpers/placeTileset.js'
 
 
 
@@ -16,6 +17,7 @@ export const ACTIONS = [
 		},
 		repeatFrequency: 150,
 	},
+
 	{
 		label: 'Move Cursor North',
 		bindings: {
@@ -26,6 +28,7 @@ export const ACTIONS = [
 		},
 		repeatFrequency: 150,
 	},
+
 	{
 		label: 'Move Cursor South',
 		bindings: {
@@ -36,6 +39,7 @@ export const ACTIONS = [
 		},
 		repeatFrequency: 150,
 	},
+
 	{
 		label: 'Move Cursor West',
 		bindings: {
@@ -45,5 +49,15 @@ export const ACTIONS = [
 			moveCursor(-1, 0)
 		},
 		repeatFrequency: 150,
+	},
+
+	{
+		label: 'Place Tile',
+		bindings: {
+			keyboard: ' ',
+		},
+		handler() {
+			placeTileset()
+		},
 	},
 ]

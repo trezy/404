@@ -21,15 +21,46 @@ export class MapManager {
 	 * Private instance properties
 	\****************************************************************************/
 
-	#tileset = null
-
 	#gameManager = null
+
+	#isTileset = false
+
+	#layerGrids = []
 
 	#needsRecenter = true
 
 	#map = null
 
 	#pathfindingGrid = null
+
+	#tileset = null
+
+	#nextTilesetIndex = 0
+
+
+
+
+
+	/****************************************************************************\
+	 * Private instance methods
+	\****************************************************************************/
+
+	#nextTileset() {
+		const nextTileset = this.#map.queue?.[this.#nextTilesetIndex]
+
+		if (nextTileset) {
+			this.#tileset = new MapManager({
+				gameManager: this.#gameManager,
+				isTileset: true,
+				map: this.#map.queue[this.#nextTilesetIndex],
+				shouldCenter: false,
+			})
+
+			this.#nextTilesetIndex += 1
+		} else {
+			this.#tileset = null
+		}
+	}
 
 
 
@@ -43,22 +74,23 @@ export class MapManager {
 	 * Creates a new map.
 	 *
 	 * @param {object} options All options.
+	 * @param {boolean} isTileset Whether this map is a tileset.
 	 * @param {import('./GameManager.js').GameManager} options.gameManager The `GameManager` this map belongs to.
 	 * @param {string} options.map The map.
 	 */
 	constructor(options) {
 		const {
 			gameManager,
+			isTileset,
 			map,
 			shouldCenter = true,
 		} = options
 
+		this.#isTileset = isTileset
 		this.#needsRecenter = shouldCenter
 
 		this.#gameManager = gameManager
 		this.#map = map
-		map.layerGrids = []
-
 		this.#pathfindingGrid = new PF.Grid(this.width, this.height)
 
 		map.tiles.forEach(layerData => {
@@ -74,7 +106,7 @@ export class MapManager {
 						.getTile(tileData.tileID, tileData.resourcepackID)
 				})
 
-			map.layerGrids.push(layerGrid)
+			this.#layerGrids.push(layerGrid)
 		})
 
 		let y = 0
@@ -98,12 +130,8 @@ export class MapManager {
 			y += 1
 		}
 
-		if (map.queue) {
-			this.#tileset = new MapManager({
-				gameManager,
-				map: map.queue[0],
-				shouldCenter: false,
-			})
+		if (!this.#isTileset) {
+			this.#nextTileset()
 		}
 	}
 
@@ -121,6 +149,59 @@ export class MapManager {
 			.map(() => {
 				return Array(this.width).fill(null)
 			})
+	}
+
+	placeTileset() {
+		const { cursorOffset } = store.state
+
+		const layerCount = Math.max(this.#layerGrids.length, this.#tileset.layerGrids.length)
+
+		const occupiedCoordinates = {}
+
+		let layerIndex = 0
+		while (layerIndex < layerCount) {
+			let targetLayerGrid = this.#layerGrids[layerIndex]
+
+			if (!targetLayerGrid) {
+				targetLayerGrid = this.generateGrid()
+				this.#layerGrids.push(targetLayerGrid)
+			}
+
+			const sourceLayerGrid = this.#tileset.layerGrids[layerIndex]
+
+			if (sourceLayerGrid) {
+				sourceLayerGrid.forEach((row, y) => {
+					row.forEach((tileData, x) => {
+						const targetX = x + cursorOffset.x
+						const targetY = y + cursorOffset.y
+
+						if (tileData) {
+							targetLayerGrid[targetY][targetX] = tileData
+							occupiedCoordinates[`${targetX}|${targetY}`] = true
+						}
+					})
+				})
+			} else {
+				Object.keys(occupiedCoordinates).forEach(coordinateString => {
+					const [x, y] = coordinateString.split('|')
+
+					targetLayerGrid[y][x] = null
+				})
+			}
+
+			layerIndex += 1
+		}
+
+		this.#tileset.#pathfindingGrid.nodes.forEach((row, y) => {
+			row.forEach((node, x) => {
+				const targetX = x + cursorOffset.x
+				const targetY = y + cursorOffset.y
+
+				this.#pathfindingGrid.setWalkableAt(targetX, targetY, node.walkable)
+			})
+		})
+
+		this.#nextTileset()
 	}
 
 	render(renderer) {
@@ -144,14 +225,14 @@ export class MapManager {
 			y: 0,
 		}
 
-		if (!this.#tileset) {
+		if (this.#isTileset) {
 			offset.x += cursorOffset.x
 			offset.y += cursorOffset.y
 		}
 
 		renderer.layer = LAYERS.foreground
 
-		this.layerGrids.forEach(layerGrid => {
+		this.#layerGrids.forEach(layerGrid => {
 			layerGrid.forEach((row, y) => {
 				row.forEach((tileData, x) => {
 					if (tileData === null) {
@@ -179,7 +260,7 @@ export class MapManager {
 			})
 		})
 
-		if (this.#tileset) {
+		if (!this.#isTileset && this.#tileset) {
 			renderer.setAlpha(0.6)
 			this.#tileset.render(renderer)
 			renderer.setAlpha(1)
@@ -216,10 +297,17 @@ export class MapManager {
 	}
 
 	/**
+	 * @returns {boolean} Whether this map is a tileset.
+	 */
+	get isTileset() {
+		return this.#isTileset
+	}
+
+	/**
 	 * @returns {Array} An array of layer grids.
 	 */
 	get layerGrids() {
-		return this.#map.layerGrids
+		return this.#layerGrids
 	}
 
 	/**
