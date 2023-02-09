@@ -59,19 +59,27 @@ export class GameManager {
 	 * The main game loop. Calls all major per-frame update functions in the correct order.
 	 */
 	gameLoop = () => {
-		const { isRunning } = store.state
+		const {
+			isRunning,
+			timer,
+		} = store.state
 
 		if (isRunning) {
 			advanceFrame()
 
 			this.#controlsManager.update()
-			this.#robot.update()
+
+			if (!timer.isInGracePeriod) {
+				this.#robot.update()
+			}
 
 			this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
 			this.#mapManager.render(this.#renderer)
 			this.#entitiesManager.render(this.#renderer)
 
 			this.#renderer.update()
+
+			timer.update()
 		}
 	}
 
@@ -79,8 +87,14 @@ export class GameManager {
 	 * Start the game manager.
 	 */
 	start = () => {
+		const { timer } = store.state
+
 		unschedule('game loop')
+
 		resetState()
+
+		store.set(() => ({ mapManager: this.#mapManager }))
+
 		schedule(this.gameLoop, { id: 'game loop' })
 
 		this.#renderer.initialise()
@@ -92,30 +106,24 @@ export class GameManager {
 		})
 		this.#entitiesManager.add(this.#robot)
 
+		timer.start(10000)
 		setIsRunning(true)
-
-		// window.addEventListener('dblclick', this.handleDoubleClick)
 	}
 
 	/**
 	 * Stop the game manager.
 	 */
 	stop = () => {
+		const { timer } = store.state
+
 		setIsRunning(false)
 
+		timer.stop()
 		this.#renderer.disconnectResizeObserver()
 		this.#entitiesManager.reset()
 
 		unschedule('game loop')
 	}
-
-	// handleDoubleClick = () => {
-	// 	if (document.fullscreenElement) {
-	// 		document.exitFullscreen()
-	// 	} else {
-	// 		this.canvas.requestFullscreen()
-	// 	}
-	// }
 
 
 

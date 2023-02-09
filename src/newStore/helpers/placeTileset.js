@@ -12,5 +12,6 @@ import { store } from '../store.js'
  * @param {number} y The number of cells to move the cursor on the vertical axis.
  */
 export const placeTileset = () => {
-	store.state.mapManager.placeTileset()
+	const { mapManager } = store.state
+	mapManager.placeTileset()
 }

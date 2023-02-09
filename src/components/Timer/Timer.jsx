@@ -1,10 +1,8 @@
 // Module imports
-import {
-	useMemo,
-	useState,
-} from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { useMemo } from 'react'
+import { useStore } from 'statery'
 
 
 
@@ -13,7 +11,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import styles from './Timer.module.scss'
 
-import { useRequestAnimationFrame } from '../../hooks/useRequestAnimationFrame.js'
+import { store } from '../../newStore/store.js'
 
 
 
@@ -37,8 +35,8 @@ export function Timer(props) {
 		isLarge,
 		isMonospace,
 	} = props
-	const [currentTime, setCurrentTime] = useState([0, 0])
-	const [startTimestamp] = useState(performance.now())
+
+	const { timerString } = useStore(store)
 
 	const compiledClassName = useMemo(() => {
 		return classnames(styles['timer'], className, {
@@ -46,53 +44,34 @@ export function Timer(props) {
 			[styles['is-centered']]: isCentered,
 			[styles['is-large']]: isLarge,
 			[styles['is-monospace']]: isMonospace,
+			[styles['is-negative']]: timerString.startsWith('-'),
 		})
 	}, [
+		className,
 		isBordered,
 		isCentered,
 		isLarge,
 		isMonospace,
-		className,
+		timerString,
 	])
 
 	const renderedTime = useMemo(() => {
-		const result = currentTime
-			.map(value => String(value).padStart(2, '0'))
-			.join(':')
-
 		if (isMonospace) {
-			return result
+			return timerString
 				.split('')
-				.reduce((accumulator, character, index) => {
-					accumulator.push((
+				.map((character, index) => {
+					return (
 						<span key={index}>
 							{character}
 						</span>
-					))
-
-					return accumulator
-				}, [])
+					)
+				})
 		}
 
-		return currentTime
+		return timerString
 	}, [
-		currentTime,
+		timerString,
 		isMonospace,
-	])
-
-	useRequestAnimationFrame(() => {
-		setCurrentTime(() => {
-			const delta = performance.now() - startTimestamp
-
-			return [
-				Math.floor(delta / 1000 / 60),
-				Math.floor((delta / 1000) % 60),
-			]
-		})
-	}, [
-		currentTime,
-		setCurrentTime,
-		startTimestamp,
 	])
 
 	return (

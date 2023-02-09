@@ -1,3 +1,10 @@
+// Local imports
+import { Timer } from '../game/Timer.js'
+
+
+
+
+
 export const initialState = {
 	cursorOffset: {
 		x: 0,
@@ -12,4 +19,6 @@ export const initialState = {
 	mapManager: null,
 	time: 0,
 	timeDelta: 0,
+	timer: new Timer,
+	timerString: '00:00',
 }
