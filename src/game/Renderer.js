@@ -202,6 +202,9 @@ export class Renderer {
 	 * Draw a rectangle to the shadow canvas.
 	 *
 	 * @param {object} config Configuration for the draw operation.
+	 * @param {object} config.cell The coordinates of the target cell (alternative to setting x and y directly).
+	 * @param {number} config.cell.x Target cell x coordinate.
+	 * @param {number} config.cell.y Target cell y coordinate.
 	 * @param {number} config.height Height of the rectangle to be drawn.
 	 * @param {'fill' | 'stroke'} [config.mode = 'fill'] Whether the rectangle will be drawn with a stroke or a fill.
 	 * @param {Array} config.options Additional options to be passed to the draw operation.
@@ -210,22 +213,21 @@ export class Renderer {
 	 * @param {number} config.y The right most position of the rectangle.
 	 */
 	drawRectangle(config) {
-		const {
-			height,
-			mode = 'fill',
-			options = [],
-			width,
-			x,
-			y,
-		} = config
+		let destinationX = config.x
+		let destinationY = config.y
+
+		if (config.cell) {
+			destinationX = config.cell.x * TILE_SIZE.width
+			destinationY = config.cell.y * TILE_SIZE.height
+		}
 
 		this.queue[this.layer].push([
-			`${mode}Rect`,
-			x,
-			y,
-			width,
-			height,
-			...options,
+			`${config.mode || 'fill'}Rect`,
+			destinationX,
+			destinationY,
+			config.width,
+			config.height,
+			...(config.options ?? []),
 		])
 	}
 

@@ -23,13 +23,13 @@ export class MapManager {
 
 	#gameManager = null
 
-	#isTileset = false
-
 	#layerGrids = []
 
 	#needsRecenter = true
 
 	#map = null
+
+	#parent = null
 
 	#pathfindingGrid = null
 
@@ -51,8 +51,8 @@ export class MapManager {
 		if (nextTileset) {
 			this.#tileset = new MapManager({
 				gameManager: this.#gameManager,
-				isTileset: true,
 				map: this.#map.queue[this.#nextTilesetIndex],
+				parent: this,
 				shouldCenter: false,
 			})
 
@@ -74,23 +74,24 @@ export class MapManager {
 	 * Creates a new map.
 	 *
 	 * @param {object} options All options.
-	 * @param {boolean} isTileset Whether this map is a tileset.
 	 * @param {import('./GameManager.js').GameManager} options.gameManager The `GameManager` this map belongs to.
 	 * @param {string} options.map The map.
+	 * @param {MapManager} options.parent The parent of the map (if this is a tileset).
+	 * @param {boolean} options.shouldCenter Whether the map should be centered on first render.
 	 */
 	constructor(options) {
 		const {
 			gameManager,
-			isTileset,
 			map,
+			parent,
 			shouldCenter = true,
 		} = options
 
-		this.#isTileset = isTileset
 		this.#needsRecenter = shouldCenter
 
 		this.#gameManager = gameManager
 		this.#map = map
+		this.#parent = parent
 		this.#pathfindingGrid = new PF.Grid(this.width, this.height)
 
 		map.tiles.forEach(layerData => {
@@ -99,7 +100,7 @@ export class MapManager {
 			Object
 				.entries(layerData)
 				.forEach(([coordinateString, tileData]) => {
-					const [x, y] = coordinateString.split('|').map(Number)
+					const [x, y] = coordinateString.split('|').map(Number).map(Number)
 
 					layerGrid[y][x] = this
 						.contentManager
@@ -130,7 +131,7 @@ export class MapManager {
 			y += 1
 		}
 
-		if (!this.#isTileset) {
+		if (!this.isTileset) {
 			this.#nextTileset()
 		}
 	}
@@ -151,12 +152,42 @@ export class MapManager {
 			})
 	}
 
+	getOccupiedCoordinates() {
+		return this.#layerGrids.reduce((accumulator, layerGrid) => {
+			layerGrid.forEach((row, y) => {
+				row.forEach((tileData, x) => {
+					if (tileData) {
+						accumulator[`${x}|${y}`] = true
+					}
+				})
+			})
+
+			return accumulator
+		}, {})
+	}
+
 	placeTileset() {
 		const { cursorOffset } = store.state
 
 		const layerCount = Math.max(this.#layerGrids.length, this.#tileset.layerGrids.length)
 
-		const occupiedCoordinates = {}
+		const occupiedCoordinates = this.#tileset.getOccupiedCoordinates()
+
+		const canPlace = Object.keys(occupiedCoordinates).every(coordinateString => {
+			const [x, y] = coordinateString.split('|').map(Number)
+
+			const targetX = x + cursorOffset.x
+			const targetY = y + cursorOffset.y
+
+			return this.#layerGrids.every(layerGrid => {
+				const cellData = layerGrid[targetY]?.[targetX]
+				return !(cellData?.isBlocking || cellData?.isTraversable)
+			})
+		})
+
+		if (!canPlace) {
+			return
+		}
 
 		let layerIndex = 0
 		while (layerIndex < layerCount) {
@@ -170,22 +201,26 @@ export class MapManager {
 			const sourceLayerGrid = this.#tileset.layerGrids[layerIndex]
 
 			if (sourceLayerGrid) {
-				sourceLayerGrid.forEach((row, y) => {
-					row.forEach((tileData, x) => {
-						const targetX = x + cursorOffset.x
-						const targetY = y + cursorOffset.y
+				Object.keys(occupiedCoordinates).forEach(coordinateString => {
+					const [x, y] = coordinateString.split('|').map(Number)
 
-						if (tileData) {
-							targetLayerGrid[targetY][targetX] = tileData
-							occupiedCoordinates[`${targetX}|${targetY}`] = true
-						}
-					})
+					const targetY = y + cursorOffset.y
+					const targetX = x + cursorOffset.x
+
+					const tileData = sourceLayerGrid[y][x]
+
+					if (tileData) {
+						targetLayerGrid[targetY][targetX] = tileData
+					}
 				})
 			} else {
 				Object.keys(occupiedCoordinates).forEach(coordinateString => {
-					const [x, y] = coordinateString.split('|')
+					const [x, y] = coordinateString.split('|').map(Number)
 
-					targetLayerGrid[y][x] = null
+					const targetX = x + cursorOffset.x
+					const targetY = y + cursorOffset.y
+
+					targetLayerGrid[targetY][targetX] = null
 				})
 			}
 
@@ -225,42 +260,75 @@ export class MapManager {
 			y: 0,
 		}
 
-		if (this.#isTileset) {
+		if (this.isTileset) {
 			offset.x += cursorOffset.x
 			offset.y += cursorOffset.y
 		}
 
 		renderer.layer = LAYERS.foreground
 
-		this.#layerGrids.forEach(layerGrid => {
-			layerGrid.forEach((row, y) => {
-				row.forEach((tileData, x) => {
-					if (tileData === null) {
-						return
-					}
+		const occupiedCoordinates = this.getOccupiedCoordinates()
 
-					renderer.drawImage({
-						image: tileData.image,
-						source: {
-							height: tileData.image.height,
-							width: tileData.image.width,
-							x: 0,
-							y: 0,
+		this.#layerGrids.forEach(layerGrid => {
+			Object.keys(occupiedCoordinates).forEach(coordinateString => {
+				const [x, y] = coordinateString.split('|').map(Number)
+
+				const tileData = layerGrid[y]?.[x]
+
+				if (!tileData) {
+					return
+				}
+
+				const targetX = x + offset.x
+				const targetY = y + offset.y
+
+				renderer.drawImage({
+					image: tileData.image,
+					source: {
+						height: tileData.image.height,
+						width: tileData.image.width,
+						x: 0,
+						y: 0,
+					},
+					destination: {
+						cell: {
+							x: targetX,
+							y: targetY,
 						},
-						destination: {
-							cell: {
-								x: x + offset.x,
-								y: y + offset.y,
-							},
-							height: TILE_SIZE.height,
-							width: TILE_SIZE.width,
-						},
-					})
+						height: TILE_SIZE.height,
+						width: TILE_SIZE.width,
+					},
 				})
 			})
 		})
 
-		if (!this.#isTileset && this.#tileset) {
+		if (this.isTileset) {
+			Object.keys(occupiedCoordinates).forEach(coordinateString => {
+				const [x, y] = coordinateString.split('|').map(Number)
+
+				const targetX = x + cursorOffset.x
+				const targetY = y + cursorOffset.y
+
+				const canPlace = this.#parent.layerGrids.every(layerGrid => {
+					const cellData = layerGrid[targetY]?.[targetX]
+					return !(cellData?.isBlocking || cellData?.isTraversable)
+				})
+
+				if (!canPlace) {
+					renderer.setColor(null, 'red')
+					renderer.drawRectangle({
+						cell: {
+							x: targetX,
+							y: targetY,
+						},
+						height: TILE_SIZE.height,
+						width: TILE_SIZE.width,
+					})
+				}
+			})
+		}
+
+		if (!this.isTileset && this.#tileset) {
 			renderer.setAlpha(0.6)
 			this.#tileset.render(renderer)
 			renderer.setAlpha(1)
@@ -300,7 +368,7 @@ export class MapManager {
 	 * @returns {boolean} Whether this map is a tileset.
 	 */
 	get isTileset() {
-		return this.#isTileset
+		return Boolean(this.#parent)
 	}
 
 	/**
