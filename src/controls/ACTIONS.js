@@ -1,6 +1,7 @@
 // Local imports
 import { moveCursor } from '../newStore/helpers/moveCursor.js'
 import { placeTileset } from '../newStore/helpers/placeTileset.js'
+import { skipGracePeriod } from '../newStore/helpers/skipGracePeriod.js'
 
 
 
@@ -58,6 +59,16 @@ export const ACTIONS = [
 		},
 		handler() {
 			placeTileset()
+		},
+	},
+
+	{
+		label: 'Begin Pathfinding',
+		bindings: {
+			keyboard: 'enter',
+		},
+		handler() {
+			skipGracePeriod()
 		},
 	},
 ]

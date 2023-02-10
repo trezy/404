@@ -14,6 +14,10 @@ export class Timer {
 
 	#gracePeriod = null
 
+	#gracePeriodSkippedAt = null
+
+	#now = null
+
 	#startedAt = null
 
 
@@ -24,6 +28,10 @@ export class Timer {
 	 * Public instance methods
 	\****************************************************************************/
 
+	skipGracePeriod() {
+		this.#gracePeriodSkippedAt = this.now
+	}
+
 	start(gracePeriod) {
 		if (gracePeriod) {
 			this.#gracePeriod = gracePeriod
@@ -31,7 +39,7 @@ export class Timer {
 			this.#gracePeriod = null
 		}
 
-		this.#startedAt = performance.now()
+		this.#startedAt = this.now
 	}
 
 	stop() {
@@ -41,14 +49,25 @@ export class Timer {
 	}
 
 	toString() {
-		if (this.delta < this.#gracePeriod) {
-			const minutes = Math.floor((this.#gracePeriod - this.delta) / 1000 / 60)
-			const seconds = Math.ceil(((this.#gracePeriod - this.delta) / 1000) % 60)
+		if (this.isInGracePeriod) {
+			const graceDelta = this.#gracePeriod - this.delta
+			const graceDeltaInSeconds = graceDelta / 1000
+
+			const minutes = Math.floor(graceDeltaInSeconds / 60)
+			const seconds = Math.ceil(graceDeltaInSeconds % 60)
 
 			return `-${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 		} else {
-			const minutes = Math.floor((this.delta - this.#gracePeriod) / 1000 / 60)
-			const seconds = Math.floor(((this.delta - this.#gracePeriod) / 1000) % 60)
+			let delta = this.delta - this.#gracePeriod
+
+			if (this.#gracePeriodSkippedAt) {
+				delta = this.delta - (this.#gracePeriodSkippedAt - this.#startedAt)
+			}
+
+			const deltaInSeconds = delta / 1000
+
+			const minutes = Math.floor(deltaInSeconds / 60)
+			const seconds = Math.floor(deltaInSeconds % 60)
 
 			const minutesString = String(minutes).padStart(2, '0')
 			const secondsString = String(seconds).padStart(2, '0')
@@ -59,6 +78,8 @@ export class Timer {
 
 	update() {
 		this.#delta = null
+		this.#now = null
+
 		updateTimer(this.toString())
 	}
 
@@ -72,13 +93,25 @@ export class Timer {
 
 	get delta() {
 		if (!this.#delta) {
-			this.#delta = performance.now() - this.#startedAt
+			this.#delta = this.now - this.#startedAt
 		}
 
 		return this.#delta
 	}
 
 	get isInGracePeriod() {
+		if (this.#gracePeriodSkippedAt) {
+			return false
+		}
+
 		return this.delta < this.#gracePeriod
+	}
+
+	get now() {
+		if (!this.#now) {
+			this.#now = performance.now()
+		}
+
+		return this.#now
 	}
 }
