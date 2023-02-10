@@ -20,6 +20,7 @@ import { resetState } from '../newStore/helpers/resetState.js'
 import { setIsRunning } from '../newStore/helpers/setIsRunning.js'
 import { store } from '../newStore/store.js'
 import { store as zustandStore } from '../store/index.js'
+import { winMap } from '../newStore/helpers/winMap.js'
 
 
 
@@ -46,6 +47,28 @@ export class GameManager {
 	#robot = null
 
 	#tileset = null
+
+
+
+
+
+	/****************************************************************************\
+	 * Private instance methods
+	\****************************************************************************/
+
+	#checkForVictoryCondition() {
+		const isVictory = this.mapManager.destinations.some(destination => {
+			const xMatch = this.#robot.position.x === destination.x
+			const yMatch = this.#robot.position.y === destination.y
+
+			return xMatch && yMatch
+		})
+
+		if (isVictory) {
+			this.pause()
+			winMap()
+		}
+	}
 
 
 
@@ -80,7 +103,13 @@ export class GameManager {
 			this.#renderer.update()
 
 			timer.update()
+
+			this.#checkForVictoryCondition()
 		}
+	}
+
+	pause = () => {
+		setIsRunning(false)
 	}
 
 	/**

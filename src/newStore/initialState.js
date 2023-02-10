@@ -16,6 +16,7 @@ export const initialState = {
 		x: 0,
 		y: 0,
 	},
+	isVictorious: false,
 	mapManager: null,
 	time: 0,
 	timeDelta: 0,

@@ -1,0 +1,43 @@
+@import '../../scss/fonts/thaleah/thaleah';
+
+.content {
+	background-color: var(--palette-black);
+	padding: calc(10px * var(--ui-scale));
+
+	dl {
+		column-gap: calc(10px * var(--ui-scale));
+		display: grid;
+		grid-template-columns: 1fr auto;
+		row-gap: calc(2px * var(--ui-scale));
+
+		dt {
+			margin-top: 0;
+		}
+	}
+}
+
+.header {
+	@extend %thaleah-2x;
+
+	margin-bottom: calc(4px * var(--ui-scale));
+	text-align: center;
+}
+
+.total {
+	@extend %thaleah-1x;
+
+	display: flex;
+	justify-content: space-between;
+
+	margin-top: calc(4px * var(--ui-scale));
+	padding-top: calc(4px * var(--ui-scale));
+}
+
+.wrapper {
+	align-items: center;
+	background-color: hsla(var(--palette-black-hsl), 0.8);
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	position: absolute;
+}
