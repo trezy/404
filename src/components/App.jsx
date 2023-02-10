@@ -22,7 +22,7 @@ import { MainScene } from './scenes/MainScene/MainScene.jsx'
 import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
 import { useStore } from '../store/react.js'
-import { WholePixelContainer } from './WholePixelContainer.jsx'
+import { WholePixelContainer } from './WholePixelContainer/WholePixelContainer.jsx'
 
 
 

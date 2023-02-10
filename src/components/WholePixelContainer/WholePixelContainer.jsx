@@ -2,9 +2,18 @@
 import {
 	useCallback,
 	useEffect,
+	useRef,
 	useState,
 } from 'react'
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import styles from './WholePixelContainer.module.scss'
 
 
 
@@ -17,22 +26,35 @@ import PropTypes from 'prop-types'
  * @param {*} [props.children] Node to be rendered inside of the container.
  */
 export function WholePixelContainer(props) {
-	const { children } = props
+	const {
+		children,
+		className,
+	} = props
+
+	const containerRef = useRef()
 	const [state, setState] = useState({
 		height: 0,
 		width: 0,
 	})
 
+	const compiledClassName = classnames(styles['whole-pixel-container'], className)
+
 	const updateSize = useCallback(() => {
+		const containerElement = containerRef.current
+
+		if (!containerElement) {
+			return
+		}
+
 		const rootElement = document.querySelector(':root')
 		const rootElementStyles = getComputedStyle(rootElement)
 		const uiScale = Number(rootElementStyles.getPropertyValue('--ui-scale'))
 
-		const viewportHeight = window.innerHeight
-		const viewportWidth = window.innerWidth
+		const parentHeight = containerElement.parentElement.clientHeight
+		const parentWidth = containerElement.parentElement.clientWidth
 
-		const height = Math.floor(viewportHeight / uiScale) * uiScale
-		const width = Math.floor(viewportWidth / uiScale) * uiScale
+		const height = Math.floor(parentHeight / uiScale) * uiScale
+		const width = Math.floor(parentWidth / uiScale) * uiScale
 
 		setState({
 			height,
@@ -52,7 +74,8 @@ export function WholePixelContainer(props) {
 
 	return (
 		<div
-			id={'whole-pixel-container'}
+			className={compiledClassName}
+			ref={containerRef}
 			style={state}>
 			{children}
 		</div>
@@ -61,8 +84,10 @@ export function WholePixelContainer(props) {
 
 WholePixelContainer.defaultProps = {
 	children: null,
+	className: '',
 }
 
 WholePixelContainer.propTypes = {
 	children: PropTypes.node,
+	className: PropTypes.string,
 }
