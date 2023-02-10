@@ -35,8 +35,8 @@ export function TileQueuePanel() {
 	const handleEditTilesetClick = useCallback(tilesetID => () => openTileset(tilesetID), [])
 
 	const handleNewTilesetClick = useCallback(() => {
-		const tilesetID = createTileset()
-		openTileset(tilesetID)
+		const newTileset = createTileset()
+		openTileset(newTileset.id)
 	}, [])
 
 	const handleRemoveTilesetClick = useCallback(tilesetID => () => removeTileset(tilesetID), [])
@@ -74,7 +74,6 @@ export function TileQueuePanel() {
 				</BlockListItem>
 			)
 		})
-		map?.queue
 	}, [map])
 
 	const Menu = (

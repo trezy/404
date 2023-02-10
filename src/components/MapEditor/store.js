@@ -117,24 +117,31 @@ export const createMap = (mapData = {}) => {
 	map.dependencies = mapData.dependencies || {}
 	map.destinations = mapData.destinations || []
 	map.name = mapData.name || ''
-	map.queue = []
+	map.queue = mapData.queue.map(tileset => {
+		if (!tileset.id) {
+			tileset.id = uuid()
+		}
+		return createTileset(tileset, false)
+	}) || []
 	map.startingPosition = mapData.startingPosition || null
 
 	return map
 }
 
-export const createTileset = (tilesetData = {}) => {
+export const createTileset = (tilesetData = {}, addToMap = true) => {
 	const tileset = createMapLike(tilesetData)
 	const map = getMap(store.state)
 
-	updateMap({
-		queue: [
-			...map.queue,
-			tileset,
-		],
-	})
+	if (addToMap) {
+		updateMap({
+			queue: [
+				...map.queue,
+				tileset,
+			],
+		})
+	}
 
-	return tileset.id
+	return tileset
 }
 
 export const openMap = async mapID => {
