@@ -39,6 +39,7 @@ export class Timer {
 			this.#gracePeriod = null
 		}
 
+		this.#gracePeriodSkippedAt = null
 		this.#startedAt = this.now
 	}
 
