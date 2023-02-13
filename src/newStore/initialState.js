@@ -17,6 +17,7 @@ export const initialState = {
 		y: 0,
 	},
 	isVictorious: false,
+	keyboardLayoutMap: null,
 	mapManager: null,
 	time: 0,
 	timeDelta: 0,

@@ -1,42 +1,44 @@
-.wrapper {
-	display: grid;
-	flex-grow: 1;
-	gap: calc(6px * var(--ui-scale));
-	grid-template-areas:
-		'heading heading'
-		'mappings mappings-visualiser';
-	grid-template-columns: 1fr 2fr;
-	grid-template-rows: auto 1fr;
+.bindings {
 
-	h2 {
-		grid-area: heading;
-	}
 }
 
 .mappings {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: 1fr auto auto;
+	column-gap: calc(5px * var(--ui-scale));
+	row-gap: calc(3px * var(--ui-scale));
+
+	dd,
+	dt {
+		align-items: center;
+		display: flex;
+	}
 
 	dt {
 		margin-top: 0;
 	}
 
 	dd {
-		text-align: right;
+		justify-content: center;
+		text-indent: initial;
 	}
 }
 
 .mappings-visualiser {
 	align-items: center;
+	background-color: black;
 	display: flex;
-	grid-area: mappings-visualiser;
 	justify-content: center;
 }
 
 .mappings-wrapper {
-	border-right-color: var(--palette-dark-grey);
-	border-right-style: solid;
-	border-right-width: calc(1px * var(--ui-scale));
-	grid-area: mappings;
 	padding-right: calc(6px * var(--ui-scale));
+}
+
+.wrapper {
+	display: grid;
+	flex-grow: 1;
+	gap: calc(6px * var(--ui-scale));
+	grid-template-columns: 1fr;
+	grid-template-rows: auto auto 2fr 3fr;
 }

@@ -1,7 +1,8 @@
 // Module imports
 import {
+	Fragment,
 	useCallback,
-	useEffect,
+	useMemo,
 	useState,
 } from 'react'
 import { motion } from 'framer-motion'
@@ -17,8 +18,61 @@ import styles from './ControlsSettings.module.scss'
 import { Combobox } from '../../Combobox.jsx'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { GamepadTemplate } from './GamepadTemplate.jsx'
+import { KeyboardKey } from '../../KeyboardVisualiser/KeyboardKey.jsx'
+import { KeyboardVisualiser } from '../../KeyboardVisualiser/KeyboardVisualiser.jsx'
+import { Tabs } from '../../Tabs/Tabs.jsx'
 import { useRafael } from '../../../hooks/useRafael.js'
 import { useStore } from '../../../store/react.js'
+
+
+
+
+
+// Constants
+const BINDINGS = {
+	moveNorth: {
+		gamepad: {},
+		keyboard: {
+			primary: ['KeyW'],
+			secondary: ['ArrowUp'],
+		},
+		label: 'Move Tile Up',
+	},
+	moveWest: {
+		gamepad: {},
+		keyboard: {
+			primary: ['KeyA'],
+			secondary: ['ArrowLeft'],
+		},
+		label: 'Move Tile Left',
+	},
+	moveSouth: {
+		gamepad: {},
+		keyboard: {
+			primary: ['KeyS'],
+			secondary: ['ArrowDown'],
+		},
+		label: 'Move Tile Down',
+	},
+	moveEast: {
+		gamepad: {},
+		keyboard: {
+			primary: ['KeyD'],
+			secondary: ['ArrowRight'],
+		},
+		label: 'Move Tile Right',
+	},
+}
+const TABS = [
+	{
+		id: 'keyboard',
+		label: 'Keyboard & Mouse',
+	},
+	{
+		id: 'controller',
+		label: 'Controller',
+	},
+]
 
 
 
@@ -39,92 +93,69 @@ export function ControlsSettings(props) {
 	const [gameManager] = useStore(state => ([state.gameManager]))
 	const { controlsManager } = gameManager
 
-	const [gamepads, setGamepads] = useState(
-		Object
-			.values(controlsManager.gamepads)
-			.map((gamepad, index) => {
-				if (gamepad === null) {
-					return gamepad
+	const [activeKeys, setActiveKeys] = useState(null)
+	const [activeTabID, setActiveTabID] = useState('keyboard')
+
+	const handleTabFocus = useCallback(tabID => setActiveTabID(tabID), [setActiveTabID])
+
+	const mappedBindings = useMemo(() => {
+		return Object
+			.entries(BINDINGS)
+			.map(([bingingID, binding]) => {
+				const handlePrimaryMouseOver = () => {
+					setActiveKeys(binding.keyboard.primary)
 				}
 
-				return {
-					gamepad,
-					label: gamepad?.name,
-					value: index,
+				const handlePrimaryMouseOut = () => {
+					setActiveKeys(null)
 				}
+
+				const handleSecondaryMouseOver = () => {
+					setActiveKeys(binding.keyboard.secondary)
+				}
+
+				const handleSecondaryMouseOut = () => {
+					setActiveKeys(null)
+				}
+
+				return (
+					<Fragment key={bingingID}>
+						<dt
+							onMouseOut={handlePrimaryMouseOut}
+							onMouseOver={handlePrimaryMouseOver}>
+							{binding.label}
+						</dt>
+						<dd
+							onMouseOut={handlePrimaryMouseOut}
+							onMouseOver={handlePrimaryMouseOver}>
+							{binding.keyboard.primary.map(code => {
+								return (
+									<KeyboardKey
+										key={code}
+										code={code}
+										isPressed={activeKeys === binding.keyboard.primary} />
+								)
+							})}
+						</dd>
+						<dd
+							onMouseOut={handleSecondaryMouseOut}
+							onMouseOver={handleSecondaryMouseOver}>
+							{binding.keyboard.secondary.map(code => {
+								return (
+									<KeyboardKey
+										key={code}
+										code={code}
+										isPressed={activeKeys === binding.keyboard.secondary} />
+								)
+							})}
+						</dd>
+					</Fragment>
+				)
 			})
-			.filter(gamepad => gamepad !== null),
-	)
-
-	const [selectedGamepad, setSelectedGamepad] = useState(gamepads[0])
-	const [gamepadIsReady, setGamepadIsReady] = useState(selectedGamepad?.gamepad.isReady || false)
-
-	const handleGamepadChange = useCallback(selectedOption => {
-		const gamepad = gamepads[selectedOption.value]
-		setSelectedGamepad(gamepad)
-		setGamepadIsReady(gamepad.gamepad.isReady)
 	}, [
-		gamepads,
-		setGamepadIsReady,
-		setSelectedGamepad,
+		activeKeys,
+		setActiveKeys,
 	])
-
-	const handleGamepadReady = useCallback(() => setGamepadIsReady(true), [setGamepadIsReady])
-
-	const updateGamepadState = useCallback(() => {
-		let shouldUpdate = controlsManager.gamepadCount !== gamepads.length
-
-		if (!shouldUpdate) {
-			const filteredGamepads = Object
-				.values(controlsManager.gamepads)
-				.filter(gamepad => (gamepad !== null))
-
-			shouldUpdate = gamepads.some(({ gamepad }) => {
-				return !filteredGamepads.includes(gamepad)
-			})
-		}
-
-		if (shouldUpdate) {
-			const newGamepads = Object
-				.values(controlsManager.gamepads)
-				.map((gamepad, index) => {
-					if (gamepad === null) {
-						return gamepad
-					}
-
-					return {
-						gamepad,
-						label: gamepad?.name,
-						value: index,
-					}
-				})
-				.filter(gamepad => gamepad !== null)
-
-			setGamepads(newGamepads)
-
-			if (!selectedGamepad) {
-				const gamepad = newGamepads[0]
-				setSelectedGamepad(gamepad)
-				setGamepadIsReady(gamepad.gamepad.isReady)
-			}
-		}
-	}, [
-		controlsManager,
-		gamepads,
-		selectedGamepad,
-		setGamepadIsReady,
-		setGamepads,
-		setSelectedGamepad,
-	])
-
-	useRafael({
-		task: updateGamepadState,
-		dependencies: [
-			gameManager,
-			selectedGamepad,
-			setGamepads,
-		],
-	})
 
 	useRafael({
 		task: controlsManager.update,
@@ -133,17 +164,6 @@ export function ControlsSettings(props) {
 		},
 		dependencies: [controlsManager],
 	})
-
-	useEffect(() => {
-		if (selectedGamepad) {
-			selectedGamepad.gamepad.once('ready', handleGamepadReady)
-			return () => selectedGamepad.gamepad.off('ready', handleGamepadReady)
-		}
-	}, [
-		handleGamepadReady,
-		selectedGamepad,
-		setGamepadIsReady,
-	])
 
 	return (
 		<motion.div
@@ -156,42 +176,69 @@ export function ControlsSettings(props) {
 				{'Controls'}
 			</DecoratedHeader>
 
-			<div className={styles['mappings-wrapper']}>
-				<Combobox
-					emptyMessage={'No gamepads connected'}
-					isDisabled={controlsManager.gamepadCount === 0}
-					onChange={handleGamepadChange}
-					options={gamepads}
-					value={selectedGamepad} />
+			<Tabs
+				activeTabID={activeTabID}
+				onFocus={handleTabFocus}
+				tabs={TABS} />
 
-				<dl className={styles['mappings']}>
-					<dt>{'Move Tile Up'}</dt>
-					<dd>{'D-Pad Up'}</dd>
+			{(activeTabID === 'keyboard') && (
+				<>
+					<div className={styles['mappings-wrapper']}>
+						<dl className={styles['mappings']}>
+							<dt>{'Control'}</dt>
+							<dd>{'Primary'}</dd>
+							<dd>{'Secondary'}</dd>
 
-					<dt>{'Move Tile Down'}</dt>
-					<dd>{'D-Pad Down'}</dd>
+							{mappedBindings}
+						</dl>
+					</div>
 
-					<dt>{'Move Tile Left'}</dt>
-					<dd>{'D-Pad Left'}</dd>
+					<div className={styles['mappings-visualiser']}>
+						<KeyboardVisualiser activeKeys={activeKeys} />
+					</div>
+				</>
+			)}
 
-					<dt>{'Move Tile Right'}</dt>
-					<dd>{'D-Pad Right'}</dd>
-				</dl>
-			</div>
+			{(activeTabID === 'controller') && (
+				<>
+					<div className={styles['mappings-wrapper']}>
+						{/* <Combobox
+							emptyMessage={'No gamepads connected'}
+							isDisabled={controlsManager.gamepadCount === 0}
+							onChange={handleGamepadChange}
+							options={gamepads}
+							value={selectedGamepad} /> */}
 
-			<div className={styles['mappings-visualiser']}>
-				{!selectedGamepad && (
-					'Select a gamepad'
-				)}
+						<dl className={styles['mappings']}>
+							<dt>{'Move Tile Up'}</dt>
+							<dd>{'D-Pad Up'}</dd>
 
-				{(selectedGamepad && !gamepadIsReady) && (
-					'Loading...'
-				)}
+							<dt>{'Move Tile Down'}</dt>
+							<dd>{'D-Pad Down'}</dd>
 
-				{(selectedGamepad && gamepadIsReady) && (
-					<GamepadTemplate gamepad={selectedGamepad} />
-				)}
-			</div>
+							<dt>{'Move Tile Left'}</dt>
+							<dd>{'D-Pad Left'}</dd>
+
+							<dt>{'Move Tile Right'}</dt>
+							<dd>{'D-Pad Right'}</dd>
+						</dl>
+					</div>
+
+					<div className={styles['mappings-visualiser']}>
+						{/* {!selectedGamepad && (
+							'Select a gamepad'
+						)}
+
+						{(selectedGamepad && !gamepadIsReady) && (
+							'Loading...'
+						)}
+
+						{(selectedGamepad && gamepadIsReady) && (
+							<GamepadTemplate gamepad={selectedGamepad} />
+						)} */}
+					</div>
+				</>
+			)}
 		</motion.div>
 	)
 }
