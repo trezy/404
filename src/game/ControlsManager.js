@@ -1,7 +1,10 @@
 // Local imports
-import { ACTIONS } from '../controls/ACTIONS.js'
+import { ACTIONS } from './ACTIONS.js'
+import { ACTION_HANDLERS } from './ACTION_HANDLERS.js'
+import { EventEmitter } from './EventEmitter.js'
 import { Gamepad } from './Gamepad.js'
 import { Keyboard } from './Keyboard.js'
+import { store } from '../newStore/store.js'
 
 
 
@@ -10,7 +13,7 @@ import { Keyboard } from './Keyboard.js'
 /**
  * Manages control surfaces, including mouse/keyboard and gamepads.
  */
-export class ControlsManager {
+export class ControlsManager extends EventEmitter {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
@@ -43,6 +46,8 @@ export class ControlsManager {
 		const { gamepad } = event
 
 		this.#gamepads[gamepad.index] = new Gamepad(gamepad)
+
+		this.emit('gamepad connected')
 	}
 
 	/**
@@ -54,6 +59,8 @@ export class ControlsManager {
 		const { gamepad } = event
 
 		this.#gamepads[gamepad.index].disconnect()
+
+		this.emit('gamepad disconnected')
 	}
 
 
@@ -68,6 +75,7 @@ export class ControlsManager {
 	 * Create a new controls manager.
 	 */
 	constructor() {
+		super()
 		this.initialiseEventListeners()
 	}
 
@@ -128,32 +136,50 @@ export class ControlsManager {
 				gamepad.update()
 			})
 
-		ACTIONS.forEach(action => {
-			const {
-				bindings,
-				handler,
-				repeatFrequency,
-			} = action
+		Object
+			.values(ACTIONS)
+			.forEach(label => {
+				const handler = ACTION_HANDLERS[label]
 
-			if (bindings.keyboard) {
-				const keyState = this.#keyboard.getKey(bindings.keyboard)
+				const control = store.state.controls.find(controlItem => controlItem.label === label)
 
-				if (keyState.isActive) {
-					let actionCache = this.#actionCaches.get(keyState)
-
-					if (!actionCache) {
-						actionCache = { triggeredAt: now }
-						this.#actionCaches.set(keyState, actionCache)
-						handler()
-					} else if ((now - actionCache.triggeredAt) >= repeatFrequency) {
-						actionCache.triggeredAt = now
-						handler()
-					}
-				} else {
-					this.#actionCaches.delete(keyState)
+				if (!control) {
+					return
 				}
-			}
-		})
+
+				if (control.mappings.keyboard.primary.length || control.mappings.keyboard.secondary.length) {
+					const isPrimaryActive = control.mappings.keyboard.primary.length && control.mappings.keyboard.primary.every(code => {
+						return this.#keyboard.getKey(code).isActive
+					})
+
+					const isSecondaryActive = control.mappings.keyboard.secondary.length && control.mappings.keyboard.secondary.every(code => {
+						return this.#keyboard.getKey(code).isActive
+					})
+
+					let keyState = null
+
+					if (isPrimaryActive) {
+						keyState = control.mappings.keyboard.primary
+					} else if (isSecondaryActive) {
+						keyState = control.mappings.keyboard.secondary
+					}
+
+					if (keyState) {
+						let actionCache = this.#actionCaches.get(keyState)
+
+						if (!actionCache) {
+							actionCache = { triggeredAt: now }
+							this.#actionCaches.set(keyState, actionCache)
+							handler()
+						} else if ((now - actionCache.triggeredAt) >= control.repeatFrequency) {
+							actionCache.triggeredAt = now
+							handler()
+						}
+					} else {
+						this.#actionCaches.delete(keyState)
+					}
+				}
+			})
 	}
 
 

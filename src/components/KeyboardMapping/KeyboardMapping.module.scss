@@ -1,0 +1,10 @@
+.mapping {
+	align-items: center;
+	display: flex;
+	gap: calc(2px * var(--ui-scale));
+	justify-content: center;
+	padding:
+		calc(2px * var(--ui-scale))
+		calc(4px * var(--ui-scale));
+	text-indent: initial;
+}

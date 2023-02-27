@@ -24,10 +24,7 @@ import { useRafael } from '../../../hooks/useRafael.js'
  *
  * @param {object} props All component props.
  * @param {string} [props.className] Classes to be applied to the component.
- * @param {object} [props.gamepad] Info about the gamepad to be emulated by this template.
- * @param {Gamepad} [props.gamepad.gamepad] The gamepad to be emulated by this template.
- * @param {string} [props.gamepad.label] The gamepad label.
- * @param {number} [props.gamepad.value] The gamepad index.
+ * @param {object} [props.gamepad] The gamepad to be emulated by this template.
  */
 export function GamepadTemplate(props) {
 	const {
@@ -35,7 +32,7 @@ export function GamepadTemplate(props) {
 		gamepad,
 	} = props
 
-	const [gamepadState, setGamepadState] = useState(gamepad.gamepad.state)
+	const [gamepadState, setGamepadState] = useState(gamepad.state)
 
 	const compiledClassnames = useMemo(() => {
 		return classnames('gamepad-template', className)
@@ -56,7 +53,7 @@ export function GamepadTemplate(props) {
 					key={index}
 					height={button.size.height}
 					isPressed={Boolean(button.isPressed)}
-					source={gamepad.gamepad.spritesheet}
+					source={gamepad.spritesheet}
 					sourceX={button.sourcePosition.x}
 					sourceY={button.sourcePosition.y}
 					sprite={index}
@@ -70,16 +67,19 @@ export function GamepadTemplate(props) {
 		gamepadState,
 	])
 
-	useRafael({
-		// eslint-disable-next-line jsdoc/require-jsdoc
-		task: () => setGamepadState({ ...gamepad.gamepad.state }),
-		dependencies: [gamepad],
-	})
+	// useRafael({
+	// 	// eslint-disable-next-line jsdoc/require-jsdoc
+	// 	task: () => setGamepadState({ ...gamepad.state }),
+	// 	dependencies: [
+	// 		gamepad,
+	// 		setGamepadState,
+	// 	],
+	// })
 
 	return (
 		<div className={compiledClassnames}>
 			<GamepadSpritesheet
-				source={gamepad.gamepad.spritesheet}
+				source={gamepad.spritesheet}
 				sprite={'gamepad'} />
 			{controlSprites}
 		</div>

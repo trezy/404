@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 import styles from './AccessibilitySettings.module.scss'
 
 import { Button } from '../../Button.jsx'
-import { Combobox } from '../../Combobox.jsx'
+import { Combobox } from '../../Combobox/Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { Switch } from '../../Switch/Switch.jsx'

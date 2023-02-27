@@ -17,7 +17,7 @@ import PropTypes from 'prop-types'
 import styles from './GraphicsSettings.module.scss'
 
 import { Button } from '../../Button.jsx'
-import { Combobox } from '../../Combobox.jsx'
+import { Combobox } from '../../Combobox/Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 

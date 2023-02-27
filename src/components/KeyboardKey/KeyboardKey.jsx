@@ -76,6 +76,8 @@ const NUMPAD_LAYOUT_MAP = Object
 export function KeyboardKey(props) {
 	const {
 		code,
+		displayKey,
+		isInline,
 		isPressed,
 	} = props
 
@@ -84,41 +86,49 @@ export function KeyboardKey(props) {
 	const compiledClassName = useMemo(() => {
 		return classnames(styles['key'], styles[`keycode-${code}`], {
 			[styles['is-active']]: isPressed,
+			[styles['is-inline']]: isInline,
 		})
 	}, [
 		code,
+		isInline,
 		isPressed,
 	])
 
-	const keyValue = useMemo(() => {
-		return keyboardLayoutMap.get(code)
+	const renderedKey = useMemo(() => {
+		return displayKey
+			?? keyboardLayoutMap.get(code)
 			?? ADDITIONAL_KEYBOARD_LAYOUT.get(code)
 			?? CONTROL_PAD_LAYOUT_MAP.get(code)
 			?? NUMPAD_LAYOUT_MAP.get(code)
 			?? code
 	}, [
 		code,
+		displayKey,
 		keyboardLayoutMap,
 	])
 
 	return (
-		<div
-			className={compiledClassName}>
+		<span className={compiledClassName}>
 			<span className={styles['icon']} />
 			<span className={styles['text']}>
-				{keyValue}
+				{renderedKey}
 			</span>
-		</div>
+		</span>
 	)
 }
 
 KeyboardKey.defaultProps = {
 	children: null,
+	code: null,
+	displayKey: null,
+	isInline: false,
 	isPressed: false,
 }
 
 KeyboardKey.propTypes = {
 	children: PropTypes.node,
-	code: PropTypes.string.isRequired,
+	code: PropTypes.string,
+	displayKey: PropTypes.string,
+	isInline: PropTypes.bool,
 	isPressed: PropTypes.bool,
 }

@@ -1,0 +1,27 @@
+.gamepad-combobox {
+	position: absolute;
+	right: calc(5px * var(--ui-scale));
+	top: calc(5px * var(--ui-scale));
+}
+
+.mappings-visualiser {
+	align-items: center;
+	background-color: black;
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	position: relative;
+}
+
+.mappings-wrapper {
+	flex-grow: 1;
+	max-height: 50%;
+	overflow: auto;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: calc(4px * var(--ui-scale));
+}

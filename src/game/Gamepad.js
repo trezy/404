@@ -118,11 +118,18 @@ export class Gamepad extends EventEmitter {
 		if (previousButtonState.needsMapping || isPressedHasChanged || isHeldHasChanged) {
 			this.#state.buttons[index] = newButtonState
 
-			// console.log({
-			// 	button: index,
-			// 	previousValue: previousButtonState,
-			// 	newValue: newButtonState,
-			// })
+			if (isPressedHasChanged) {
+				this.emit('button pressed', newButtonState, this)
+			} else if (isHeldHasChanged) {
+				this.emit('button held', newButtonState, this)
+			} else if (!newButtonState.isPressed && !newButtonState.isHeld) {
+				this.emit('button released', newButtonState, this)
+			}
+			console.log({
+				button: index,
+				previousValue: previousButtonState,
+				newValue: newButtonState,
+			})
 		}
 	}
 

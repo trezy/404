@@ -22,9 +22,41 @@ export function Table(props) {
 		columns,
 		data,
 		isRowSelected,
+		rowClassName,
+		showHeader,
 	} = props
 
 	const compiledClassName = classnames(styles['table'], className)
+	const compiledRowClassName = classnames(styles['row'], rowClassName)
+
+	const headers = useMemo(() => {
+		if (showHeader) {
+			const className = classnames(styles['header'], styles['row'])
+
+			const headerCells = columns.map(column => {
+				return (
+					<div>{column.label}</div>
+				)
+			})
+
+			return (
+				<div
+					className={className}
+					style={{
+						gridTemplateColumns: columns
+							.map(column => column.width || '1fr')
+							.join(' '),
+					}}>
+					{headerCells}
+				</div>
+			)
+		}
+
+		return null
+	}, [
+		columns,
+		showHeader,
+	])
 
 	const mappedData = useMemo(() => {
 		return data.map((datum, index) => {
@@ -32,6 +64,7 @@ export function Table(props) {
 			return (
 				<TableRow
 					key={index}
+					className={compiledRowClassName}
 					columns={columns}
 					datum={datum}
 					isSelected={isSelected} />
@@ -45,6 +78,7 @@ export function Table(props) {
 
 	return (
 		<div className={compiledClassName}>
+			{headers}
 			{mappedData}
 		</div>
 	)
@@ -53,7 +87,8 @@ export function Table(props) {
 Table.defaultProps = {
 	className: '',
 	children: null,
-	isRowSelected: undefined
+	isRowSelected: undefined,
+	showHeader: false,
 }
 
 Table.propTypes = {
@@ -70,4 +105,6 @@ Table.propTypes = {
 		label: PropTypes.string,
 	})).isRequired,
 	isRowSelected: PropTypes.func,
+	rowClassName: PropTypes.string,
+	showHeader: PropTypes.bool,
 }

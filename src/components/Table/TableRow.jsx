@@ -18,6 +18,7 @@ import { TableCell } from './TableCell.jsx'
 
 export function TableRow(props) {
 	const {
+		className,
 		columns,
 		datum,
 		isSelected,
@@ -38,17 +39,20 @@ export function TableRow(props) {
 	])
 
 	const compiledClassName = useMemo(() => {
-		return classnames(styles['row'], {
+		return classnames(styles['row'], className, {
 			[styles['is-selected']]: isSelected,
 		})
 	}, [
+		className,
 		columns,
 		isSelected,
 	])
 
 	const compiledStyles = useMemo(() => {
 		return {
-			gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+			gridTemplateColumns: columns
+				.map(column => column.width || '1fr')
+				.join(' '),
 		}
 	}, [columns])
 

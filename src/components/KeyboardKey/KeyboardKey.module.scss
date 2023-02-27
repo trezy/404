@@ -1,0 +1,940 @@
+.key {
+	align-items: center;
+	color: var(--palette-grey);
+	display: inline-flex;
+	font-family: 'Dabble';
+	justify-content: center;
+	min-height: calc(10px * var(--ui-scale));
+	min-width: calc(9px * var(--ui-scale));
+	padding-bottom: calc(2px * var(--ui-scale));
+	padding-left: calc(2px * var(--ui-scale));
+	padding-top: calc(2px * var(--ui-scale));
+	position: relative;
+	transition-duration: 0.1s;
+	transition-property: color;
+
+	&:before {
+		border-color: currentColor;
+		border-style: solid;
+		border-width: calc(1px * var(--ui-scale));
+		clip-path: polygon(
+			0 calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) 0,
+
+			calc(100% - (1px * var(--ui-scale))) 0,
+			calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+			100% calc(1px * var(--ui-scale)),
+
+			100% calc(100% - (1px * var(--ui-scale))),
+			calc(100% - (1px * var(--ui-scale))) calc(100% - (1px * var(--ui-scale))),
+			calc(100% - (1px * var(--ui-scale))) 100%,
+
+			calc(1px * var(--ui-scale)) 100%,
+			calc(1px * var(--ui-scale)) calc(100% - (1px * var(--ui-scale))),
+			0 calc(100% - (1px * var(--ui-scale))),
+		);
+		content: '';
+		inset: 0;
+		position: absolute;
+	}
+
+	&:after {
+		background-color: var(--palette-indigo);
+		clip-path: polygon(
+			0 0,
+			calc(1px * var(--ui-scale)) 0,
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) 0,
+			100% 0,
+
+			100% calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			0 calc(1px * var(--ui-scale)),
+		);
+		content: '';
+		display: block;
+		height: calc(2px * var(--ui-scale));
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: calc(100% - (1px * var(--ui-scale)));
+	}
+
+	&.is-active {
+		color: var(--palette-white);
+	}
+
+	&.is-inline {
+		margin-top: calc(-4px * var(--ui-scale));
+	}
+}
+
+.keycode-AltLeft,
+.keycode-AltRight,
+.keycode-ArrowDown,
+.keycode-ArrowLeft,
+.keycode-ArrowRight,
+.keycode-ArrowUp,
+.keycode-Backspace,
+.keycode-CapsLock,
+.keycode-ControlLeft,
+.keycode-ControlRight,
+.keycode-Enter,
+.keycode-Escape,
+.keycode-F1,
+.keycode-F2,
+.keycode-F3,
+.keycode-F4,
+.keycode-F5,
+.keycode-F6,
+.keycode-F7,
+.keycode-F8,
+.keycode-F9,
+.keycode-F10,
+.keycode-F11,
+.keycode-F12,
+.keycode-NumpadEnter,
+.keycode-ShiftRight,
+.keycode-ShiftLeft,
+.keycode-Tab {
+	padding-right: calc(2px * var(--ui-scale));
+
+	.icon {
+		background-color: currentColor;
+		display: inline-flex;
+		height: calc(5px * var(--ui-scale));
+		width: calc(5px * var(--ui-scale));
+	}
+
+	.text {
+		display: none;
+	}
+}
+
+.keycode-AltLeft {
+	width: calc(13px * var(--ui-scale));
+}
+
+.keycode-AltRight {
+	width: calc(21px * var(--ui-scale));
+}
+
+.keycode-AltLeft,
+.keycode-AltRight {
+	width: calc(17px * var(--ui-scale));
+
+	.icon {
+		clip-path: polygon(
+			0 calc(5px * var(--ui-scale)),
+			0 calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) 0,
+			calc(2px * var(--ui-scale)) 0,
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+			calc(4px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+			calc(7px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) 0,
+			calc(9px * var(--ui-scale)) 0,
+			calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		);
+		width: calc(9px * var(--ui-scale));
+	}
+}
+
+.keycode-ArrowDown,
+.keycode-ArrowLeft,
+.keycode-ArrowRight,
+.keycode-ArrowUp {
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		);
+	}
+}
+
+.keycode-ArrowDown .icon {
+	transform: rotate((180deg));
+}
+
+.keycode-ArrowLeft .icon {
+	transform: rotate((270deg));
+}
+
+.keycode-ArrowRight .icon {
+	transform: rotate((90deg));
+}
+
+.keycode-Backslash {
+	width: calc(13px * var(--ui-scale));
+}
+
+.keycode-Backspace {
+	width: calc(19px * var(--ui-scale));
+
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		)
+	}
+}
+
+.keycode-CapsLock {
+	width: calc(17px * var(--ui-scale));
+
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			0 calc(5px * var(--ui-scale)),
+			0 calc(4px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		);
+	}
+}
+
+.keycode-ControlLeft,
+.keycode-ControlRight {
+	width: calc(18px * var(--ui-scale));
+
+	.icon {
+		clip-path: polygon(
+			calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			0 calc(4px * var(--ui-scale)),
+			0 calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+			calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) 0,
+			calc(7px * var(--ui-scale)) 0,
+			calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+			calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) 0,
+			calc(10px * var(--ui-scale)) 0,
+			calc(10px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(11px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(11px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(11px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(11px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(9px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(9px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(10px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+			calc(12px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(12px * var(--ui-scale)) 0,
+			calc(13px * var(--ui-scale)) 0,
+			calc(13px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(14px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(14px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		);
+		width: calc(14px * var(--ui-scale));
+	}
+}
+
+.keycode-Enter {
+	width: calc(21px * var(--ui-scale));
+}
+
+.keycode-Enter,
+.keycode-NumpadEnter {
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) 0,
+			calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		);
+	}
+}
+
+.keycode-Escape .icon {
+	clip-path: polygon(
+		calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(3px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(4px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) 0,
+		calc(11px * var(--ui-scale)) 0,
+		calc(11px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(11px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(11px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+	width: calc(11px * var(--ui-scale));
+}
+
+.keycode-F1 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+	width: calc(6px * var(--ui-scale));
+}
+
+.keycode-F2,
+.keycode-F3,
+.keycode-F4,
+.keycode-F5,
+.keycode-F6,
+.keycode-F7,
+.keycode-F8,
+.keycode-F9 {
+	.icon {
+		width: calc(7px * var(--ui-scale));
+	}
+}
+
+.keycode-F2 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(4px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F3 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(4px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F4 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) 0,
+		calc(5px * var(--ui-scale)) 0,
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F5 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(4px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F6 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F7 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) 0,
+		calc(7px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F8 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F9 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+}
+
+.keycode-F10 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+	width: calc(10px * var(--ui-scale));
+}
+
+.keycode-F11 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+	width: calc(9px * var(--ui-scale));
+}
+
+.keycode-F12 .icon {
+	clip-path: polygon(
+		0 calc(5px * var(--ui-scale)),
+		0 0,
+		calc(3px * var(--ui-scale)) 0,
+		calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(1px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(5px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) 0,
+		calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+
+		calc(7px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(7px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) 0,
+		calc(9px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+		calc(9px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+		calc(8px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+		calc(10px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+	);
+	width: calc(10px * var(--ui-scale));
+}
+
+.keycode-MetaLeft,
+.keycode-MetaRight {
+	display: none;
+}
+
+.keycode-Numpad0 {
+	width: calc(19px * var(--ui-scale));
+}
+
+.keycode-NumpadAdd {
+	margin-bottom: calc(-12px * var(--ui-scale))
+}
+
+.keycode-NumpadEnter {
+	margin-bottom: calc(-12px * var(--ui-scale))
+}
+
+.keycode-ShiftLeft {
+	width: calc(19px * var(--ui-scale));
+}
+
+.keycode-ShiftRight {
+	width: calc(29px * var(--ui-scale));
+}
+
+.keycode-ShiftLeft,
+.keycode-ShiftRight {
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) 0,
+			calc(3px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(4px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(3px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		);
+	}
+}
+
+.keycode-Space {
+	width: calc(75px * var(--ui-scale));
+
+	.icon:before {
+		content: '_';
+	}
+
+	.text {
+		display: none;
+	}
+}
+
+.keycode-Tab {
+	width: calc(15px * var(--ui-scale));
+
+	.icon {
+		clip-path: polygon(
+			0 calc(2px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) 0,
+			calc(6px * var(--ui-scale)) 0,
+			calc(6px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(7px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			calc(7px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) 0,
+			calc(9px * var(--ui-scale)) 0,
+			calc(9px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(8px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(7px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(7px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(5px * var(--ui-scale)),
+			calc(5px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(4px * var(--ui-scale)),
+			calc(6px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			0 calc(3px * var(--ui-scale)),
+		);
+		width: calc(9px * var(--ui-scale));
+	}
+}

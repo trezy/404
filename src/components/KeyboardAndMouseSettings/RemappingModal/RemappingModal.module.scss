@@ -1,0 +1,43 @@
+.instructions {
+	margin-bottom: calc(9px * var(--ui-scale));
+	margin-top: calc(6px * var(--ui-scale));
+}
+
+.mappings {
+	align-content: stretch;
+	display: grid;
+	gap: calc(2px * var(--ui-scale));
+	grid-template-columns: repeat(2, 1fr);
+
+	.current-mapping,
+	.new-mapping {
+		background-color: black;
+		display: flex;
+		flex-direction: column;
+		padding: calc(2px * var(--ui-scale));
+		text-align: center;
+	}
+}
+
+.mapping-conflict {
+	background-color: black;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	line-height: calc(6px * var(--ui-scale));
+	margin-top: calc(2px * var(--ui-scale));
+	padding: calc(4px * var(--ui-scale));
+	text-align: center;
+}
+
+.mapping-conflict-label {
+	color: var(--palette-red);
+}
+
+.mapping-placeholder {
+	align-items: center;
+	color: var(--palette-grey);
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+}

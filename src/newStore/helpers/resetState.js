@@ -19,6 +19,7 @@ export const resetState = () => {
 	store.set(state => {
 		return {
 			...initialState,
+			controls: state.controls,
 			keyboardLayoutMap: state.keyboardLayoutMap,
 		}
 	})

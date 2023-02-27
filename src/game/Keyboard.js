@@ -21,9 +21,17 @@ export class Keyboard extends EventEmitter {
 	 * Private instance properties
 	\****************************************************************************/
 
-	handleKeyDown = event => this.#activateKey(event)
+	handleKeyDown = event => {
+		if (event.isTrusted) {
+			this.#activateKey(event)
+		}
+	}
 
-	handleKeyUp = event => this.#deactivateKey(event)
+	handleKeyUp = event => {
+		if (event.isTrusted) {
+			this.#deactivateKey(event)
+		}
+	}
 
 
 
@@ -44,16 +52,17 @@ export class Keyboard extends EventEmitter {
 	\****************************************************************************/
 
 	#activateKey(event) {
-		const key = event.key.toLowerCase()
+		const { code } = event
 
-		if (!this.#keyStates[key]) {
-			this.#keyStates[key] = {
+		if (!this.#keyStates[code]) {
+			this.#keyStates[code] = {
 				activatedAt: null,
+				code,
 				isActive: false,
 			}
 		}
 
-		const keyState = this.#keyStates[key]
+		const keyState = this.#keyStates[code]
 
 		if (keyState.isActive) {
 			return
@@ -61,6 +70,7 @@ export class Keyboard extends EventEmitter {
 
 		keyState.isActive = true
 		keyState.activatedAt = performance.now()
+		this.emit('key activated', keyState)
 	}
 
 	#bindEventListeners() {
@@ -70,11 +80,13 @@ export class Keyboard extends EventEmitter {
 	}
 
 	#deactivateKey(event) {
-		const key = event.key.toLowerCase()
-		const keyState = this.#keyStates[key]
+		const { code } = event
+
+		const keyState = this.#keyStates[code]
 
 		keyState.isActive = false
 		keyState.activatedAt = null
+		this.emit('key deactivated', keyState)
 	}
 
 	#unbindEventListeners() {
@@ -108,11 +120,14 @@ export class Keyboard extends EventEmitter {
 		this.#unbindEventListeners()
 	}
 
-	getKey(key) {
-		const keyState = this.#keyStates[key.toLowerCase()]
+	getKey(code) {
+		const keyState = this.#keyStates[code]
 
 		if (!keyState) {
-			return fakeKeyState
+			return {
+				...fakeKeyState,
+				code,
+			}
 		}
 
 		return keyState

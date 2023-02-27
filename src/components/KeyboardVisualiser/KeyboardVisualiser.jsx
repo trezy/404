@@ -9,7 +9,7 @@ import { useMemo } from 'react'
 // Local imports
 import styles from './KeyboardVisualiser.module.scss'
 
-import { KeyboardKey } from './KeyboardKey.jsx'
+import { KeyboardKey } from '../KeyboardKey/KeyboardKey.jsx'
 
 
 

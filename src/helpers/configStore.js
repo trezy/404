@@ -5,6 +5,13 @@ import ConfigStore from 'electron-store'
 
 
 
+// Local imports
+import { ACTIONS } from '../game/ACTIONS.js'
+
+
+
+
+
 // Variables
 export const configStore = new ConfigStore({
 	defaults: {
@@ -18,9 +25,67 @@ export const configStore = new ConfigStore({
 
 			controls: [
 				{
-					bindings: {},
-					inputID: 'keyboard/mouse',
-					inputType: 'keyboard/mouse',
+					label: ACTIONS.MOVE_CURSOR_RIGHT,
+					mappings: {
+						keyboard: {
+							primary: ['KeyD'],
+							secondary: ['ArrowRight'],
+						},
+					},
+					repeatFrequency: 150,
+				},
+
+				{
+					label: ACTIONS.MOVE_CURSOR_UP,
+					mappings: {
+						keyboard: {
+							primary: ['KeyW'],
+							secondary: ['ArrowUp'],
+						},
+					},
+					repeatFrequency: 150,
+				},
+
+				{
+					label: ACTIONS.MOVE_CURSOR_DOWN,
+					mappings: {
+						keyboard: {
+							primary: ['KeyS'],
+							secondary: ['ArrowDown'],
+						},
+					},
+					repeatFrequency: 150,
+				},
+
+				{
+					label: ACTIONS.MOVE_CURSOR_LEFT,
+					mappings: {
+						keyboard: {
+							primary: ['KeyA'],
+							secondary: ['ArrowLeft'],
+						},
+					},
+					repeatFrequency: 150,
+				},
+
+				{
+					label: ACTIONS.PLACE_TILESET,
+					mappings: {
+						keyboard: {
+							primary: ['Space'],
+							secondary: [],
+						},
+					},
+				},
+
+				{
+					label: ACTIONS.SKIP_TIMER,
+					mappings: {
+						keyboard: {
+							primary: ['Enter'],
+							secondary: [],
+						},
+					},
 				},
 			],
 
@@ -81,13 +146,9 @@ export const configStore = new ConfigStore({
 					items: {
 						type: 'object',
 						properties: {
-							bindings: {
-								type: 'object',
-								properties: {
-								},
-							},
-							inputID: { type: 'string' },
-							inputType: { type: 'string' },
+							mappings: { type: 'object' },
+							label: { type: 'string' },
+							repeatFrequency: { type: 'number' },
 						},
 					},
 				},

@@ -1,0 +1,25 @@
+.mappings-table {
+	display: grid;
+	gap: calc(3px * var(--ui-scale));
+	grid-template-columns: 5fr 1fr 1fr;
+
+	header {
+		align-items: center;
+		background-color: black;
+		display: flex;
+		padding:
+			calc(2px * var(--ui-scale))
+			calc(4px * var(--ui-scale));
+		position: sticky;
+		top: 0;
+		z-index: 1;
+
+		&:first-child {
+			visibility: hidden;
+		}
+
+		&:not(:first-child) {
+			justify-content: center;
+		}
+	}
+}

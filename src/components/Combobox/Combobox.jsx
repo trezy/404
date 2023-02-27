@@ -15,7 +15,9 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
-import { useForeignInteractionHandler } from '../hooks/useForeignInteractionHandler.js'
+import styles from './Combobox.module.scss'
+
+import { useForeignInteractionHandler } from '../../hooks/useForeignInteractionHandler.js'
 
 
 
@@ -36,6 +38,10 @@ const OPEN_KEYS = ['ArrowDown', 'ArrowUp']
  * @returns {boolean} Whether or not the element is visible.
  */
 function isElementInView(element) {
+	if (!element) {
+		return true
+	}
+
 	const bounding = element.getBoundingClientRect()
 
 	if (bounding.top < 0) {
@@ -179,16 +185,18 @@ export function Combobox(props) {
 	])
 
 	const compiledClassName = useMemo(() => {
-		return classnames('combobox', className, {
-			'is-open': isOpen,
+		return classnames(styles['combobox'], className, {
+			[styles['is-disabled']]: isDisabled,
+			[styles['is-open']]: isOpen,
 		})
 	}, [
 		className,
+		isDisabled,
 		isOpen,
 	])
 
 	const compiledLabelClassName = useMemo(() => {
-		return classnames(labelClassName, 'combobox-label')
+		return classnames(labelClassName, styles['combobox-label'])
 	}, [labelClassName])
 
 	const mappedOptions = useMemo(() => {
@@ -235,7 +243,7 @@ export function Combobox(props) {
 			return (
 				<div
 					key={optionGroupName}
-					className={'combobox-options-group'}>
+					className={styles['combobox-options-group']}>
 					<header>{optionGroupName}</header>
 					{items}
 				</div>
@@ -299,7 +307,7 @@ export function Combobox(props) {
 
 			<div
 				aria-labelledby={`${comboboxID}-label`}
-				className={'combobox-options'}
+				className={styles['combobox-options']}
 				hidden={!isOpen}
 				role={'listbox'}
 				tabIndex={-1}>
