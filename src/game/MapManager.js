@@ -16,10 +16,21 @@ import { store } from '../newStore/store.js'
 
 
 
+// Constants
+const MAP_PADDING = 40
+
+
+
+
+
 export class MapManager {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
+
+	#finder = new PF.AStarFinder({
+		diagonalMovement: PF.DiagonalMovement.Never,
+	})
 
 	#gameManager = null
 
@@ -92,7 +103,7 @@ export class MapManager {
 		this.#gameManager = gameManager
 		this.#map = map
 		this.#parent = parent
-		this.#pathfindingGrid = new PF.Grid(this.width, this.height)
+		this.#pathfindingGrid = this.generatePFGrid()
 
 		map.tiles.forEach(layerData => {
 			const layerGrid = this.generateGrid()
@@ -119,10 +130,10 @@ export class MapManager {
 				const coordinateString = `${x}|${y}`
 				const cell = map.pfgrid[coordinateString]
 
-				if (cell) {
-					this.#pathfindingGrid.setWalkableAt(x, y, cell.isTraversable)
+				if (cell?.isTraversable) {
+					this.makeCellTraversable(x, y)
 				} else {
-					this.#pathfindingGrid.setWalkableAt(x, y, false)
+					this.makeCellUntraversable(x, y)
 				}
 
 				x += 1
@@ -144,12 +155,69 @@ export class MapManager {
 	 * Public instance methods
 	\****************************************************************************/
 
+	findPath(fromX, fromY, toX, toY) {
+		const [
+			fromPFX,
+			fromPFY,
+		] = this.getPFCellCoordinates(fromX, fromY)
+		const [
+			toPFX,
+			toPFY,
+		] = this.getPFCellCoordinates(toX, toY)
+
+		const grid = this.#pathfindingGrid.clone()
+
+		const path = this.#finder.findPath(
+			fromPFX,
+			fromPFY,
+			toPFX,
+			toPFY,
+			grid,
+		)
+
+		return path.map(([x, y]) => this.getCellFromPFCoordinates(x, y))
+	}
+
 	generateGrid() {
 		return Array(this.height)
 			.fill(null)
 			.map(() => {
 				return Array(this.width).fill(null)
 			})
+	}
+
+	generatePFGrid() {
+		if (this.isTileset) {
+			return new PF.Grid(this.width, this.height)
+		}
+
+		const pfGridHeight = this.height + MAP_PADDING
+		const pfGridWidth = this.width + MAP_PADDING
+
+		const pfGrid = new PF.Grid(pfGridWidth, pfGridHeight)
+
+		let xIndex = 0
+
+		while (xIndex < pfGridWidth) {
+			let yIndex = 0
+
+			while (yIndex < pfGridHeight) {
+				pfGrid.setWalkableAt(xIndex, yIndex, false)
+
+				yIndex += 1
+			}
+
+			xIndex += 1
+		}
+
+		return pfGrid
+	}
+
+	getCellFromPFCoordinates(x, y) {
+		return [
+			x - Math.ceil(MAP_PADDING / 2),
+			y - Math.ceil(MAP_PADDING / 2),
+		]
 	}
 
 	getOccupiedCoordinates() {
@@ -164,6 +232,33 @@ export class MapManager {
 
 			return accumulator
 		}, {})
+	}
+
+	getPFCellCoordinates(x, y) {
+		if (this.isTileset) {
+			return [x, y]
+		}
+
+		return [
+			x + Math.ceil(MAP_PADDING / 2),
+			y + Math.ceil(MAP_PADDING / 2),
+		]
+	}
+
+	makeCellTraversable(x, y) {
+		const [
+			cellX,
+			cellY,
+		] = this.getPFCellCoordinates(x, y)
+		this.#pathfindingGrid.setWalkableAt(cellX, cellY, true)
+	}
+
+	makeCellUntraversable(x, y) {
+		const [
+			cellX,
+			cellY,
+		] = this.getPFCellCoordinates(x, y)
+		this.#pathfindingGrid.setWalkableAt(cellX, cellY, false)
 	}
 
 	placeTileset() {
@@ -233,9 +328,14 @@ export class MapManager {
 			const targetX = x + cursorOffset.x
 			const targetY = y + cursorOffset.y
 
-			const node = this.#tileset.#pathfindingGrid.nodes[y][x]
+			const [
+				targetPFCellX,
+				targetPFCellY,
+			] = this.getPFCellCoordinates(targetX, targetY)
 
-			this.#pathfindingGrid.setWalkableAt(targetX, targetY, node.walkable)
+			const node = this.#tileset.pathfindingGrid.nodes[y][x]
+
+			this.#pathfindingGrid.setWalkableAt(targetPFCellX, targetPFCellY, node.walkable)
 		})
 
 		this.#nextTileset()
@@ -357,6 +457,13 @@ export class MapManager {
 	 */
 	get destinations() {
 		return this.#map.destinations
+	}
+
+	/**
+	 * @returns {PF.AStarFinder} The map's pathfinder.
+	 */
+	get finder() {
+		return this.#finder
 	}
 
 	/**

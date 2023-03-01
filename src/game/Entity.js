@@ -1,10 +1,3 @@
-// Module imports
-import PF from 'pathfinding'
-
-
-
-
-
 // Local imports
 import { MapManager } from './MapManager.js'
 import { Renderer } from './Renderer.js'
@@ -34,10 +27,6 @@ export class Entity {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
-
-	#finder = new PF.AStarFinder({
-		diagonalMovement: PF.DiagonalMovement.Never,
-	})
 
 	#frame = 0
 
@@ -124,33 +113,29 @@ export class Entity {
 
 	#getRandomNearbyTile() {
 		const paths = [
-			this.#finder.findPath(
+			this.#mapManager.findPath(
 				this.#position.x,
 				this.#position.y,
 				Math.min(this.#position.x + 1, this.#mapManager.width),
 				this.#position.y,
-				this.#mapManager.pathfindingGrid.clone(),
 			),
-			this.#finder.findPath(
+			this.#mapManager.findPath(
 				this.#position.x,
 				this.#position.y,
 				Math.max(this.#position.x - 1, 0),
 				this.#position.y,
-				this.#mapManager.pathfindingGrid.clone(),
 			),
-			this.#finder.findPath(
+			this.#mapManager.findPath(
 				this.#position.x,
 				this.#position.y,
 				this.#position.x,
 				Math.min(this.#position.y + 1, this.#mapManager.height),
-				this.#mapManager.pathfindingGrid.clone(),
 			),
-			this.#finder.findPath(
+			this.#mapManager.findPath(
 				this.#position.x,
 				this.#position.y,
 				this.#position.x,
 				Math.max(this.#position.y - 1, 0),
-				this.#mapManager.pathfindingGrid.clone(),
 			),
 		]
 
@@ -178,12 +163,11 @@ export class Entity {
 			.#mapManager
 			.destinations
 			.map(destination => {
-				return this.#finder.findPath(
+				return this.#mapManager.findPath(
 					this.#position.x,
 					this.#position.y,
 					destination.x,
 					destination.y,
-					this.#mapManager.pathfindingGrid.clone(),
 				)
 			})
 			.filter(path => path.length)
