@@ -148,11 +148,11 @@ export class ControlsManager extends EventEmitter {
 				}
 
 				if (control.mappings.keyboard.primary.length || control.mappings.keyboard.secondary.length) {
-					const isPrimaryActive = control.mappings.keyboard.primary.length && control.mappings.keyboard.primary.every(code => {
+					const isPrimaryActive = Boolean(control.mappings.keyboard.primary.length) && control.mappings.keyboard.primary.every(code => {
 						return this.#keyboard.getKey(code).isActive
 					})
 
-					const isSecondaryActive = control.mappings.keyboard.secondary.length && control.mappings.keyboard.secondary.every(code => {
+					const isSecondaryActive = Boolean(control.mappings.keyboard.secondary.length) && control.mappings.keyboard.secondary.every(code => {
 						return this.#keyboard.getKey(code).isActive
 					})
 
@@ -165,18 +165,18 @@ export class ControlsManager extends EventEmitter {
 					}
 
 					if (keyState) {
-						let actionCache = this.#actionCaches.get(keyState)
+						let actionCache = this.#actionCaches.get(label)
 
 						if (!actionCache) {
 							actionCache = { triggeredAt: now }
-							this.#actionCaches.set(keyState, actionCache)
+							this.#actionCaches.set(label, actionCache)
 							handler()
 						} else if ((now - actionCache.triggeredAt) >= control.repeatFrequency) {
 							actionCache.triggeredAt = now
 							handler()
 						}
 					} else {
-						this.#actionCaches.delete(keyState)
+						this.#actionCaches.delete(label)
 					}
 				}
 			})
