@@ -36,8 +36,6 @@ export class GameManager {
 
 	#contentManager = null
 
-	#controlsManager = null
-
 	#entitiesManager = null
 
 	#mapManager = null
@@ -83,6 +81,7 @@ export class GameManager {
 	 */
 	gameLoop = () => {
 		const {
+			controlsManager,
 			isRunning,
 			timer,
 		} = store.state
@@ -90,7 +89,7 @@ export class GameManager {
 		if (isRunning) {
 			advanceFrame()
 
-			this.#controlsManager.update()
+			controlsManager.update()
 
 			if (!timer.isInGracePeriod) {
 				this.#robot.update()
@@ -167,7 +166,6 @@ export class GameManager {
 	 */
 	constructor() {
 		this.#contentManager = new ContentManager
-		this.#controlsManager = new ControlsManager
 		this.#entitiesManager = new EntitiesManager({ gameManager: this })
 		this.#renderer = new Renderer
 	}
@@ -225,20 +223,6 @@ export class GameManager {
 	 */
 	get contentManager() {
 		return this.#contentManager
-	}
-
-	/**
-	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.
-	 */
-	get controlsManager() {
-		return this.#controlsManager
-	}
-
-	/**
-	 * @returns {ControlsManager} The `GameManager`'s `ControlsManager`.
-	 */
-	get controlsManager() {
-		return this.#controlsManager
 	}
 
 	/**

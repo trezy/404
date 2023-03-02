@@ -36,7 +36,6 @@ const FRAME_BUFFER = []
 
 export const store = create(subscribeWithSelector((set, get) => ({
 	contentManager: null,
-	controlsManager: null,
 	gameManager: new GameManager,
 	isCampaignMenuVisible: false,
 	isCustomGameMenuVisible: false,
@@ -219,7 +218,6 @@ export const store = create(subscribeWithSelector((set, get) => ({
 store.setState(state => {
 	return {
 		contentManager: state.gameManager.contentManager,
-		controlsManager: state.gameManager.controlsManager,
 	}
 })
 

@@ -17,8 +17,6 @@ import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { GamepadSettings } from '../../GamepadSettings/GamepadSettings.jsx'
 import { KeyboardAndMouseSettings } from '../../KeyboardAndMouseSettings/KeyboardAndMouseSettings.jsx'
 import { Tabs } from '../../Tabs/Tabs.jsx'
-import { useRafael } from '../../../hooks/useRafael.js'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -52,20 +50,9 @@ const TABS = [
 export function ControlsSettings(props) {
 	const { variants } = props
 
-	const [gameManager] = useStore(state => ([state.gameManager]))
-	const { controlsManager } = gameManager
-
 	const [activeTabID, setActiveTabID] = useState('keyboard')
 
 	const handleTabFocus = useCallback(tabID => setActiveTabID(tabID), [setActiveTabID])
-
-	useRafael({
-		task: controlsManager.update,
-		options: {
-			context: controlsManager,
-		},
-		dependencies: [controlsManager],
-	})
 
 	return (
 		<motion.div

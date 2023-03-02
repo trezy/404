@@ -1,5 +1,6 @@
 // Local imports
 import { configStore } from '../helpers/configStore.js'
+import { ControlsManager } from '../game/ControlsManager.js'
 import { Timer } from '../game/Timer.js'
 
 
@@ -8,6 +9,7 @@ import { Timer } from '../game/Timer.js'
 
 export const initialState = {
 	controls: configStore.get('settings.controls'),
+	controlsManager: new ControlsManager,
 	cursorOffset: {
 		x: 0,
 		y: 0,

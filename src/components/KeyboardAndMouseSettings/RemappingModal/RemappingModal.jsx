@@ -3,7 +3,6 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from 'react'
 import { useStore } from 'statery'
@@ -21,7 +20,6 @@ import {
 	updateControlBinding,
 } from '../store.js'
 import { Button } from '../../Button.jsx'
-import { ControlsManager } from '../../../game/ControlsManager.js'
 import { KeyboardKey } from '../../KeyboardKey/KeyboardKey.jsx'
 import { Modal } from '../../Modal/Modal.jsx'
 import { KeyboardMapping } from '../../KeyboardMapping/KeyboardMapping.jsx'
@@ -33,13 +31,10 @@ import { store as mainStore } from '../../../newStore/store.js'
 
 export function RemappingModal() {
 	const { bindingToRemap } = useStore(store)
-	const { controls } = useStore(mainStore)
-
-	const controlsManagerRef = useRef(null)
-
-	if (!controlsManagerRef.current) {
-		controlsManagerRef.current = new ControlsManager
-	}
+	const {
+		controls,
+		controlsManager,
+	} = useStore(mainStore)
 
 	const [activeKeys, setActiveKeys] = useState([])
 	const [isCapturing, setIsCapturing] = useState(true)
@@ -128,7 +123,6 @@ export function RemappingModal() {
 	])
 
 	useEffect(() => {
-		const controlsManager = controlsManagerRef.current
 		const keyboard = controlsManager.getKeyboard()
 
 		keyboard.on('key activated', handleKeyActivated)
@@ -139,7 +133,7 @@ export function RemappingModal() {
 			keyboard.off('key deactivated', handleKeyDeactivated)
 		}
 	}, [
-		controlsManagerRef,
+		controlsManager,
 		handleKeyActivated,
 		handleKeyDeactivated,
 	])
