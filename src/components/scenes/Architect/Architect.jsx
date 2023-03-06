@@ -29,6 +29,19 @@ const TABS = [
 		label: 'Map Editor',
 	},
 ]
+const VARIANTS = {
+	animate: {
+		opacity: 1,
+	},
+
+	exit: {
+		opacity: 0,
+	},
+
+	initial: {
+		opacity: 0,
+	},
+}
 
 
 
@@ -41,7 +54,13 @@ export function Architect() {
 	const [activeTab, setActiveTab] = useState('map-editor')
 
 	return (
-		<Scene className={styles['architect']}>
+		<Scene
+			key={'loading-game'}
+			animate={'animate'}
+			className={styles['architect']}
+			exit={'exit'}
+			initial={'initial'}
+			variants={VARIANTS}>
 			<Tabs
 				activeTabID={activeTab}
 				className={styles['tabs']}
