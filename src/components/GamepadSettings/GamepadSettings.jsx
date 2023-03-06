@@ -17,7 +17,6 @@ import { Combobox } from '../Combobox/Combobox.jsx'
 import { GamepadVisualiser } from '../GamepadVisualiser/GamepadVisualiser.jsx'
 import { MappingTable } from '../MappingTable/MappingTable.jsx'
 import { store } from './store.js'
-import { useStore as useZustandStore } from '../../store/react.js'
 
 
 
@@ -114,11 +113,10 @@ const BINDINGS = {
  */
 export function GamepadSettings() {
 	const {
-		activeInputs,
+		controlsManager,
 		gamepad,
 		gamepads,
 	} = useStore(store)
-	const controlsManager = useZustandStore(state => state.controlsManager)
 
 	const handleGamepadChange = useCallback(option => {
 		store.set(() => ({ gamepad: option }))

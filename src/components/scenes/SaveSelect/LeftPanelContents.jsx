@@ -1,25 +1,29 @@
 // Local imports
+import {
+	MAIN_MENU,
+	SETTINGS,
+} from '../../../constants/SceneNames.js'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { PanelMenu } from '../../Panel/PanelMenu.jsx'
-import { useStore } from '../../../store/react.js'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 
 
 
 
+
+function handleMainMenuClick() {
+	pushScene(MAIN_MENU)
+}
+
+function handleSettingsClick() {
+	pushScene(SETTINGS)
+}
 
 /**
  * Renders the contents of the left panel for the Save Select scene.
  */
 export function LeftPanelContents() {
-	const [
-		goToSettings,
-		goToMainMenu,
-	] = useStore(state => [
-		state.goToSettings,
-		state.goToMainMenu,
-	])
-
 	return (
 		<PanelMenu>
 			<ButtonStack>
@@ -27,11 +31,11 @@ export function LeftPanelContents() {
 					{'Statistics'}
 				</Button>
 
-				<Button onClick={goToSettings}>
+				<Button onClick={handleSettingsClick}>
 					{'Settings'}
 				</Button>
 
-				<Button onClick={goToMainMenu}>
+				<Button onClick={handleMainMenuClick}>
 					{'Main Menu'}
 				</Button>
 			</ButtonStack>

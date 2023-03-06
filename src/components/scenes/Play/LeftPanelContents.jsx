@@ -1,5 +1,6 @@
 // Module imports
 import { useCallback } from 'react'
+import { useStore } from 'statery'
 
 
 
@@ -9,9 +10,11 @@ import { useCallback } from 'react'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 // import { FPSMeter } from '../../FPSMeter.jsx'
+import { MAP_SELECT } from '../../../constants/SceneNames.js'
 import { PanelMenu } from '../../Panel/PanelMenu.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
+import { store } from '../../../newStore/store.js'
 import { Timer } from '../../Timer/Timer.jsx'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -21,21 +24,12 @@ import { useStore } from '../../../store/react.js'
  * Renders the contents of the left panel for the Play scene.
  */
 export function LeftPanelContents() {
-	const [
-		gameManager,
-		goToMapSelect,
-	] = useStore(state => [
-		state.gameManager,
-		state.goToMapSelect,
-	])
+	const { gameManager } = useStore(store)
 
 	const handleQuitClick = useCallback(() => {
 		gameManager.stop()
-		goToMapSelect(null)
-	}, [
-		gameManager,
-		goToMapSelect,
-	])
+		pushScene(MAP_SELECT)
+	}, [gameManager])
 
 	return (
 		<>

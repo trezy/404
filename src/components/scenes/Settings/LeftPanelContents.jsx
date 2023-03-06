@@ -9,22 +9,25 @@ import { useCallback } from 'react'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { PanelMenu } from '../../Panel/PanelMenu.jsx'
+import { popScene } from '../../../newStore/helpers/popScene.js'
 import { useStore } from '../../../store/react.js'
 
 
 
 
 
+function handleBackClick() {
+	popScene()
+}
+
 /**
  * Renders the contents of the left panel for the Settings scene.
  */
 export function LeftPanelContents() {
 	const [
-		goBack,
 		goToSettingsPanel,
 		settingsPanel,
 	] = useStore(state => [
-		state.goBack,
 		state.goToSettingsPanel,
 		state.settingsPanel,
 	])
@@ -61,7 +64,7 @@ export function LeftPanelContents() {
 					{'Sound'}
 				</Button>
 
-				<Button onClick={goBack}>
+				<Button onClick={handleBackClick}>
 					{'Back'}
 				</Button>
 			</ButtonStack>

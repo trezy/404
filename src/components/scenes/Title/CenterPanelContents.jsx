@@ -12,27 +12,36 @@ import { motion } from 'framer-motion'
 // Local imports
 import styles from './CenterPanelContents.module.scss'
 
+import {
+	MAP_SELECT,
+	SAVE_SELECT,
+} from '../../../constants/SceneNames.js'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { GameTitle } from '../../GameTitle/GameTitle.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { useStore } from '../../../store/react.js'
 
 
 
 
 
+function handleLoadGameClick() {
+	pushScene(SAVE_SELECT)
+}
+
+function handleNewGameClick() {
+	pushScene(MAP_SELECT)
+}
+
 /**
  * Renders the contents of the center panel for the Title scene.
  */
 export function CenterPanelContents() {
   const [
-		goToSaveSelect,
-		goToMapSelect,
 		mostRecentSaveID,
 		saveManager,
 	] = useStore(state => [
-		state.goToSaveSelect,
-    state.goToMapSelect,
     state.mostRecentSaveID,
     state.saveManager,
   ])
@@ -42,19 +51,9 @@ export function CenterPanelContents() {
 	}, [saveManager])
 
 	const handleContinueClick = useCallback(() => {
-		goToMapSelect(mostRecentSaveID)
-	}, [
-		goToMapSelect,
-		mostRecentSaveID,
-	])
-
-	const handleLoadGameClick = useCallback(() => {
-		goToSaveSelect()
-	}, [goToSaveSelect])
-
-	const handleNewGameClick = useCallback(() => {
-		goToMapSelect()
-	}, [goToMapSelect])
+		pushScene(MAP_SELECT)
+		// goToMapSelect(mostRecentSaveID)
+	}, [mostRecentSaveID])
 
 	return (
 		<motion.div

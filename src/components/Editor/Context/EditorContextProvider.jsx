@@ -6,6 +6,7 @@ import {
 	useState,
 } from 'react'
 import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 import { v4 as uuid } from 'uuid'
 
 
@@ -15,7 +16,7 @@ import { v4 as uuid } from 'uuid'
 // Local imports
 import { EditorContext } from './EditorContext.js'
 import { initialState } from './initialState.js'
-import { useStore } from '../../../store/react.js'
+import { store } from '../../../newStore/store.js'
 
 
 
@@ -24,7 +25,7 @@ import { useStore } from '../../../store/react.js'
 export function EditorContextProvider(props) {
 	const { children } = props
 
-	const contentManager = useStore(state => state.contentManager)
+	const { contentManager } = useStore(store)
 
 	const [activeTile, setActiveTile] = useState(initialState.activeTile)
 	const [currentLayerIndex, setCurrentLayerIndex] = useState(initialState.currentLayerIndex)

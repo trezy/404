@@ -20,14 +20,19 @@ import {
 	store,
 } from '../store.js'
 import { Button } from '../../Button.jsx'
+import { MAIN_MENU } from '../../../constants/SceneNames.js'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { TilePalettePanel } from '../TilePalettePanel/TilePalettePanel.jsx'
 import { TileQueuePanel } from '../TileQueuePanel/TileQueuePanel.jsx'
-import { useStore as useZustandStore } from '../../../store/react.js'
 
 
 
 
+
+function handleMainMenuClick() {
+	pushScene(MAIN_MENU)
+}
 
 /**
  * Renders the left side of the map editor.
@@ -38,8 +43,6 @@ export function LeftPanelContainer(props) {
 	const storeProxy = useStore(store)
 	const { activeTabID } = storeProxy
 
-	const goToMainMenu = useZustandStore(state => state.goToMainMenu)
-
 	const leftPanels = useMemo(() => {
 		return [
 			TilePalettePanel,
@@ -48,8 +51,6 @@ export function LeftPanelContainer(props) {
 	}, [])
 
 	const handleLoadMapClick = useCallback(() => showLoadMapModal(), [showLoadMapModal])
-
-	const handleMainMenuClick = useCallback(() => goToMainMenu(), [goToMainMenu])
 
 	const handleManageResourcePacksClick = useCallback(() => showManageResourcePacksModal(), [showManageResourcePacksModal])
 

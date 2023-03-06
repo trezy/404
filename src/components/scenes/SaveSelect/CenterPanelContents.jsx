@@ -1,8 +1,5 @@
 // Module imports
-import {
-	useCallback,
-	useMemo,
-} from 'react'
+import { useMemo } from 'react'
 
 
 
@@ -11,6 +8,8 @@ import {
 // Local imports
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+import { MAP_SELECT } from '../../../constants/SceneNames.js'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { SaveActions } from './SaveActions.jsx'
 import { Table } from '../../Table/Table.jsx'
 import { useStore } from '../../../store/react'
@@ -19,23 +18,15 @@ import { useStore } from '../../../store/react'
 
 
 
+function handleLoad() {
+	pushScene(MAP_SELECT)
+}
+
 /**
  * Renders the contents of the center panel for the Save Select scene.
  */
 export function CenterPanelContents() {
-	const [
-		goToMapSelect,
-		saveManager,
-	] = useStore(state => [
-		state.goToMapSelect,
-		state.saveManager,
-	])
-
-	const handleLoadClick = useCallback(saveID => () => {
-		goToMapSelect(saveID)
-	}, [goToMapSelect])
-
-	const handleLoad = useCallback(saveID => goToMapSelect(saveID), [goToMapSelect])
+	const saveManager = useStore(state => state.saveManager)
 
 	const tableColumns = useMemo(() => {
 		return [
@@ -57,7 +48,7 @@ export function CenterPanelContents() {
 				onLoad: handleLoad,
 			},
 		]
-	}, [handleLoad])
+	}, [])
 
 	const tableData = useMemo(() => {
 		const allSaves = saveManager.getAllSaves()

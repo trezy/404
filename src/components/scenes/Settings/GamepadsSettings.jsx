@@ -6,6 +6,7 @@ import {
 } from 'react'
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
@@ -17,8 +18,8 @@ import styles from './GamepadsSettings.module.scss'
 import { Combobox } from '../../Combobox/Combobox.jsx'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { GamepadTemplate } from './GamepadTemplate.jsx'
+import { store } from '../../../newStore/store.js'
 import { useRafael } from '../../../hooks/useRafael.js'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -36,8 +37,7 @@ import { useStore } from '../../../store/react.js'
 export function GamepadsSettings(props) {
 	const { variants } = props
 
-	const [gameManager] = useStore(state => ([state.gameManager]))
-	const { controlsManager } = gameManager
+	const { controlsManager } = useStore(store)
 
 	const [gamepads, setGamepads] = useState(
 		Object
@@ -120,7 +120,7 @@ export function GamepadsSettings(props) {
 	useRafael({
 		task: updateGamepadState,
 		dependencies: [
-			gameManager,
+			controlsManager,
 			selectedGamepad,
 			setGamepads,
 		],

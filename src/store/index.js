@@ -7,19 +7,6 @@ import { subscribeWithSelector } from 'zustand/middleware'
 
 
 // Local imports
-import {
-	ARCHITECT,
-	CUSTOM_GAME,
-	LOADING_GAME,
-	LOADING_MAP,
-	MAIN_MENU,
-	MAP_EDITOR,
-	MAP_SELECT,
-	PLAY,
-	SAVE_SELECT,
-	SETTINGS,
-} from '../constants/SceneNames.js'
-import { GameManager } from '../game/GameManager.js'
 import { SaveManager } from '../game/SaveManager.js'
 
 
@@ -28,19 +15,12 @@ import { SaveManager } from '../game/SaveManager.js'
 
 // Constants
 const DEFAULT_SETTINGS_SCENE = 'accessibility'
-const FRAME_BUFFER = []
 
 
 
 
 
 export const store = create(subscribeWithSelector((set, get) => ({
-	contentManager: null,
-	gameManager: new GameManager,
-	isCampaignMenuVisible: false,
-	isCustomGameMenuVisible: false,
-	mapID: null,
-	mapManager: null,
 	mostRecentSaveID: (() => {
 		const mostRecentSaveID = localStorage.getItem('debug-game:most-recent-save-id')
 
@@ -50,145 +30,8 @@ export const store = create(subscribeWithSelector((set, get) => ({
 
 		return null
 	})(),
-	previousScene: null,
-	saveID: null,
 	saveManager: new SaveManager,
-	scene: LOADING_GAME,
 	settingsPanel: DEFAULT_SETTINGS_SCENE,
-
-	/**
-	 * Go back to the previous scene.
-	 */
-	goBack() {
-		const {
-			// @ts-ignore
-			goToScene,
-			// @ts-ignore
-			previousScene,
-		} = get()
-
-		goToScene(previousScene)
-	},
-
-	/**
-	 * Switch to the map editor scene.
-	 */
-	goToArchitect() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(ARCHITECT)
-	},
-
-	/**
-	 * Switch to the custom game scene.
-	 */
-	goToCustomGame() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(CUSTOM_GAME)
-	},
-
-	/**
-	 * Switch to the map loading scene.
-	 *
-	 * @param {string} mapID The ID of the map to be loaded.
-	 */
-	goToLoadingMap(mapID) {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(LOADING_MAP, { mapID })
-	},
-
-	/**
-	 * Switch to the main title scene.
-	 */
-	goToMainMenu() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(MAIN_MENU, {
-			mapID: null,
-			saveID: null,
-		})
-	},
-
-	/**
-	 * Switch to the map editor scene.
-	 */
-	goToMapEditor() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(MAP_EDITOR)
-	},
-
-	/**
-	 * Switch to the map select scene. Also sets the saveID if one is passed.
-	 *
-	 * @param {number} [saveID] The ID of the save that has been selected.
-	 */
-	goToMapSelect(saveID) {
-		const {
-			goToScene,
-			saveID: currentSaveID,
-			saveManager,
-		} = get()
-
-		if (!currentSaveID && !saveID) {
-			({ id: saveID } = saveManager.createSave())
-		}
-
-		localStorage.setItem('debug-game:most-recent-save-id', saveID || currentSaveID)
-
-		goToScene(MAP_SELECT, {
-			mapID: null,
-			mostRecentSaveID: saveID || currentSaveID,
-			saveID: saveID || currentSaveID,
-		})
-	},
-
-	/**
-	 * Switch to the save select scene.
-	 */
-	goToSaveSelect() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(SAVE_SELECT, {
-			mapID: null,
-			saveID: null,
-		})
-	},
-
-	/**
-	 * Change the scene.
-	 *
-	 * @param {string} sceneName The key of the scene to switch to.
-	 * @param {object} [options] Additional keys to be set in the state.
-	 */
-	goToScene(sceneName, options = {}) {
-		set(state => ({
-			scene: sceneName,
-			// @ts-ignore
-			previousScene: state.scene,
-			...options,
-		}))
-	},
-
-	/**
-	 * Switch to the game settings scene.
-	 */
-	goToSettings() {
-		// @ts-ignore
-		const { goToScene } = get()
-
-		goToScene(SETTINGS, {
-			settingsPanel: DEFAULT_SETTINGS_SCENE,
-		})
-	},
 
 	/**
 	 * Change settings panel.
@@ -198,28 +41,7 @@ export const store = create(subscribeWithSelector((set, get) => ({
 	goToSettingsPanel(panelName) {
 		set({ settingsPanel: panelName })
 	},
-
-	/**
-	 * Load the currently selected map. Also initiates preloading of the tileset.
-	 */
-	async loadMap() {
-		const {
-			gameManager,
-			goToScene,
-			mapID,
-		} = get()
-
-		await gameManager.loadMap(mapID)
-
-		goToScene(PLAY, { mapManager: gameManager.mapManager })
-	},
 })))
-
-store.setState(state => {
-	return {
-		contentManager: state.gameManager.contentManager,
-	}
-})
 
 // eslint-disable-next-line jsdoc/require-jsdoc
 const showIshihara = () => {

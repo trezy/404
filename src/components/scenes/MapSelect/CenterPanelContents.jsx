@@ -1,8 +1,5 @@
 // Module imports
-import {
-	useCallback,
-	useMemo,
-} from 'react'
+import { useMemo } from 'react'
 
 
 
@@ -11,10 +8,12 @@ import {
 // Local imports
 import { convertMillisecondsToStopwatchString } from '../../../helpers/convertMillisecondsToStopwatchString.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+import { LOADING_MAP } from '../../../constants/SceneNames.js'
 import { MapActions } from './MapActions.jsx'
 import { MapRating } from './MapRating.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
+import { selectMap } from '../../../newStore/helpers/selectMap.js'
 import { Table } from '../../Table/Table.jsx'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -58,14 +57,17 @@ const MAPS = [
 
 
 
+function handleLoad(mapID) {
+	return () => {
+		selectMap(mapID)
+		pushScene(LOADING_MAP)
+	}
+}
+
 /**
  * Renders the contents of the center panel for the Map Select scene.
  */
 export function CenterPanelContents() {
-	const [goToLoadingMap] = useStore(state => [state.goToLoadingMap])
-
-	const handleLoad = useCallback(mapID => () => goToLoadingMap(mapID), [goToLoadingMap])
-
 	const tableColumns = useMemo(() => {
 		return [
 			{
@@ -87,10 +89,10 @@ export function CenterPanelContents() {
 				onLoad: handleLoad,
 			},
 		]
-	}, [handleLoad])
+	}, [])
 
 	const tableData = useMemo(() => {
-		return MAPS.map((map, index) => {
+		return MAPS.map(map => {
 			return {
 				bestTime: convertMillisecondsToStopwatchString(map.bestTime),
 				id: map.id,

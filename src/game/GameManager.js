@@ -10,8 +10,6 @@ import {
 
 // Local imports
 import { advanceFrame } from '../newStore/helpers/advanceFrame.js'
-import { ContentManager } from './ContentManager.js'
-import { ControlsManager } from './ControlsManager.js'
 import { EntitiesManager } from './EntitiesManager.js'
 import { Entity } from './Entity.js'
 import { MapManager } from './MapManager.js'
@@ -33,8 +31,6 @@ export class GameManager {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
-
-	#contentManager = null
 
 	#entitiesManager = null
 
@@ -165,7 +161,6 @@ export class GameManager {
 	 * Creates a new `GameManager`
 	 */
 	constructor() {
-		this.#contentManager = new ContentManager
 		this.#entitiesManager = new EntitiesManager({ gameManager: this })
 		this.#renderer = new Renderer
 	}
@@ -184,12 +179,11 @@ export class GameManager {
 	 * @param {string} mapID The ID of the map to be loaded.
 	 */
 	async loadMap(mapID) {
-		const map = await this.contentManager.loadMap(mapID)
+		const { contentManager } = store.state
 
-		this.#mapManager = new MapManager({
-			gameManager: this,
-			map,
-		})
+		const map = await contentManager.loadMap(mapID)
+
+		this.#mapManager = new MapManager({ map })
 
 		await this.preloadTileset()
 
@@ -217,13 +211,6 @@ export class GameManager {
 	/****************************************************************************\
 	 * Public instance getters/setters
 	\****************************************************************************/
-
-	/**
-	 * @returns {ContentManager} The `GameManager`'s `ContentManager`.
-	 */
-	get contentManager() {
-		return this.#contentManager
-	}
 
 	/**
 	 * @returns {MapManager} The current `MapManager`.

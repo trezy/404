@@ -4,6 +4,7 @@ import {
 	useState,
 } from 'react'
 import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
@@ -14,9 +15,9 @@ import { Button } from '../../Button.jsx'
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { Modal } from '../../Modal/Modal.jsx'
 import { ResourcepackActions } from './ResourcepackActions.jsx'
+import { store } from '../../../newStore/store.js'
 import { Table } from '../../Table/Table.jsx'
 import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -24,13 +25,14 @@ import { useStore } from '../../../store/react.js'
 
 export function LoadResourcepackModal(props) {
 	const { onClose } = props
+
+	const { contentManager } = useStore(store)
+
 	const [isLoading, setIsLoading] = useState(false)
 	const [loaderText, setLoaderText] = useState('')
 	const [selectedResourcepackID, setSelectedResourcepackID] = useState(null)
 
 	const { loadResourcepack } = useResourcepackEditorContext()
-
-	const contentManager = useStore(state => state.contentManager)
 
 	const handleLoadClick = useCallback(async() => {
 		setLoaderText('Loading...')

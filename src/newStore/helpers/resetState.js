@@ -20,7 +20,11 @@ export const resetState = () => {
 		return {
 			...initialState,
 			controls: state.controls,
+			contentManager: state.contentManager,
+			controlsManager: state.controlsManager,
+			gameManager: state.gameManager,
 			keyboardLayoutMap: state.keyboardLayoutMap,
+			sceneHistory: state.sceneHistory,
 		}
 	})
 }

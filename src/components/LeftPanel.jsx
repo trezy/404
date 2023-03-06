@@ -1,5 +1,6 @@
 // Module imports
 import { AnimatePresence } from 'framer-motion'
+import { useStore } from 'statery'
 
 
 
@@ -16,8 +17,9 @@ import {
 	SETTINGS,
 } from '../constants/SceneNames.js'
 import { DecoratedHeader } from './DecoratedHeader/DecoratedHeader.jsx'
+import { getCurrentScene } from '../newStore/selectors/getCurrentScene.js'
 import { Panel } from './Panel/Panel.jsx'
-import { useStore } from '../store/react.js'
+import { store } from '../newStore/store.js'
 
 import { LeftPanelContents as CustomGameSceneLeftPanelContents } from './scenes/CustomGame/LeftPanelContents.jsx'
 import { LeftPanelContents as LoadingMapSceneLeftPanelContents } from './scenes/LoadingMap/LeftPanelContents.jsx'
@@ -57,38 +59,39 @@ const PANEL_VARIANTS = {
  * Renders the game's left panel.
  */
 export function LeftPanel() {
-	const [scene] = useStore(state => [state.scene])
+	const proxyStore = useStore(store)
+	const currentScene = getCurrentScene(proxyStore)
 
 	return (
 		<Panel variants={PANEL_VARIANTS}>
 			<DecoratedHeader>{'Menu'}</DecoratedHeader>
 
 			<AnimatePresence mode={'wait'}>
-				{(scene === CUSTOM_GAME) && (
+				{(currentScene === CUSTOM_GAME) && (
 					<CustomGameSceneLeftPanelContents key={'CustomGameSceneLeftPanelContents'} />
 				)}
 
-				{(scene === LOADING_MAP) && (
+				{(currentScene === LOADING_MAP) && (
 					<LoadingMapSceneLeftPanelContents key={'LoadingMapSceneLeftPanelContents'} />
 				)}
 
-				{(scene === MAP_SELECT) && (
+				{(currentScene === MAP_SELECT) && (
 					<MapSelectSceneLeftPanelContents key={'MapSelectSceneLeftPanelContents'} />
 				)}
 
-				{(scene === PLAY) && (
+				{(currentScene === PLAY) && (
 					<PlaySceneLeftPanelContents key={'PlaySceneLeftPanelContents'} />
 				)}
 
-				{(scene === SAVE_SELECT) && (
+				{(currentScene === SAVE_SELECT) && (
 					<SaveSelectSceneLeftPanelContents key={'SaveSelectSceneLeftPanelContents'} />
 				)}
 
-				{(scene === SETTINGS) && (
+				{(currentScene === SETTINGS) && (
 					<SettingsSceneLeftPanelContents key={'SettingsSceneLeftPanelContents'} />
 				)}
 
-				{(scene === MAIN_MENU) && (
+				{(currentScene === MAIN_MENU) && (
 					<TitleSceneLeftPanelContents key={'TitleSceneLeftPanelContents'} />
 				)}
 			</AnimatePresence>

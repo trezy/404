@@ -9,7 +9,6 @@ import { useStore } from 'statery'
 // Local imports
 import { store } from '../../../newStore/store.js'
 import { Victory } from '../../Victory/Victory.jsx'
-import { useStore as useZustandStore } from '../../../store/react.js'
 
 
 
@@ -19,9 +18,10 @@ import { useStore as useZustandStore } from '../../../store/react.js'
  * Renders the contents of the center panel for the Play scene.
  */
 export function CenterPanelContents() {
-	const { isVictorious } = useStore(store)
-
-	const [gameManager] = useZustandStore(state => [state.gameManager])
+	const {
+		gameManager,
+		isVictorious,
+	}= useStore(store)
 
 	useEffect(() => {
 		gameManager.start()

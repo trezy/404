@@ -8,6 +8,7 @@ import {
 } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 
 
 
@@ -17,12 +18,12 @@ import PropTypes from 'prop-types'
 import styles from './Editor.module.scss'
 
 import { Notifications } from './Notifications.jsx'
+import { store } from '../../newStore/store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
 import { useDOMEvent } from '../../hooks/useDOMEvent.js'
 import { useEditorContext } from './Context/useEditorContext.js'
 import { useKeyState } from '../KeyStateContext/KeyStateContext.jsx'
 import { useRafael } from '../../hooks/useRafael.js'
-import { useStore } from '../../store/react.js'
 import { useWindowEvent } from '../../hooks/useWindowEvent.js'
 
 
@@ -806,6 +807,8 @@ export function Editor(props) {
 		showTransparencyGrid,
 	} = props
 
+	const { contentManager } = useStore(store)
+
 	const { keyState } = useKeyState()
 
 	const {
@@ -826,8 +829,6 @@ export function Editor(props) {
 		tool,
 		zoom,
 	} = useEditorContext()
-
-	const contentManager = useStore(state => state.contentManager)
 
 	const canvasRef = useRef(null)
 	const parentRef = useRef(null)

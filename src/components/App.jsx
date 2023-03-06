@@ -4,6 +4,7 @@ import {
 	useEffect,
 } from 'react'
 import { AnimatePresence } from 'framer-motion'
+import { useStore } from 'statery'
 
 
 
@@ -13,15 +14,18 @@ import { AnimatePresence } from 'framer-motion'
 import {
 	ARCHITECT,
 	LOADING_GAME,
+	MAIN_MENU,
 } from '../constants/SceneNames.js'
 import { Architect } from './scenes/Architect/Architect.jsx'
 import { executePromiseWithMinimumDuration } from '../helpers/executePromiseWithMinimumDuration.js'
+import { getCurrentScene } from '../newStore/selectors/getCurrentScene.js'
 import { ipcRenderer } from 'electron'
 import { LoadingGameScene } from './scenes/LoadingGameScene/LoadingGameScene.jsx'
 import { MainScene } from './scenes/MainScene/MainScene.jsx'
 import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
+import { pushScene } from '../newStore/helpers/pushScene.js'
+import { store } from '../newStore/store.js'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
-import { useStore } from '../store/react.js'
 import { WholePixelContainer } from './WholePixelContainer/WholePixelContainer.jsx'
 
 
@@ -39,15 +43,10 @@ const MINIMUM_DURATION = 2000
  * The main application wrapper.
  */
 export function App() {
-	const [
-		contentManager,
-		goToMainMenu,
-		scene,
-	] = useStore(state => [
-		state.contentManager,
-		state.goToMainMenu,
-		state.scene,
-	])
+	const proxyStore = useStore(store)
+	const currentScene = getCurrentScene(proxyStore)
+
+	const { contentManager } = proxyStore
 
 	useConfigWatcher()
 
@@ -60,34 +59,31 @@ export function App() {
 	}, [contentManager])
 
 	useEffect(() => {
-		if (scene === LOADING_GAME) {
+		if (currentScene === LOADING_GAME) {
 			executePromiseWithMinimumDuration(initialiseFilesystem, MINIMUM_DURATION)
-				.then(() => {
-					return goToMainMenu()
-				})
+				.then(() => pushScene(MAIN_MENU))
 				.catch(error => {
 					throw error
 				})
 		}
 	}, [
-		goToMainMenu,
 		initialiseFilesystem,
-		scene,
+		currentScene,
 	])
 
 	return (
 		<>
 			<WholePixelContainer>
 				<AnimatePresence mode={'wait'}>
-					{(scene === LOADING_GAME) && (
+					{(currentScene === LOADING_GAME) && (
 						<LoadingGameScene />
 					)}
 
-					{(scene === ARCHITECT) && (
+					{(currentScene === ARCHITECT) && (
 						<Architect key={'architect'} />
 					)}
 
-					{(![LOADING_GAME, ARCHITECT].includes(scene)) && (
+					{(![LOADING_GAME, ARCHITECT].includes(currentScene)) && (
 						<MainScene />
 					)}
 				</AnimatePresence>

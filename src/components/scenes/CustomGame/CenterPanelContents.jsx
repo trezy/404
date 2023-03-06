@@ -1,9 +1,9 @@
 // Module imports
 import {
-	useCallback,
 	useEffect,
 	useMemo,
 } from 'react'
+import { useStore } from 'statery'
 
 
 
@@ -14,37 +14,33 @@ import styles from './CenterPanelContents.module.scss'
 
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
+import { LOADING_MAP } from '../../../constants/SceneNames.js'
 import { MapCard } from './MapCard.jsx'
 import { PanelContent } from '../../Panel/PanelContent.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
+import { selectMap } from '../../../newStore/helpers/selectMap.js'
+import { store } from '../../../newStore/store.js'
 import { usePanelContext } from '../../Panel/Context/usePanelContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
 
+
+function handleMapPlay(mapID) {
+	selectMap(mapID)
+	pushScene(LOADING_MAP)
+}
 
 /**
  * Renders the contents of the center panel for the Custom Game scene.
  */
 export function CenterPanelContents() {
-	const {
-		contentManager,
-		goToLoadingMap,
-	} = useStore(state => {
-		return {
-			contentManager: state.contentManager,
-			goToLoadingMap: state.goToLoadingMap,
-		}
-	})
+	const { contentManager } = useStore(store)
 
 	const {
 		isLoading: isPanelLoading,
 		setIsLoading: setIsPanelLoading,
 	} = usePanelContext()
-
-	const handleMapPlay = useCallback(mapID => {
-		goToLoadingMap(mapID)
-	}, [goToLoadingMap])
 
 	const mappedMaps = useMemo(() => {
 		return Object

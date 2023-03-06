@@ -6,7 +6,6 @@ import PF from 'pathfinding'
 
 
 // Local imports
-import { ContentManager } from './ContentManager.js'
 import { LAYERS } from './Renderer.js'
 import { setGlobalOffset } from '../newStore/helpers/setGlobalOffset.js'
 import { TILE_SIZE } from './Tile.js'
@@ -31,8 +30,6 @@ export class MapManager {
 	#finder = new PF.AStarFinder({
 		diagonalMovement: PF.DiagonalMovement.Never,
 	})
-
-	#gameManager = null
 
 	#layerGrids = []
 
@@ -60,8 +57,10 @@ export class MapManager {
 		const nextTileset = this.#map.queue?.[this.#nextTilesetIndex]
 
 		if (nextTileset) {
+			const { gameManager } = store.state
+
 			this.#tileset = new MapManager({
-				gameManager: this.#gameManager,
+				gameManager,
 				map: this.#map.queue[this.#nextTilesetIndex],
 				parent: this,
 				shouldCenter: false,
@@ -85,22 +84,20 @@ export class MapManager {
 	 * Creates a new map.
 	 *
 	 * @param {object} options All options.
-	 * @param {import('./GameManager.js').GameManager} options.gameManager The `GameManager` this map belongs to.
 	 * @param {string} options.map The map.
 	 * @param {MapManager} options.parent The parent of the map (if this is a tileset).
 	 * @param {boolean} options.shouldCenter Whether the map should be centered on first render.
 	 */
 	constructor(options) {
 		const {
-			gameManager,
 			map,
 			parent,
 			shouldCenter = true,
 		} = options
 
-		this.#needsRecenter = shouldCenter
+		const { contentManager } = store.state
 
-		this.#gameManager = gameManager
+		this.#needsRecenter = shouldCenter
 		this.#map = map
 		this.#parent = parent
 		this.#pathfindingGrid = this.generatePFGrid()
@@ -113,9 +110,7 @@ export class MapManager {
 				.forEach(([coordinateString, tileData]) => {
 					const [x, y] = coordinateString.split('|').map(Number).map(Number)
 
-					layerGrid[y][x] = this
-						.contentManager
-						.getTile(tileData.tileID, tileData.resourcepackID)
+					layerGrid[y][x] = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
 				})
 
 			this.#layerGrids.push(layerGrid)
@@ -444,13 +439,6 @@ export class MapManager {
 	/****************************************************************************\
 	 * Public instance getters
 	\****************************************************************************/
-
-	/**
-	 * @returns {ContentManager} The game's `ContentManager`.
-	 */
-	get contentManager() {
-		return this.#gameManager.contentManager
-	}
 
 	/**
 	 * @returns {Array} An array of possible destinations.

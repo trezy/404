@@ -6,6 +6,7 @@ import {
 } from 'react'
 import { ipcRenderer } from 'electron'
 import PropTypes from 'prop-types'
+import { useStore } from 'statery'
 import { v4 as uuid } from 'uuid'
 
 
@@ -15,8 +16,8 @@ import { v4 as uuid } from 'uuid'
 // Local imports
 import { initialState } from './initialState.js'
 import { ResourcepackEditorContext } from './ResourcepackEditorContext.js'
+import { store } from '../../../newStore/store.js'
 import { useEditorContext } from '../../Editor/Context/useEditorContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
@@ -25,13 +26,13 @@ import { useStore } from '../../../store/react.js'
 export function ResourcepackEditorContextProvider(props) {
 	const { children } = props
 
+	const { contentManager } = useStore(store)
+
 	const [assets, setAssets] = useState(initialState.assets)
 	const [isExporting, setIsExporting] = useState(initialState.isExporting)
 	const [isSaving, setIsSaving] = useState(initialState.isSaving)
 	const [tiles, setTiles] = useState(initialState.tiles)
 	const [tilesetName, setTilesetName] = useState(initialState.tilesetName)
-
-	const contentManager = useStore(state => state.contentManager)
 
  	const {
 		closeAllItems,

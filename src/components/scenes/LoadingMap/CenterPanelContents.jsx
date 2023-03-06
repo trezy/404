@@ -3,6 +3,7 @@ import {
 	useEffect,
 	useMemo,
 } from 'react'
+import { useStore } from 'statery'
 
 
 
@@ -10,8 +11,9 @@ import {
 
 // Local imports
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+import { loadMap } from '../../../newStore/helpers/loadMap.js'
 import { Meter } from '../../Meter/Meter.jsx'
-import { useStore } from '../../../store/react.js'
+import { store } from '../../../newStore/store.js'
 
 
 
@@ -23,25 +25,20 @@ import { useStore } from '../../../store/react.js'
 export function CenterPanelContents() {
 	const {
 		contentManager,
-		loadMap,
 		mapID,
 		mapManager,
-	} = useStore(state => {
-		return {
-			contentManager: state.contentManager,
-			loadMap: state.loadMap,
-			mapID: state.mapID,
-			mapManager: state.mapManager,
-		}
-	})
+	} = useStore(store)
 
 	const map = useMemo(() => {
 		return contentManager.getMap(mapID)
-	}, [contentManager])
+	}, [
+		contentManager,
+		mapID,
+	])
 
 	useEffect(() => {
 		loadMap()
-	}, [loadMap])
+	}, [])
 
 	return (
 		<div>

@@ -1,5 +1,6 @@
 // Module imports
 import { AnimatePresence } from 'framer-motion'
+import { useStore } from 'statery'
 
 
 
@@ -15,8 +16,9 @@ import {
 	SAVE_SELECT,
 	SETTINGS,
 } from '../constants/SceneNames.js'
+import { getCurrentScene } from '../newStore/selectors/getCurrentScene.js'
 import { Panel } from './Panel/Panel.jsx'
-import { useStore } from '../store/react.js'
+import { store } from '../newStore/store.js'
 
 import { CenterPanelContents as CustomGameSceneCenterPanelContents } from './scenes/CustomGame/CenterPanelContents.jsx'
 import { CenterPanelContents as LoadingMapSceneCenterPanelContents } from './scenes/LoadingMap/CenterPanelContents.jsx'
@@ -61,67 +63,68 @@ const PANEL_VARIANTS = {
  * Renders the game's center panel.
  */
 export function CenterPanel() {
-	const [scene] = useStore(state => [state.scene])
+	const proxyStore = useStore(store)
+	const currentScene = getCurrentScene(proxyStore)
 
 	return (
 		<AnimatePresence mode={'wait'}>
-			{(scene === CUSTOM_GAME) && (
+			{(currentScene === CUSTOM_GAME) && (
 				<Panel
-					key={'CustomGameSceneCenterPanelContents'}
+					key={`${CUSTOM_GAME}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<CustomGameSceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === LOADING_MAP) && (
+			{(currentScene === LOADING_MAP) && (
 				<Panel
-					key={'LoadingMapSceneCenterPanelContents'}
+					key={`${LOADING_MAP}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<LoadingMapSceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === MAP_SELECT) && (
+			{(currentScene === MAP_SELECT) && (
 				<Panel
-					key={'MapSelectSceneCenterPanelContents'}
+					key={`${MAP_SELECT}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<MapSelectSceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === PLAY) && (
+			{(currentScene === PLAY) && (
 				<Panel
-					key={'PlaySceneCenterPanelContents'}
+					key={`${PLAY}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<PlaySceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === SAVE_SELECT) && (
+			{(currentScene === SAVE_SELECT) && (
 				<Panel
-					key={'SaveSelectSceneCenterPanelContents'}
+					key={`${SAVE_SELECT}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<SaveSelectSceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === SETTINGS) && (
+			{(currentScene === SETTINGS) && (
 				<Panel
-					key={'SettingsSceneCenterPanelContents'}
+					key={`${SETTINGS}SceneCenterPanelContents`}
 					columnSpan={3}
 					variants={PANEL_VARIANTS}>
 					<SettingsSceneCenterPanelContents />
 				</Panel>
 			)}
 
-			{(scene === MAIN_MENU) && (
+			{(currentScene === MAIN_MENU) && (
 				<Panel
-					key={'TitleSceneCenterPanelContents'}
+					key={`${MAIN_MENU}SceneCenterPanelContents`}
 					columnSpan={3}
 					isCentered
 					variants={PANEL_VARIANTS}>

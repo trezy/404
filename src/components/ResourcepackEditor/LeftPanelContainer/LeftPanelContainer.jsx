@@ -14,14 +14,19 @@ import { AssetsPanel } from '../AssetsPanel.jsx'
 import { Button } from '../../Button.jsx'
 import { ExportModal } from '../ExportModal/ExportModal.jsx'
 import { LoadResourcepackModal } from '../LoadResourcepackModal/LoadResourcepackModal.jsx'
+import { MAIN_MENU } from '../../../constants/SceneNames.js'
 import { PanelContainer } from '../../PanelContainer/PanelContainer.jsx'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { TilesPanel } from '../TilesPanel.jsx'
 import { useResourcepackEditorContext } from '../Context/useResourcepackEditorContext.js'
-import { useStore } from '../../../store/react.js'
 
 
 
 
+
+function handleMainMenuClick() {
+	pushScene(MAIN_MENU)
+}
 
 /**
  * Renders the left side of the map editor.
@@ -32,8 +37,6 @@ export function LeftPanelContainer() {
 		isExporting,
 		isSaving,
 	} = useResourcepackEditorContext()
-
-	const goToMainMenu = useStore(state => state.goToMainMenu)
 
 	const leftPanels = useMemo(() => {
 		return [
@@ -50,8 +53,6 @@ export function LeftPanelContainer() {
 
 	const handleLoadResourcepackClick = useCallback(() => setShowLoadResourcepackModal(true), [setShowLoadResourcepackModal])
 	const handleLoadResourcepackModalClose = useCallback(() => setShowLoadResourcepackModal(false), [setShowLoadResourcepackModal])
-
-	const handleMainMenuClick = useCallback(() => goToMainMenu(), [goToMainMenu])
 
 	const Menu = useMemo(() => {
 		return (

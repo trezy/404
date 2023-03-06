@@ -1,42 +1,34 @@
-// Module imports
-import { useCallback } from 'react'
-
-
-
-
-
 // Local imports
+import {
+	ARCHITECT,
+	CUSTOM_GAME,
+	SETTINGS,
+} from '../../../constants/SceneNames.js'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { PanelMenu } from '../../Panel/PanelMenu.jsx'
-import { useStore } from '../../../store/react.js'
+import { pushScene } from '../../../newStore/helpers/pushScene.js'
 
 
 
 
+
+function handleArchitectClick() {
+	pushScene(ARCHITECT)
+}
+
+function handleCustomGameClick() {
+	pushScene(CUSTOM_GAME)
+}
+
+function handleSettingsClick() {
+	pushScene(SETTINGS)
+}
 
 /**
  * Renders the contents of the left panel for the Title scene.
  */
 export function LeftPanelContents() {
-  const [
-		goToArchitect,
-		goToCustomGame,
-		goToSettings,
-	] = useStore(state => [
-    state.goToArchitect,
-    state.goToCustomGame,
-    state.goToSettings,
-  ])
-
-	const handleCustomGameClick = useCallback(() => {
-		goToCustomGame()
-	}, [goToCustomGame])
-
-	const handleSettingsClick = useCallback(() => {
-		goToSettings()
-	}, [goToSettings])
-
 	return (
 		<PanelMenu>
 			<ButtonStack>
@@ -44,7 +36,7 @@ export function LeftPanelContents() {
 					{'Custom Game'}
 				</Button>
 
-				<Button onClick={goToArchitect}>
+				<Button onClick={handleArchitectClick}>
 					{'Architect'}
 				</Button>
 
