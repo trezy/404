@@ -4412,6 +4412,7 @@ __metadata:
     eslint-plugin-unused-imports: ^2.0.0
     framer-motion: ^8.4.3
     local-fonts-manager: ^0.9.1
+    ngraph.graph: ^20.0.1
     node-loader: ^2.0.0
     numeral: ^2.0.6
     pathfinding: ^0.4.18
@@ -8277,6 +8278,22 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"ngraph.events@npm:^1.2.1":
+  version: 1.2.2
+  resolution: "ngraph.events@npm:1.2.2"
+  checksum: 358d312ebdf8eeddfac9741938f38cb7fe488b402641900613f632fe81fe63da92543db050c659e5a7dc7c28750b1109ce4d78cc9d68e66d732fba7128efbbc2
+  languageName: node
+  linkType: hard
+
+"ngraph.graph@npm:^20.0.1":
+  version: 20.0.1
+  resolution: "ngraph.graph@npm:20.0.1"
+  dependencies:
+    ngraph.events: ^1.2.1
+  checksum: 16e42c4c4fdabf8243b42291c8c5bf5baa0614773d62edf911b86ef2aa9f60a38e107a9d1bb97ab6feac2ac514c8e04a0aa24d1992502b21420fdd5f563c96cb
   languageName: node
   linkType: hard
 

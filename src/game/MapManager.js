@@ -1,4 +1,5 @@
 // Module imports
+import createGraph from 'ngraph.graph'
 import PF from 'pathfinding'
 
 
@@ -31,6 +32,8 @@ export class MapManager {
 		diagonalMovement: PF.DiagonalMovement.Never,
 	})
 
+	#graph = null
+
 	#layerGrids = []
 
 	#needsRecenter = true
@@ -53,6 +56,43 @@ export class MapManager {
 	 * Private instance methods
 	\****************************************************************************/
 
+	#generateGraph() {
+		const { contentManager } = store.state
+
+		this.#graph = createGraph()
+
+		this.#map.tiles.forEach(layer => {
+			Object
+				.entries(layer)
+				.forEach(([coordinateString, tileData]) => {
+					const [x, y] = coordinateString.split('|').map(Number).map(Number)
+
+					const tileTypeData = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
+
+					if (this.#graph.hasNode(coordinateString)) {
+						const node = this.#graph.getNode(coordinateString)
+
+						if (tileTypeData.isBlocking) {
+							node.data.isBlocking = true
+							node.data.isTraversable = false
+						} else if (tileTypeData.isTraversable && !node.data.isBlocking) {
+							node.data.isTraversable = tileTypeData.isTraversable
+						}
+					} else {
+						this.#graph.addNode(coordinateString, {
+							isBlocking: tileTypeData.isBlocking,
+							isTraversable: tileTypeData.isTraversable,
+							renderStack: [tileTypeData.image],
+							x,
+							y,
+						})
+					}
+				})
+		})
+
+		this.#updateGraphLinks()
+	}
+
 	#nextTileset() {
 		const nextTileset = this.#map.queue?.[this.#nextTilesetIndex]
 
@@ -70,6 +110,45 @@ export class MapManager {
 		} else {
 			this.#tileset = null
 		}
+	}
+
+	#updateGraphLinks() {
+		this.#graph.forEachNode(node => {
+			const {
+				isBlocking,
+				isTraversable,
+				x,
+				y,
+			} = node.data
+
+			if (isTraversable) {
+				const adjacentNodeIDs = [
+					// east
+					`${x + 1}|${y}`,
+
+					// west
+					`${x - 1}|${y}`,
+
+					// south
+					`${x}|${y + 1}`,
+
+					// north
+					`${x}|${y - 1}`,
+				]
+
+				adjacentNodeIDs.forEach(adjacentNodeID => {
+					const adjacentNode = this.#graph.getNode(adjacentNodeID)
+
+					if (adjacentNode?.data.isTraversable) {
+						this.#graph.addLink(node.id, adjacentNodeID)
+					}
+				})
+			} else if (isBlocking) {
+				this.#graph.forEachLinkedNode(node.id, (linkedNode, link) =>{
+					this.#graph.removeLink(link)
+				})
+			}
+		})
 	}
 
 
@@ -101,6 +180,8 @@ export class MapManager {
 		this.#map = map
 		this.#parent = parent
 		this.#pathfindingGrid = this.generatePFGrid()
+
+		this.#generateGraph()
 
 		map.tiles.forEach(layerData => {
 			const layerGrid = this.generateGrid()
