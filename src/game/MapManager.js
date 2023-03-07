@@ -1,4 +1,5 @@
 // Module imports
+import { aStar } from 'ngraph.path'
 import createGraph from 'ngraph.graph'
 import PF from 'pathfinding'
 
@@ -232,26 +233,14 @@ export class MapManager {
 	\****************************************************************************/
 
 	findPath(fromX, fromY, toX, toY) {
-		const [
-			fromPFX,
-			fromPFY,
-		] = this.getPFCellCoordinates(fromX, fromY)
-		const [
-			toPFX,
-			toPFY,
-		] = this.getPFCellCoordinates(toX, toY)
+		if (this.#graph.hasNode(`${toX}|${toY}`)) {
+			return aStar(this.#graph).find(
+				`${fromX}|${fromY}`,
+				`${toX}|${toY}`,
+			)
+		}
 
-		const grid = this.#pathfindingGrid.clone()
-
-		const path = this.#finder.findPath(
-			fromPFX,
-			fromPFY,
-			toPFX,
-			toPFY,
-			grid,
-		)
-
-		return path.map(([x, y]) => this.getCellFromPFCoordinates(x, y))
+		return null
 	}
 
 	generateGrid() {

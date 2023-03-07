@@ -139,7 +139,7 @@ export class Entity {
 			),
 		]
 
-		const viablePaths = paths.filter(path => path.length)
+		const viablePaths = paths.filter(path => path?.length)
 
 		const selectedPathIndex = Math.floor(Math.random() * viablePaths.length)
 		const selectedPath = viablePaths[selectedPathIndex]
@@ -189,7 +189,7 @@ export class Entity {
 			this.#path = this.#getRandomNearbyTile()
 		}
 
-		this.#destination = this.#path?.shift()
+		this.#destination = this.#path?.pop()
 	}
 
 	/**
@@ -273,20 +273,20 @@ export class Entity {
 			const xSpeed = this.#speed / TILE_SIZE.width
 			const ySpeed = this.#speed / TILE_SIZE.height
 
-			if (this.#position.x > this.#destination[0]) {
+			if (this.#position.x > this.#destination.data.x) {
 				this.#position.x -= xSpeed
 				this.#direction = 'left'
-			} else if (this.#position.x < this.#destination[0]) {
+			} else if (this.#position.x < this.#destination.data.x) {
 				this.#position.x += xSpeed
 				this.#direction = 'right'
-			} else if (this.#position.y > this.#destination[1]) {
+			} else if (this.#position.y > this.#destination.data.y) {
 				this.#position.y -= ySpeed
 				this.#direction = 'up'
-			} else if (this.#position.y < this.#destination[1]) {
+			} else if (this.#position.y < this.#destination.data.y) {
 				this.#position.y += ySpeed
 				this.#direction = 'down'
 			} else if (this.#path?.length) {
-				this.#destination = this.#path.shift()
+				this.#destination = this.#path.pop()
 			} else {
 				this.#destination = null
 				this.#path = null
