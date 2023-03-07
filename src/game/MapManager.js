@@ -1,7 +1,6 @@
 // Module imports
 import { aStar } from 'ngraph.path'
 import createGraph from 'ngraph.graph'
-import PF from 'pathfinding'
 
 
 
@@ -17,33 +16,18 @@ import { store } from '../newStore/store.js'
 
 
 
-// Constants
-const MAP_PADDING = 40
-
-
-
-
-
 export class MapManager {
 	/****************************************************************************\
 	 * Private instance properties
 	\****************************************************************************/
 
-	#finder = new PF.AStarFinder({
-		diagonalMovement: PF.DiagonalMovement.Never,
-	})
-
 	#graph = null
-
-	#layerGrids = []
 
 	#needsRecenter = true
 
 	#map = null
 
 	#parent = null
-
-	#pathfindingGrid = null
 
 	#tileset = null
 
@@ -81,9 +65,11 @@ export class MapManager {
 						}
 					} else {
 						this.#graph.addNode(coordinateString, {
+							height: tileTypeData.height,
 							isBlocking: tileTypeData.isBlocking,
 							isTraversable: tileTypeData.isTraversable,
 							renderStack: [tileTypeData.image],
+							width: tileTypeData.width,
 							x,
 							y,
 						})
@@ -165,8 +151,8 @@ export class MapManager {
 	 *
 	 * @param {object} options All options.
 	 * @param {string} options.map The map.
-	 * @param {MapManager} options.parent The parent of the map (if this is a tileset).
-	 * @param {boolean} options.shouldCenter Whether the map should be centered on first render.
+	 * @param {MapManager} [options.parent] The parent of the map (if this is a tileset).
+	 * @param {boolean} [options.shouldCenter = true] Whether the map should be centered on first render.
 	 */
 	constructor(options) {
 		const {
@@ -175,49 +161,11 @@ export class MapManager {
 			shouldCenter = true,
 		} = options
 
-		const { contentManager } = store.state
-
 		this.#needsRecenter = shouldCenter
 		this.#map = map
 		this.#parent = parent
-		this.#pathfindingGrid = this.generatePFGrid()
 
 		this.#generateGraph()
-
-		map.tiles.forEach(layerData => {
-			const layerGrid = this.generateGrid()
-
-			Object
-				.entries(layerData)
-				.forEach(([coordinateString, tileData]) => {
-					const [x, y] = coordinateString.split('|').map(Number).map(Number)
-
-					layerGrid[y][x] = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
-				})
-
-			this.#layerGrids.push(layerGrid)
-		})
-
-		let y = 0
-
-		while (y < this.height) {
-			let x = 0
-
-			while (x < this.width) {
-				const coordinateString = `${x}|${y}`
-				const cell = map.pfgrid[coordinateString]
-
-				if (cell?.isTraversable) {
-					this.makeCellTraversable(x, y)
-				} else {
-					this.makeCellUntraversable(x, y)
-				}
-
-				x += 1
-			}
-
-			y += 1
-		}
 
 		if (!this.isTileset) {
 			this.#nextTileset()
@@ -243,95 +191,8 @@ export class MapManager {
 		return null
 	}
 
-	generateGrid() {
-		return Array(this.height)
-			.fill(null)
-			.map(() => {
-				return Array(this.width).fill(null)
-			})
-	}
-
-	generatePFGrid() {
-		if (this.isTileset) {
-			return new PF.Grid(this.width, this.height)
-		}
-
-		const pfGridHeight = this.height + MAP_PADDING
-		const pfGridWidth = this.width + MAP_PADDING
-
-		const pfGrid = new PF.Grid(pfGridWidth, pfGridHeight)
-
-		let xIndex = 0
-
-		while (xIndex < pfGridWidth) {
-			let yIndex = 0
-
-			while (yIndex < pfGridHeight) {
-				pfGrid.setWalkableAt(xIndex, yIndex, false)
-
-				yIndex += 1
-			}
-
-			xIndex += 1
-		}
-
-		return pfGrid
-	}
-
-	getCellFromPFCoordinates(x, y) {
-		return [
-			x - Math.ceil(MAP_PADDING / 2),
-			y - Math.ceil(MAP_PADDING / 2),
-		]
-	}
-
-	getOccupiedCoordinates() {
-		return this.#layerGrids.reduce((accumulator, layerGrid) => {
-			layerGrid.forEach((row, y) => {
-				row.forEach((tileData, x) => {
-					if (tileData) {
-						accumulator[`${x}|${y}`] = true
-					}
-				})
-			})
-
-			return accumulator
-		}, {})
-	}
-
-	getPFCellCoordinates(x, y) {
-		if (this.isTileset) {
-			return [x, y]
-		}
-
-		return [
-			x + Math.ceil(MAP_PADDING / 2),
-			y + Math.ceil(MAP_PADDING / 2),
-		]
-	}
-
-	makeCellTraversable(x, y) {
-		const [
-			cellX,
-			cellY,
-		] = this.getPFCellCoordinates(x, y)
-		this.#pathfindingGrid.setWalkableAt(cellX, cellY, true)
-	}
-
-	makeCellUntraversable(x, y) {
-		const [
-			cellX,
-			cellY,
-		] = this.getPFCellCoordinates(x, y)
-		this.#pathfindingGrid.setWalkableAt(cellX, cellY, false)
-	}
-
 	placeTileset() {
 		const { cursorOffset } = store.state
-
-		const layerCount = Math.max(this.#layerGrids.length, this.#tileset.layerGrids.length)
-
-		const occupiedCoordinates = this.#tileset.getOccupiedCoordinates()
 
 		let canPlace = true
 
@@ -376,61 +237,6 @@ export class MapManager {
 		})
 
 		this.#updateGraphLinks()
-
-		let layerIndex = 0
-		while (layerIndex < layerCount) {
-			let targetLayerGrid = this.#layerGrids[layerIndex]
-
-			if (!targetLayerGrid) {
-				targetLayerGrid = this.generateGrid()
-				this.#layerGrids.push(targetLayerGrid)
-			}
-
-			const sourceLayerGrid = this.#tileset.layerGrids[layerIndex]
-
-			if (sourceLayerGrid) {
-				Object.keys(occupiedCoordinates).forEach(coordinateString => {
-					const [x, y] = coordinateString.split('|').map(Number)
-
-					const targetY = y + cursorOffset.y
-					const targetX = x + cursorOffset.x
-
-					const tileData = sourceLayerGrid[y][x]
-
-					if (tileData) {
-						targetLayerGrid[targetY][targetX] = tileData
-					}
-				})
-			} else {
-				Object.keys(occupiedCoordinates).forEach(coordinateString => {
-					const [x, y] = coordinateString.split('|').map(Number)
-
-					const targetX = x + cursorOffset.x
-					const targetY = y + cursorOffset.y
-
-					targetLayerGrid[targetY][targetX] = null
-				})
-			}
-
-			layerIndex += 1
-		}
-
-		Object.keys(occupiedCoordinates).forEach(coordinateString => {
-			const [x, y] = coordinateString.split('|').map(Number)
-
-			const targetX = x + cursorOffset.x
-			const targetY = y + cursorOffset.y
-
-			const [
-				targetPFCellX,
-				targetPFCellY,
-			] = this.getPFCellCoordinates(targetX, targetY)
-
-			const node = this.#tileset.pathfindingGrid.nodes[y][x]
-
-			this.#pathfindingGrid.setWalkableAt(targetPFCellX, targetPFCellY, node.walkable)
-		})
-
 		this.#nextTileset()
 	}
 
@@ -462,26 +268,24 @@ export class MapManager {
 
 		renderer.layer = LAYERS.foreground
 
-		const occupiedCoordinates = this.getOccupiedCoordinates()
+		this.#graph.forEachNode(node => {
+			const {
+				height,
+				renderStack,
+				width,
+				x,
+				y,
+			} = node.data
 
-		this.#layerGrids.forEach(layerGrid => {
-			Object.keys(occupiedCoordinates).forEach(coordinateString => {
-				const [x, y] = coordinateString.split('|').map(Number)
+			const targetX = x + offset.x
+			const targetY = y + offset.y
 
-				const tileData = layerGrid[y]?.[x]
-
-				if (!tileData) {
-					return
-				}
-
-				const targetX = x + offset.x
-				const targetY = y + offset.y
-
+			renderStack.forEach(image => {
 				renderer.drawImage({
-					image: tileData.image,
+					image,
 					source: {
-						height: tileData.image.height,
-						width: tileData.image.width,
+						height: image.height,
+						width: image.width,
 						x: 0,
 						y: 0,
 					},
@@ -490,34 +294,36 @@ export class MapManager {
 							x: targetX,
 							y: targetY,
 						},
-						height: TILE_SIZE.height,
-						width: TILE_SIZE.width,
+						height,
+						width,
 					},
 				})
 			})
 		})
 
 		if (this.isTileset) {
-			Object.keys(occupiedCoordinates).forEach(coordinateString => {
-				const [x, y] = coordinateString.split('|').map(Number)
+			this.#graph.forEachNode(node => {
+				const {
+					height,
+					width,
+					x,
+					y,
+				} = node.data
 
 				const targetX = x + cursorOffset.x
 				const targetY = y + cursorOffset.y
 
-				const canPlace = this.#parent.layerGrids.every(layerGrid => {
-					const cellData = layerGrid[targetY]?.[targetX]
-					return !(cellData?.isBlocking || cellData?.isTraversable)
-				})
+				const targetNode = this.#parent.graph.getNode(`${targetX}|${targetY}`)
 
-				if (!canPlace) {
+				if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
 					renderer.setColor(null, 'red')
 					renderer.drawRectangle({
 						cell: {
 							x: targetX,
 							y: targetY,
 						},
-						height: TILE_SIZE.height,
-						width: TILE_SIZE.width,
+						height,
+						width,
 					})
 				}
 			})
@@ -546,13 +352,6 @@ export class MapManager {
 	}
 
 	/**
-	 * @returns {PF.AStarFinder} The map's pathfinder.
-	 */
-	get finder() {
-		return this.#finder
-	}
-
-	/**
 	 * @returns {import('ngraph.graph').Graph} The map's graph.
 	 */
 	get graph() {
@@ -574,13 +373,6 @@ export class MapManager {
 	}
 
 	/**
-	 * @returns {Array} An array of layer grids.
-	 */
-	get layerGrids() {
-		return this.#layerGrids
-	}
-
-	/**
 	 * @returns {Array} An array of map layers.
 	 */
 	get layers() {
@@ -592,13 +384,6 @@ export class MapManager {
 	 */
 	get name() {
 		return this.#map.name
-	}
-
-	/**
-	 * @returns {PF.Grid} The pathfinding grid.
-	 */
-	get pathfindingGrid() {
-		return this.#pathfindingGrid
 	}
 
 	/**
