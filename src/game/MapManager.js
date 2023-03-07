@@ -344,21 +344,49 @@ export class MapManager {
 
 		const occupiedCoordinates = this.#tileset.getOccupiedCoordinates()
 
-		const canPlace = Object.keys(occupiedCoordinates).every(coordinateString => {
-			const [x, y] = coordinateString.split('|').map(Number)
+		let canPlace = true
+
+		this.#tileset.graph.forEachNode(node => {
+			if (!canPlace) {
+				return
+			}
+
+			const {
+				x,
+				y,
+			} = node.data
 
 			const targetX = x + cursorOffset.x
 			const targetY = y + cursorOffset.y
 
-			return this.#layerGrids.every(layerGrid => {
-				const cellData = layerGrid[targetY]?.[targetX]
-				return !(cellData?.isBlocking || cellData?.isTraversable)
-			})
+			const targetNode = this.#graph.getNode(`${targetX}|${targetY}`)
+
+			if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
+				canPlace = false
+			}
 		})
 
 		if (!canPlace) {
 			return
 		}
+
+		this.#tileset.graph.forEachNode(node => {
+			const {
+				x,
+				y,
+			} = node.data
+
+			const targetX = x + cursorOffset.x
+			const targetY = y + cursorOffset.y
+
+			this.#graph.addNode(`${targetX}|${targetY}`, {
+				...node.data,
+				x: targetX,
+				y: targetY,
+			})
+		})
+
+		this.#updateGraphLinks()
 
 		let layerIndex = 0
 		while (layerIndex < layerCount) {
@@ -533,6 +561,13 @@ export class MapManager {
 	 */
 	get finder() {
 		return this.#finder
+	}
+
+	/**
+	 * @returns {import('ngraph.graph').Graph} The map's graph.
+	 */
+	get graph() {
+		return this.#graph
 	}
 
 	/**
