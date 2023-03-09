@@ -199,6 +199,35 @@ export class Renderer {
 	}
 
 	/**
+	 * Draw a path to the shadow canvas.
+	 *
+	 * @param {object} config Configuration for the draw operation.
+	 * @param {object[]} config.points Path points.
+	 */
+	drawPath(config) {
+		const { points } = config
+
+		this.queue[this.layer].push(['beginPath'])
+
+		points.forEach((point, index) => {
+			const {
+				x,
+				y,
+			} = point
+
+			let operation = 'lineTo'
+
+			if (index === 0) {
+				operation = 'moveTo'
+			}
+
+			this.queue[this.layer].push([operation, x, y])
+		})
+
+		this.queue[this.layer].push(['stroke'])
+	}
+
+	/**
 	 * Draw a rectangle to the shadow canvas.
 	 *
 	 * @param {object} config Configuration for the draw operation.
@@ -346,6 +375,33 @@ export class Renderer {
 	}
 
 	/**
+	 * Sets the line cap style for draw operations.
+	 *
+	 * @param {'butt' | 'round' | 'square'} lineCapStyle The line cap style to be set.
+	 */
+	setLineCap(lineCapStyle) {
+		this.queue[this.layer].push(['lineCap', lineCapStyle])
+	}
+
+	/**
+	 * Sets the line dash style for draw operations.
+	 *
+	 * @param {number[]} lineDashStyle The line dash style to be set.
+	 */
+	setLineDash(lineDashStyle) {
+		this.queue[this.layer].push(['setLineDash', lineDashStyle])
+	}
+
+	/**
+	 * Sets the width of lines for draw operations.
+	 *
+	 * @param {number} width The width (in pixels) to be set.
+	 */
+	setLineWidth(width) {
+		this.queue[this.layer].push(['lineWidth', width])
+	}
+
+	/**
 	 * Translate the anchor point for draw operations. Useful for shifting to a relative position before performing a large number of draw operations.
 	 *
 	 * @param {number} x The number of pixels to shift the canvas horizontally.
@@ -396,8 +452,9 @@ export class Renderer {
 					context.fillStyle = task[2]
 					break
 
+				case 'lineCap':
 				case 'lineWidth':
-					context.lineWidth = task[1]
+					context[call] = task[1]
 					break
 
 				default:
