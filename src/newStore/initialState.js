@@ -60,6 +60,9 @@ export const initialState = {
 	/** @type {string[]} */
 	sceneHistory: [LOADING_GAME],
 
+	/** @type {string} */
+	currentSettingsPanel: 'accessibility',
+
 	/** @type {number} */
 	time: 0,
 

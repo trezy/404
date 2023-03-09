@@ -1,5 +1,6 @@
 // Module imports
 import { AnimatePresence } from 'framer-motion'
+import { useStore } from 'statery'
 
 
 
@@ -10,7 +11,7 @@ import { AccessibilitySettings } from './AccessibilitySettings.jsx'
 import { ControlsSettings } from './ControlsSettings.jsx'
 import { GraphicsSettings } from './GraphicsSettings.jsx'
 import { SoundSettings } from './SoundSettings.jsx'
-import { useStore } from '../../../store/react.js'
+import { store } from '../../../newStore/store.js'
 
 
 
@@ -57,31 +58,31 @@ const VARIANTS = {
  * Renders the contents of the center panel for the Settings scene.
  */
 export function CenterPanelContents() {
-	const [settingsPanel] = useStore(state => [state.settingsPanel])
+	const { currentSettingsPanel } = useStore(store)
 
 	return (
 		<AnimatePresence
 			initial={false}
 			mode={'wait'}>
-			{(settingsPanel === 'accessibility') && (
+			{(currentSettingsPanel === 'accessibility') && (
 				<AccessibilitySettings
 					key={'accessibility'}
 					variants={VARIANTS} />
 			)}
 
-			{(settingsPanel === 'controls') && (
+			{(currentSettingsPanel === 'controls') && (
 				<ControlsSettings
 					key={'controls'}
 					variants={VARIANTS} />
 				)}
 
-			{(settingsPanel === 'graphics') && (
+			{(currentSettingsPanel === 'graphics') && (
 				<GraphicsSettings
 					key={'graphics'}
 					variants={VARIANTS} />
 			)}
 
-			{(settingsPanel === 'sound') && (
+			{(currentSettingsPanel === 'sound') && (
 				<SoundSettings
 					key={'sound'}
 					variants={VARIANTS} />
