@@ -50,7 +50,7 @@ export class MapManager {
 			Object
 				.entries(layer)
 				.forEach(([coordinateString, tileData]) => {
-					const [x, y] = coordinateString.split('|').map(Number).map(Number)
+					const [x, y] = coordinateString.split('|').map(Number)
 
 					const tileTypeData = contentManager.getTile(tileData.tileID, tileData.resourcepackID)
 
