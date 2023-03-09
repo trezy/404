@@ -100,8 +100,8 @@ function translateMap(mapData) {
 
 	const newMap = {
 		dimensions: {
-			height: height + 1,
-			width: width + 1,
+			height,
+			width,
 		},
 		tiles: mapData.layers.map(layer => {
 			return Object.entries(layer).reduce((accumulator, [coordinateString, cellData]) => {
