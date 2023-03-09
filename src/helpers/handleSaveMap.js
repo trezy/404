@@ -103,15 +103,6 @@ function translateMap(mapData) {
 			height: height + 1,
 			width: width + 1,
 		},
-		pfgrid: Object.entries(mapData.pfgrid).reduce((accumulator, [coordinateString, cellData]) => {
-			const [x, y] = coordinateString
-				.split('|')
-				.map(Number)
-
-			accumulator[`${x - adjustmentX}|${y - adjustmentY}`] = cellData
-
-			return accumulator
-		}, {}),
 		tiles: mapData.layers.map(layer => {
 			return Object.entries(layer).reduce((accumulator, [coordinateString, cellData]) => {
 				const [x, y] = coordinateString

@@ -100,15 +100,18 @@ export const closeMap = mapID => {
 }
 
 export const createMapLike = (mapData = {}) => {
-	return {
+	const mapLike = {
 		dimensions: mapData.dimensions || {
 			height: 0,
 			width: 0,
 		},
 		id: mapData.id || uuid(),
 		layers: mapData.tiles || [],
-		pfgrid: mapData.pfgrid || {},
 	}
+
+	mapLike.pfgrid = generatePFGridForMap(mapLike)
+
+	return mapLike
 }
 
 export const createMap = (mapData = {}) => {
