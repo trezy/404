@@ -102,7 +102,18 @@ export function NavGraphContextProvider(props) {
 
 	const { controlsManager } = useStore(store)
 
-	const [axes, setAxes] = useState({})
+	const [axes, setAxes] = useState({
+		x: {
+			direction: 0,
+			isActivated: false,
+			isHandled: true,
+		},
+		y: {
+			direction: 0,
+			isActivated: false,
+			isHandled: true,
+		},
+	})
 	const [currentTargetNodeID, setCurrentTargetNodeID] = useState(null)
 	const [gamepadUpdate, setGamepadUpdate] = useState({})
 	const [graph] = useState(createGraph())
@@ -290,13 +301,14 @@ export function NavGraphContextProvider(props) {
 		} = event
 
 		const absoluteState = Math.abs(state)
-		const axisIsActivated = axes[index]?.isActivated
+		const axisKey = [0, 2].includes(index) ? 'x' : 'y'
+		const axisIsActivated = axes[axisKey]?.isActivated
 
 		if (!axisIsActivated && (absoluteState > 0.5)) {
 			setAxes(previousState => {
 				return {
 					...previousState,
-					[index]: {
+					[axisKey]: {
 						direction: Math.sign(state),
 						isActivated: true,
 						isHandled: false,
@@ -307,7 +319,7 @@ export function NavGraphContextProvider(props) {
 			setAxes(previousState => {
 				return {
 					...previousState,
-					[index]: {
+					[axisKey]: {
 						isActivated: false,
 						isHandled: false,
 					},
@@ -325,22 +337,85 @@ export function NavGraphContextProvider(props) {
 		const { index } = event
 
 		if (index === 0) {
-			activateNode(currentTargetNodeID)
+			return activateNode(currentTargetNodeID)
+		}
+
+		let axis = null
+		let direction = null
+
+		// D-pad Up
+		if (index === 12) {
+			axis = 'y'
+			direction = -1
+
+		// D-pad Down
+		} else if (index === 13) {
+			axis = 'y'
+			direction = 1
+
+		// D-pad Left
+		} else if (index === 14) {
+			axis = 'x'
+			direction = -1
+
+		// D-pad Right
+		} else if (index === 15) {
+			axis = 'x'
+			direction = 1
+		}
+
+		if (axis && direction) {
+			setAxes(previousState => ({
+				...previousState,
+				[axis]: {
+					direction,
+					isActivated: true,
+					isHandled: false,
+				},
+			}))
 		}
 	}, [
 		activateNode,
 		currentTargetNodeID,
 		graph,
+		setAxes,
 	])
+
+	const handleButtonReleased = useCallback(event => {
+		const { index } = event
+
+		let axis = null
+
+		// D-pad Up/Down
+		if ([12, 13].includes(index)) {
+			axis = 'x'
+
+		// D-pad Right/Left
+		} else if ([14, 15].includes(index)) {
+			axis = 'y'
+		}
+
+		if (axis) {
+			setAxes(previousState => ({
+				...previousState,
+				[axis]: {
+					isActivated: false,
+					isHandled: false,
+				},
+			}))
+		}
+	}, [setAxes])
 
 	const handleGamepadChange = useCallback(() => setGamepadUpdate({}), [setGamepadUpdate])
 
 	const bindGamepadEvents = useCallback(gamepad => {
 		gamepad.on('button pressed', handleButtonPressed)
+		gamepad.on('button released', handleButtonReleased)
 		gamepad.on('axis changed', handleAxisChanged)
 	}, [
 		handleAxisChanged,
 		handleButtonPressed,
+		handleButtonReleased,
 	])
 
 	const unbindGamepadEvents = useCallback(gamepad => {
@@ -398,7 +473,7 @@ export function NavGraphContextProvider(props) {
 	useLayoutEffect(() => {
 		Object
 			.entries(axes)
-			.forEach(([index, state]) => {
+			.forEach(([axisKey, state]) => {
 				const {
 					direction,
 					isActivated,
@@ -415,7 +490,7 @@ export function NavGraphContextProvider(props) {
 							const boundingRect = node.data.targetRef.current.getBoundingClientRect()
 
 							// Horizontal axis
-							if (['0', '2'].includes(index)) {
+							if (axisKey === 'x') {
 								// Moving right
 								if (direction === 1) {
 									return currentNodeBoundingRect.left < boundingRect.left
@@ -426,7 +501,7 @@ export function NavGraphContextProvider(props) {
 							}
 
 							// Vertical axis
-							if (['1', '3'].includes(index)) {
+							if (axisKey === 'y') {
 								// Moving down
 								if (direction === 1) {
 									return currentNodeBoundingRect.top < boundingRect.top
@@ -454,8 +529,8 @@ export function NavGraphContextProvider(props) {
 					setAxes(previousState => {
 						return {
 							...previousState,
-							[index]: {
-								...previousState[index],
+							[axisKey]: {
+								...previousState[axisKey],
 								isHandled: true,
 							},
 						}
