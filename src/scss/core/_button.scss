@@ -47,6 +47,10 @@ button {
 		width: 100%;
 	}
 
+	&.is-gamepad-focused {
+		background-color: var(--palette-yellow);
+	}
+
 	&.is-negative {
 		background-color: hsl(var(--palette-red-hsl));
 		color: var(--palette-white);

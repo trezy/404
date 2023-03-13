@@ -23,6 +23,7 @@ import { ipcRenderer } from 'electron'
 import { LoadingGameScene } from './scenes/LoadingGameScene/LoadingGameScene.jsx'
 import { MainScene } from './scenes/MainScene/MainScene.jsx'
 import { ModalPortal } from './ModalPortal/ModalPortal.jsx'
+import { NavGraphContextProvider } from './NavGraph/NavGraphContextProvider.jsx'
 import { pushScene } from '../newStore/helpers/pushScene.js'
 import { store } from '../newStore/store.js'
 import { useConfigWatcher } from '../hooks/useConfigWatcher.js'
@@ -73,21 +74,23 @@ export function App() {
 
 	return (
 		<>
-			<WholePixelContainer>
-				<AnimatePresence mode={'wait'}>
-					{(currentScene === LOADING_GAME) && (
-						<LoadingGameScene />
-					)}
+			<NavGraphContextProvider>
+				<WholePixelContainer>
+					<AnimatePresence mode={'wait'}>
+						{(currentScene === LOADING_GAME) && (
+							<LoadingGameScene />
+						)}
 
-					{(currentScene === ARCHITECT) && (
-						<Architect key={'architect'} />
-					)}
+						{(currentScene === ARCHITECT) && (
+							<Architect key={'architect'} />
+						)}
 
-					{(![LOADING_GAME, ARCHITECT].includes(currentScene)) && (
-						<MainScene />
-					)}
-				</AnimatePresence>
-			</WholePixelContainer>
+						{(![LOADING_GAME, ARCHITECT].includes(currentScene)) && (
+							<MainScene />
+						)}
+					</AnimatePresence>
+				</WholePixelContainer>
+			</NavGraphContextProvider>
 
 			<ModalPortal />
 		</>

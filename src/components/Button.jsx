@@ -1,8 +1,11 @@
 // Module imports
+import {
+	forwardRef,
+	useMemo,
+} from 'react'
 import classnames from 'classnames'
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
-import { useMemo } from 'react'
 
 
 
@@ -14,24 +17,26 @@ import { useMemo } from 'react'
  * @param {object} props All component props.
  * @param {*} [props.children] Node to be rendered inside of the button.
  * @param {string} [props.className] A string of classes to be set on the button.
- * @param {string} [props.forceAnimationInclusion] Whether or not to set animation variants forcefully.
+ * @param {string} [props.forceAnimationInclusion] Whether to set animation variants forcefully.
  * @param {string} [props.id] A unique identifier for this button.
- * @param {boolean} [props.isAffirmative = false] Whether or not this button will cause an affirmative action.
- * @param {boolean} [props.isDisabled = false] Whether or not this button is disabled.
- * @param {boolean} [props.isFullWidth = false] Whether or not this button should take up the full width of its parent.
- * @param {boolean} [props.isNegative = false] Whether or not this button will cause an negative action.
- * @param {boolean} [props.isSmall = false] Whether or not this button should be smaller than normal.
- * @param {boolean} [props.isStyled = true] Whether or not to apply styles to this component.
- * @param {boolean} [props.isSubmit = false] Whether or not this button should be smaller than normal.
- * @param {boolean} [props.isText = false] Whether or not this button should be rendered as only text.
- * @param {boolean} [props.isUniformlyPadded = false] Whether or not this button shoudl have the same padding on all sides.
+ * @param {boolean} [props.isAffirmative = false] Whether this button will cause an affirmative action.
+ * @param {boolean} [props.isDisabled = false] Whether this button is disabled.
+ * @param {boolean} [props.isFullWidth = false] Whether this button should take up the full width of its parent.
+ * @param {boolean} [props.isGamepadFocused = false] Whether this button is currently focused by the gamepad.
+ * @param {boolean} [props.isNegative = false] Whether this button will cause an negative action.
+ * @param {boolean} [props.isSmall = false] Whether this button should be smaller than normal.
+ * @param {boolean} [props.isStyled = true] Whether to apply styles to this component.
+ * @param {boolean} [props.isSubmit = false] Whether this button should be smaller than normal.
+ * @param {boolean} [props.isText = false] Whether this button should be rendered as only text.
+ * @param {boolean} [props.isUniformlyPadded = false] Whether this button shoudl have the same padding on all sides.
  * @param {Function} [props.onClick] The function to be executed when this button is clicked.
  * @param {object} [props.variants] An object representing variations of the component's state to be used for animations.
  * @param {object} [props.variants.animate] The typical state of the component.
  * @param {object} [props.variants.exit] The state to which the component should be animated when it is unmounted.
  * @param {object} [props.variants.initial] The state from which the component should be animated when it is mounted.
+ * @param {object} [ref] A ref to be set on the button.
  */
-export function Button(props) {
+const buttonFn = (props, ref) => {
 	const {
 		children,
 		className,
@@ -40,6 +45,7 @@ export function Button(props) {
 		isAffirmative,
 		isDisabled,
 		isFullWidth,
+		isGamepadFocused,
 		isNegative,
 		isSmall,
 		isStyled,
@@ -62,6 +68,7 @@ export function Button(props) {
 			disabled: isDisabled,
 			key: id,
 			onClick,
+			ref,
 			type: isSubmit ? 'submit' : 'button',
 			variants,
 		})
@@ -70,6 +77,7 @@ export function Button(props) {
 			result.className = classnames('button', className, {
 				'is-affirmative': isAffirmative,
 				'is-full-width': isFullWidth,
+				'is-gamepad-focused': isGamepadFocused,
 				'is-negative': isNegative,
 				'is-small': isSmall,
 				'is-text': isText,
@@ -91,6 +99,7 @@ export function Button(props) {
 		isAffirmative,
 		isDisabled,
 		isFullWidth,
+		isGamepadFocused,
 		isNegative,
 		isSmall,
 		isStyled,
@@ -99,6 +108,7 @@ export function Button(props) {
 		isUniformlyPadded,
 		onClick,
 		props,
+		ref,
 		variants,
 	])
 
@@ -109,6 +119,10 @@ export function Button(props) {
 	)
 }
 
+export const Button = forwardRef(buttonFn)
+
+Button.displayName = 'Button'
+
 Button.defaultProps = {
 	children: null,
 	className: '',
@@ -117,6 +131,7 @@ Button.defaultProps = {
 	isAffirmative: false,
 	isDisabled: false,
 	isFullWidth: false,
+	isGamepadFocused: false,
 	isNegative: false,
 	isSmall: false,
 	isStyled: true,
@@ -136,6 +151,7 @@ Button.propTypes = {
 	isAffirmative: PropTypes.bool,
 	isDisabled: PropTypes.bool,
 	isFullWidth: PropTypes.bool,
+	isGamepadFocused: PropTypes.bool,
 	isNegative: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	isStyled: PropTypes.bool,

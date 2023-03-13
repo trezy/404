@@ -69,11 +69,11 @@ export class Gamepad extends EventEmitter {
 
 		if (previousAxisValue !== processedAxisValue) {
 			this.#state.axes[index] = { value: processedAxisValue }
-			// console.log({
-			// 	axis: index,
-			// 	previousValue: previousAxisValue,
-			// 	newValue: processedAxisValue,
-			// })
+			this.emit('axis changed', {
+				index,
+				previousState: previousAxisValue,
+				state: processedAxisValue,
+			})
 		}
 	}
 
@@ -118,18 +118,13 @@ export class Gamepad extends EventEmitter {
 		if (previousButtonState.needsMapping || isPressedHasChanged || isHeldHasChanged) {
 			this.#state.buttons[index] = newButtonState
 
-			if (isPressedHasChanged) {
-				this.emit('button pressed', newButtonState, this)
-			} else if (isHeldHasChanged) {
-				this.emit('button held', newButtonState, this)
-			} else if (!newButtonState.isPressed && !newButtonState.isHeld) {
-				this.emit('button released', newButtonState, this)
+			if (isPressedHasChanged && newButtonState.isPressed) {
+				this.emit('button pressed', { index })
+			} else if (isHeldHasChanged && newButtonState.isHeld) {
+				this.emit('button held', { index })
+			} else if ((isPressedHasChanged && !newButtonState.isPressed) || (isHeldHasChanged && !newButtonState.isHeld)) {
+				this.emit('button released', { index })
 			}
-			console.log({
-				button: index,
-				previousValue: previousButtonState,
-				newValue: newButtonState,
-			})
 		}
 	}
 

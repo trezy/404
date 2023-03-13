@@ -126,14 +126,6 @@ export function GamepadsSettings(props) {
 		],
 	})
 
-	useRafael({
-		task: controlsManager.update,
-		options: {
-			context: controlsManager,
-		},
-		dependencies: [controlsManager],
-	})
-
 	useEffect(() => {
 		if (selectedGamepad) {
 			selectedGamepad.gamepad.once('ready', handleGamepadReady)

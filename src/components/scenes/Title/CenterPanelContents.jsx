@@ -1,7 +1,9 @@
 // Module imports
 import {
 	useCallback,
+	useEffect,
 	useMemo,
+	useRef,
 } from 'react'
 import { motion } from 'framer-motion'
 
@@ -16,6 +18,10 @@ import {
 	MAP_SELECT,
 	SAVE_SELECT,
 } from '../../../constants/SceneNames.js'
+import {
+	useNavGraph,
+	useNavGraphContext,
+} from '../../NavGraph/NavGraphContextProvider.jsx'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { GameTitle } from '../../GameTitle/GameTitle.jsx'
@@ -46,6 +52,15 @@ export function CenterPanelContents() {
     state.saveManager,
   ])
 
+	const {
+		currentTargetNodeID,
+		setTargetNodeID,
+	} = useNavGraphContext()
+
+	const continueRef = useRef(null)
+	const newGameRef = useRef(null)
+	const loadGameRef = useRef(null)
+
 	const hasSaves = useMemo(() => {
 		return Boolean(saveManager.getAllSaves().length)
 	}, [saveManager])
@@ -54,6 +69,33 @@ export function CenterPanelContents() {
 		pushScene(MAP_SELECT)
 		// goToMapSelect(mostRecentSaveID)
 	}, [mostRecentSaveID])
+
+	useNavGraph({
+		id: 'center panel',
+		links: ['left panel'],
+		nodes: [
+			{
+				id: 'continue',
+				isDefault: true,
+				onActivate: () => console.log('Activating continue button!'),
+				targetRef: continueRef,
+			},
+			{
+				id: 'new game',
+				onActivate: () => {},
+				targetRef: newGameRef,
+			},
+			{
+				id: 'load game',
+				onActivate: () => {},
+				targetRef: loadGameRef
+			},
+		],
+	})
+
+	useEffect(() => {
+		setTargetNodeID('continue')
+	}, [setTargetNodeID])
 
 	return (
 		<motion.div
@@ -65,17 +107,25 @@ export function CenterPanelContents() {
 				{Boolean(mostRecentSaveID) && (
 					<Button
 						isAffirmative
-						onClick={handleContinueClick}>
+						isGamepadFocused={currentTargetNodeID === 'continue'}
+						onClick={handleContinueClick}
+						ref={continueRef}>
 						{'Continue'}
 					</Button>
 				)}
 
-				<Button onClick={handleNewGameClick}>
+				<Button
+					isGamepadFocused={currentTargetNodeID === 'new game'}
+					onClick={handleNewGameClick}
+					ref={newGameRef}>
 					{'New Game'}
 				</Button>
 
 				{hasSaves && (
-					<Button onClick={handleLoadGameClick}>
+					<Button
+						isGamepadFocused={currentTargetNodeID === 'load game'}
+						onClick={handleLoadGameClick}
+						ref={loadGameRef}>
 						{'Load Game'}
 					</Button>
 				)}

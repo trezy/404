@@ -77,15 +77,12 @@ export class GameManager {
 	 */
 	gameLoop = () => {
 		const {
-			controlsManager,
 			isRunning,
 			timer,
 		} = store.state
 
 		if (isRunning) {
 			advanceFrame()
-
-			controlsManager.update()
 
 			if (!timer.isInGracePeriod) {
 				this.#robot.update()

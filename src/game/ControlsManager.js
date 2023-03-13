@@ -4,6 +4,7 @@ import { ACTION_HANDLERS } from './ACTION_HANDLERS.js'
 import { EventEmitter } from './EventEmitter.js'
 import { Gamepad } from './Gamepad.js'
 import { Keyboard } from './Keyboard.js'
+import { schedule } from 'rafael/lib/schedule.js'
 import { store } from '../newStore/store.js'
 
 
@@ -59,6 +60,7 @@ export class ControlsManager extends EventEmitter {
 		const { gamepad } = event
 
 		this.#gamepads[gamepad.index].disconnect()
+		this.#gamepads[gamepad.index] = null
 
 		this.emit('gamepad disconnected')
 	}
@@ -118,6 +120,13 @@ export class ControlsManager extends EventEmitter {
 	initialiseEventListeners() {
 		window.addEventListener('gamepadconnected', this.handleGamepadConnected)
 		window.addEventListener('gamepaddisconnected', this.handleGamepadDisconnected)
+	}
+
+	/**
+	 * Start the manager updating in a loop.
+	 */
+	start() {
+		schedule(this.update, { context: this })
 	}
 
 	/**
