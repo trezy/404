@@ -1,0 +1,38 @@
+.combobox-label {
+	.button {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		padding: var(--item-padding);
+		position: relative;
+		text-align: left;
+		width: 100%;
+
+		&:after {
+			background-color: var(--palette-white);
+			clip-path: polygon(
+				0 0,
+				100% 0,
+				100% calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+				calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+				calc(100% - (2px * var(--ui-scale))) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+				calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+				calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+				0 calc(1px * var(--ui-scale)),
+			);
+			content: '';
+			display: block;
+			height: calc(3px * var(--ui-scale));
+			margin-left: calc(5px * var(--ui-scale));
+			width: calc(5px * var(--ui-scale));
+		}
+	}
+
+	&.is-open .button {
+		z-index: 2;
+	}
+}

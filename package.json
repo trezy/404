@@ -55,6 +55,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^6.0.4",
     "@electron-forge/plugin-webpack": "^6.0.4",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@types/prop-types": "^15.7.5",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^8.3.0",
     "better-docs": "^2.7.2",

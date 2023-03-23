@@ -1,0 +1,20 @@
+.button {
+	background-color: var(--palette-dark-grey);
+	cursor: not-allowed;
+	padding: var(--item-padding);
+	text-align: left;
+	width: 100%;
+
+	&.is-disabled {
+		opacity: 0.8;
+	}
+
+	&:not(.is-disabled) {
+		cursor: pointer;
+
+		&:hover,
+		&:focus {
+			background-color: var(--palette-green);
+		}
+	}
+}

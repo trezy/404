@@ -1,0 +1,25 @@
+.options-group {
+	display: block;
+	position: relative;
+
+	&:not(:first-child) {
+		padding-top: calc(8px * var(--ui-scale));
+	}
+
+	header {
+		background-color: var(--palette-dark-grey);
+		border-color: var(--palette-white);
+		border-style: solid;
+		border-bottom-width: calc(1px * var(--ui-scale));
+		padding: var(--item-padding);
+		position: sticky;
+		text-align: left;
+		top: 0;
+		width: 100%;
+	}
+
+	[role=option] button:before {
+		content: '↳';
+		margin-right: calc(2px * var(--ui-scale));
+	}
+}

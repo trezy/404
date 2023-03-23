@@ -1,0 +1,41 @@
+.options {
+	background-color: var(--palette-dark-grey);
+	box-shadow:
+		0 0 0 calc(2px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6),
+		0 0 0 calc(4px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6),
+		0 0 0 calc(6px * var(--ui-scale)) hsla(var(--palette-black-h), var(--palette-black-s), var(--palette-black-l), 0.6);
+	flex-direction: column;
+	left: 0;
+	max-height: 50vh;
+	overflow: auto;
+	position: absolute;
+	right: 0;
+	top: calc(100% + (3px * var(--ui-scale)));
+	z-index: 1;
+
+	&:before {
+		background-color: var(--palette-white);
+		bottom: 100%;
+		clip-path: polygon(
+			0 0,
+			100% 0,
+			100% calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) calc(1px * var(--ui-scale)),
+			calc(100% - (1px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+			calc(100% - (2px * var(--ui-scale))) calc(2px * var(--ui-scale)),
+			calc(100% - (2px * var(--ui-scale))) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)),
+			calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(2px * var(--ui-scale)),
+			calc(1px * var(--ui-scale)) calc(1px * var(--ui-scale)),
+			0 calc(1px * var(--ui-scale)),
+		);
+		content: '';
+		display: block;
+		height: calc(3px * var(--ui-scale));
+		position: absolute;
+		right: 0;
+		width: calc(5px * var(--ui-scale));
+		z-index: 1;
+	}
+}

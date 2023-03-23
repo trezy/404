@@ -2453,6 +2453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/prop-types@npm:^15.7.5":
+  version: 15.7.5
+  resolution: "@types/prop-types@npm:15.7.5"
+  checksum: 5b43b8b15415e1f298243165f1d44390403bb2bd42e662bca3b5b5633fdd39c938e91b7fce3a9483699db0f7a715d08cef220c121f723a634972fdf596aec980
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*":
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
@@ -4384,6 +4391,7 @@ __metadata:
     "@electron-forge/plugin-auto-unpack-natives": ^6.0.4
     "@electron-forge/plugin-webpack": ^6.0.4
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
+    "@types/prop-types": ^15.7.5
     "@vercel/webpack-asset-relocator-loader": 1.7.3
     adm-zip: ^0.5.10
     archiver: ^5.3.1
