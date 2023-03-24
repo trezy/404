@@ -1,5 +1,6 @@
 // Local imports
 import { EventEmitter } from './EventEmitter.js'
+import { store } from '../newStore/store.js'
 
 
 
@@ -68,8 +69,17 @@ export class Gamepad extends EventEmitter {
 		}
 
 		if (previousAxisValue !== processedAxisValue) {
+			const { controlsManager } = store.state
+
 			this.#state.axes[index] = { value: processedAxisValue }
+
 			this.emit('axis changed', {
+				index,
+				previousState: previousAxisValue,
+				state: processedAxisValue,
+			})
+			controlsManager.emit('axis changed', {
+				gamepad: this,
 				index,
 				previousState: previousAxisValue,
 				state: processedAxisValue,
@@ -85,6 +95,8 @@ export class Gamepad extends EventEmitter {
 	 */
 	updateButton = (button, index) => {
 		const now = performance.now()
+
+		const { controlsManager } = store.state
 
 		const previousButtonState = this.#state.buttons[index]
 
@@ -119,10 +131,22 @@ export class Gamepad extends EventEmitter {
 			this.#state.buttons[index] = newButtonState
 
 			if (isPressedHasChanged && newButtonState.isPressed) {
+				controlsManager.emit('button pressed', {
+					gamepad: this,
+					index,
+				})
 				this.emit('button pressed', { index })
 			} else if (isHeldHasChanged && newButtonState.isHeld) {
+				controlsManager.emit('button held', {
+					gamepad: this,
+					index,
+				})
 				this.emit('button held', { index })
 			} else if ((isPressedHasChanged && !newButtonState.isPressed) || (isHeldHasChanged && !newButtonState.isHeld)) {
+				controlsManager.emit('button released', {
+					gamepad: this,
+					index,
+				})
 				this.emit('button released', { index })
 			}
 		}
