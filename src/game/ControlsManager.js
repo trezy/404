@@ -179,9 +179,11 @@ export class ControlsManager extends EventEmitter {
 						if (!actionCache) {
 							actionCache = { triggeredAt: now }
 							this.#actionCaches.set(label, actionCache)
+							this.emit(`action::${label}`)
 							handler()
 						} else if ((now - actionCache.triggeredAt) >= control.repeatFrequency) {
 							actionCache.triggeredAt = now
+							this.emit(`action::${label}`)
 							handler()
 						}
 					} else {

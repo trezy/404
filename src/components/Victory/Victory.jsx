@@ -15,7 +15,11 @@ import { store } from '../../newStore/store.js'
 
 
 export function Victory() {
-	const {} = useStore(store)
+	const { isVictorious } = useStore(store)
+
+	if (!isVictorious) {
+		return null
+	}
 
 	return (
 		<div className={styles['wrapper']}>

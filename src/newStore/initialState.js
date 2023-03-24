@@ -4,8 +4,8 @@ import { ContentManager } from '../game/ContentManager.js'
 import { ControlsManager } from '../game/ControlsManager.js'
 import { GameManager } from '../game/GameManager.js'
 import { LOADING_GAME } from '../constants/SceneNames.js'
-import { Timer } from '../game/Timer.js'
 import { MapManager } from '../game/MapManager.js'
+import { Timer } from '../game/Timer.js'
 
 
 
@@ -41,6 +41,9 @@ export const initialState = {
 		x: 0,
 		y: 0,
 	},
+
+	/** @type {boolean} */
+	isPauseModalVisible: false,
 
 	/** @type {boolean} */
 	isRunning: false,

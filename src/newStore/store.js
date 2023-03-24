@@ -20,3 +20,8 @@ export const store = makeStore(initialState)
 navigator.keyboard.getLayoutMap().then(keyboardLayoutMap => {
 	store.set(() => ({ keyboardLayoutMap }))
 })
+
+/**
+ * Start the control manager
+ */
+store.state.controlsManager.start()

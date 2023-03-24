@@ -100,6 +100,9 @@ export class GameManager {
 		}
 	}
 
+	/**
+	 * Pause the game.
+	 */
 	pause = () => {
 		setIsRunning(false)
 	}
@@ -144,6 +147,13 @@ export class GameManager {
 		this.#entitiesManager.reset()
 
 		unschedule('game loop')
+	}
+
+	/**
+	 * Unpause the game.
+	 */
+	unpause = () => {
+		setIsRunning(true)
 	}
 
 

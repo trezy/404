@@ -3,6 +3,7 @@ import { ACTIONS } from './ACTIONS.js'
 import { moveCursor } from '../newStore/helpers/moveCursor.js'
 import { placeTileset } from '../newStore/helpers/placeTileset.js'
 import { skipGracePeriod } from '../newStore/helpers/skipGracePeriod.js'
+import { store } from '../newStore/store.js'
 
 
 
@@ -20,4 +21,17 @@ export const ACTION_HANDLERS = {
 	[ACTIONS.PLACE_TILESET]: () => placeTileset(),
 
 	[ACTIONS.SKIP_TIMER]: () => skipGracePeriod(),
+
+	[ACTIONS.PAUSE]: () => {
+		const {
+			gameManager,
+			isRunning,
+		} = store.state
+
+		if (isRunning) {
+			gameManager.pause()
+		} else {
+			gameManager.unpause()
+		}
+	},
 }
