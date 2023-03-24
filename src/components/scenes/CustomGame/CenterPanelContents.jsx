@@ -20,6 +20,7 @@ import { PanelContent } from '../../Panel/PanelContent.jsx'
 import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { selectMap } from '../../../newStore/helpers/selectMap.js'
 import { store } from '../../../newStore/store.js'
+import { useNavGraphContext } from '../../NavGraph/NavGraphContextProvider.jsx'
 import { usePanelContext } from '../../Panel/Context/usePanelContext.js'
 
 
@@ -36,6 +37,8 @@ function handleMapPlay(mapID) {
  */
 export function CenterPanelContents() {
 	const { contentManager } = useStore(store)
+
+	const { focusNode } = useNavGraphContext()
 
 	const {
 		isLoading: isPanelLoading,
@@ -63,13 +66,16 @@ export function CenterPanelContents() {
 
 		executePromiseWithMinimumDuration(contentManager.loadMeta(), 2000)
 			.then(() => {
-				return setIsPanelLoading(false)
+				focusNode(`play-map:${Object.keys(contentManager.maps)[0]}`)
+				setIsPanelLoading(false)
+				return true
 			})
 			.catch(() => {
 				console.log('Error loading maps!')
 			})
 	}, [
 		contentManager,
+		focusNode,
 		setIsPanelLoading,
 	])
 

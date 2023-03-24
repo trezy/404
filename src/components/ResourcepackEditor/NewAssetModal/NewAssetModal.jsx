@@ -33,9 +33,7 @@ export function NewAssetModal(props) {
 		onAddToProject,
 	])
 
-	const handleFilenameChange = useCallback(({ target }) => {
-		const fileID = target.getAttribute('data-fileid')
-
+	const handleFilenameChange = useCallback(fileID => () => {
 		setFiles(oldFiles => {
 			oldFiles[fileID].name = target.value
 			return { ...oldFiles }
@@ -73,9 +71,9 @@ export function NewAssetModal(props) {
 		setIsLoading(false)
 	}, [setFiles])
 
-	const handleRemoveFile = useCallback(({ target }) => {
+	const handleRemoveFile = useCallback(fileID => () => {
 		setFiles(oldFiles => {
-			delete oldFiles[target.getAttribute('data-fileid')]
+			delete oldFiles[fileID]
 			return { ...oldFiles }
 		})
 	}, [setFiles])
@@ -119,10 +117,9 @@ export function NewAssetModal(props) {
 										</label>
 
 										<input
-											data-fileid={fileID}
 											id={`${fileID}-name`}
 											name={'name'}
-											onChange={handleFilenameChange}
+											onChange={handleFilenameChange(fileID)}
 											type={'text'}
 											value={fileData.name} />
 									</div>
@@ -130,9 +127,8 @@ export function NewAssetModal(props) {
 
 								<menu type={'toolbar'}>
 									<Button
-										data-fileid={fileID}
 										isNegative
-										onClick={handleRemoveFile}>
+										onClick={handleRemoveFile(fileID)}>
 										{'Remove'}
 									</Button>
 								</menu>

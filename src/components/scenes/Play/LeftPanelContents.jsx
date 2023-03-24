@@ -7,9 +7,7 @@ import { useStore } from 'statery'
 
 
 // Local imports
-import { Button } from '../../Button.jsx'
-import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
-// import { FPSMeter } from '../../FPSMeter.jsx'
+import { FPSMeter } from '../../FPSMeter.jsx'
 import { MAP_SELECT } from '../../../constants/SceneNames.js'
 import { PanelMenu } from '../../Panel/PanelMenu.jsx'
 import { pushScene } from '../../../newStore/helpers/pushScene.js'
@@ -39,16 +37,8 @@ export function LeftPanelContents() {
 				isLarge
 				isMonospace />
 
-			{/* <div className={'panel-bottom'}>
-				<FPSMeter />
-			</div> */}
-
 			<PanelMenu>
-				<ButtonStack>
-					<Button onClick={handleQuitClick}>
-						{'Quit'}
-					</Button>
-				</ButtonStack>
+				<FPSMeter />
 			</PanelMenu>
 		</>
 	)

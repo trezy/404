@@ -28,9 +28,7 @@ export function MapCard(props) {
 		onPlay,
 	} = props
 
-	const handleMapPlayClick = useCallback(() => {
-		onPlay(map.id)
-	}, [
+	const handleMapPlayClick = useCallback(() => onPlay(map.id), [
 		map,
 		onPlay,
 	])
@@ -77,6 +75,10 @@ export function MapCard(props) {
 				<ButtonGroup>
 					<Button
 						isAffirmative
+						nodeID={`play-map:${map.id}`}
+						nodeGroupID={'center panel'}
+						nodeGroupLinks={['left panel']}
+						onActivate={handleMapPlayClick}
 						onClick={handleMapPlayClick}>
 						{'Play'}
 					</Button>

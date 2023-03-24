@@ -20,6 +20,7 @@ import { Combobox } from '../../Combobox/Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
 import { Switch } from '../../Switch/Switch.jsx'
+import { useNavGraphContext } from '../../NavGraph/NavGraphContextProvider.jsx'
 
 
 
@@ -161,7 +162,9 @@ export function AccessibilitySettings(props) {
 	])
 
 	const handleSubmit = useCallback(event => {
-		event.preventDefault()
+		if (event) {
+			event.preventDefault()
+		}
 
 		configStore.set('settings.accessibility.colorblindType', colorblindType.value)
 		configStore.set('settings.accessibility.usePixelFonts', usePixelFonts)
@@ -197,6 +200,10 @@ export function AccessibilitySettings(props) {
 		isLoadingFonts,
 		usePixelFonts,
 	])
+
+	useEffect(() => {
+		focusNode('apply changes')
+	}, [focusNode])
 
 	return (
 		<motion.div
@@ -266,6 +273,13 @@ export function AccessibilitySettings(props) {
 					type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button
+							nodeGroupID={'center panel bottom'}
+							nodeGroupLinks={[
+								'center panel',
+								'left panel',
+							]}
+							nodeID={'apply changes'}
+							onActivate={handleSubmit}
 							isAffirmative
 							isSubmit>
 							{'Apply Changes'}

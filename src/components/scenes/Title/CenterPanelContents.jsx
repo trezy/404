@@ -3,7 +3,6 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
-	useRef,
 } from 'react'
 import { motion } from 'framer-motion'
 
@@ -18,14 +17,11 @@ import {
 	MAP_SELECT,
 	SAVE_SELECT,
 } from '../../../constants/SceneNames.js'
-import {
-	useNavGraph,
-	useNavGraphContext,
-} from '../../NavGraph/NavGraphContextProvider.jsx'
 import { Button } from '../../Button.jsx'
 import { ButtonStack } from '../../ButtonStack/ButtonStack.jsx'
 import { GameTitle } from '../../GameTitle/GameTitle.jsx'
 import { pushScene } from '../../../newStore/helpers/pushScene.js'
+import { useNavGraphContext } from '../../NavGraph/NavGraphContextProvider.jsx'
 import { useStore } from '../../../store/react.js'
 
 
@@ -52,14 +48,7 @@ export function CenterPanelContents() {
     state.saveManager,
   ])
 
-	const {
-		currentTargetNodeID,
-		setTargetNodeID,
-	} = useNavGraphContext()
-
-	const continueRef = useRef(null)
-	const newGameRef = useRef(null)
-	const loadGameRef = useRef(null)
+	const { focusNode } = useNavGraphContext()
 
 	const hasSaves = useMemo(() => {
 		return Boolean(saveManager.getAllSaves().length)
@@ -70,32 +59,9 @@ export function CenterPanelContents() {
 		// goToMapSelect(mostRecentSaveID)
 	}, [mostRecentSaveID])
 
-	useNavGraph({
-		id: 'center panel',
-		links: ['left panel'],
-		nodes: [
-			{
-				id: 'continue',
-				isDefault: true,
-				onActivate: () => console.log('Activating continue button!'),
-				targetRef: continueRef,
-			},
-			{
-				id: 'new game',
-				onActivate: () => {},
-				targetRef: newGameRef,
-			},
-			{
-				id: 'load game',
-				onActivate: () => {},
-				targetRef: loadGameRef
-			},
-		],
-	})
-
 	useEffect(() => {
-		setTargetNodeID('continue')
-	}, [setTargetNodeID])
+		focusNode('continue')
+	}, [focusNode])
 
 	return (
 		<motion.div
@@ -107,25 +73,32 @@ export function CenterPanelContents() {
 				{Boolean(mostRecentSaveID) && (
 					<Button
 						isAffirmative
-						isGamepadFocused={currentTargetNodeID === 'continue'}
-						onClick={handleContinueClick}
-						ref={continueRef}>
+						isNodeGroupDefault
+						nodeGroupID={'center panel'}
+						nodeGroupLinks={['left panel']}
+						nodeID={'continue'}
+						onActivate={handleContinueClick}
+						onClick={handleContinueClick}>
 						{'Continue'}
 					</Button>
 				)}
 
 				<Button
-					isGamepadFocused={currentTargetNodeID === 'new game'}
-					onClick={handleNewGameClick}
-					ref={newGameRef}>
+					nodeGroupID={'center panel'}
+					nodeGroupLinks={['left panel']}
+					nodeID={'new game'}
+					onActivate={handleNewGameClick}
+					onClick={handleNewGameClick}>
 					{'New Game'}
 				</Button>
 
 				{hasSaves && (
 					<Button
-						isGamepadFocused={currentTargetNodeID === 'load game'}
-						onClick={handleLoadGameClick}
-						ref={loadGameRef}>
+						nodeGroupID={'center panel'}
+						nodeGroupLinks={['left panel']}
+						nodeID={'load game'}
+						onActivate={handleLoadGameClick}
+						onClick={handleLoadGameClick}>
 						{'Load Game'}
 					</Button>
 				)}

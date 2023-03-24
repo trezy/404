@@ -1,11 +1,20 @@
 // Module imports
 import {
-	forwardRef,
+	useCallback,
 	useMemo,
+	useRef,
 } from 'react'
 import classnames from 'classnames'
 import { motion } from 'framer-motion'
 import PropTypes from 'prop-types'
+
+
+
+
+
+// Local imports
+import { NavGraphNode } from './NavGraph/NavGraphNode.jsx'
+import { useNavGraphContext } from './NavGraph/NavGraphContextProvider.jsx'
 
 
 
@@ -19,24 +28,30 @@ import PropTypes from 'prop-types'
  * @param {string} [props.className] A string of classes to be set on the button.
  * @param {string} [props.forceAnimationInclusion] Whether to set animation variants forcefully.
  * @param {string} [props.id] A unique identifier for this button.
+ * @param {string} props.nodeID The ID to be used for this button in the navgraph.
+ * @param {string} props.nodeGroupID The ID of the group to which this node will belong in the navgraph.
+ * @param {string[]} props.nodeGroupLinks An array of IDs to which this node's group will be linked.
  * @param {boolean} [props.isAffirmative = false] Whether this button will cause an affirmative action.
  * @param {boolean} [props.isDisabled = false] Whether this button is disabled.
  * @param {boolean} [props.isFullWidth = false] Whether this button should take up the full width of its parent.
- * @param {boolean} [props.isGamepadFocused = false] Whether this button is currently focused by the gamepad.
  * @param {boolean} [props.isNegative = false] Whether this button will cause an negative action.
+ * @param {boolean} props.isNodeGroupDefault Whether this node will be used as the default for its node.
  * @param {boolean} [props.isSmall = false] Whether this button should be smaller than normal.
  * @param {boolean} [props.isStyled = true] Whether to apply styles to this component.
  * @param {boolean} [props.isSubmit = false] Whether this button should be smaller than normal.
  * @param {boolean} [props.isText = false] Whether this button should be rendered as only text.
  * @param {boolean} [props.isUniformlyPadded = false] Whether this button shoudl have the same padding on all sides.
+ * @param {Function} props.onActivate A function to be executed when the button is activated via the navgraph.
+ * @param {Function} props.onDeactivate A function to be executed when the button is deactivated via the navgraph.
  * @param {Function} [props.onClick] The function to be executed when this button is clicked.
+ * @param {Function} props.onFocus A function to be executed when the button is focused within the navgraph.
  * @param {object} [props.variants] An object representing variations of the component's state to be used for animations.
  * @param {object} [props.variants.animate] The typical state of the component.
  * @param {object} [props.variants.exit] The state to which the component should be animated when it is unmounted.
  * @param {object} [props.variants.initial] The state from which the component should be animated when it is mounted.
  * @param {object} [ref] A ref to be set on the button.
  */
-const buttonFn = (props, ref) => {
+export function Button(props) {
 	const {
 		children,
 		className,
@@ -45,7 +60,6 @@ const buttonFn = (props, ref) => {
 		isAffirmative,
 		isDisabled,
 		isFullWidth,
-		isGamepadFocused,
 		isNegative,
 		isSmall,
 		isStyled,
@@ -54,7 +68,22 @@ const buttonFn = (props, ref) => {
 		isUniformlyPadded,
 		onClick,
 		variants,
+
+		nodeID,
+		nodeGroupID,
+		nodeGroupLinks,
+		isNodeGroupDefault,
+		onActivate,
+		onDeactivate,
+		onFocus,
 	} = props
+
+	const buttonRef = useRef(null)
+
+	const {
+		currentTargetNodeID,
+		focusNode,
+	} = useNavGraphContext()
 
 	const compiledProps = useMemo(() => {
 		// Start by compiling `aria-` and `data-` props
@@ -68,7 +97,6 @@ const buttonFn = (props, ref) => {
 			disabled: isDisabled,
 			key: id,
 			onClick,
-			ref,
 			type: isSubmit ? 'submit' : 'button',
 			variants,
 		})
@@ -77,7 +105,7 @@ const buttonFn = (props, ref) => {
 			result.className = classnames('button', className, {
 				'is-affirmative': isAffirmative,
 				'is-full-width': isFullWidth,
-				'is-gamepad-focused': isGamepadFocused,
+				'is-gamepad-focused': currentTargetNodeID === nodeID,
 				'is-negative': isNegative,
 				'is-small': isSmall,
 				'is-text': isText,
@@ -94,34 +122,48 @@ const buttonFn = (props, ref) => {
 		return result
 	}, [
 		className,
+		currentTargetNodeID,
 		forceAnimationInclusion,
 		id,
 		isAffirmative,
 		isDisabled,
 		isFullWidth,
-		isGamepadFocused,
 		isNegative,
 		isSmall,
 		isStyled,
 		isSubmit,
 		isText,
 		isUniformlyPadded,
+		nodeID,
 		onClick,
 		props,
-		ref,
 		variants,
 	])
 
+	const handleHover = useCallback(() => focusNode(nodeID), [
+		focusNode,
+		nodeID,
+	])
+
 	return (
-		<motion.button {...compiledProps}>
-			{children}
-		</motion.button>
+		<NavGraphNode
+			id={nodeID}
+			isDefault={isNodeGroupDefault}
+			groupID={nodeGroupID}
+			groupLinks={nodeGroupLinks}
+			onActivate={onActivate}
+			onDeactivate={onDeactivate}
+			onFocus={onFocus}
+			targetRef={buttonRef}>
+			<motion.button
+				ref={buttonRef}
+				onMouseOver={handleHover}
+				{...compiledProps}>
+				{children}
+			</motion.button>
+		</NavGraphNode>
 	)
 }
-
-export const Button = forwardRef(buttonFn)
-
-Button.displayName = 'Button'
 
 Button.defaultProps = {
 	children: null,
@@ -133,13 +175,17 @@ Button.defaultProps = {
 	isFullWidth: false,
 	isGamepadFocused: false,
 	isNegative: false,
+	isNodeGroupDefault: false,
 	isSmall: false,
 	isStyled: true,
 	isSubmit: false,
 	isText: false,
 	isUniformlyPadded: false,
-	// eslint-disable-next-line jsdoc/require-jsdoc
+	nodeGroupLinks: [],
+	onActivate: () => {},
+	onDeactivate: () => {},
 	onClick: () => {},
+	onFocus: () => {},
 	variants: null,
 }
 
@@ -153,12 +199,21 @@ Button.propTypes = {
 	isFullWidth: PropTypes.bool,
 	isGamepadFocused: PropTypes.bool,
 	isNegative: PropTypes.bool,
+	isNodeGroupDefault: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	isStyled: PropTypes.bool,
 	isSubmit: PropTypes.bool,
 	isText: PropTypes.bool,
 	isUniformlyPadded: PropTypes.bool,
+	nodeID: PropTypes.string.isRequired,
+	nodeGroupID: PropTypes.string.isRequired,
+	nodeGroupLinks: PropTypes.arrayOf(PropTypes.string),
+	// onActivate: PropTypes.func.isRequired,
+	onActivate: PropTypes.func,
+	onDeactivate: PropTypes.func,
 	onClick: PropTypes.func,
+	// onFocus: PropTypes.func.isRequired,
+	onFocus: PropTypes.func,
 	variants: PropTypes.shape({
 		animate: PropTypes.object,
 		exit: PropTypes.object,

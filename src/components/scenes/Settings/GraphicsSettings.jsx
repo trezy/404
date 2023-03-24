@@ -20,6 +20,7 @@ import { Button } from '../../Button.jsx'
 import { Combobox } from '../../Combobox/Combobox.jsx'
 import { configStore } from '../../../helpers/configStore.js'
 import { DecoratedHeader } from '../../DecoratedHeader/DecoratedHeader.jsx'
+import { useNavGraphContext } from '../../NavGraph/NavGraphContextProvider.jsx'
 
 
 
@@ -56,6 +57,8 @@ const DISPLAY_MODE_OPTIONS = [
  */
 export function GraphicsSettings(props) {
 	const { variants } = props
+
+	const { focusNode } = useNavGraphContext()
 
 	const [displaysInformation, setDisplaysInformation] = useState(null)
 	const [isLoadingDisplaysInformation, setIsLoadingDisplaysInformation] = useState(false)
@@ -115,7 +118,9 @@ export function GraphicsSettings(props) {
 	])
 
 	const handleSubmit = useCallback(event => {
-		event.preventDefault()
+		if (event) {
+			event.preventDefault()
+		}
 
 		const [width, height] = displayResolution.value.split('x')
 		const newDisplayResolution = {
@@ -147,6 +152,10 @@ export function GraphicsSettings(props) {
 		getDisplaysInformation,
 		isLoadingDisplaysInformation,
 	])
+
+	useEffect(() => {
+		focusNode('apply changes')
+	}, [focusNode])
 
 	return (
 		<motion.div
@@ -184,13 +193,29 @@ export function GraphicsSettings(props) {
 					className={styles['menu']}
 					type={'toolbar'}>
 					<div className={'menu-right'}>
-						<Button onClick={handleReset}>
+						<Button
+							nodeGroupID={'center panel bottom'}
+							nodeGroupLinks={[
+								'center panel',
+								'left panel',
+							]}
+							nodeID={'reset changes'}
+							onActivate={handleReset}
+							onClick={handleReset}>
 							{'Reset'}
 						</Button>
 
 						<Button
+							nodeGroupID={'center panel bottom'}
+							nodeGroupLinks={[
+								'center panel',
+								'left panel',
+							]}
+							nodeID={'apply changes'}
 							isAffirmative
-							isSubmit>
+							isNodeGroupDefault
+							isSubmit
+							onActivate={handleSubmit}>
 							{'Apply Changes'}
 						</Button>
 					</div>

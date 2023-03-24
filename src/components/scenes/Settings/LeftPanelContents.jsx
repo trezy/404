@@ -38,29 +38,51 @@ export function LeftPanelContents() {
 			<ButtonStack>
 				<Button
 					isAffirmative={currentSettingsPanel === 'accessibility'}
+					isNodeGroupDefault
+					nodeGroupID={'left panel'}
+					nodeGroupLinks={['center panel']}
+					nodeID={'accessibility'}
+					onActivate={showAccessibilityPanel}
 					onClick={showAccessibilityPanel}>
 					{'Accessibility'}
 				</Button>
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'controls'}
+					nodeGroupID={'left panel'}
+					nodeGroupLinks={['center panel']}
+					nodeID={'controls'}
+					onActivate={showControlsPanel}
 					onClick={showControlsPanel}>
 					{'Controls'}
 				</Button>
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'graphics'}
+					nodeGroupID={'left panel'}
+					nodeGroupLinks={['center panel']}
+					nodeID={'graphics'}
+					onActivate={showGraphicsPanel}
 					onClick={showGraphicsPanel}>
 					{'Graphics'}
 				</Button>
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'sound'}
+					nodeGroupID={'left panel'}
+					nodeGroupLinks={['center panel']}
+					nodeID={'sound'}
+					onActivate={showSoundPanel}
 					onClick={showSoundPanel}>
 					{'Sound'}
 				</Button>
 
-				<Button onClick={handleBackClick}>
+				<Button
+					nodeGroupID={'left panel'}
+					nodeGroupLinks={['center panel']}
+					nodeID={'back'}
+					onActivate={handleBackClick}
+					onClick={handleBackClick}>
 					{'Back'}
 				</Button>
 			</ButtonStack>
