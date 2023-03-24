@@ -49,7 +49,10 @@ export function ComboboxContainer() {
 			className={compiledClassName}
 			ref={ref}>
 			<ComboboxLabel />
-			<ComboboxOptions />
+
+			{isOpen && (
+				<ComboboxOptions />
+			)}
 		</div>
 	)
 }

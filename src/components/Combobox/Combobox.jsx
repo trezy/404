@@ -17,6 +17,7 @@ import PropTypes from 'prop-types'
 // Local imports
 import { ComboboxContainer } from './ComboboxContainer.jsx'
 import { isElementInView } from '../../helpers/isElementInView.js'
+import { useNavGraphContext } from '../NavGraph/NavGraphContextProvider.jsx'
 
 
 
@@ -33,6 +34,8 @@ const ComboboxContext = createContext({
 	isDisabled: false,
 	isOpen: false,
 	labelClassName: '',
+	navGroupID: '',
+	navGroupLinks: [],
 	options: [],
 	selectedOption: null,
 
@@ -67,10 +70,14 @@ export function Combobox(props) {
 		id,
 		isDisabled,
 		labelClassName,
+		navGroupID,
+		navGroupLinks,
 		onChange,
 		options,
 		value,
 	} = props
+
+	const { focusNode } = useNavGraphContext()
 
 	const comboboxID = useID()
 
@@ -160,6 +167,8 @@ export function Combobox(props) {
 		selectOption,
 	])
 
+	const handleOptionDeactivate = useCallback(() => hideOptions(), [hideOptions])
+
 	const handleOptionKeyUp = useCallback((event, option) => {
 		const { code } = event
 
@@ -175,6 +184,11 @@ export function Combobox(props) {
 		selectOption,
 	])
 
+	const optionsNavGroupID = useMemo(() => `${navGroupID}-${comboboxID}-options`, [
+		comboboxID,
+		navGroupID,
+	])
+
 	const providerValue = useMemo(() => {
 		return {
 			className,
@@ -184,13 +198,17 @@ export function Combobox(props) {
 			handleLabelActivate,
 			handleLabelKeyUp,
 			handleOptionActivate,
+			handleOptionDeactivate,
 			handleOptionKeyUp,
 			hideOptions,
 			id,
 			isDisabled,
 			isOpen,
 			labelClassName,
+			navGroupID,
+			navGroupLinks,
 			options,
+			optionsNavGroupID,
 			selectedOption,
 		}
 	}, [
@@ -201,13 +219,17 @@ export function Combobox(props) {
 		handleLabelActivate,
 		handleLabelKeyUp,
 		handleOptionActivate,
+		handleOptionDeactivate,
 		handleOptionKeyUp,
 		hideOptions,
 		id,
 		isDisabled,
 		isOpen,
 		labelClassName,
+		navGroupID,
+		navGroupLinks,
 		options,
+		optionsNavGroupID,
 		selectedOption,
 	])
 
@@ -230,6 +252,18 @@ export function Combobox(props) {
 		value,
 	])
 
+	useLayoutEffect(() => {
+		if (isOpen) {
+			focusNode(optionsNavGroupID)
+		} else {
+			focusNode(navGroupID)
+		}
+	}, [
+		isOpen,
+		navGroupID,
+		optionsNavGroupID,
+	])
+
 	return (
 		<ComboboxContext.Provider value={providerValue}>
 			<ComboboxContainer />
@@ -242,6 +276,7 @@ Combobox.defaultProps = {
 	emptyMessage: 'No options available.',
 	id: null,
 	isDisabled: false,
+	navGroupLinks: [],
 	onChange: null,
 	options: [],
 	value: null,
@@ -252,6 +287,8 @@ Combobox.propTypes = {
 	emptyMessage: PropTypes.string,
 	id: PropTypes.string,
 	isDisabled: PropTypes.bool,
+	navGroupID: PropTypes.string.isRequired,
+	navGroupLinks: PropTypes.arrayOf(PropTypes.string),
 	onChange: PropTypes.func,
 	options: PropTypes.array,
 	value: PropTypes.any,

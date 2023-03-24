@@ -118,6 +118,8 @@ export function AccessibilitySettings(props) {
 		setUsePixelFonts,
 	] = useState(configStore.get('settings.accessibility.usePixelFonts'))
 
+	const { focusNode } = useNavGraphContext()
+
 	const getFonts = useCallback(async() => {
 		setIsLoadingFonts(true)
 
@@ -223,6 +225,11 @@ export function AccessibilitySettings(props) {
 					<div className={'field'}>
 						<label>{'Colorblind Type'}</label>
 						<Combobox
+							navGroupID={'center panel'}
+							navGroupLinks={[
+								'left panel',
+								'center panel bottom',
+							]}
 							onChange={setColorblindType}
 							options={COLORBLIND_OPTIONS}
 							value={colorblindType} />
@@ -245,6 +252,11 @@ export function AccessibilitySettings(props) {
 									<Combobox
 										className={styles['font-list']}
 										labelClassName={styles['font-list-label']}
+										navGroupID={'center panel'}
+										navGroupLinks={[
+											'left panel',
+											'center panel bottom',
+										]}
 										onChange={setHeadingFontFace}
 										options={fontOptions}
 										value={headingFontFace} />
@@ -257,6 +269,11 @@ export function AccessibilitySettings(props) {
 									<Combobox
 										className={styles['font-list']}
 										labelClassName={styles['font-list-label']}
+										navGroupID={'center panel'}
+										navGroupLinks={[
+											'left panel',
+											'center panel bottom',
+										]}
 										onChange={setTextFontFace}
 										options={fontOptions}
 										value={textFontFace} />

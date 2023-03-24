@@ -18,7 +18,9 @@ import { useComboboxContext } from './Combobox.jsx'
 
 export function ComboboxOptionGroup(props) {
 	const {
+		isNavGroupDefault,
 		name,
+		navGroupID,
 		shouldShowLabel,
 	} = props
 
@@ -36,16 +38,20 @@ export function ComboboxOptionGroup(props) {
 
 				return option.group === name
 			})
-			.map(option => {
+			.map((option, index) => {
 				return (
 					<ComboboxOption
 						key={generateOptionKey(option)}
+						isNavGroupDefault={isNavGroupDefault && (index === 0)}
+						navGroupID={navGroupID}
 						option={option} />
 				)
 			})
 	}, [
 		generateOptionKey,
+		isNavGroupDefault,
 		name,
+		navGroupID,
 		options,
 	])
 
@@ -61,10 +67,13 @@ export function ComboboxOptionGroup(props) {
 }
 
 ComboboxOptionGroup.propTypes = {
+	isNavGroupDefault: false,
 	shouldShowLabel: true,
 }
 
 ComboboxOptionGroup.propTypes = {
+	isNavGroupDefault: PropTypes.bool,
 	name: PropTypes.string.isRequired,
+	navGroupID: PropTypes.string.isRequired,
 	shouldShowLabel: PropTypes.bool,
 }

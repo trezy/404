@@ -175,6 +175,11 @@ export function GraphicsSettings(props) {
 					<div className={'field'}>
 						<label>{'Display Mode'}</label>
 						<Combobox
+							navGroupID={'center panel'}
+							navGroupLinks={[
+								'left panel',
+								'center bottom panel',
+							]}
 							onChange={setDisplayMode}
 							options={DISPLAY_MODE_OPTIONS}
 							value={displayMode} />
@@ -183,6 +188,11 @@ export function GraphicsSettings(props) {
 					<div className={'field'}>
 						<label>{'Display Resolution'}</label>
 						<Combobox
+							navGroupID={'center panel'}
+							navGroupLinks={[
+								'left panel',
+								'center bottom panel',
+							]}
 							onChange={setDisplayResolution}
 							options={displayResolutionOptions}
 							value={displayResolution} />

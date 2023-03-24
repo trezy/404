@@ -21,12 +21,17 @@ import { useComboboxContext } from './Combobox.jsx'
 
 
 export function ComboboxOption(props) {
-	const { option } = props
+	const {
+		isNavGroupDefault,
+		option,
+	} = props
 
 	const {
 		generateOptionKey,
 		handleOptionActivate,
+		handleOptionDeactivate,
 		handleOptionKeyUp,
+		optionsNavGroupID,
 		selectedOption,
 	} = useComboboxContext()
 
@@ -65,11 +70,15 @@ export function ComboboxOption(props) {
 			key={optionID}
 			aria-selected={isSelected}
 			id={optionID}
-			role={'option'} >
+			role={'option'}>
 			{/* eslint-disable-next-line react/forbid-elements */}
 			<ComboboxButton
 				className={compiledButtonClassName}
+				id={optionID}
+				isNavGroupDefault={isNavGroupDefault}
+				navGroupID={optionsNavGroupID}
 				onActivate={handleActivate}
+				onDeactivate={handleOptionDeactivate}
 				onKeyUp={handleKeyUp}>
 				{option.label ?? option.value}
 			</ComboboxButton>
@@ -77,7 +86,12 @@ export function ComboboxOption(props) {
 	)
 }
 
+ComboboxOption.defaultProps = {
+	isNavGroupDefault: false,
+}
+
 ComboboxOption.propTypes = {
+	isNavGroupDefault: PropTypes.bool,
 	option: PropTypes.shape({
 		group: PropTypes.string,
 		label: PropTypes.string,

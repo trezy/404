@@ -26,8 +26,12 @@ export function ComboboxLabel() {
 		id,
 		isOpen,
 		labelClassName,
+		navGroupID,
+		navGroupLinks,
 		selectedOption,
 	} = useComboboxContext()
+
+	const nodeID = useMemo(() => `${comboboxID}-label`, [comboboxID])
 
 	const compiledClassName = useMemo(() => {
 		return classnames(labelClassName, styles['combobox-label'], {
@@ -42,12 +46,15 @@ export function ComboboxLabel() {
 		<label
 			aria-activedescendant={selectedOption ? generateOptionKey(selectedOption) : null}
 			className={compiledClassName}
-			id={`${comboboxID}-label`}
+			id={id}
 			// eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
 			tabIndex={0}>
 			<ComboboxButton
 				className={styles['button']}
-				id={id}
+				id={nodeID}
+				isNavGroupDefault
+				navGroupID={navGroupID}
+				navGroupLinks={navGroupLinks}
 				onActivate={handleLabelActivate}
 				onKeyUp={handleLabelKeyUp}>
 				{selectedOption?.label ?? selectedOption?.value ?? emptyMessage}

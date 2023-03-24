@@ -1,5 +1,10 @@
 // Module imports
-import { useMemo } from 'react'
+import {
+	useId as useID,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+} from 'react'
 
 
 
@@ -10,6 +15,7 @@ import styles from './ComboboxOptions.module.scss'
 
 import { ComboboxOptionGroup } from './ComboboxOptionGroup.jsx'
 import { useComboboxContext } from './Combobox.jsx'
+import { useNavGraphContext } from '../NavGraph/NavGraphContextProvider.jsx'
 
 
 
@@ -22,6 +28,14 @@ export function ComboboxOptions() {
 		options,
 	} = useComboboxContext()
 
+	const navGroupID = useID()
+	const returnNodeRef = useRef(null)
+
+	const {
+		currentTargetNodeID,
+		focusNode,
+	} = useNavGraphContext()
+
 	const mappedOptionGroups = useMemo(() => {
 		// Collect a list of all the groups that exist
 		const groupSet = options.reduce((accumulator, option) => {
@@ -31,15 +45,35 @@ export function ComboboxOptions() {
 
 		const groupNames = Array.from(groupSet)
 
-		return groupNames.map(groupName => {
+		return groupNames.map((groupName, index) => {
 			return (
 				<ComboboxOptionGroup
 					key={groupName}
+					isNavGroupDefault={index === 0}
 					name={groupName}
+					navGroupID={navGroupID}
 					shouldShowLabel={groupNames.length > 1} />
 			)
 		})
-	}, [options])
+	}, [
+		navGroupID,
+		options,
+	])
+
+	// useLayoutEffect(() => {
+	// 	if (isOpen && (returnNodeRef.current === null)) {
+	// 		returnNodeRef.current = currentTargetNodeID
+	// 		focusNode(navGroupID)
+
+	// 		return () => focusNode(returnNodeRef.current)
+	// 	}
+	// }, [
+	// 	currentTargetNodeID,
+	// 	focusNode,
+	// 	isOpen,
+	// 	navGroupID,
+	// 	returnNodeRef,
+	// ])
 
 	return (
 		<div
