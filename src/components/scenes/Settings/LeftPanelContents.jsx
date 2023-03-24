@@ -38,9 +38,9 @@ export function LeftPanelContents() {
 			<ButtonStack>
 				<Button
 					isAffirmative={currentSettingsPanel === 'accessibility'}
-					isNodeGroupDefault
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
+					isNavGroupDefault
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'accessibility'}
 					onActivate={showAccessibilityPanel}
 					onClick={showAccessibilityPanel}>
@@ -49,8 +49,8 @@ export function LeftPanelContents() {
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'controls'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'controls'}
 					onActivate={showControlsPanel}
 					onClick={showControlsPanel}>
@@ -59,8 +59,8 @@ export function LeftPanelContents() {
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'graphics'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'graphics'}
 					onActivate={showGraphicsPanel}
 					onClick={showGraphicsPanel}>
@@ -69,8 +69,8 @@ export function LeftPanelContents() {
 
 				<Button
 					isAffirmative={currentSettingsPanel === 'sound'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'sound'}
 					onActivate={showSoundPanel}
 					onClick={showSoundPanel}>
@@ -78,8 +78,8 @@ export function LeftPanelContents() {
 				</Button>
 
 				<Button
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'back'}
 					onActivate={handleBackClick}
 					onClick={handleBackClick}>

@@ -29,13 +29,13 @@ import { useNavGraphContext } from './NavGraph/NavGraphContextProvider.jsx'
  * @param {string} [props.forceAnimationInclusion] Whether to set animation variants forcefully.
  * @param {string} [props.id] A unique identifier for this button.
  * @param {string} props.nodeID The ID to be used for this button in the navgraph.
- * @param {string} props.nodeGroupID The ID of the group to which this node will belong in the navgraph.
- * @param {string[]} props.nodeGroupLinks An array of IDs to which this node's group will be linked.
+ * @param {string} props.navGroupID The ID of the group to which this node will belong in the navgraph.
+ * @param {string[]} props.navGroupLinks An array of IDs to which this node's group will be linked.
  * @param {boolean} [props.isAffirmative = false] Whether this button will cause an affirmative action.
  * @param {boolean} [props.isDisabled = false] Whether this button is disabled.
  * @param {boolean} [props.isFullWidth = false] Whether this button should take up the full width of its parent.
  * @param {boolean} [props.isNegative = false] Whether this button will cause an negative action.
- * @param {boolean} props.isNodeGroupDefault Whether this node will be used as the default for its node.
+ * @param {boolean} props.isNavGroupDefault Whether this node will be used as the default for its node.
  * @param {boolean} [props.isSmall = false] Whether this button should be smaller than normal.
  * @param {boolean} [props.isStyled = true] Whether to apply styles to this component.
  * @param {boolean} [props.isSubmit = false] Whether this button should be smaller than normal.
@@ -60,22 +60,21 @@ export function Button(props) {
 		isAffirmative,
 		isDisabled,
 		isFullWidth,
+		isNavGroupDefault,
 		isNegative,
 		isSmall,
 		isStyled,
 		isSubmit,
 		isText,
 		isUniformlyPadded,
-		onClick,
-		variants,
-
+		navGroupID,
+		navGroupLinks,
 		nodeID,
-		nodeGroupID,
-		nodeGroupLinks,
-		isNodeGroupDefault,
 		onActivate,
+		onClick,
 		onDeactivate,
 		onFocus,
+		variants,
 	} = props
 
 	const buttonRef = useRef(null)
@@ -148,9 +147,9 @@ export function Button(props) {
 	return (
 		<NavGraphNode
 			id={nodeID}
-			isDefault={isNodeGroupDefault}
-			groupID={nodeGroupID}
-			groupLinks={nodeGroupLinks}
+			isDefault={isNavGroupDefault}
+			groupID={navGroupID}
+			groupLinks={navGroupLinks}
 			onActivate={onActivate}
 			onDeactivate={onDeactivate}
 			onFocus={onFocus}
@@ -174,14 +173,14 @@ Button.defaultProps = {
 	isDisabled: false,
 	isFullWidth: false,
 	isGamepadFocused: false,
+	isNavGroupDefault: false,
 	isNegative: false,
-	isNodeGroupDefault: false,
 	isSmall: false,
 	isStyled: true,
 	isSubmit: false,
 	isText: false,
 	isUniformlyPadded: false,
-	nodeGroupLinks: [],
+	navGroupLinks: [],
 	onActivate: () => {},
 	onDeactivate: () => {},
 	onClick: () => {},
@@ -198,16 +197,16 @@ Button.propTypes = {
 	isDisabled: PropTypes.bool,
 	isFullWidth: PropTypes.bool,
 	isGamepadFocused: PropTypes.bool,
+	isNavGroupDefault: PropTypes.bool,
 	isNegative: PropTypes.bool,
-	isNodeGroupDefault: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	isStyled: PropTypes.bool,
 	isSubmit: PropTypes.bool,
 	isText: PropTypes.bool,
 	isUniformlyPadded: PropTypes.bool,
+	navGroupID: PropTypes.string.isRequired,
+	navGroupLinks: PropTypes.arrayOf(PropTypes.string),
 	nodeID: PropTypes.string.isRequired,
-	nodeGroupID: PropTypes.string.isRequired,
-	nodeGroupLinks: PropTypes.arrayOf(PropTypes.string),
 	// onActivate: PropTypes.func.isRequired,
 	onActivate: PropTypes.func,
 	onDeactivate: PropTypes.func,

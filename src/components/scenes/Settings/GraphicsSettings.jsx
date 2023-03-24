@@ -204,8 +204,8 @@ export function GraphicsSettings(props) {
 					type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button
-							nodeGroupID={'center panel bottom'}
-							nodeGroupLinks={[
+							navGroupID={'center panel bottom'}
+							navGroupLinks={[
 								'center panel',
 								'left panel',
 							]}
@@ -216,14 +216,14 @@ export function GraphicsSettings(props) {
 						</Button>
 
 						<Button
-							nodeGroupID={'center panel bottom'}
-							nodeGroupLinks={[
+							navGroupID={'center panel bottom'}
+							navGroupLinks={[
 								'center panel',
 								'left panel',
 							]}
 							nodeID={'apply changes'}
 							isAffirmative
-							isNodeGroupDefault
+							isNavGroupDefault
 							isSubmit
 							onActivate={handleSubmit}>
 							{'Apply Changes'}

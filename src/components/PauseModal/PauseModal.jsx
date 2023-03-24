@@ -56,7 +56,7 @@ export function PauseModal() {
 		<Modal title={'Game Paused'}>
 			<ButtonStack>
 				<Button
-					nodeGroupID={'pause menu'}
+					navGroupID={'pause menu'}
 					nodeID={'continue'}
 					onActivate={handleActivateContinue}
 					onClick={handleActivateContinue}>
@@ -64,7 +64,7 @@ export function PauseModal() {
 				</Button>
 
 				<Button
-					nodeGroupID={'pause menu'}
+					navGroupID={'pause menu'}
 					nodeID={'restart'}
 					onActivate={handleActivateRestartLevel}
 					onClick={handleActivateRestartLevel}>
@@ -72,7 +72,7 @@ export function PauseModal() {
 				</Button>
 
 				<Button
-					nodeGroupID={'pause menu'}
+					navGroupID={'pause menu'}
 					nodeID={'main menu'}
 					onActivate={handleActivateQuitToMainMenu}
 					onClick={handleActivateQuitToMainMenu}>
@@ -80,7 +80,7 @@ export function PauseModal() {
 				</Button>
 
 				<Button
-					nodeGroupID={'pause menu'}
+					navGroupID={'pause menu'}
 					nodeID={'exit'}
 					onActivate={handleActivateQuitToDesktop}
 					onClick={handleActivateQuitToDesktop}>

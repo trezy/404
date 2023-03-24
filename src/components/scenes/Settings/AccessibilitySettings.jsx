@@ -290,8 +290,8 @@ export function AccessibilitySettings(props) {
 					type={'toolbar'}>
 					<div className={'menu-right'}>
 						<Button
-							nodeGroupID={'center panel bottom'}
-							nodeGroupLinks={[
+							navGroupID={'center panel bottom'}
+							navGroupLinks={[
 								'center panel',
 								'left panel',
 							]}

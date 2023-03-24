@@ -33,28 +33,28 @@ export function LeftPanelContents() {
 		<PanelMenu>
 			<ButtonStack>
 				<Button
-					isNodeGroupDefault
+					isNavGroupDefault
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'custom game'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleCustomGameClick}
 					onClick={handleCustomGameClick}>
 					{'Custom Game'}
 				</Button>
 
 				<Button
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'architect'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleArchitectClick}
 					onClick={handleArchitectClick}>
 					{'Architect'}
 				</Button>
 
 				<Button
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'settings'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleSettingsClick}
 					onClick={handleSettingsClick}>
 					{'Settings'}

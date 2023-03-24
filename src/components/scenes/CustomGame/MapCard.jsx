@@ -75,9 +75,9 @@ export function MapCard(props) {
 				<ButtonGroup>
 					<Button
 						isAffirmative
+						navGroupID={'center panel'}
+						navGroupLinks={['left panel']}
 						nodeID={`play-map:${map.id}`}
-						nodeGroupID={'center panel'}
-						nodeGroupLinks={['left panel']}
 						onActivate={handleMapPlayClick}
 						onClick={handleMapPlayClick}>
 						{'Play'}

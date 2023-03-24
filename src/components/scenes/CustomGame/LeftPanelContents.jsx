@@ -47,27 +47,27 @@ export function LeftPanelContents() {
 		<PanelMenu>
 			<ButtonStack>
 				<Button
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'main menu'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleMainMenuClick}
 					onClick={handleMainMenuClick}>
 					{'Main Menu'}
 				</Button>
 
 				<Button
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'settings'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleSettingsClick}
 					onClick={handleSettingsClick}>
 					{'Settings'}
 				</Button>
 
 				<Button
+					navGroupID={'left panel'}
+					navGroupLinks={['center panel']}
 					nodeID={'back'}
-					nodeGroupID={'left panel'}
-					nodeGroupLinks={['center panel']}
 					onActivate={handleBackClick}
 					onClick={handleBackClick}>
 					{'Back'}

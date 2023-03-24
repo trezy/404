@@ -73,9 +73,9 @@ export function CenterPanelContents() {
 				{Boolean(mostRecentSaveID) && (
 					<Button
 						isAffirmative
-						isNodeGroupDefault
-						nodeGroupID={'center panel'}
-						nodeGroupLinks={['left panel']}
+						isNavGroupDefault
+						navGroupID={'center panel'}
+						navGroupLinks={['left panel']}
 						nodeID={'continue'}
 						onActivate={handleContinueClick}
 						onClick={handleContinueClick}>
@@ -84,8 +84,8 @@ export function CenterPanelContents() {
 				)}
 
 				<Button
-					nodeGroupID={'center panel'}
-					nodeGroupLinks={['left panel']}
+					navGroupID={'center panel'}
+					navGroupLinks={['left panel']}
 					nodeID={'new game'}
 					onActivate={handleNewGameClick}
 					onClick={handleNewGameClick}>
@@ -94,8 +94,8 @@ export function CenterPanelContents() {
 
 				{hasSaves && (
 					<Button
-						nodeGroupID={'center panel'}
-						nodeGroupLinks={['left panel']}
+						navGroupID={'center panel'}
+						navGroupLinks={['left panel']}
 						nodeID={'load game'}
 						onActivate={handleLoadGameClick}
 						onClick={handleLoadGameClick}>
