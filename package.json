@@ -33,6 +33,7 @@
     "ngraph.graph": "^20.0.1",
     "ngraph.path": "^1.4.0",
     "numeral": "^2.0.6",
+    "pixi.js": "^7.2.4",
     "prop-types": "^15.8.1",
     "rafael": "^5.0.2",
     "react": "^18.0.0",
