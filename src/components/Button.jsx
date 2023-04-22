@@ -42,9 +42,9 @@ import { useNavGraphContext } from './NavGraph/NavGraphContextProvider.jsx'
  * @param {boolean} [props.isText = false] Whether this button should be rendered as only text.
  * @param {boolean} [props.isUniformlyPadded = false] Whether this button shoudl have the same padding on all sides.
  * @param {Function} props.onActivate A function to be executed when the button is activated via the navgraph.
- * @param {Function} props.onDeactivate A function to be executed when the button is deactivated via the navgraph.
+ * @param {Function} [props.onDeactivate] A function to be executed when the button is deactivated via the navgraph.
  * @param {Function} [props.onClick] The function to be executed when this button is clicked.
- * @param {Function} props.onFocus A function to be executed when the button is focused within the navgraph.
+ * @param {Function} [props.onFocus] A function to be executed when the button is focused within the navgraph.
  * @param {object} [props.variants] An object representing variations of the component's state to be used for animations.
  * @param {object} [props.variants.animate] The typical state of the component.
  * @param {object} [props.variants.exit] The state to which the component should be animated when it is unmounted.
