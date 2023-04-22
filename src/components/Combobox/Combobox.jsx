@@ -6,6 +6,7 @@ import {
 	useId as useID,
 	useLayoutEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -69,6 +70,7 @@ export function Combobox(props) {
 		emptyMessage,
 		id,
 		isDisabled,
+		isNavGroupDefault,
 		labelClassName,
 		navGroupID,
 		navGroupLinks,
@@ -76,6 +78,8 @@ export function Combobox(props) {
 		options,
 		value,
 	} = props
+
+	const isInitialRenderRef = useRef(true)
 
 	const { focusNode } = useNavGraphContext()
 
@@ -203,6 +207,7 @@ export function Combobox(props) {
 			hideOptions,
 			id,
 			isDisabled,
+			isNavGroupDefault,
 			isOpen,
 			labelClassName,
 			navGroupID,
@@ -224,6 +229,7 @@ export function Combobox(props) {
 		hideOptions,
 		id,
 		isDisabled,
+		isNavGroupDefault,
 		isOpen,
 		labelClassName,
 		navGroupID,
@@ -253,12 +259,15 @@ export function Combobox(props) {
 	])
 
 	useLayoutEffect(() => {
-		if (isOpen) {
+		if (isInitialRenderRef.current) {
+			isInitialRenderRef.current = false
+		} else if (isOpen) {
 			focusNode(optionsNavGroupID)
 		} else {
 			focusNode(navGroupID)
 		}
 	}, [
+		isInitialRenderRef,
 		isOpen,
 		navGroupID,
 		optionsNavGroupID,
@@ -276,6 +285,7 @@ Combobox.defaultProps = {
 	emptyMessage: 'No options available.',
 	id: null,
 	isDisabled: false,
+	isNavGroupDefault: false,
 	navGroupLinks: [],
 	onChange: null,
 	options: [],
@@ -287,6 +297,7 @@ Combobox.propTypes = {
 	emptyMessage: PropTypes.string,
 	id: PropTypes.string,
 	isDisabled: PropTypes.bool,
+	isNavGroupDefault: PropTypes.bool,
 	navGroupID: PropTypes.string.isRequired,
 	navGroupLinks: PropTypes.arrayOf(PropTypes.string),
 	onChange: PropTypes.func,

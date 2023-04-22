@@ -55,28 +55,22 @@ function getDistanceBetweenNodes(nodeA, nodeB) {
 	let yDistance = 0
 
 	if (boundingRectA.left > boundingRectB.right) {
-		xDistance = boundingRectA.left - boundingRectB.right
+		xDistance = Math.max(boundingRectA.left, boundingRectB.right) - Math.min(boundingRectA.left, boundingRectB.right)
 	} else if (boundingRectA.right < boundingRectB.left) {
-		xDistance = boundingRectA.right - boundingRectB.left
+		xDistance = Math.max(boundingRectA.right, boundingRectB.left) - Math.min(boundingRectA.right, boundingRectB.left)
 	} else {
-		const centerA = boundingRectA.left + (boundingRectA.width / 2)
-		const centerB = boundingRectB.left + (boundingRectB.width / 2)
-
-		xDistance = centerA - centerB
+		xDistance = 0
 	}
 
 	if (boundingRectA.top > boundingRectB.bottom) {
-		yDistance = boundingRectA.top - boundingRectB.bottom
+		yDistance = Math.max(boundingRectA.top, boundingRectB.bottom) - Math.min(boundingRectA.top, boundingRectB.bottom)
 	} else if (boundingRectA.bottom < boundingRectB.top) {
-		yDistance = boundingRectA.bottom - boundingRectB.top
+		yDistance = Math.max(boundingRectA.bottom, boundingRectB.top) - Math.min(boundingRectA.bottom, boundingRectB.top)
 	} else {
-		const centerA = boundingRectA.top + (boundingRectA.height / 2)
-		const centerB = boundingRectB.top + (boundingRectB.height / 2)
-
-		yDistance = centerA - centerB
+		yDistance = 0
 	}
 
-	return (xDistance ** 2) + (yDistance ** 2)
+	return Math.sqrt((xDistance ** 2) + (yDistance ** 2))
 }
 
 
@@ -387,7 +381,6 @@ export function NavGraphContextProvider(props) {
 
 		setCurrentTargetNodeID(nodeID)
 	}, [
-		getAdjacentNodeIDs,
 		graph,
 		setCurrentTargetNodeID,
 	])
@@ -614,51 +607,61 @@ export function NavGraphContextProvider(props) {
 
 					const currentNodeBoundingRect = currentNode.data.targetRef.current.getBoundingClientRect()
 
-					const nearestNode = getAdjacentNodeIDs({ sourceNodeID: currentTargetNodeID })
-						.map(id => graph.getNode(id))
-						.filter(node => {
-							if (!node) {
-								return false
+					const adjacentNodeIDs = getAdjacentNodeIDs({ sourceNodeID: currentTargetNodeID })
+					const adjacentNodes = adjacentNodeIDs.map(id => graph.getNode(id))
+
+					const correctDirectionNodes = adjacentNodes.filter(node => {
+						if (!node) {
+							return false
+						}
+
+						const boundingRect = node.data.targetRef.current.getBoundingClientRect()
+
+						// Horizontal axis
+						if (axisKey === 'x') {
+							// Moving right
+							if (direction === 1) {
+								return currentNodeBoundingRect.left < boundingRect.left
 							}
 
-							const boundingRect = node.data.targetRef.current.getBoundingClientRect()
+							// Moving left
+							return currentNodeBoundingRect.right > boundingRect.right
+						}
 
-							// Horizontal axis
-							if (axisKey === 'x') {
-								// Moving right
-								if (direction === 1) {
-									return currentNodeBoundingRect.left < boundingRect.left
-								}
-
-								// Moving left
-								return currentNodeBoundingRect.right > boundingRect.right
+						// Vertical axis
+						if (axisKey === 'y') {
+							// Moving down
+							if (direction === 1) {
+								return currentNodeBoundingRect.top < boundingRect.top
 							}
 
-							// Vertical axis
-							if (axisKey === 'y') {
-								// Moving down
-								if (direction === 1) {
-									return currentNodeBoundingRect.top < boundingRect.top
-								}
+							// Moving up
+							return currentNodeBoundingRect.bottom > boundingRect.bottom
+						}
+					})
 
-								// Moving up
-								return currentNodeBoundingRect.bottom > boundingRect.bottom
-							}
+					const nodeDistances = []
+
+					const nearestNode = correctDirectionNodes.reduce((accumulator, node) => {
+						if (accumulator === null) {
+							return node
+						}
+
+						const distanceA = getDistanceBetweenNodes(currentNode, accumulator)
+						const distanceB = getDistanceBetweenNodes(currentNode, node)
+
+						nodeDistances.push({
+							node,
+							distanceA,
+							distanceB,
 						})
-						.reduce((accumulator, node) => {
-							if (accumulator === null) {
-								return node
-							}
 
-							const distanceA = getDistanceBetweenNodes(currentNode, accumulator)
-							const distanceB = getDistanceBetweenNodes(currentNode, node)
+						if (distanceA > distanceB) {
+							return node
+						}
 
-							if (distanceA > distanceB) {
-								return node
-							}
-
-							return accumulator
-						}, null)
+						return accumulator
+					}, null)
 
 					setAxes(previousState => {
 						return {

@@ -24,6 +24,7 @@ export function ComboboxLabel() {
 		handleLabelActivate,
 		handleLabelKeyUp,
 		id,
+		isNavGroupDefault,
 		isOpen,
 		labelClassName,
 		navGroupID,
@@ -31,7 +32,10 @@ export function ComboboxLabel() {
 		selectedOption,
 	} = useComboboxContext()
 
-	const nodeID = useMemo(() => `${comboboxID}-label`, [comboboxID])
+	const nodeID = useMemo(() => (id ?? `${comboboxID}-label`), [
+		comboboxID,
+		id,
+	])
 
 	const compiledClassName = useMemo(() => {
 		return classnames(labelClassName, styles['combobox-label'], {
@@ -52,7 +56,7 @@ export function ComboboxLabel() {
 			<ComboboxButton
 				className={styles['button']}
 				id={nodeID}
-				isNavGroupDefault
+				isNavGroupDefault={isNavGroupDefault}
 				navGroupID={navGroupID}
 				navGroupLinks={navGroupLinks}
 				onActivate={handleLabelActivate}
