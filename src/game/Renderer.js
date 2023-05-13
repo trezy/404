@@ -1,5 +1,4 @@
 // Local imports
-import { store as zustandStore } from '../store/index.js'
 import { store } from '../newStore/store.js'
 import { TILE_SIZE } from './Tile.js'
 
