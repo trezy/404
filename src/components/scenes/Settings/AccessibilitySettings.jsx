@@ -225,6 +225,8 @@ export function AccessibilitySettings(props) {
 					<div className={'field'}>
 						<label>{'Colorblind Type'}</label>
 						<Combobox
+							id={'colorblindType'}
+							isNavGroupDefault
 							navGroupID={'center panel'}
 							navGroupLinks={[
 								'left panel',
@@ -239,6 +241,13 @@ export function AccessibilitySettings(props) {
 						<label>{'Use Pixel Fonts'}</label>
 						<Switch
 							isOn={usePixelFonts}
+							navGroupID={'center panel'}
+							navGroupLinks={[
+								'left panel',
+								'center panel bottom',
+							]}
+							nodeID={'use pixel fonts'}
+							onActivate={handleUsePixelFontsChange}
 							onChange={handleUsePixelFontsChange} />
 					</div>
 
@@ -251,6 +260,7 @@ export function AccessibilitySettings(props) {
 									<label>{'Heading Font'}</label>
 									<Combobox
 										className={styles['font-list']}
+										id={'headingFont'}
 										labelClassName={styles['font-list-label']}
 										navGroupID={'center panel'}
 										navGroupLinks={[
@@ -268,6 +278,7 @@ export function AccessibilitySettings(props) {
 									<label>{'Text Font'}</label>
 									<Combobox
 										className={styles['font-list']}
+										id={'textFont'}
 										labelClassName={styles['font-list-label']}
 										navGroupID={'center panel'}
 										navGroupLinks={[
