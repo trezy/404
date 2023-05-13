@@ -16,6 +16,10 @@ import { useStore } from 'statery'
 
 
 // Local imports
+import {
+	GAMEPAD_NAV_MODE,
+	KEYBOARD_NAV_MODE,
+} from '../../constants/NavModes.js'
 import { Gamepad } from '../../game/Gamepad.js'
 import { store } from '../../newStore/store.js'
 
@@ -27,12 +31,14 @@ import { store } from '../../newStore/store.js'
 const NavGraphContext = createContext({
 	currentTargetNodeID: null,
 	graph: null,
+	navMode: KEYBOARD_NAV_MODE,
 
 	activateNode: () => {},
 	createLink: () => {},
 	createNode: () => {},
 	destroyNode: () => {},
 	focusNode: () => {},
+	setNavMode: () => {},
 })
 
 
@@ -113,6 +119,7 @@ export function NavGraphContextProvider(props) {
 	const [currentTargetNodeID, setCurrentTargetNodeID] = useState(null)
 	const [gamepadUpdate, setGamepadUpdate] = useState({})
 	const [graph] = useState(createGraph())
+	const [navMode, setNavMode] = useState(KEYBOARD_NAV_MODE)
 
 	/**
 	 * Traverses the graph to find adjacent nodes.
@@ -420,11 +427,14 @@ export function NavGraphContextProvider(props) {
 				}
 			})
 		}
+
+		setNavMode(GAMEPAD_NAV_MODE)
 	}, [
 		activateNode,
 		axes,
 		currentTargetNodeID,
 		graph,
+		setNavMode,
 	])
 
 	/**
@@ -475,12 +485,15 @@ export function NavGraphContextProvider(props) {
 				},
 			}))
 		}
+
+		setNavMode(GAMEPAD_NAV_MODE)
 	}, [
 		activateNode,
 		currentTargetNodeID,
 		deactivateNode,
 		graph,
 		setAxes,
+		setNavMode,
 	])
 
 	/**
@@ -552,6 +565,8 @@ export function NavGraphContextProvider(props) {
 		destroyNode,
 		focusNode,
 		graph,
+		navMode,
+		setNavMode,
 	}), [
 		createLink,
 		createNode,
@@ -560,6 +575,8 @@ export function NavGraphContextProvider(props) {
 		destroyNode,
 		focusNode,
 		graph,
+		navMode,
+		setNavMode,
 	])
 
 	useLayoutEffect(() => {

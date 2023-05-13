@@ -13,6 +13,10 @@ import PropTypes from 'prop-types'
 
 
 // Local imports
+import {
+	GAMEPAD_NAV_MODE,
+	KEYBOARD_NAV_MODE,
+} from '../constants/NavModes.js'
 import { NavGraphNode } from './NavGraph/NavGraphNode.jsx'
 import { useNavGraphContext } from './NavGraph/NavGraphContextProvider.jsx'
 
@@ -82,6 +86,8 @@ export function Button(props) {
 	const {
 		currentTargetNodeID,
 		focusNode,
+		navMode,
+		setNavMode,
 	} = useNavGraphContext()
 
 	const compiledProps = useMemo(() => {
@@ -104,7 +110,6 @@ export function Button(props) {
 			result.className = classnames('button', className, {
 				'is-affirmative': isAffirmative,
 				'is-full-width': isFullWidth,
-				'is-gamepad-focused': currentTargetNodeID === nodeID,
 				'is-negative': isNegative,
 				'is-small': isSmall,
 				'is-text': isText,
@@ -139,8 +144,28 @@ export function Button(props) {
 		variants,
 	])
 
-	const handleHover = useCallback(() => focusNode(nodeID), [
+	const handleHover = useCallback(() => {
+		setNavMode(KEYBOARD_NAV_MODE)
+		focusNode(nodeID)
+	}, [
 		focusNode,
+		nodeID,
+		setNavMode,
+	])
+
+	const shouldDisplayActivationButton = useMemo(() => {
+		if (currentTargetNodeID !== nodeID) {
+			return false
+		}
+
+		if (navMode !== GAMEPAD_NAV_MODE) {
+			return false
+		}
+
+		return true
+	}, [
+		currentTargetNodeID,
+		navMode,
 		nodeID,
 	])
 
@@ -158,6 +183,7 @@ export function Button(props) {
 				ref={buttonRef}
 				onMouseOver={handleHover}
 				{...compiledProps}>
+				{shouldDisplayActivationButton && ('X')}
 				{children}
 			</motion.button>
 		</NavGraphNode>
