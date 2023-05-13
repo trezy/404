@@ -88,11 +88,11 @@ export class GameManager {
 				this.#robot.update()
 			}
 
-			this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
-			this.#mapManager.render(this.#renderer)
-			this.#entitiesManager.render(this.#renderer)
+			// this.#renderer.drawGrid(this.#mapManager.width, this.#mapManager.height)
+			// this.#mapManager.render(this.#renderer)
+			// this.#entitiesManager.render(this.#renderer)
 
-			this.#renderer.update()
+			// this.#renderer.update()
 
 			timer.update()
 

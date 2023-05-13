@@ -1,3 +1,17 @@
+// Module imports
+import {
+	Application,
+	BaseTexture,
+	extensions,
+	Graphics,
+	SCALE_MODES,
+	settings,
+} from 'pixi.js'
+
+
+
+
+
 // Local imports
 import { store } from '../newStore/store.js'
 import { TILE_SIZE } from './Tile.js'
@@ -25,13 +39,15 @@ export class Renderer {
 	 * Public instance properties
 	\****************************************************************************/
 
-	height = 0
+	canvas = null
 
 	layer = LAYERS.background
 
 	needsResize = true
 
 	pixelSize = 1
+
+	pixiApp = null
 
 	queue = [
 		[], // background
@@ -44,8 +60,6 @@ export class Renderer {
 	shadow = null
 
 	target = null
-
-	width = 0
 
 
 
@@ -69,65 +83,50 @@ export class Renderer {
 	 * @param {number} mapHeight The height of the map that will be rendered on top of the grid.
 	 */
 	drawGrid(mapWidth, mapHeight) {
-		this.layer = LAYERS.background
+		const gridManager = new Graphics
 
-		const { globalOffset } = store.state
+		const gridColor = '#30346d'
 
-		const computedStyles = getComputedStyle(this.target.canvas)
-		const gridColor = computedStyles.getPropertyValue('--palette-purple')
-
-		const renderHeight = Math.max(
-			Math.ceil(this.height / TILE_SIZE.height) + 2,
-			mapHeight,
+		gridManager.beginFill(gridColor, 0.1)
+		gridManager.drawRect(
+			0,
+			0,
+			this.width,
+			this.height,
 		)
-		const renderWidth = Math.max(
-			Math.ceil(this.width / TILE_SIZE.width) + 2,
-			mapWidth,
-		)
+		gridManager.endFill()
 
-		this.setTranslate(
-			-Math.ceil(globalOffset.x / TILE_SIZE.width) * TILE_SIZE.width,
-			-Math.ceil(globalOffset.y / TILE_SIZE.height) * TILE_SIZE.height,
-		)
-		this.setAlpha(0.1)
+		gridManager.beginHole()
+
+		const renderHeight = Math.ceil(this.height / TILE_SIZE.height) + 2
+		const renderWidth = Math.ceil(this.width / TILE_SIZE.width) + 2
+
+		// this.setTranslate(
+		// 	-Math.ceil(globalOffset.x / TILE_SIZE.width) * TILE_SIZE.width,
+		// 	-Math.ceil(globalOffset.y / TILE_SIZE.height) * TILE_SIZE.height,
+		// )
 
 		let column = 0
 		let row = 0
 
 		while (row <= renderHeight) {
-			const y = (TILE_SIZE.height * row) + 0.5
-			this.setColor(gridColor, 'transparent')
-			this.drawLine({
-				source: {
-					x: 0,
-					y,
-				},
-				destination: {
-					x: this.width,
-					y,
-				},
-			})
+			while (column <= renderWidth) {
+				gridManager.drawRect(
+					(column * TILE_SIZE.width) + 1,
+					(row * TILE_SIZE.height) + 1,
+					TILE_SIZE.width - 1,
+					TILE_SIZE.height - 1,
+				)
+				column += 1
+			}
+
+			column = 0
 			row += 1
 		}
 
-		while (column <= renderWidth) {
-			const x = (TILE_SIZE.width * column) + 0.5
-			this.setColor(gridColor, 'transparent')
-			this.drawLine({
-				source: {
-					x,
-					y: 0,
-				},
-				destination: {
-					x,
-					y: this.height,
-				},
-			})
-			column += 1
-		}
+		gridManager.endHole()
 
-		this.resetTransform()
-		this.setAlpha(1)
+		this.pixiApp.stage.addChild(gridManager)
 	}
 
 	/**
@@ -263,13 +262,43 @@ export class Renderer {
 	 * Initialise the renderer.
 	 */
 	initialise() {
-		/** @type {HTMLCanvasElement} */
-		const canvas = document.querySelector('#game-canvas')
+		// Get required elements.
+		this.canvas = document.querySelector('#game-canvas')
 
-		this.target = canvas.getContext('2d')
-		this.shadow = canvas.cloneNode().getContext('2d')
+		// Render pixel art properly.
+		BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST
 
-		this.initialiseResizeObserver()
+		// Set options for pixi-tilemap.
+		settings.TEXTILE_UNITS = 4
+		settings.TEXTURES_PER_TILEMAP = 4
+		settings.use32bitIndex = true
+
+		// Create the Pixi app.
+		this.pixiApp = new Application({
+			antialias: false,
+			autoDensity: true,
+			backgroundAlpha: 0,
+			resizeTo: this.canvas.parentElement,
+			resolution: window.devicePixelRatio || 1,
+			view: this.canvas,
+		})
+
+		const { stage } = this.pixiApp
+
+		// Scale the stage up 4x.
+		stage.setTransform(
+			0,
+			0,
+			this.uiScale,
+			this.uiScale,
+			0,
+			0,
+			0,
+			0,
+			0,
+		)
+
+		this.drawGrid()
 	}
 
 	/**
@@ -474,6 +503,10 @@ export class Renderer {
 	 * Public getters
 	\****************************************************************************/
 
+	get height() {
+		return this.pixiApp.screen.height
+	}
+
 	/**
 	 * Retrieves the screen's pixel density.
 	 *
@@ -489,6 +522,10 @@ export class Renderer {
 	 * @returns {number} The current UI scale.
 	 */
 	get uiScale() {
-		return Number(getComputedStyle(this.target.canvas).getPropertyValue('--ui-scale'))
+		return Number(getComputedStyle(this.canvas).getPropertyValue('--ui-scale'))
+	}
+
+	get width() {
+		return this.pixiApp.screen.width
 	}
 }
