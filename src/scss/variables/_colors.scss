@@ -2,23 +2,23 @@
 	--hue-shift: 0deg;
 
 	/* Palette */
-	@include generateHSLCustomPropertiesFromColor('palette-pure-black', #000);
-	@include generateHSLCustomPropertiesFromColor('palette-black', #140c1c);
-	@include generateHSLCustomPropertiesFromColor('palette-indigo', #442434);
-	@include generateHSLCustomPropertiesFromColor('palette-purple', #30346d);
-	@include generateHSLCustomPropertiesFromColor('palette-dark-grey', #4e4a4e);
-	@include generateHSLCustomPropertiesFromColor('palette-brown', #854c30);
-	@include generateHSLCustomPropertiesFromColor('palette-green', #346524);
-	@include generateHSLCustomPropertiesFromColor('palette-red', #d04648);
-	@include generateHSLCustomPropertiesFromColor('palette-grey', #757161);
-	@include generateHSLCustomPropertiesFromColor('palette-blue', #597dce);
-	@include generateHSLCustomPropertiesFromColor('palette-orange', #d27d2c);
-	@include generateHSLCustomPropertiesFromColor('palette-light-grey', #8595a1);
-	@include generateHSLCustomPropertiesFromColor('palette-light-green', #6daa2c);
-	@include generateHSLCustomPropertiesFromColor('palette-beige', #d2aa99);
-	@include generateHSLCustomPropertiesFromColor('palette-light-blue', #6dc2ca);
-	@include generateHSLCustomPropertiesFromColor('palette-yellow', #dad45e);
-	@include generateHSLCustomPropertiesFromColor('palette-white', #deeed6);
+	@include generateColourCustomPropertiesFromColour('palette-pure-black', #000);
+	@include generateColourCustomPropertiesFromColour('palette-black', #140c1c);
+	@include generateColourCustomPropertiesFromColour('palette-indigo', #442434);
+	@include generateColourCustomPropertiesFromColour('palette-purple', #30346d);
+	@include generateColourCustomPropertiesFromColour('palette-dark-grey', #4e4a4e);
+	@include generateColourCustomPropertiesFromColour('palette-brown', #854c30);
+	@include generateColourCustomPropertiesFromColour('palette-green', #346524);
+	@include generateColourCustomPropertiesFromColour('palette-red', #d04648);
+	@include generateColourCustomPropertiesFromColour('palette-grey', #757161);
+	@include generateColourCustomPropertiesFromColour('palette-blue', #597dce);
+	@include generateColourCustomPropertiesFromColour('palette-orange', #d27d2c);
+	@include generateColourCustomPropertiesFromColour('palette-light-grey', #8595a1);
+	@include generateColourCustomPropertiesFromColour('palette-light-green', #6daa2c);
+	@include generateColourCustomPropertiesFromColour('palette-beige', #d2aa99);
+	@include generateColourCustomPropertiesFromColour('palette-light-blue', #6dc2ca);
+	@include generateColourCustomPropertiesFromColour('palette-yellow', #dad45e);
+	@include generateColourCustomPropertiesFromColour('palette-white', #deeed6);
 
 	/* Normalised */
 	--background-color: var(--palette-black);

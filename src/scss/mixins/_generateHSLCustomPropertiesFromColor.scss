@@ -1,8 +1,0 @@
-@mixin generateHSLCustomPropertiesFromColor($name, $color) {
-	@include generateHSLCustomProperties(
-		$name,
-		hue($color),
-		saturation($color),
-		lightness($color),
-	)
-}
