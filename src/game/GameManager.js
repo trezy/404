@@ -143,8 +143,8 @@ export class GameManager {
 		setIsRunning(false)
 
 		timer.stop()
-		this.#renderer.disconnectResizeObserver()
-		this.#entitiesManager.reset()
+		// this.#renderer.disconnectResizeObserver()
+		// this.#entitiesManager.reset()
 
 		unschedule('game loop')
 	}

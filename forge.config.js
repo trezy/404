@@ -34,9 +34,10 @@ module.exports = {
 			name: '@electron-forge/plugin-webpack',
 			config: {
 				devContentSecurityPolicy: [
-					'default-src \'self\' \'unsafe-inline\' data:;',
+					'default-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:;',
+					'img-src \'self\' blob: data: https://via.placeholder.com;',
 					'script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:;',
-					'img-src \'self\' blob: data: https://via.placeholder.com',
+					'worker-src \'self\' blob:',
 				].join(' '),
 				devServer: {
 					client: { overlay: false },

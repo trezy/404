@@ -6,6 +6,7 @@ import {
 	Graphics,
 	SCALE_MODES,
 	settings,
+	Spritesheet,
 } from 'pixi.js'
 
 
@@ -82,12 +83,11 @@ export class Renderer {
 	 * @param {number} mapWidth The width of the map that will be rendered on top of the grid.
 	 * @param {number} mapHeight The height of the map that will be rendered on top of the grid.
 	 */
-	drawGrid(mapWidth, mapHeight) {
+	drawGrid() {
+		const { pixiApp } = store.state
 		const gridManager = new Graphics
 
-		const gridColor = '#30346d'
-
-		gridManager.beginFill(gridColor, 0.1)
+		gridManager.beginFill(this.gridColor, 0.1)
 		gridManager.drawRect(
 			0,
 			0,
@@ -126,7 +126,7 @@ export class Renderer {
 
 		gridManager.endHole()
 
-		this.pixiApp.stage.addChild(gridManager)
+		pixiApp.stage.addChild(gridManager)
 	}
 
 	/**
@@ -261,10 +261,7 @@ export class Renderer {
 	/**
 	 * Initialise the renderer.
 	 */
-	initialise() {
-		// Get required elements.
-		this.canvas = document.querySelector('#game-canvas')
-
+	async initialise() {
 		// Render pixel art properly.
 		BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST
 
@@ -273,20 +270,21 @@ export class Renderer {
 		settings.TEXTURES_PER_TILEMAP = 4
 		settings.use32bitIndex = true
 
-		// Create the Pixi app.
-		this.pixiApp = new Application({
+		const canvas = document.querySelector('#game-canvas')
+
+		const pixiApp = new Application({
 			antialias: false,
 			autoDensity: true,
+			autoStart: false,
 			backgroundAlpha: 0,
-			resizeTo: this.canvas.parentElement,
 			resolution: window.devicePixelRatio || 1,
-			view: this.canvas,
+			view: canvas,
 		})
 
-		const { stage } = this.pixiApp
+		store.state.pixiApp = pixiApp
 
 		// Scale the stage up 4x.
-		stage.setTransform(
+		pixiApp.stage.setTransform(
 			0,
 			0,
 			this.uiScale,
@@ -297,6 +295,10 @@ export class Renderer {
 			0,
 			0,
 		)
+
+		// const spritesheet = new Spritesheet()
+
+		// await spritesheet.parse()
 
 		this.drawGrid()
 	}
@@ -503,29 +505,32 @@ export class Renderer {
 	 * Public getters
 	\****************************************************************************/
 
-	get height() {
-		return this.pixiApp.screen.height
+	/** @returns {string} The current grid color. */
+	get gridColor() {
+		const { pixiApp } = store.state
+		const canvas = pixiApp.view
+		return getComputedStyle(canvas).getPropertyValue('--palette-purple-hex')
 	}
 
-	/**
-	 * Retrieves the screen's pixel density.
-	 *
-	 * @returns {number} The pixel density of the current screen.
-	 */
+	get height() {
+		const { pixiApp } = store.state
+		return pixiApp.screen.height
+	}
+
+	/** @returns {number} The pixel density of the current screen. */
 	get resolution() {
 		return window.devicePixelRatio || 1
 	}
 
-	/**
-	 * Retrieves the game's UI scale.
-	 *
-	 * @returns {number} The current UI scale.
-	 */
+	/** @returns {number} The current UI scale. */
 	get uiScale() {
-		return Number(getComputedStyle(this.canvas).getPropertyValue('--ui-scale'))
+		const { pixiApp } = store.state
+		const canvas = pixiApp.view
+		return Number(getComputedStyle(canvas).getPropertyValue('--ui-scale'))
 	}
 
 	get width() {
-		return this.pixiApp.screen.width
+		const { pixiApp } = store.state
+		return pixiApp.screen.width
 	}
 }

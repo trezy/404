@@ -12,6 +12,12 @@ import { Timer } from '../game/Timer.js'
 
 
 export const initialState = {
+	/** @type {boolean} */
+	areAssetsLoaded: false,
+
+	/** @type {number} */
+	assetLoadingProgress: 0,
+
 	/** @type {object} */
 	controls: configStore.get('settings.controls'),
 
@@ -43,10 +49,19 @@ export const initialState = {
 	},
 
 	/** @type {boolean} */
+	isInitialising: false,
+
+	/** @type {boolean} */
+	isLoadingAssets: false,
+
+	/** @type {boolean} */
 	isPauseModalVisible: false,
 
 	/** @type {boolean} */
 	isRunning: false,
+
+	/** @type {boolean} */
+	isUploadingAssetsToGPU: false,
 
 	/** @type {boolean} */
 	isVictorious: false,
@@ -59,6 +74,9 @@ export const initialState = {
 
 	/** @type {MapManager} */
 	mapManager: null,
+
+	/** @type {import('pixi.js').Application} */
+	pixiApp: null,
 
 	/** @type {string[]} */
 	sceneHistory: [LOADING_GAME],
