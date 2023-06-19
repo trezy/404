@@ -20,7 +20,7 @@ export async function handleLoadMap(event, mapID) {
 		.values(STATE.metaCache)
 		.find(cacheItem => cacheItem.id === mapID)
 
-	const mapDataString = await extractFileFromArchive(mapMeta.path, 'map.json')
+	const mapData = await extractFileFromArchive(mapMeta.path, 'map.json')
 
-	return JSON.parse(mapDataString)
+	return JSON.parse(mapData.toString('utf8'))
 }

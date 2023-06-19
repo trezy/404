@@ -7,8 +7,6 @@ import createGraph from 'ngraph.graph'
 
 
 // Local imports
-import { LAYERS } from './Renderer.js'
-import { setGlobalOffset } from '../newStore/helpers/setGlobalOffset.js'
 import { TILE_SIZE } from './Tile.js'
 import { store } from '../newStore/store.js'
 
@@ -22,8 +20,6 @@ export class MapManager {
 	\****************************************************************************/
 
 	#graph = null
-
-	#needsRecenter = true
 
 	#map = null
 
@@ -46,7 +42,7 @@ export class MapManager {
 
 		this.#graph = createGraph()
 
-		this.#map.tiles.forEach(layer => {
+		this.#map.tiles.forEach((layer, layerIndex) => {
 			Object
 				.entries(layer)
 				.forEach(([coordinateString, tileData]) => {
@@ -57,6 +53,8 @@ export class MapManager {
 					if (this.#graph.hasNode(coordinateString)) {
 						const node = this.#graph.getNode(coordinateString)
 
+						node.data.tileStack[layerIndex] = { ...tileData }
+
 						if (tileTypeData.isBlocking) {
 							node.data.isBlocking = true
 							node.data.isTraversable = false
@@ -64,15 +62,20 @@ export class MapManager {
 							node.data.isTraversable = tileTypeData.isTraversable
 						}
 					} else {
-						this.#graph.addNode(coordinateString, {
+						const nodeData = {
 							height: tileTypeData.height,
 							isBlocking: tileTypeData.isBlocking,
 							isTraversable: tileTypeData.isTraversable,
-							renderStack: [tileTypeData.image],
+							renderStack: [],
+							tileStack: [],
 							width: tileTypeData.width,
 							x,
 							y,
-						})
+						}
+
+						nodeData.tileStack[layerIndex] = { ...tileData }
+
+						this.#graph.addNode(coordinateString, nodeData)
 					}
 				})
 		})
@@ -84,10 +87,7 @@ export class MapManager {
 		const nextTileset = this.#map.queue?.[this.#nextTilesetIndex]
 
 		if (nextTileset) {
-			const { gameManager } = store.state
-
 			this.#tileset = new MapManager({
-				gameManager,
 				map: this.#map.queue[this.#nextTilesetIndex],
 				parent: this,
 				shouldCenter: false,
@@ -152,16 +152,13 @@ export class MapManager {
 	 * @param {object} options All options.
 	 * @param {string} options.map The map.
 	 * @param {MapManager} [options.parent] The parent of the map (if this is a tileset).
-	 * @param {boolean} [options.shouldCenter = true] Whether the map should be centered on first render.
 	 */
 	constructor(options) {
 		const {
 			map,
 			parent,
-			shouldCenter = true,
 		} = options
 
-		this.#needsRecenter = shouldCenter
 		this.#map = map
 		this.#parent = parent
 
@@ -238,102 +235,6 @@ export class MapManager {
 
 		this.#updateGraphLinks()
 		this.#nextTileset()
-	}
-
-	render(renderer) {
-		if ((renderer.width === 0) || (renderer.height === 0)) {
-			return
-		}
-
-		if (this.#needsRecenter) {
-			setGlobalOffset(
-				((renderer.width * renderer.resolution) - (this.pixelWidth * renderer.pixelSize)) / 2,
-				((renderer.height * renderer.resolution) - (this.pixelHeight * renderer.pixelSize)) / 2,
-			)
-
-			this.#needsRecenter = false
-		}
-
-		const { cursorOffset } = store.state
-
-		const offset = {
-			x: 0,
-			y: 0,
-		}
-
-		if (this.isTileset) {
-			offset.x += cursorOffset.x
-			offset.y += cursorOffset.y
-		}
-
-		renderer.layer = LAYERS.foreground
-
-		this.#graph.forEachNode(node => {
-			const {
-				height,
-				renderStack,
-				width,
-				x,
-				y,
-			} = node.data
-
-			const targetX = x + offset.x
-			const targetY = y + offset.y
-
-			renderStack.forEach(image => {
-				renderer.drawImage({
-					image,
-					source: {
-						height: image.height,
-						width: image.width,
-						x: 0,
-						y: 0,
-					},
-					destination: {
-						cell: {
-							x: targetX,
-							y: targetY,
-						},
-						height,
-						width,
-					},
-				})
-			})
-		})
-
-		if (this.isTileset) {
-			this.#graph.forEachNode(node => {
-				const {
-					height,
-					width,
-					x,
-					y,
-				} = node.data
-
-				const targetX = x + cursorOffset.x
-				const targetY = y + cursorOffset.y
-
-				const targetNode = this.#parent.graph.getNode(`${targetX}|${targetY}`)
-
-				if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
-					renderer.setColor(null, 'red')
-					renderer.drawRectangle({
-						cell: {
-							x: targetX,
-							y: targetY,
-						},
-						height,
-						width,
-					})
-				}
-			})
-		}
-
-		if (!this.isTileset && this.#tileset) {
-			renderer.setAlpha(0.6)
-			this.#tileset.render(renderer)
-			renderer.setAlpha(1)
-		}
 	}
 
 

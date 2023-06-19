@@ -93,7 +93,7 @@ export class MapSaveDataList {
 	 * @returns {GameSave} The game save this list belongs to.
 	 */
 	get gameSave() {
-		return this.saveManager.getSaveByID(this.gameSaveID)
+		// return this.saveManager.getSaveByID(this.gameSaveID)
 	}
 
 	/**

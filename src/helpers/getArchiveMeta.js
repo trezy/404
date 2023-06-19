@@ -18,8 +18,8 @@ import { extractFileFromArchive } from './extractFileFromArchive.js'
  */
 export async function getArchiveMeta(archivePath) {
 	const fileStat = await stat(archivePath)
-	const metadataString = await extractFileFromArchive(archivePath, 'meta.json')
-	const metadata = JSON.parse(metadataString)
+	const metadataBuffer = await extractFileFromArchive(archivePath, 'meta.json')
+	const metadata = JSON.parse(metadataBuffer.toString('utf8'))
 
 	metadata.createdAt = fileStat.birthtime
 	// eslint-disable-next-line security/detect-non-literal-regexp

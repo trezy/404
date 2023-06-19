@@ -29,6 +29,8 @@ const PATHFINDING_STAGES = {
 
 /**
  * Represents a controllable or interactive entity in the game.
+ *
+ * @deprecated
  */
 export class Entity {
 	/****************************************************************************\

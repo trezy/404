@@ -1,4 +1,8 @@
 // Module imports
+import {
+	BaseTexture,
+	Spritesheet,
+} from 'pixi.js'
 import { ipcRenderer } from 'electron'
 
 
@@ -126,7 +130,8 @@ export class ContentManager extends EventEmitter {
 	 * @returns {object} The requested tile.
 	 */
 	getTile(tileID, resourcepackID) {
-		return this.#manifests.resourcepacks[resourcepackID].tiles[tileID]
+		const resourcepack = this.#manifests.resourcepacks[resourcepackID]
+		return resourcepack.tilesSpritesheet.data.frames[tileID]
 	}
 
 	/**
@@ -200,27 +205,29 @@ export class ContentManager extends EventEmitter {
 
 		resourcepack.isLoading = true
 
-		const {
-			assets,
-			tiles,
-		} = await ipcRenderer.invoke('loadResourcepack', resourcepackID, includeAssets)
+		const resourcepackData = await ipcRenderer.invoke('loadResourcepack', resourcepackID, includeAssets)
 
-		for await (const tile of Object.values(tiles)) {
-			tile.image = new Image
-			tile.image.src = tile.dataURI
-			await tile.image.decode()
-		}
+		for await (const key of ['robots', 'tiles']) {
+			const dataKey = `${key}Data`
+			const imageKey = `${key}Image`
+			const spritesheetKey = `${key}Spritesheet`
 
-		resourcepack.tiles = tiles
-
-		if (assets) {
-			for await (const asset of Object.values(assets)) {
-				asset.image = new Image
-				asset.image.src = asset.dataURL
-				await asset.image.decode()
+			if (!resourcepackData[imageKey]) {
+				return
 			}
 
-			resourcepack.assets = assets
+			const image = new Image
+			image.src = resourcepackData[imageKey]
+			await image.decode()
+
+			const spritesheet = new Spritesheet(
+				BaseTexture.from(image),
+				resourcepackData[dataKey],
+			)
+
+			await spritesheet.parse()
+
+			resourcepack[spritesheetKey] = spritesheet
 		}
 
 		resourcepack.isLoaded = false

@@ -42,17 +42,17 @@ function handleNewGameClick() {
 export function CenterPanelContents() {
   const [
 		mostRecentSaveID,
-		saveManager,
+		// saveManager,
 	] = useStore(state => [
     state.mostRecentSaveID,
-    state.saveManager,
+    // state.saveManager,
   ])
 
 	const { focusNode } = useNavGraphContext()
 
-	const hasSaves = useMemo(() => {
-		return Boolean(saveManager.getAllSaves().length)
-	}, [saveManager])
+	// const hasSaves = useMemo(() => {
+	// 	// return Boolean(saveManager.getAllSaves().length)
+	// }, [saveManager])
 
 	const handleContinueClick = useCallback(() => {
 		pushScene(MAP_SELECT)
@@ -92,7 +92,7 @@ export function CenterPanelContents() {
 					{'New Game'}
 				</Button>
 
-				{hasSaves && (
+				{/* {hasSaves && (
 					<Button
 						navGroupID={'center panel'}
 						navGroupLinks={['left panel']}
@@ -101,7 +101,7 @@ export function CenterPanelContents() {
 						onClick={handleLoadGameClick}>
 						{'Load Game'}
 					</Button>
-				)}
+				)} */}
 			</ButtonStack>
 		</motion.div>
 	)

@@ -23,15 +23,6 @@ export const ACTION_HANDLERS = {
 	[ACTIONS.SKIP_TIMER]: () => skipGracePeriod(),
 
 	[ACTIONS.PAUSE]: () => {
-		const {
-			gameManager,
-			isRunning,
-		} = store.state
-
-		if (isRunning) {
-			gameManager.pause()
-		} else {
-			gameManager.unpause()
-		}
+		console.log('TODO: PAUSE THE GAME')
 	},
 }

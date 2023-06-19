@@ -1,17 +1,36 @@
 // Local imports
 import { store } from '../store.js'
+import { renderMapToTilemap } from '../../helpers/renderMapToTilemap.js'
 
 
 
 
 
-/**
- * Moves the cursor by the specified number of cells.
- *
- * @param {number} x The number of cells to move the cursor on the horizontal axis.
- * @param {number} y The number of cells to move the cursor on the vertical axis.
- */
-export const placeTileset = () => {
-	const { mapManager } = store.state
-	mapManager.placeTileset()
+/** Moves entities based on their velocity. */
+export function placeTileset() {
+	const {
+		lastPlaceUpdate,
+		mapManager,
+		viewport,
+	} = store.state
+
+	const now = performance.now()
+
+	if ((now - lastPlaceUpdate) < 125) {
+		return
+	}
+
+	if (mapManager.tileset) {
+		mapManager.placeTileset()
+
+		/** @type {import('pixi.js').Container} */
+		const mapContainer = viewport.getChildByName('map')
+
+		viewport.removeChild(mapContainer)
+		viewport.addChildAt(renderMapToTilemap(mapManager, { name: 'map' }), 1)
+
+		mapContainer.destroy({ children: true })
+	}
+
+	store.set(() => ({ lastPlaceUpdate: now }))
 }

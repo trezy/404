@@ -22,6 +22,12 @@ navigator.keyboard.getLayoutMap().then(keyboardLayoutMap => {
 })
 
 /**
- * Start the control manager
+ * Retrieve and update the most recent save.
  */
-store.state.controlsManager.start()
+const mostRecentSaveID = localStorage.getItem('debug-game:most-recent-save-id')
+
+if (mostRecentSaveID) {
+	store.set(() => ({
+		mostRecentSaveID: Number(mostRecentSaveID)
+	}))
+}

@@ -12,10 +12,13 @@ import { store } from '../store.js'
  * @param {number} y The number of cells to move the cursor on the vertical axis.
  */
 export const moveCursor = (x, y) => {
-	store.set(state => ({
+	const { now } = store.state
+
+	store.set(previousState => ({
 		cursorOffset: {
-			x: state.cursorOffset.x + x,
-			y: state.cursorOffset.y + y,
-		}
+			x: previousState.cursorOffset.x + x,
+			y: previousState.cursorOffset.y + y,
+		},
+		lastCursorUpdate: now,
 	}))
 }

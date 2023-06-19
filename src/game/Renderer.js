@@ -34,6 +34,8 @@ export const LAYERS = {
 
 /**
  * A renderer to control canvas operations.
+ *
+ * @deprecated
  */
 export class Renderer {
 	/****************************************************************************\
@@ -100,11 +102,6 @@ export class Renderer {
 
 		const renderHeight = Math.ceil(this.height / TILE_SIZE.height) + 2
 		const renderWidth = Math.ceil(this.width / TILE_SIZE.width) + 2
-
-		// this.setTranslate(
-		// 	-Math.ceil(globalOffset.x / TILE_SIZE.width) * TILE_SIZE.width,
-		// 	-Math.ceil(globalOffset.y / TILE_SIZE.height) * TILE_SIZE.height,
-		// )
 
 		let column = 0
 		let row = 0
@@ -262,45 +259,42 @@ export class Renderer {
 	 * Initialise the renderer.
 	 */
 	async initialise() {
-		// Render pixel art properly.
-		BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST
+		// // Render pixel art properly.
+		// BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST
 
-		// Set options for pixi-tilemap.
-		settings.TEXTILE_UNITS = 4
-		settings.TEXTURES_PER_TILEMAP = 4
-		settings.use32bitIndex = true
+		// // Set options for pixi-tilemap.
+		// settings.TEXTILE_UNITS = 4
+		// settings.TEXTURES_PER_TILEMAP = 4
+		// settings.use32bitIndex = true
 
-		const canvas = document.querySelector('#game-canvas')
+		// const pixiApp = new Application({
+		// 	antialias: false,
+		// 	autoDensity: true,
+		// 	autoStart: false,
+		// 	backgroundAlpha: 0,
+		// 	resolution: window.devicePixelRatio || 1,
+		// })
 
-		const pixiApp = new Application({
-			antialias: false,
-			autoDensity: true,
-			autoStart: false,
-			backgroundAlpha: 0,
-			resolution: window.devicePixelRatio || 1,
-			view: canvas,
-		})
+		// store.state.pixiApp = pixiApp
 
-		store.state.pixiApp = pixiApp
+		// // Scale the stage up 4x.
+		// pixiApp.stage.setTransform(
+		// 	0,
+		// 	0,
+		// 	this.uiScale,
+		// 	this.uiScale,
+		// 	0,
+		// 	0,
+		// 	0,
+		// 	0,
+		// 	0,
+		// )
 
-		// Scale the stage up 4x.
-		pixiApp.stage.setTransform(
-			0,
-			0,
-			this.uiScale,
-			this.uiScale,
-			0,
-			0,
-			0,
-			0,
-			0,
-		)
+		// // const spritesheet = new Spritesheet()
 
-		// const spritesheet = new Spritesheet()
+		// // await spritesheet.parse()
 
-		// await spritesheet.parse()
-
-		this.drawGrid()
+		// this.drawGrid()
 	}
 
 	/**

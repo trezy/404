@@ -2,7 +2,6 @@
 import { configStore } from '../helpers/configStore.js'
 import { ContentManager } from '../game/ContentManager.js'
 import { ControlsManager } from '../game/ControlsManager.js'
-import { GameManager } from '../game/GameManager.js'
 import { LOADING_GAME } from '../constants/SceneNames.js'
 import { MapManager } from '../game/MapManager.js'
 import { Timer } from '../game/Timer.js'
@@ -27,8 +26,8 @@ export const initialState = {
 	/** @type {ControlsManager} */
 	controlsManager: new ControlsManager,
 
-	/** @type {GameManager} */
-	gameManager: null,
+	/** @type {string} */
+	currentSettingsPanel: 'accessibility',
 
 	/** @type {object} */
 	cursorOffset: {
@@ -47,6 +46,9 @@ export const initialState = {
 		x: 0,
 		y: 0,
 	},
+
+	/** @type {boolean} */
+	isFilesystemInitialised: false,
 
 	/** @type {boolean} */
 	isInitialising: false,
@@ -69,20 +71,34 @@ export const initialState = {
 	/** @type {KeyboardLayoutMap} */
 	keyboardLayoutMap: null,
 
+	/** @type {number} */
+	lastCursorUpdate: 0,
+
+	/** @type {number} */
+	lastPlaceUpdate: 0,
+
 	/** @type {string} */
 	mapID: null,
 
 	/** @type {MapManager} */
 	mapManager: null,
 
+	/** @type {number} */
+	mostRecentSaveID: configStore.get('mostRecentSaveID'),
+
+	/** @type {number} */
+	now: performance.now(),
+
 	/** @type {import('pixi.js').Application} */
 	pixiApp: null,
+
+	/** @type {import('pixi.js').AnimatedSprite} */
+	robotSprite: null,
 
 	/** @type {string[]} */
 	sceneHistory: [LOADING_GAME],
 
-	/** @type {string} */
-	currentSettingsPanel: 'accessibility',
+	spriteCache: {},
 
 	/** @type {number} */
 	time: 0,
@@ -95,4 +111,7 @@ export const initialState = {
 
 	/** @type {string} */
 	timerString: '00:00',
+
+	/** @type {import('pixi-viewport').Viewport} */
+	viewport: null,
 }

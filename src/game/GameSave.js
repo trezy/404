@@ -151,7 +151,7 @@ export class GameSave {
 		this.#updatedAt = Date.now()
 		this.#name = value
 
-		saveManager.queueSave()
+		// saveManager.queueSave()
 	}
 
 	/**

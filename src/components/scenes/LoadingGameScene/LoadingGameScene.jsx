@@ -1,10 +1,5 @@
 // Module imports
-import {
-	useCallback,
-	useEffect,
-	useState,
-} from 'react'
-import { ipcRenderer } from 'electron'
+import { useEffect, useState } from 'react'
 import { useStore } from 'statery'
 
 
@@ -14,12 +9,13 @@ import { useStore } from 'statery'
 // Local imports
 import styles from './LoadingGameScene.module.scss'
 
-import { executePromiseWithMinimumDuration } from '../../../helpers/executePromiseWithMinimumDuration.js'
 import { GameTitle } from '../../GameTitle/GameTitle.jsx'
+import { initialiseFilesystem } from '../../../newStore/helpers/initialiseFilesystem.js'
 import { loadGameAssets } from '../../../game/loadGameAssets.js'
 import { MAIN_MENU } from '../../../constants/SceneNames.js'
 import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { Scene } from '../../Scene/Scene.jsx'
+import { setupPixiApp } from '../../../newStore/helpers/setupPixiApp.js'
 import { store } from '../../../newStore/store.js'
 
 
@@ -27,7 +23,6 @@ import { store } from '../../../newStore/store.js'
 
 
 // Constants
-const MINIMUM_DURATION = 2000
 const VARIANTS = {
 	animate: {
 		opacity: 1,
@@ -49,26 +44,29 @@ const VARIANTS = {
 export function LoadingGameScene() {
 	const {
 		areAssetsLoaded,
-		contentManager,
+		controlsManager,
+		isFilesystemInitialised,
+		pixiApp,
 	} = useStore(store)
 
-	const [areDirectoriesInitialised, setAreDirectoriesInitialised] = useState(false)
-
-	const initialiseFilesystem = useCallback(() => {
-		return ipcRenderer.invoke('initialiseDirectories')
-	}, [])
+	const [isLoaded, setIsLoaded] = useState(false)
 
 	useEffect(() => {
-		if (areDirectoriesInitialised) {
-			return
+		if (!isFilesystemInitialised) {
+			initialiseFilesystem()
+		} else if (!pixiApp) {
+			setupPixiApp()
+		} else if (!areAssetsLoaded) {
+			loadGameAssets()
+		} else {
+			store.state.controlsManager.start()
+			setIsLoaded(true)
 		}
-
-		executePromiseWithMinimumDuration(initialiseFilesystem, MINIMUM_DURATION)
-			.then(() => setAreDirectoriesInitialised(true))
 	}, [
-		areDirectoriesInitialised,
-		initialiseFilesystem,
-		setAreDirectoriesInitialised,
+		areAssetsLoaded,
+		isFilesystemInitialised,
+		pixiApp,
+		setIsLoaded,
 	])
 
 	useEffect(() => {
@@ -76,17 +74,13 @@ export function LoadingGameScene() {
 			return
 		}
 
-		loadGameAssets()
 	}, [areAssetsLoaded])
 
 	useEffect(() => {
-		if (areAssetsLoaded && areDirectoriesInitialised) {
+		if (isLoaded) {
 			pushScene(MAIN_MENU)
 		}
-	}, [
-		areAssetsLoaded,
-		areDirectoriesInitialised,
-	])
+	}, [isLoaded])
 
 	return (
 		<Scene
