@@ -1,5 +1,12 @@
 // Module imports
-import { useEffect, useState } from 'react'
+import {
+	useEffect,
+	useState,
+} from 'react'
+import {
+	AnimatePresence,
+	motion,
+} from 'framer-motion'
 import { useStore } from 'statery'
 
 
@@ -10,12 +17,10 @@ import { useStore } from 'statery'
 import styles from './LoadingGameScene.module.scss'
 
 import { GameTitle } from '../../GameTitle/GameTitle.jsx'
-import { initialiseFilesystem } from '../../../newStore/helpers/initialiseFilesystem.js'
-import { loadGameAssets } from '../../../game/loadGameAssets.js'
+import { loadGame } from '../../../newStore/helpers/loadGame.js'
 import { MAIN_MENU } from '../../../constants/SceneNames.js'
 import { pushScene } from '../../../newStore/helpers/pushScene.js'
 import { Scene } from '../../Scene/Scene.jsx'
-import { setupPixiApp } from '../../../newStore/helpers/setupPixiApp.js'
 import { store } from '../../../newStore/store.js'
 
 
@@ -23,6 +28,22 @@ import { store } from '../../../newStore/store.js'
 
 
 // Constants
+const MESSAGE_VARIANTS = {
+	animate: {
+		opacity: 1,
+		y: 0,
+	},
+
+	exit: {
+		opacity: 0,
+		y: '150%',
+	},
+
+	initial: {
+		opacity: 0,
+		y: '-150%',
+	},
+}
 const VARIANTS = {
 	animate: {
 		opacity: 1,
@@ -43,38 +64,27 @@ const VARIANTS = {
 
 export function LoadingGameScene() {
 	const {
-		areAssetsLoaded,
-		controlsManager,
-		isFilesystemInitialised,
-		pixiApp,
+		assetLoadingProgress,
+		isInitialisingFilesystem,
+		isLoadingAssets,
+		isSettingUpPixi,
 	} = useStore(store)
 
+	const [isLoading, setIsLoading] = useState(false)
 	const [isLoaded, setIsLoaded] = useState(false)
 
 	useEffect(() => {
-		if (!isFilesystemInitialised) {
-			initialiseFilesystem()
-		} else if (!pixiApp) {
-			setupPixiApp()
-		} else if (!areAssetsLoaded) {
-			loadGameAssets()
-		} else {
-			store.state.controlsManager.start()
-			setIsLoaded(true)
+		if (!isLoading) {
+			setIsLoading(true)
+			loadGame().then(() => {
+				setIsLoaded(true)
+			})
 		}
 	}, [
-		areAssetsLoaded,
-		isFilesystemInitialised,
-		pixiApp,
+		isLoading,
 		setIsLoaded,
+		setIsLoading,
 	])
-
-	useEffect(() => {
-		if (areAssetsLoaded) {
-			return
-		}
-
-	}, [areAssetsLoaded])
 
 	useEffect(() => {
 		if (isLoaded) {
@@ -91,7 +101,42 @@ export function LoadingGameScene() {
 			initial={'initial'}
 			variants={VARIANTS}>
 			<GameTitle />
-			<p>{'loading...'}</p>
+			<div className={styles['message-wrapper']}>
+				<AnimatePresence>
+					{isInitialisingFilesystem && (
+						<motion.p
+							key={'filesystemSetup'}
+							animate={'animate'}
+							exit={'exit'}
+							initial={'initial'}
+							variants={MESSAGE_VARIANTS}>
+							{'Setting up the filesystem'}
+						</motion.p>
+					)}
+
+					{isSettingUpPixi && (
+						<motion.p
+							key={'rendererSetup'}
+							animate={'animate'}
+							exit={'exit'}
+							initial={'initial'}
+							variants={MESSAGE_VARIANTS}>
+							{'Setting up the renderer'}
+						</motion.p>
+					)}
+
+					{isLoadingAssets && (
+						<motion.p
+							key={'assetLoading'}
+							animate={'animate'}
+							exit={'exit'}
+							initial={'initial'}
+							variants={MESSAGE_VARIANTS}>
+							{`Loading assets (${Math.floor(assetLoadingProgress) * 100}%)`}
+						</motion.p>
+					)}
+				</AnimatePresence>
+			</div>
 		</Scene>
 	)
 }

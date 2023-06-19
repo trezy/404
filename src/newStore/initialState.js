@@ -51,7 +51,7 @@ export const initialState = {
 	isFilesystemInitialised: false,
 
 	/** @type {boolean} */
-	isInitialising: false,
+	isInitialisingFilesystem: false,
 
 	/** @type {boolean} */
 	isLoadingAssets: false,
@@ -61,6 +61,9 @@ export const initialState = {
 
 	/** @type {boolean} */
 	isRunning: false,
+
+	/** @type {boolean} */
+	isSettingUpPixi: false,
 
 	/** @type {boolean} */
 	isUploadingAssetsToGPU: false,

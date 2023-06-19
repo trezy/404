@@ -6,15 +6,7 @@ import { ipcRenderer } from 'electron'
 
 
 // Local imports
-import { executePromiseWithMinimumDuration } from '../../helpers/executePromiseWithMinimumDuration.js'
 import { store } from '../store.js'
-
-
-
-
-
-// Constants
-const MINIMUM_DURATION = 2000
 
 
 
@@ -26,8 +18,8 @@ const MINIMUM_DURATION = 2000
 export async function initialiseFilesystem() {
 	const { contentManager } = store.state
 
-	await executePromiseWithMinimumDuration(ipcRenderer.invoke('initialiseDirectories'), MINIMUM_DURATION)
+	await ipcRenderer.invoke('initialiseDirectories')
 	await contentManager.loadMeta()
 
-	store.set({ isFilesystemInitialised: true })
+	store.set(() => ({ isFilesystemInitialised: true }))
 }

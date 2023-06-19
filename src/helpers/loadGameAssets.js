@@ -6,7 +6,7 @@ import { Assets } from 'pixi.js'
 
 
 // Local imports
-import { ASSET_MANIFEST } from './ASSET_MANIFEST.js'
+import { ASSET_MANIFEST } from '../game/ASSET_MANIFEST.js'
 import { store } from '../newStore/store.js'
 
 
@@ -21,14 +21,7 @@ export async function loadGameAssets() {
 
 	const bundleNames = ASSET_MANIFEST.bundles.map(bundle => bundle.name)
 
-	store.set(() => ({ isInitialising: true }))
-
 	await Assets.init({ manifest: ASSET_MANIFEST })
-
-	store.set(() => ({
-		isLoadingAssets: true,
-		isInitialising: false,
-	}))
 
 	let bundleIndex = 0
 
@@ -42,6 +35,7 @@ export async function loadGameAssets() {
 			const cumulativeProgress = bundleIndex + progress
 			const totalProgress = cumulativeProgress / bundleNames.length
 
+			console.log({ assetLoadingProgress: totalProgress })
 			return { assetLoadingProgress: totalProgress }
 		})
 	}
@@ -58,7 +52,6 @@ export async function loadGameAssets() {
 	store.set(() => ({
 		areAssetsLoaded: true,
 		assetLoadingProgress: bundleNames.length,
-		isLoadingAssets: false,
 	}))
 
 	// store.set(() => ({

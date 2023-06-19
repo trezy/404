@@ -5,3 +5,14 @@
 	gap: calc(5px * var(--ui-scale));
 	justify-content: center;
 }
+
+.message-wrapper {
+	justify-content: center;
+	display: flex;
+	position: relative;
+
+	> p {
+		position: absolute;
+		white-space: nowrap;
+	}
+}
