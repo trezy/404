@@ -83,5 +83,7 @@ export const loadMap = async () => {
 
 	viewport.addChildAt(mainMapContainer, 1)
 
+	store.set(() => ({ timerGracePeriod: 10000 }))
+
 	replaceScene(PLAY)
 }

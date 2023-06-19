@@ -1,7 +1,7 @@
 // Local imports
 import { executePromiseWithMinimumDuration } from '../../helpers/executePromiseWithMinimumDuration.js'
 import { initialiseFilesystem } from './initialiseFilesystem.js'
-import { loadGameAssets } from '../../game/loadGameAssets.js'
+import { loadGameAssets } from '../../helpers/loadGameAssets.js'
 import { setupPixiApp } from './setupPixiApp.js'
 import { store } from '../store.js'
 

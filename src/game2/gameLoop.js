@@ -3,9 +3,9 @@
 import { controllerSystem } from './systems/controllerSystem.js'
 import { initialisationSystem } from './systems/initialisationSystem.js'
 import { moveSystem } from './systems/moveSystem.js'
-// import { animationSystem } from './systems/animationSystem.js'
 // import { sortSystem } from './systems/sortSystem.js'
 import { store } from '../newStore/store.js'
+import { timeSystem } from './systems/timeSystem.js'
 
 
 
@@ -23,12 +23,10 @@ export function gameLoop() {
 		return true
 	}
 
-	store.set(() => ({ now: performance.now() }))
-
+	timeSystem()
 	initialisationSystem()
 	controllerSystem()
 	moveSystem()
-	// animationSystem()
 	// sortSystem()
 	// cameraSystem()
 

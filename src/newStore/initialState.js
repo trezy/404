@@ -4,7 +4,6 @@ import { ContentManager } from '../game/ContentManager.js'
 import { ControlsManager } from '../game/ControlsManager.js'
 import { LOADING_GAME } from '../constants/SceneNames.js'
 import { MapManager } from '../game/MapManager.js'
-import { Timer } from '../game/Timer.js'
 
 
 
@@ -101,6 +100,7 @@ export const initialState = {
 	/** @type {string[]} */
 	sceneHistory: [LOADING_GAME],
 
+	/** @type {object} */
 	spriteCache: {},
 
 	/** @type {number} */
@@ -109,8 +109,17 @@ export const initialState = {
 	/** @type {number} */
 	timeDelta: 0,
 
-	/** @type {Timer} */
-	timer: new Timer,
+	/** @type {number | null} */
+	timerGracePeriod: null,
+
+	/** @type {number | null} */
+	timerPathfindingStartedAt: null,
+
+	/** @type {number | null} */
+	timerStartDelta: null,
+
+	/** @type {number | null} */
+	timerStartedAt: null,
 
 	/** @type {string} */
 	timerString: '00:00',
