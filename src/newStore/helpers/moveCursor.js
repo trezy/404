@@ -1,4 +1,5 @@
 // Local imports
+import { Vector2 } from '../../game2/structures/Vector2.js'
 import { store } from '../store.js'
 
 
@@ -12,13 +13,24 @@ import { store } from '../store.js'
  * @param {number} y The number of cells to move the cursor on the vertical axis.
  */
 export const moveCursor = (x, y) => {
-	const { now } = store.state
+	const { currentTileset } = store.state
 
-	store.set(previousState => ({
-		cursorOffset: {
-			x: previousState.cursorOffset.x + x,
-			y: previousState.cursorOffset.y + y,
-		},
-		lastCursorUpdate: now,
-	}))
+	if (!currentTileset) {
+		return
+	}
+
+	store.set(previousState => {
+		const newX = previousState.cursorOffset.x + x
+		const newY = previousState.cursorOffset.y + y
+
+		previousState.currentTileset.offset = new Vector2(newX, newY)
+
+		return {
+			cursorOffset: {
+				x: newX,
+				y: newY,
+			},
+			lastCursorUpdate: previousState.now,
+		}
+	})
 }

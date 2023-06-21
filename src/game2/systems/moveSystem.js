@@ -11,6 +11,7 @@ import {
 // Local imports
 import { store } from '../../newStore/store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
+import { Vector2 } from '../structures/Vector2.js'
 
 
 
@@ -19,57 +20,45 @@ import { TILE_SIZE } from '../../game/Tile.js'
 /** Moves the robot. */
 export function moveSystem() {
 	const {
+		currentTileset,
 		cursorOffset,
-		mapManager,
-		viewport,
+		map,
 	} = store.state
 
-	if (!mapManager.tileset) {
+	if (!currentTileset) {
 		return
 	}
 
-	const tilesetContainer = viewport.getChildByName('tileset')
+	const target = new Vector2(
+		cursorOffset.x * TILE_SIZE.width,
+		cursorOffset.y * TILE_SIZE.height,
+	)
 
-	if (!tilesetContainer) {
+	if ((target.x === currentTileset.sprite.x) && (target.y === currentTileset.sprite.y)) {
 		return
 	}
 
-	const target = {
-		x: cursorOffset.x * TILE_SIZE.width,
-		y: cursorOffset.y * TILE_SIZE.height,
-	}
+	currentTileset.sprite.x = target.x
+	currentTileset.sprite.y = target.y
+	currentTileset.offset = new Vector2(cursorOffset.x, cursorOffset.y)
 
-	if ((target.x === tilesetContainer.x) && (target.y === tilesetContainer.y)) {
-		return
-	}
+	currentTileset.graph.forEachNode(node => {
+		const { position } = node.data
 
-	tilesetContainer.x = cursorOffset.x * TILE_SIZE.width
-	tilesetContainer.y = cursorOffset.y * TILE_SIZE.height
+		const target = new Vector2(
+			(currentTileset.sprite.x / TILE_SIZE.width) + position.x,
+			(currentTileset.sprite.y / TILE_SIZE.height) + position.y,
+		)
 
-	mapManager.tileset.graph.forEachNode(node => {
-		const {
-			x,
-			y,
-		} = node.data
+		const sourceSpritePosition = Vector2.fromString(node.id)
+		const targetNode = map.getNodeAt(target)
+		const sourceSprite = currentTileset.getSpriteAt(sourceSpritePosition)
 
-		const targetX = (tilesetContainer.x / TILE_SIZE.width) + x
-		const targetY = (tilesetContainer.y / TILE_SIZE.height) + y
-
-		const targetCoordinateString = `${targetX}|${targetY}`
-		const targetNode = mapManager.graph.getNode(targetCoordinateString)
-		const targetSprite = tilesetContainer.getChildByName(node.id)
-
-		if (targetSprite) {
-			/** @type {ColorMatrixFilter} */
-			const alphaFilter = targetSprite.filters.find(filter => filter instanceof AlphaFilter)
-			const colorMatrixFilter = targetSprite.filters.find(filter => filter instanceof ColorMatrixFilter)
-
+		if (sourceSprite) {
 			if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
-				colorMatrixFilter.tint(0xff0000, true)
-				alphaFilter.alpha = 1
+				currentTileset.markTileInvalid(sourceSpritePosition)
 			} else {
-				alphaFilter.alpha = 0.5
-				colorMatrixFilter.reset()
+				currentTileset.markTileValid(sourceSpritePosition)
 			}
 		}
 	})

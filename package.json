@@ -21,7 +21,6 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
-    "@pixi/tilemap": "^4.0.0",
     "adm-zip": "^0.5.10",
     "archiver": "^5.3.1",
     "chokidar": "^3.5.3",

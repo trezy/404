@@ -1,5 +1,4 @@
 // Module imports
-import { CompositeTilemap } from '@pixi/tilemap'
 import { Graphics } from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
 
@@ -7,12 +6,11 @@ import { Viewport } from 'pixi-viewport'
 
 
 // Local imports
-import { MapManager } from '../../game/MapManager.js'
 import { PLAY } from '../../constants/SceneNames.js'
-import { renderMapToTilemap } from '../../helpers/renderMapToTilemap.js'
 import { replaceScene } from './replaceScene.js'
 import { store } from '../store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
+import { TileMap } from '../../game2/structures/TileMap.js'
 
 
 
@@ -29,10 +27,18 @@ export const loadMap = async () => {
 		viewport,
 	} = store.state
 
-	const map = await contentManager.loadMap(mapID)
+	const mapData = await contentManager.loadMap(mapID)
 
-	const mapManager = new MapManager({ map })
-	store.set({ mapManager })
+	const map = new TileMap({ mapData })
+	const tilesetQueue = mapData.queue.map(tilesetData => new TileMap({
+		alpha: 0.5,
+		mapData: tilesetData,
+	}))
+
+	store.set(() => ({
+		map,
+		tilesetQueue,
+	}))
 
 	const gridManager = new Graphics
 
@@ -78,10 +84,7 @@ export const loadMap = async () => {
 	gridManager.endHole()
 
 	viewport.addChildAt(gridManager, 0)
-
-	const mainMapContainer = renderMapToTilemap(mapManager, { name: 'map' })
-
-	viewport.addChildAt(mainMapContainer, 1)
+	viewport.addChildAt(map.sprite, 1)
 
 	store.set(() => ({ timerGracePeriod: 10000 }))
 

@@ -2520,13 +2520,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pixi/tilemap@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@pixi/tilemap@npm:4.0.0"
-  checksum: 1a62396414f76800f8f2e8bb207a762c19ad45bcd206e5e53bc2876ebb3f2d5d5f54fda9470773c88c2ee317b18824c69a4ccf7d43a59bd1933a231d8eada6db
-  languageName: node
-  linkType: hard
-
 "@pixi/utils@npm:7.2.4":
   version: 7.2.4
   resolution: "@pixi/utils@npm:7.2.4"
@@ -4835,7 +4828,6 @@ __metadata:
     "@electron-forge/maker-zip": ^6.0.4
     "@electron-forge/plugin-auto-unpack-natives": ^6.0.4
     "@electron-forge/plugin-webpack": ^6.0.4
-    "@pixi/tilemap": ^4.0.0
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@types/adm-zip": ^0.5.0
     "@types/prop-types": ^15.7.5

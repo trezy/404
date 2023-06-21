@@ -1,6 +1,6 @@
 // Local imports
+import { TileMap } from '../../game2/structures/TileMap.js'
 import { store } from '../store.js'
-import { renderMapToTilemap } from '../../helpers/renderMapToTilemap.js'
 
 
 
@@ -9,8 +9,9 @@ import { renderMapToTilemap } from '../../helpers/renderMapToTilemap.js'
 /** Moves entities based on their velocity. */
 export function placeTileset() {
 	const {
+		currentTileset,
 		lastPlaceUpdate,
-		mapManager,
+		map,
 		viewport,
 	} = store.state
 
@@ -20,17 +21,21 @@ export function placeTileset() {
 		return
 	}
 
-	if (mapManager.tileset) {
-		mapManager.placeTileset()
+	if (currentTileset) {
+		const newMap = TileMap.mergeTileMaps(map, currentTileset)
 
-		/** @type {import('pixi.js').Container} */
-		const mapContainer = viewport.getChildByName('map')
+		viewport.removeChild(map.sprite)
+		map.sprite.destroy(({ children: true }))
 
-		viewport.removeChild(mapContainer)
-		viewport.addChildAt(renderMapToTilemap(mapManager, { name: 'map' }), 1)
+		viewport.removeChild(currentTileset.sprite)
+		currentTileset.sprite.destroy(({ children: true }))
 
-		mapContainer.destroy({ children: true })
+		viewport.addChildAt(newMap.sprite, 1)
+
+		store.set(() => ({
+			currentTileset: null,
+			map: newMap,
+			lastPlaceUpdate: now,
+		}))
 	}
-
-	store.set(() => ({ lastPlaceUpdate: now }))
 }

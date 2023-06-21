@@ -3,7 +3,6 @@ import { configStore } from '../helpers/configStore.js'
 import { ContentManager } from '../game/ContentManager.js'
 import { ControlsManager } from '../game/ControlsManager.js'
 import { LOADING_GAME } from '../constants/SceneNames.js'
-import { MapManager } from '../game/MapManager.js'
 
 
 
@@ -27,6 +26,9 @@ export const initialState = {
 
 	/** @type {string} */
 	currentSettingsPanel: 'accessibility',
+
+	/** @type {null | import('../game2/structures/TileMap.js').TileMap} */
+	currentTileset: null,
 
 	/** @type {object} */
 	cursorOffset: {
@@ -70,7 +72,7 @@ export const initialState = {
 	/** @type {boolean} */
 	isVictorious: false,
 
-	/** @type {KeyboardLayoutMap} */
+	/** @type {null | KeyboardLayoutMap} */
 	keyboardLayoutMap: null,
 
 	/** @type {number} */
@@ -79,11 +81,11 @@ export const initialState = {
 	/** @type {number} */
 	lastPlaceUpdate: 0,
 
-	/** @type {string} */
-	mapID: null,
+	/** @type {null | import('../game2/structures/TileMap.js').TileMap} */
+	map: null,
 
-	/** @type {MapManager} */
-	mapManager: null,
+	/** @type {null | string} */
+	mapID: null,
 
 	/** @type {number} */
 	mostRecentSaveID: configStore.get('mostRecentSaveID'),
@@ -91,10 +93,10 @@ export const initialState = {
 	/** @type {number} */
 	now: performance.now(),
 
-	/** @type {import('pixi.js').Application} */
+	/** @type {null | import('pixi.js').Application} */
 	pixiApp: null,
 
-	/** @type {import('pixi.js').AnimatedSprite} */
+	/** @type {null | import('pixi.js').AnimatedSprite} */
 	robotSprite: null,
 
 	/** @type {string[]} */
@@ -102,6 +104,9 @@ export const initialState = {
 
 	/** @type {object} */
 	spriteCache: {},
+
+	/** @type {null | import('../game2/structures/TileMap.js').TileMap[]} */
+	tilesetQueue: null,
 
 	/** @type {number} */
 	time: 0,
@@ -124,6 +129,6 @@ export const initialState = {
 	/** @type {string} */
 	timerString: '00:00',
 
-	/** @type {import('pixi-viewport').Viewport} */
+	/** @type {null | import('pixi-viewport').Viewport} */
 	viewport: null,
 }
