@@ -8,9 +8,10 @@ import { Viewport } from 'pixi-viewport'
 // Local imports
 import { PLAY } from '../../constants/SceneNames.js'
 import { replaceScene } from './replaceScene.js'
+import { RobotManager } from '../../game2/structures/RobotManager.js'
 import { store } from '../store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
-import { TileMap } from '../../game2/structures/TileMap.js'
+import { TileMapManager } from '../../game2/structures/TileMapManager.js'
 
 
 
@@ -29,15 +30,10 @@ export const loadMap = async () => {
 
 	const mapData = await contentManager.loadMap(mapID)
 
-	const map = new TileMap({ mapData })
-	const tilesetQueue = mapData.queue.map(tilesetData => new TileMap({
+	const map = new TileMapManager({ mapData })
+	const tilesetQueue = mapData.queue.map(tilesetData => new TileMapManager({
 		alpha: 0.5,
 		mapData: tilesetData,
-	}))
-
-	store.set(() => ({
-		map,
-		tilesetQueue,
 	}))
 
 	const gridManager = new Graphics
@@ -86,7 +82,14 @@ export const loadMap = async () => {
 	viewport.addChildAt(gridManager, 0)
 	viewport.addChildAt(map.sprite, 1)
 
-	store.set(() => ({ timerGracePeriod: 10000 }))
+	const robot = new RobotManager({ position: map.startingPosition })
+
+	store.set(() => ({
+		map,
+		robot,
+		tilesetQueue,
+		timerGracePeriod: 10000,
+	}))
 
 	replaceScene(PLAY)
 }

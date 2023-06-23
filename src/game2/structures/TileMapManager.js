@@ -28,6 +28,8 @@ import { Vector2 } from './Vector2.js'
  * @property {import('ngraph.graph').Graph} [graph] A pre-generated graph.
  * @property {object} [mapData] The base map data.
  * @property {import('pixi.js').Container} [sprite] A pre-generated sprite.
+ * @property {Vector2[]} [destinations] A pre-generated list of destinations.
+ * @property {Vector2} [startingPosition] A pre-generated starting position.
  */
 
 
@@ -37,7 +39,7 @@ import { Vector2 } from './Vector2.js'
 /**
  * Maintains the node graph and sprite for a map.
  */
-export class TileMap {
+export class TileMapManager {
 	/****************************************************************************\
 	 * Static methods
 	\****************************************************************************/
@@ -49,10 +51,10 @@ export class TileMap {
 	 *
 	 * @param {Map} mapA The map to be merged in.
 	 * @param {Map} mapB The map to be merged with.
-	 * @param {MapConfig} mapOptions Additional configuration options to be passed to the new map.
+	 * @param {MapConfig} [mapOptions = {}] Additional configuration options to be passed to the new map.
 	 * @returns {Map} The new map.
 	 */
-	static mergeTileMaps(mapA, mapB, mapOptions) {
+	static mergeTileMaps(mapA, mapB, mapOptions = {}) {
 		const newGraph = createGraph()
 		const newSprite = new Container
 
@@ -68,7 +70,10 @@ export class TileMap {
 			tileSprite.name = newPositionString
 
 			newSprite.addChild(tileSprite)
-			newGraph.addNode(newPositionString, node.data)
+			newGraph.addNode(newPositionString, {
+				...node.data,
+				position: newPosition,
+			})
 
 			mapB.sprite.removeChild(tileSprite)
 		})
@@ -91,13 +96,24 @@ export class TileMap {
 			}
 
 			newSprite.addChild(tileSprite)
-			newGraph.addNode(newPositionString, node.data)
+			newGraph.addNode(newPositionString, {
+				...node.data,
+				position: newPosition,
+			})
 			mapA.sprite.removeChild(tileSprite)
 		})
 
-		Map.updateGraphLinks(newGraph)
+		TileMapManager.updateGraphLinks(newGraph)
 
-		return new Map({
+		if (!mapOptions.mapData) {
+			mapOptions.startingPosition = mapA.startingPosition ?? mapB.startingPosition
+			mapOptions.destinations = [
+				...mapA.destinations || [],
+				...mapB.destinations || [],
+			]
+		}
+
+		return new TileMapManager({
 			graph: newGraph,
 			sprite: newSprite,
 			...mapOptions,
@@ -161,6 +177,9 @@ export class TileMap {
 	/** @type {number} */
 	#alpha
 
+	/** @type {null | Vector2[]} */
+	#destinations = null
+
 	/** @type {import('ngraph.graph').Graph} */
 	#graph
 
@@ -173,8 +192,8 @@ export class TileMap {
 	/** @type {import('pixi.js').Sprite} */
 	#sprite
 
-	/** @type {Vector2} */
-	#startingPosition
+	/** @type {null | Vector2} */
+	#startingPosition = null
 
 	/** @type {{ [string]: Container }} */
 	#tileSprites = {}
@@ -195,8 +214,18 @@ export class TileMap {
 	constructor(config = {}) {
 		this.#mapData = config.mapData
 
-		if (this.#mapData?.startingPosition) {
-			this.#startingPosition = new Vector2(this.#mapData?.startingPosition.x, this.#mapData?.startingPosition.y)
+		if (config.startingPosition) {
+			this.#startingPosition = config.startingPosition
+		} else if (this.#mapData?.startingPosition) {
+			this.#startingPosition = new Vector2(this.#mapData.startingPosition.x, this.#mapData.startingPosition.y)
+		}
+
+		if (config.destinations) {
+			this.#destinations = config.destinations
+		} else if (this.#mapData?.destinations) {
+			this.#destinations = this.#mapData.destinations.map(destination => {
+				return new Vector2(destination.x, destination.y)
+			})
 		}
 
 		this.#alpha = config.alpha ?? 1
@@ -272,7 +301,7 @@ export class TileMap {
 				})
 		})
 
-		Map.updateGraphLinks(this.#graph)
+		TileMapManager.updateGraphLinks(this.#graph)
 	}
 
 	/**
@@ -433,6 +462,11 @@ export class TileMap {
 	 */
 	set alpha(newAlpha) {
 		this.#alpha = newAlpha
+	}
+
+	/** @returns {Vector2[]} */
+	get destinations() {
+		return this.#destinations
 	}
 
 	/** @returns {import('ngraph.graph').Graph} */

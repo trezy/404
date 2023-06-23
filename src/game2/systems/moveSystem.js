@@ -1,13 +1,3 @@
-// Module imports
-import {
-	AlphaFilter,
-	ColorMatrixFilter,
-} from 'pixi.js'
-
-
-
-
-
 // Local imports
 import { store } from '../../newStore/store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
@@ -20,46 +10,41 @@ import { Vector2 } from '../structures/Vector2.js'
 /** Moves the robot. */
 export function moveSystem() {
 	const {
-		currentTileset,
-		cursorOffset,
-		map,
+		currentPath,
+		robot,
 	} = store.state
 
-	if (!currentTileset) {
+	if (!currentPath) {
 		return
 	}
 
-	const target = new Vector2(
-		cursorOffset.x * TILE_SIZE.width,
-		cursorOffset.y * TILE_SIZE.height,
-	)
-
-	if ((target.x === currentTileset.sprite.x) && (target.y === currentTileset.sprite.y)) {
+	if (!currentPath.length) {
+		store.set(() => ({ currentPath: null }))
 		return
 	}
 
-	currentTileset.sprite.x = target.x
-	currentTileset.sprite.y = target.y
-	currentTileset.offset = new Vector2(cursorOffset.x, cursorOffset.y)
+	let path = currentPath
+	let nextPathSegment = path[0]
 
-	currentTileset.graph.forEachNode(node => {
-		const { position } = node.data
+	if (Vector2.areEqual(robot.cellPosition, nextPathSegment)) {
+		path = [...currentPath]
+		path.shift()
+		nextPathSegment = path[0]
 
-		const target = new Vector2(
-			(currentTileset.sprite.x / TILE_SIZE.width) + position.x,
-			(currentTileset.sprite.y / TILE_SIZE.height) + position.y,
-		)
-
-		const sourceSpritePosition = Vector2.fromString(node.id)
-		const targetNode = map.getNodeAt(target)
-		const sourceSprite = currentTileset.getSpriteAt(sourceSpritePosition)
-
-		if (sourceSprite) {
-			if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
-				currentTileset.markTileInvalid(sourceSpritePosition)
-			} else {
-				currentTileset.markTileValid(sourceSpritePosition)
-			}
+		if (!nextPathSegment) {
+			store.set(() => ({ currentPath: null }))
+			return
+		} else {
+			store.set(() => ({ currentPath: path }))
 		}
-	})
+	}
+
+	const travelDirection = Vector2.subtract(nextPathSegment, robot.cellPosition)
+	const travelDistance = new Vector2(
+		travelDirection.x * robot.speed,
+		travelDirection.y * robot.speed,
+	)
+	const newPosition = Vector2.add(robot.position, travelDistance)
+
+	robot.position = newPosition
 }

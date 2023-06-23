@@ -3,7 +3,8 @@
 import { controllerSystem } from './systems/controllerSystem.js'
 import { initialisationSystem } from './systems/initialisationSystem.js'
 import { moveSystem } from './systems/moveSystem.js'
-// import { sortSystem } from './systems/sortSystem.js'
+import { pathfindingSystem } from './systems/pathfindingSystem.js'
+import { renderSystem } from './systems/renderSystem.js'
 import { store } from '../newStore/store.js'
 import { timeSystem } from './systems/timeSystem.js'
 
@@ -26,8 +27,9 @@ export function gameLoop() {
 	timeSystem()
 	initialisationSystem()
 	controllerSystem()
+	pathfindingSystem()
 	moveSystem()
-	// sortSystem()
+	renderSystem()
 	// cameraSystem()
 
 	return true

@@ -24,10 +24,16 @@ export const initialState = {
 	/** @type {ControlsManager} */
 	controlsManager: new ControlsManager,
 
+	/** @type {null | import('../game2/structures/Vector2.js').Vector2} */
+	currentDestination: null,
+
+	/** @type {null | Array} */
+	currentPath: null,
+
 	/** @type {string} */
 	currentSettingsPanel: 'accessibility',
 
-	/** @type {null | import('../game2/structures/TileMap.js').TileMap} */
+	/** @type {null | import('../game2/structures/TileMapManager.js').TileMapManager} */
 	currentTileset: null,
 
 	/** @type {object} */
@@ -81,7 +87,7 @@ export const initialState = {
 	/** @type {number} */
 	lastPlaceUpdate: 0,
 
-	/** @type {null | import('../game2/structures/TileMap.js').TileMap} */
+	/** @type {null | import('../game2/structures/TileMapManager.js').TileMapManager} */
 	map: null,
 
 	/** @type {null | string} */
@@ -96,8 +102,8 @@ export const initialState = {
 	/** @type {null | import('pixi.js').Application} */
 	pixiApp: null,
 
-	/** @type {null | import('pixi.js').AnimatedSprite} */
-	robotSprite: null,
+	/** @type {null | import('../game2/structures/RobotManager.js').RobotManager} */
+	robot: null,
 
 	/** @type {string[]} */
 	sceneHistory: [LOADING_GAME],
@@ -105,7 +111,7 @@ export const initialState = {
 	/** @type {object} */
 	spriteCache: {},
 
-	/** @type {null | import('../game2/structures/TileMap.js').TileMap[]} */
+	/** @type {null | import('../game2/structures/TileMapManager.js').TileMapManager[]} */
 	tilesetQueue: null,
 
 	/** @type {number} */

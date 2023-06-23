@@ -24,11 +24,6 @@ export function setupPixiApp() {
 	// Render pixel art properly.
 	BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST
 
-	// Set options for pixi-tilemap.
-	settings.TEXTILE_UNITS = 4
-	settings.TEXTURES_PER_TILEMAP = 4
-	settings.use32bitIndex = true
-
 	const pixiApp = new Application({
 		antialias: false,
 		autoDensity: true,

@@ -35,7 +35,6 @@ export async function loadGameAssets() {
 			const cumulativeProgress = bundleIndex + progress
 			const totalProgress = cumulativeProgress / bundleNames.length
 
-			console.log({ assetLoadingProgress: totalProgress })
 			return { assetLoadingProgress: totalProgress }
 		})
 	}

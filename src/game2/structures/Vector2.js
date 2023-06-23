@@ -14,10 +14,50 @@ export class Vector2 {
 	 * @returns {Vector2} A new Vector2 representing the result of the operation.
 	 */
 	static add(vectorA, vectorB) {
+		if (!(vectorA instanceof Vector2) || !(vectorB instanceof Vector2)) {
+			throw new TypeError('Cannot add non-vectors.')
+		}
+
 		return new Vector2(
 			vectorA.x + vectorB.x,
 			vectorA.y + vectorB.y,
 		)
+	}
+
+	/**
+	 * Compares two vectors to check if they're equivalent.
+	 *
+	 * @param {Vector2} vectorA The first vector to be compared.
+	 * @param {Vector2} vectorB The second vector to be compared.
+	 * @returns {boolean} Whether the vectors are equivalent.
+	 */
+	static areEqual(vectorA, vectorB) {
+		if (!(vectorA instanceof Vector2) || !(vectorB instanceof Vector2)) {
+			throw new TypeError('Cannot check equality of non-vectors.')
+		}
+
+		return vectorA.toString() === vectorB.toString()
+	}
+
+	/**
+	 * Gets the distance between two vectors.
+	 *
+	 * @param {Vector2} vectorA The first vector to be compared.
+	 * @param {Vector2} [vectorB] The second vector to be compared. Defaults to 0, 0.
+	 * @returns {Vector2} A vector representing the relative distance between the input vectors.
+	 */
+	static magnitude(vectorA, vectorB = new Vector2(0, 0)) {
+		if (!(vectorA instanceof Vector2) || !(vectorB instanceof Vector2)) {
+			throw new TypeError('Cannot calculate magnitude for non-vectors.')
+		}
+
+		const x = vectorA.x - vectorB.x
+		const y = vectorA.y - vectorB.y
+
+		const x2 = x ** 2
+		const y2 = y ** 2
+
+		return Math.sqrt(x2 + y2)
 	}
 
 	/**
@@ -29,6 +69,24 @@ export class Vector2 {
 		}
 
 		return new Vector2(...coordinateString.split('|').map(Number))
+	}
+
+	/**
+	 * Subtracts the values of two vectors.
+	 *
+	 * @param {Vector2} vectorA The first vector to be subtracted.
+	 * @param {Vector2} vectorB The second vector to be subtracted.
+	 * @returns {Vector2} A new Vector2 representing the result of the operation.
+	 */
+	static subtract(vectorA, vectorB) {
+		if (!(vectorA instanceof Vector2) || !(vectorB instanceof Vector2)) {
+			throw new TypeError('Cannot subtract non-vectors.')
+		}
+
+		return new Vector2(
+			vectorA.x - vectorB.x,
+			vectorA.y - vectorB.y,
+		)
 	}
 
 

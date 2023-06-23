@@ -1,5 +1,5 @@
 // Local imports
-import { TileMap } from '../../game2/structures/TileMap.js'
+import { TileMapManager } from '../../game2/structures/TileMapManager.js'
 import { store } from '../store.js'
 
 
@@ -22,7 +22,7 @@ export function placeTileset() {
 	}
 
 	if (currentTileset) {
-		const newMap = TileMap.mergeTileMaps(map, currentTileset)
+		const newMap = TileMapManager.mergeTileMaps(map, currentTileset)
 
 		viewport.removeChild(map.sprite)
 		map.sprite.destroy(({ children: true }))
