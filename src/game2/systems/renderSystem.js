@@ -2,6 +2,7 @@
 import { store } from '../../newStore/store.js'
 import { TILE_SIZE } from '../../game/Tile.js'
 import { Vector2 } from '../structures/Vector2.js'
+import { TileMapManager } from '../structures/TileMapManager.js'
 
 
 
@@ -31,24 +32,17 @@ export function renderSystem() {
 		currentTileset.sprite.y = target.y
 		currentTileset.offset = new Vector2(cursorOffset.x, cursorOffset.y)
 
+		const conflicts = TileMapManager.findConflicts(currentTileset, map)
+
 		currentTileset.graph.forEachNode(node => {
-			const { position } = node.data
+			const absolutePosition = Vector2.add(node.data.position, currentTileset.offset)
 
-			const target = new Vector2(
-				(currentTileset.sprite.x / TILE_SIZE.width) + position.x,
-				(currentTileset.sprite.y / TILE_SIZE.height) + position.y,
-			)
+			const hasConflict = Boolean(conflicts.find(conflictPosition => Vector2.areEqual(conflictPosition, absolutePosition)))
 
-			const sourceSpritePosition = Vector2.fromString(node.id)
-			const targetNode = map.getNodeAt(target)
-			const sourceSprite = currentTileset.getSpriteAt(sourceSpritePosition)
-
-			if (sourceSprite) {
-				if (targetNode?.data.isBlocking || targetNode?.data.isTraversable) {
-					currentTileset.markTileInvalid(sourceSpritePosition)
-				} else {
-					currentTileset.markTileValid(sourceSpritePosition)
-				}
+			if (hasConflict) {
+				currentTileset.markTileInvalid(node.data.position)
+			} else {
+				currentTileset.markTileValid(node.data.position)
 			}
 		})
 	}

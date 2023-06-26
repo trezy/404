@@ -21,7 +21,7 @@ export function placeTileset() {
 		return
 	}
 
-	if (currentTileset) {
+	if (currentTileset && !TileMapManager.haveConflicts(currentTileset, map)) {
 		const newMap = TileMapManager.mergeTileMaps(map, currentTileset)
 
 		viewport.removeChild(map.sprite)

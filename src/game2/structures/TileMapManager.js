@@ -45,6 +45,40 @@ export class TileMapManager {
 	\****************************************************************************/
 
 	/**
+	 * Finds conflicting cells between two maps.
+	 *
+	 * @param {TileMapManager} mapA The source map.
+	 * @param {TileMapManager} mapB The destination map.
+	 * @returns {Vector2[]} A list of conflict coordinates (absolute).
+	 */
+	static findConflicts(mapA, mapB) {
+		const conflicts = []
+
+		mapA.graph.forEachNode(node => {
+			const { position } = node.data
+
+			const absolutePosition = Vector2.add(position, mapA.offset)
+
+			if (mapA.hasConflictAt(position) && mapB.hasConflictAt(absolutePosition)) {
+				conflicts.push(absolutePosition)
+			}
+		})
+
+		return conflicts
+	}
+
+	/**
+	 * Determines if there are any conflicts between two maps.
+	 *
+	 * @param {TileMapManager} mapA The source map.
+	 * @param {TileMapManager} mapB The destination map.
+	 * @returns {boolean} Whether there are conflicts between the two maps.
+	 */
+	static haveConflicts(mapA, mapB) {
+		return Boolean(TileMapManager.findConflicts(mapA, mapB).length)
+	}
+
+	/**
 	 * Merges 2 maps together, returning a new map. If both map graphs have a
 	 * node at the same coordinate, the node from the map B will overwrite the
 	 * node from map A.
@@ -339,6 +373,18 @@ export class TileMapManager {
 		})
 
 		this.#sprite = mapContainer
+	}
+
+	/**
+	 * Determines if there's a conflict at the requested coordinated.
+	 *
+	 * @param {Vector2} position The position to check for a conflict.
+	 * @returns {boolean} Whether there's a conflict at the requested position.
+	 */
+	hasConflictAt(position) {
+		const targetNode = this.getNodeAt(position)
+
+		return targetNode?.data.isBlocking || targetNode?.data.isTraversable
 	}
 
 	/**
