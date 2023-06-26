@@ -1,6 +1,5 @@
 // Local imports
 import { store } from '../../newStore/store.js'
-import { TILE_SIZE } from '../../game/Tile.js'
 import { Vector2 } from '../structures/Vector2.js'
 
 
@@ -32,6 +31,7 @@ export function moveSystem() {
 		nextPathSegment = path[0]
 
 		if (!nextPathSegment) {
+			robot.position = robot.cellPosition
 			store.set(() => ({ currentPath: null }))
 			return
 		} else {

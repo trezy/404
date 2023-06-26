@@ -87,7 +87,31 @@ export class RobotManager {
 			viewport,
 		} = store.state
 
-		const animationName = 'idle-east'
+		if (this.#sprite) {
+			const pixelPosition = new Vector2(
+				this.#position.x * 16,
+				this.#position.y * 16,
+			)
+			const spritePosition = new Vector2(this.#sprite.x, this.#sprite.y)
+
+			if (!Vector2.areEqual(pixelPosition, spritePosition)) {
+				this.#state = 'walk'
+
+				if (pixelPosition.x > spritePosition.x) {
+					this.#direction = 'east'
+				} else if (pixelPosition.x < spritePosition.x) {
+					this.#direction = 'west'
+				} else if (pixelPosition.y > spritePosition.y) {
+					this.#direction = 'south'
+				} else if (pixelPosition.y < spritePosition.y) {
+					this.#direction = 'north'
+				}
+			} else {
+				this.#state = 'idle'
+			}
+		}
+
+		const animationName = `${this.#state}-${this.#direction}`
 
 		if (!spriteCache[animationName]) {
 			const spritesheet = Assets.get('global-spritesheet')
