@@ -2,6 +2,7 @@
 import {
 	AnimatedSprite,
 	Assets,
+	Container,
 } from 'pixi.js'
 
 
@@ -42,13 +43,16 @@ export class RobotManager {
 	/** @type {'north' | 'south' | 'east' | 'west'} */
 	#direction = 'east'
 
+	/** @type {import('pixi.js').Container} */
+	#offsetContainer
+
 	/** @type {Vector2} */
 	#position
 
 	/** @type {number} */
 	#speed = 0.02
 
-	/** @type {import('pixi.js').Sprite} */
+	/** @type {import('pixi.js').Container} */
 	#sprite
 
 	/** @type {'idle' | 'walk' | 'push'} */
@@ -68,7 +72,19 @@ export class RobotManager {
 	 * @param {RobotConfig} config Initial configuration for the robot.
 	 */
 	constructor(config) {
+		const { viewport } = store.state
+
 		this.position = config.position ?? new Vector2(0, 0)
+
+		this.#offsetContainer = new Container
+		this.#sprite = new Container
+
+		this.#offsetContainer.y = -2
+
+		this.#sprite.name = 'player'
+		this.#sprite.addChild(this.#offsetContainer)
+
+		viewport.addChildAt(this.#sprite, 2)
 
 		this.#updateSprite()
 	}
@@ -82,10 +98,7 @@ export class RobotManager {
 	\****************************************************************************/
 
 	#updateSprite() {
-		const {
-			spriteCache,
-			viewport,
-		} = store.state
+		const { spriteCache } = store.state
 
 		if (this.#sprite) {
 			const pixelPosition = new Vector2(
@@ -116,23 +129,21 @@ export class RobotManager {
 		if (!spriteCache[animationName]) {
 			const spritesheet = Assets.get('global-spritesheet')
 			spriteCache[animationName] = new AnimatedSprite(spritesheet.animations[`robot-0-${animationName}`])
-			spriteCache[animationName].name = 'player'
 		}
 
-		const sprite = spriteCache[animationName]
+		const currentSprite = this.#offsetContainer.children[0]
+		const newSprite = spriteCache[animationName]
 
-		if (sprite !== this.#sprite) {
-			sprite.animationSpeed = 0.1666
-			sprite.play()
+		if (newSprite !== currentSprite) {
+			newSprite.animationSpeed = 0.1666
+			newSprite.play()
 
-			if (this.#sprite) {
-				this.#sprite.gotoAndStop(0)
-				viewport.removeChild(this.#sprite)
+			if (currentSprite) {
+				currentSprite.gotoAndStop(0)
+				this.#offsetContainer.removeChild(currentSprite)
 			}
 
-			this.#sprite = sprite
-
-			viewport.addChildAt(this.#sprite, 2)
+			this.#offsetContainer.addChild(newSprite)
 		}
 
 		this.#sprite.x = Math.floor(this.#position.x * TILE_SIZE.width)
