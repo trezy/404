@@ -9,6 +9,12 @@ import { store } from '../../newStore/store.js'
 export function timeSystem() {
 	const now = performance.now()
 
+	const { timerStoppedAt } = store.state
+
+	if (timerStoppedAt) {
+		return
+	}
+
 	store.set(previousState => {
 		const patch = { now }
 

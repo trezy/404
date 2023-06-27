@@ -120,17 +120,20 @@ export const initialState = {
 	/** @type {number} */
 	timeDelta: 0,
 
-	/** @type {number | null} */
+	/** @type {null | number} */
 	timerGracePeriod: null,
 
-	/** @type {number | null} */
+	/** @type {null | number} */
 	timerPathfindingStartedAt: null,
 
-	/** @type {number | null} */
+	/** @type {null | number} */
 	timerStartDelta: null,
 
-	/** @type {number | null} */
+	/** @type {null | number} */
 	timerStartedAt: null,
+
+	/** @type {null | number} */
+	timerStoppedAt: null,
 
 	/** @type {string} */
 	timerString: '00:00',

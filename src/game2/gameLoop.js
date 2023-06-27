@@ -7,6 +7,7 @@ import { pathfindingSystem } from './systems/pathfindingSystem.js'
 import { renderSystem } from './systems/renderSystem.js'
 import { store } from '../newStore/store.js'
 import { timeSystem } from './systems/timeSystem.js'
+import { victorySystem } from './systems/victorySystem.js'
 
 
 
@@ -31,6 +32,7 @@ export function gameLoop() {
 	moveSystem()
 	renderSystem()
 	// cameraSystem()
+	victorySystem()
 
 	return true
 }
