@@ -79,10 +79,11 @@ export const loadMap = async () => {
 
 	gridManager.endHole()
 
+	const robot = new RobotManager({ position: map.startingPosition })
+
 	viewport.addChildAt(gridManager, 0)
 	viewport.addChildAt(map.sprite, 1)
-
-	const robot = new RobotManager({ position: map.startingPosition })
+	viewport.addChildAt(robot.sprite, 2)
 
 	store.set(() => ({
 		map,

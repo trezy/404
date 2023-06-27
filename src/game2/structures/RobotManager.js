@@ -44,7 +44,7 @@ export class RobotManager {
 	#direction = 'east'
 
 	/** @type {import('pixi.js').Container} */
-	#offsetContainer
+	#offsetContainer = new Container
 
 	/** @type {Vector2} */
 	#position
@@ -53,7 +53,7 @@ export class RobotManager {
 	#speed = 0.02
 
 	/** @type {import('pixi.js').Container} */
-	#sprite
+	#sprite = new Container
 
 	/** @type {'idle' | 'walk' | 'push'} */
 	#state = 'idle'
@@ -72,19 +72,14 @@ export class RobotManager {
 	 * @param {RobotConfig} config Initial configuration for the robot.
 	 */
 	constructor(config) {
-		const { viewport } = store.state
-
 		this.position = config.position ?? new Vector2(0, 0)
 
-		this.#offsetContainer = new Container
-		this.#sprite = new Container
-
 		this.#offsetContainer.y = -2
-
 		this.#sprite.name = 'player'
-		this.#sprite.addChild(this.#offsetContainer)
+		this.#sprite.x = this.#position.x * TILE_SIZE.width
+		this.#sprite.y = this.#position.y * TILE_SIZE.height
 
-		viewport.addChildAt(this.#sprite, 2)
+		this.#sprite.addChild(this.#offsetContainer)
 
 		this.#updateSprite()
 	}
