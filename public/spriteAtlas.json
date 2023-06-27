@@ -384,16 +384,16 @@
 			"robot-0-idle-west"
 		],
 		"robot-0-walk-east": [
-			"robot-0-walk-south-0",
-			"robot-0-walk-south-1",
-			"robot-0-walk-south-2",
-			"robot-0-walk-south-3"
+			"robot-0-walk-east-0",
+			"robot-0-walk-east-1",
+			"robot-0-walk-east-2",
+			"robot-0-walk-east-3"
 		],
 		"robot-0-walk-north": [
-			"robot-0-walk-south-0",
-			"robot-0-walk-south-1",
-			"robot-0-walk-south-2",
-			"robot-0-walk-south-3"
+			"robot-0-walk-north-0",
+			"robot-0-walk-north-1",
+			"robot-0-walk-north-2",
+			"robot-0-walk-north-3"
 		],
 		"robot-0-walk-south": [
 			"robot-0-walk-south-0",
@@ -402,10 +402,10 @@
 			"robot-0-walk-south-3"
 		],
 		"robot-0-walk-west": [
-			"robot-0-walk-south-0",
-			"robot-0-walk-south-1",
-			"robot-0-walk-south-2",
-			"robot-0-walk-south-3"
+			"robot-0-walk-west-0",
+			"robot-0-walk-west-1",
+			"robot-0-walk-west-2",
+			"robot-0-walk-west-3"
 		]
 	}
 }
